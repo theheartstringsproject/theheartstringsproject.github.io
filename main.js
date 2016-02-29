@@ -5,14 +5,12 @@ import { createStore } from 'redux'
 import campaign from './reducers'
 import Campaign from './containers/Campaign'
 
-let contribution = {
-	charityName: 'United States Association for UNHCR',
-	reason: 'Syrian refugees',
-	amount: 0
-}	
-
 let store = createStore(campaign, {
-	contribution: contribution,
+	contribution: {
+		charityName: 'United States Association for UNHCR',
+		reason: 'Syrian refugees',
+		amount: 0
+	},
 	pages: [
 		'LandingPage',
 		'ContributionPage',
@@ -21,8 +19,7 @@ let store = createStore(campaign, {
 		'ConfirmationPage',
 		'LoadingPage',
 		'ThanksPage'
-	],
-	currentPage: 0
+	]
 })
 
 render(

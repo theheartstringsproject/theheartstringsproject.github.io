@@ -16,6 +16,7 @@ body {
 
 	height: 400px;
 	overflow: scroll;
+	position: relative;
 
 	h1 {
 		font-family: Avenir-Heavy;
@@ -59,6 +60,55 @@ body {
 		flex-direction: column;
 		align-items: center;
 		position: relative;
+	
+
+		/* Animate page transitions */
+		&.next-page-enter {
+			transform: translateX(100%);
+		}
+
+		&.next-page-enter.next-page-enter-active {
+			transform: translateX(0);
+			transition: transform $animation-duration ease-in-out;
+		}
+
+		&.next-page-leave {
+			transform: translateX(0);
+
+			/* Make sure the page is out of the way */
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+
+		&.next-page-leave.next-page-leave-active {
+			transform: translateX(-100%);
+			transition: transform $animation-duration ease-in-out;
+		}
+
+		&.prev-page-enter {
+			transform: translateX(-100%);
+		}
+
+		&.prev-page-enter.prev-page-enter-active {
+			transform: translateX(0);
+			transition: transform $animation-duration ease-in-out;
+		}
+
+		&.prev-page-leave {
+			transform: translateX(0);
+
+			/* Make sure the page is out of the way */
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+
+		&.prev-page-leave.prev-page-leave-active {
+			transform: translateX(100%);
+			transition: transform $animation-duration ease-in-out;
+		}
+
 	}
 
 	.Header {
@@ -129,7 +179,7 @@ body {
 		position: absolute;
 		text-align: center;
 		width: 100%;
-		left: 0;
+		left: -3px;
 		top: calc((60px - 28px) / 2); /* Attempt to center the text by subtracting line-height from circle height and divide by two */
 
 		color: $background-color;

@@ -9,3 +9,6 @@ $background-color: #00AB6B;
 
 /* Spacing */
 $space: 24px;
+
+/* Animation */
+$animation-duration: 250ms;

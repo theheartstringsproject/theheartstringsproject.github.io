@@ -29,7 +29,7 @@ const ConfirmationPage = (props) => (
 			<span className='email'>lubin.jeremy@gmail.com</span>
 			<span className='card-number'>•••• •••••• •4507</span>
 		</div>
-		<ConfirmContributionButton text={`Confirm ${props.amount} Donation`} type='primary' />
+		<ConfirmContributionButton text={`Confirm $${props.amount} Donation`} type='primary' />
 		<div className='Footer'>
 			<Button text='Forget my payment info' type='quaternary small' />
 		</div>

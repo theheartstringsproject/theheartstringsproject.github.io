@@ -4,13 +4,24 @@ import DOT_MAP from './dot-map.js'
 import { VelocityComponent } from 'velocity-react';
 import './world-map.css'
 
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-
 const DOT_AMOUNT = 10
 const DOT_INTERVAL = 200
 const ANIMATION_DURATION = 100
 
+const SetIntervalMixin = {
+  componentWillMount: function() {
+    this.intervals = [];
+  },
+  setInterval: function() {
+    this.intervals.push(setInterval.apply(null, arguments));
+  },
+  componentWillUnmount: function() {
+    this.intervals.forEach(clearInterval);
+  }
+};
+
 const WorldMap = React.createClass ({
+	mixins: [SetIntervalMixin],
 
 	getInitialState: function() {
 		let dots = new Array(DOT_AMOUNT)
@@ -22,14 +33,15 @@ const WorldMap = React.createClass ({
 
 	componentDidMount: function() {
 		// Set a new dot every so often
-		setInterval(() => {
-			if ( this.state.illuminatedDotIndices.length >= DOT_AMOUNT ) {
-				this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices.slice(1), this.getRandomDot()] })	
-			} else {
-				this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices, this.getRandomDot()] })
-			}
-			
-		}, DOT_INTERVAL);
+		this.setInterval(this.illumateDots, DOT_INTERVAL)
+	},
+
+	illumateDots: function() {
+		if ( this.state.illuminatedDotIndices.length >= DOT_AMOUNT ) {
+			this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices.slice(1), this.getRandomDot()] })	
+		} else {
+			this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices, this.getRandomDot()] })
+		}
 	},
 
 	getRandomDot: function() {
@@ -72,24 +84,26 @@ const WorldMap = React.createClass ({
 		})
 
 		return (
-			<div className='world-map'>
-				<svg /*width="351px" height="226px"*/ viewBox="0 0 351 226" version="1.1">
-				    <title>Group</title>
-				    <desc>Created with Sketch.</desc>
-				    <defs></defs>
-				    <g id="Explorations" stroke="none" strokeWidth="1" fill="none">
-				        <g id="Heartstrings-Donation-Flow---CNN---01" transform="translate(-12.000000, -256.000000)">
-				            <g id="Group" transform="translate(12.000000, 256.000000)">
-				                <g id="Oval">
-				                    <g>
-										
-				                    		{dots}
-				                    </g>
-				                </g>
-				            </g>
-				        </g>
-				    </g>
-				</svg>
+			<div className={`world-map-container ${this.props.position}`}>
+				<div className="world-map">
+					<svg /*width="351px" height="226px"*/ viewBox="0 0 351 226" version="1.1">
+					    <title>Group</title>
+					    <desc>Created with Sketch.</desc>
+					    <defs></defs>
+					    <g id="Explorations" stroke="none" strokeWidth="1" fill="none">
+					        <g id="Heartstrings-Donation-Flow---CNN---01" transform="translate(-12.000000, -256.000000)">
+					            <g id="Group" transform="translate(12.000000, 256.000000)">
+					                <g id="Oval">
+					                    <g>
+											
+					                    		{dots}
+					                    </g>
+					                </g>
+					            </g>
+					        </g>
+					    </g>
+					</svg>
+				</div>
 			</div>
 		)
 	}
