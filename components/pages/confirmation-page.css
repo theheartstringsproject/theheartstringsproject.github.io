@@ -1,0 +1,9 @@
+@import '../variables.css';
+@import '../mixins.css';
+
+.confirmation-page {
+	.donation-info {
+		margin-top: $space;
+		margin-bottom: $space;
+	}
+}

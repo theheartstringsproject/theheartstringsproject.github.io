@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.5.2 (25235) - http://www.bohemiancoding.com/sketch -->
+    <title>circle-check</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="24x24" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="circle-check" sketch:type="MSArtboardGroup" fill="#FFFFFF">
+            <path d="M22.0055144,5.37271088 C23.2658363,7.27166391 24,9.5500954 24,12 C24,18.627417 18.627417,24 12,24 C5.372583,24 0,18.627417 0,12 C0,5.372583 5.372583,0 12,0 C15.4481289,0 18.556582,1.45432521 20.7454267,3.78304311 L11.845703,13.6780395 L7.62469505,10.2191312 C7.19343311,9.87412164 6.56414074,9.94404302 6.21913119,10.375305 C5.87412164,10.8065669 5.94404302,11.4358593 6.37530495,11.7808688 L11.375305,15.7808688 C11.7889619,16.1117944 12.3889172,16.0627169 12.7432941,15.6689647 L22.0055144,5.37271088 Z" id="Background" sketch:type="MSShapeGroup"></path>
+        </g>
+    </g>
+</svg>

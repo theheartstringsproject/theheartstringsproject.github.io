@@ -1,0 +1,140 @@
+@import '../variables.css';
+@import '../mixins.css';
+
+body {
+	margin: 0;
+}
+
+.Campaign {
+	background: $background-color;
+	background-image: radial-gradient(50% 100%, rgba(0,0,0,0.00) 50%, rgba(0,0,0,0.20) 100%);
+
+	font: 16px $font-family;
+	line-height: 1.375em;
+	color: $text-color-light;
+	text-align: center;
+
+	height: 400px;
+	overflow: scroll;
+
+	h1 {
+		font-family: Avenir-Heavy;
+		font-size: 24px;
+		color: $text-color-light;
+		margin-top: $space;
+		margin-bottom: $space;
+	}
+
+	p {
+		color: $text-color-light-secondary;
+		font-size: 1rem;
+		line-height: 1.375em;
+		font-weight: 300;
+		margin-top: calc($space / 2);
+		margin-bottom: calc($space / 2);
+	}
+
+	small {
+		/* color: $text-color-light-secondary;
+		font-size: .75rem;
+		line-height: 1.375em; */
+		@mixin text-small;
+		margin-top: calc($space / 2);
+		margin-bottom: calc($space / 2);
+	}
+
+	a {
+		color: $text-color-light;
+		text-decoration: none;
+	}
+
+	.Page {
+		max-width: 375px;
+		min-height: 400px;
+		box-sizing: border-box;
+		padding: calc($space * 2);
+		margin: auto; /* Center each page within the campaigin */
+
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		position: relative;
+	}
+
+	.Header {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		nav {
+			width: 100%;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+	}
+	
+	.Footer {
+		position: absolute;
+		bottom: $space;
+		margin: auto;
+		width: calc(100% - $space * 4);
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		small {
+			margin: 0;
+		}
+	}
+
+	.donation-info {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		color: $text-color-light;
+		font-size: .75rem;
+		line-height: 1.375em;
+	}
+
+	.donation-info .header {
+		color: $text-color-light-secondary;
+		text-transform: uppercase;
+		margin-bottom: calc($space / 3);
+	}
+
+	.donation-icons {
+		$size: 60px;
+		max-height: $size;
+		flex: 1 0 $size;
+
+		display: flex;
+		justify-content: center;
+
+		svg {
+			height: $size;
+		}
+	}
+
+	.donation-amount-icon {
+		/*  Move this over slightly to appear
+			underneath the charity icon */
+		margin-left: -3px;
+		position: relative;
+	}
+
+	.donation-amount {
+		position: absolute;
+		text-align: center;
+		width: 100%;
+		left: 0;
+		top: calc((60px - 28px) / 2); /* Attempt to center the text by subtracting line-height from circle height and divide by two */
+
+		color: $background-color;
+		font-size: 1.25rem;
+		line-height: 1.375em;
+		font-weight: 300;
+	}
+}

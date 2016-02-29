@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.5.2 (25235) - http://www.bohemiancoding.com/sketch -->
+    <title>envelope</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="24x24" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="envelope" sketch:type="MSArtboardGroup" stroke="#3E97BD" stroke-width="2" stroke-linejoin="round">
+            <g id="Envelope-:-Glyph" sketch:type="MSLayerGroup" transform="translate(5.000000, 7.000000)">
+                <path d="M12.9370688,10 C12.3741377,10 1.41041379,10 1,10 C0.5,10 4.72107065e-09,9.5 2.71210432e-09,9 C7.03137965e-10,8.5 3.52928353e-10,1.5 0,1 C-3.52928298e-10,0.500000002 0.50000011,4.17682067e-09 1,-2.93098879e-14 C1.49999989,-4.17687926e-09 12.3741379,-2.84217094e-14 12.9370689,-2.93098879e-14 C13.5,-2.84217094e-14 14,0.499999998 14,1 C14,1.5 14,6.33452938 14,9 C14,9.5 13.5,10 12.9370688,10 Z" id="Path-34" sketch:type="MSShapeGroup"></path>
+                <path d="M1,1 L7,6 L13,1" id="Path-38" sketch:type="MSShapeGroup"></path>
+            </g>
+        </g>
+    </g>
+</svg>
