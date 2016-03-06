@@ -1,0 +1,33 @@
+@import '../variables.css';
+@import '../mixins.css';
+
+.Campaign .PaymentFlow {
+
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+
+	&.Page {
+		padding: 0;
+	}
+
+	.pages {
+		display: flex;
+		flex-grow: 1;
+
+		&> span {
+			display: flex;
+			flex-grow: 1;
+		}
+
+		/* Animate page transitions */
+		.page-leave {
+			height: auto;
+			// justify-content: flex-end;
+		}
+	}
+
+
+
+}

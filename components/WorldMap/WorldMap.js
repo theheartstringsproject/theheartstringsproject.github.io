@@ -58,7 +58,7 @@ const WorldMap = React.createClass ({
 
 		// Create dot elements
 		// let animationProps = { duration: ANIMATION_DURATION }
-		let opacity, fill, key
+		let opacity, fill, key, className
 		const dots = DOT_MAP.map((dot, i) => {			
 			if (this.state.illuminatedDotIndices.includes( i )) {
 				// animationProps.animation = {
@@ -68,6 +68,7 @@ const WorldMap = React.createClass ({
 				opacity = 1.0
 				fill = '#FFFFFF'
 				key = 'on'
+				className='on'
 			} else {
 				// animationProps.animation = {
 				// 	opacity: 0.2,
@@ -79,7 +80,7 @@ const WorldMap = React.createClass ({
 			}
 
 			// return <VelocityComponent {...animationProps} key={i}>{this.renderDot(i)}</VelocityComponent>
-			return <WorldMapDot fillOpacity={opacity} fill={fill} cx={dot.cx} cy={dot.cy} key={`dot-${i}`} />
+			return <WorldMapDot fillOpacity={opacity} fill={fill} cx={dot.cx} cy={dot.cy} key={`dot-${i}`} className={key}/>
 					
 		})
 

@@ -6,34 +6,46 @@ import BackButton from '../../containers/BackButton'
 import ConfirmContributionButton from '../../containers/ConfirmContributionButton'
 import './confirmation-page.css'
 
-const ConfirmationPage = (props) => (
-	<div className='Page confirmation-page'>
-		<div className="Header">
-			<nav>
-				<BackButton type='tertiary circle' icon='back' />
-				<div className='donation-icons'>
-					<div className='charity-icon'>
-						<InlineSVG src={require(`svg-inline!../../icons/heart-hands-circle.svg`)} />
-					</div>
-					<div className='donation-amount-icon'>
-						<InlineSVG src={require(`svg-inline!../../icons/donate-amount-circle.svg`)} />
-						<span className='donation-amount'>${props.amount}</span>
-					</div>
+const formatCardNumber = ( cardNumber ) => {
+	let newString = '',
+		i = 0
+
+	if ( cardNumber.length <= 4 )
+		return cardNumber
+
+	for ( ; i < cardNumber.length - 4 ; i++ ) {
+		newString += '•'
+	}
+
+	newString += cardNumber.slice(-4)
+
+	if ( newString.length > 4 ) {
+		newString = [newString.slice(0, 4), ' ', newString.slice(4)].join('')
+	}
+
+	if ( newString.length > 11 ) {
+		newString = [newString.slice(0, 11), ' ', newString.slice(11)].join('')
+	}
+
+	return newString
+}
+
+const ConfirmationPage = React.createClass({
+	render: function() {
+		return (
+			<div className='Page confirmation-page' style={this.props.style}>
+				<div className='donation-info'>
+					<span className='header'>From</span>
+					<span className='email'>{this.props.email}</span>
+					<span className='card-number'>{formatCardNumber(this.props.cardNumber)}</span>
 				</div>
-				<Button type='tertiary circle' icon='info' />
-			</nav>
-			<p>${props.amount} to the <Link text={props.charityName} /></p>
-		</div>
-		<div className='donation-info'>
-			<span className='header'>From</span>
-			<span className='email'>lubin.jeremy@gmail.com</span>
-			<span className='card-number'>•••• •••••• •4507</span>
-		</div>
-		<ConfirmContributionButton text={`Confirm $${props.amount} Donation`} type='primary' />
-		<div className='Footer'>
-			<Button text='Forget my payment info' type='quaternary small' />
-		</div>
-	</div>
-)
+				<ConfirmContributionButton text={`Confirm $${this.props.amount} Donation`} type='primary' />
+				<div className='Footer'>
+					<Button text='Forget my payment info' type='quaternary small' />
+				</div>
+			</div>
+		)
+	}
+})
 
 export default ConfirmationPage

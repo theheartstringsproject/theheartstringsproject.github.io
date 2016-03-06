@@ -7,7 +7,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 		onClick: () => {
 			dispatch(confirmContribution())
 			dispatch(advancePage())
-			setTimeout( () => dispatch(advancePage() ), 1000)
+			setTimeout( () => dispatch(advancePage() ), 2000)
 		}
 	}
 }

@@ -18,6 +18,17 @@ body {
 	overflow: scroll;
 	position: relative;
 
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+
+	&> .pages {
+
+		display: flex;
+		flex-grow: 1;
+	}
+
 	h1 {
 		font-family: Avenir-Heavy;
 		font-size: 24px;
@@ -51,18 +62,30 @@ body {
 
 	.Page {
 		max-width: 375px;
-		min-height: 400px;
+		/*min-height: 400px;*/
 		box-sizing: border-box;
 		padding: calc($space * 2);
-		margin: auto; /* Center each page within the campaigin */
+		padding-top: 0;
+		margin: 0 auto; /* Center each page within the campaigin */
 
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		position: relative;
-	
+		position: relative;	
+
+		flex-grow: 1;
 
 		/* Animate page transitions */
+		&.page-leave {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			// justify-content: flex-end;
+		}
+
+
 		&.next-page-enter {
 			transform: translateX(100%);
 		}
@@ -76,9 +99,13 @@ body {
 			transform: translateX(0);
 
 			/* Make sure the page is out of the way */
+			// position: absolute;
+			// top: 0;
+			// left: 0;
 			position: absolute;
-			top: 0;
+			bottom: 0;
 			left: 0;
+			width: 100%;
 		}
 
 		&.next-page-leave.next-page-leave-active {
@@ -100,8 +127,10 @@ body {
 
 			/* Make sure the page is out of the way */
 			position: absolute;
-			top: 0;
-			left: 0;
+			bottom: 0;
+			width: 100%;
+			// top: 0;
+			// left: 0;
 		}
 
 		&.prev-page-leave.prev-page-leave-active {
@@ -109,19 +138,6 @@ body {
 			transition: transform $animation-duration ease-in-out;
 		}
 
-	}
-
-	.Header {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-
-		nav {
-			width: 100%;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-		}
 	}
 	
 	.Footer {
@@ -137,54 +153,5 @@ body {
 		small {
 			margin: 0;
 		}
-	}
-
-	.donation-info {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-
-		color: $text-color-light;
-		font-size: .75rem;
-		line-height: 1.375em;
-	}
-
-	.donation-info .header {
-		color: $text-color-light-secondary;
-		text-transform: uppercase;
-		margin-bottom: calc($space / 3);
-	}
-
-	.donation-icons {
-		$size: 60px;
-		max-height: $size;
-		flex: 1 0 $size;
-
-		display: flex;
-		justify-content: center;
-
-		svg {
-			height: $size;
-		}
-	}
-
-	.donation-amount-icon {
-		/*  Move this over slightly to appear
-			underneath the charity icon */
-		margin-left: -3px;
-		position: relative;
-	}
-
-	.donation-amount {
-		position: absolute;
-		text-align: center;
-		width: 100%;
-		left: -3px;
-		top: calc((60px - 28px) / 2); /* Attempt to center the text by subtracting line-height from circle height and divide by two */
-
-		color: $background-color;
-		font-size: 1.25rem;
-		line-height: 1.375em;
-		font-weight: 300;
 	}
 }

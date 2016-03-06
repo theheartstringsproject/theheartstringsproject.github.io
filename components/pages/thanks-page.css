@@ -2,6 +2,12 @@
 @import '../mixins.css';
 
 .thanks-page {
+
+	.Header {
+		padding: 0;
+		padding-top: $space;
+	}
+
 	.share-buttons {
 		display: flex;
 		justify-content: center;

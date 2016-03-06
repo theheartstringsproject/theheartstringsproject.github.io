@@ -29,3 +29,18 @@ export const confirmContribution = () => {
 		type: 'CONFIRM_CONTRIBUTION'
 	}
 }
+
+export const setEmail = ( email ) => {
+	return {
+		type: 'SET_EMAIL',
+		email: email
+	}
+}
+
+export const setCardNumber = ( cardNumber, cardCursorPosition ) => {
+	return {
+		type: 'SET_CARD_NUMBER',
+		cardNumber: cardNumber,
+		cardCursorPosition: cardCursorPosition
+	}
+}
