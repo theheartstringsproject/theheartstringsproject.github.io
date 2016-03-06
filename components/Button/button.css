@@ -27,9 +27,14 @@ button {
 	cursor: pointer;
 	
 	position: relative;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+
+	/*  Because Safari doesn't currently support displaying buttons as flex containers,
+		we can add the flex container functionality to React's inner span isntead */
+	&>span, i {
+		display: flex;
+		align-items: center;
+		justify-content: center;	
+	}
 
 	/* Default size */
 	$height: 48px;

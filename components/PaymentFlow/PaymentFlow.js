@@ -58,13 +58,16 @@ const PaymentFlow = React.createClass ({
 		// newPage.style.height = newPage.clientHeight
 		// newPage.className += " page-enter"
 
+		// Begin pages offscreen, measured by the width of the window
+		const startingPosition = window.innerWidth
+
 		// Don't do any animation if we're transitioning out of the payment flow,
 		if ( this.props.pageName === 'LandingPage' || this.props.pageName === 'ThanksPage' ) {
 			return { x: 0 }
 		}
 
 		return {
-			x: this.props.direction === 'next' ? 100 : -100
+			x: this.props.direction === 'next' ? startingPosition : -startingPosition
 		}
 	},
 
@@ -80,13 +83,21 @@ const PaymentFlow = React.createClass ({
 		// oldPage.style.height = oldPage.clientHeight
 		oldPage.className += " page-leave"
 		oldPage.style.height = oldPage.clientHeight + 'px'
+
+		// Transition pages offscreen, measured by the width of the window
+		const endingPosition = window.innerWidth
+
 		return {
-			x: this.props.direction === 'next' ? spring(-100, presets.stiff) : spring(100, presets.stiff)
+			x: this.props.direction === 'next' ? spring(-endingPosition, {stiffness: 160, damping: 20}) : spring(endingPosition, {stiffness: 160, damping: 20})
 		}
 	},
 
 	render: function() {	
 		const key = this.getKeyForPageName( this.props.pageName )
+
+		// Begin pages offscreen, measured by the width of the window
+		const startingPosition = window.innerWidth
+		
 		return (
 			<div className='Page PaymentFlow' style={this.props.style}>
 				<Header charityName={this.props.contribution.charityName} reason={this.props.contribution.reason} amount={this.props.contribution.amount} pageName={key} previousPageName={this.props.previousPageName} key='header'/>
@@ -97,13 +108,13 @@ const PaymentFlow = React.createClass ({
 					defaultStyles={[{
 						key: key,
 						style: {
-							x: this.props.direction === 'next' ? 100 : -100
+							x: this.props.direction === 'next' ? startingPosition : -startingPosition
 						}
 					}]}
 					styles={[{
 						key: key,
 						style: {
-							x: spring(0, presets.stiff)							
+							x: spring(0, {stiffness: 160, damping: 20})							
 						}
 					}]}>
 					{interpolatedStyles =>

@@ -15,7 +15,7 @@ const pagesWithNavigation = [
 	'ConfirmationPage'
 ]
 
-const CAMPAIGN_HEIGHT = 400;
+const CAMPAIGN_HEIGHT = 400 - 48;
 
 const Header = React.createClass({	
 
@@ -112,7 +112,7 @@ const Header = React.createClass({
 	},
 
 	amountIconWillExit: function() {
-		return {scale: spring(0.8, presets.stiff), opacity: spring(0), x: spring(0, presets.stiff)}
+		return {scale: spring(0.8, {stiffness: 160, damping: 20}), opacity: spring(0), x: spring(0, {stiffness: 160, damping: 20})}
 	},
 
 	getAmountIcon: function() {
@@ -173,10 +173,10 @@ const Header = React.createClass({
 		return {opacity: spring(0)}
 	},
 
-	render: function() {
+	render: function() {		
 		let style = {
 			opacity: this.props.pageName === 'LandingPage' ? spring(0) : spring(1),
-			y: this.props.pageName === 'LoadingPage' ? spring( ( CAMPAIGN_HEIGHT - this.header.clientHeight ) / 2) : spring(0)
+			y: this.props.pageName === 'LoadingPage' ? spring( ( CAMPAIGN_HEIGHT - this.header.offsetHeight ) / 2, {stiffness: 160, damping: 20}) : spring(0, {stiffness: 160, damping: 20})
 		}
 
 		let donationIcons = this.getDonationIconKeys()
@@ -207,7 +207,7 @@ const Header = React.createClass({
 										styles={donationIcons.map( key => {
 											return {
 												key: key,
-												style: {scale: spring(1, presets.stiff), opacity: spring(1), x: spring( this.getXForIcon( key ), presets.stiff )}
+												style: {scale: spring(1, {stiffness: 160, damping: 20}), opacity: spring(1), x: spring( this.getXForIcon( key ), {stiffness: 160, damping: 20} )}
 											}
 										})}>
 										{interpolatedStyles =>
@@ -217,7 +217,7 @@ const Header = React.createClass({
 													return React.cloneElement( this.getDonationIconForKey( key ), {
 														style: {
 															WebkitTransform: `translate3d(${style.x}px, 0px, 0) scale(${style.scale})`,
-															// transform: `scale(${style.scale}) transitionX(${style.x}px)`,
+															transform: `translate3d(${style.x}px, 0px, 0) scale(${style.scale})`,
 															opacity: style.opacity
 														},
 														key: key

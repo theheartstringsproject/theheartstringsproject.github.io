@@ -82,8 +82,12 @@ const CampaignView = React.createClass ({
 		// const newPage = ReactDOM.findDOMNode(this.currentPage)
 		// newPage.style.height = newPage.clientHeight
 		// newPage.className += " page-enter"
+
+		// Start the page offscreen, measured by the width of the window
+		const startingPosition = window.innerWidth
+
 		return {
-			x: this.props.direction === 'next' ? 100 : -100
+			x: this.props.direction === 'next' ? startingPosition : -startingPosition
 		}
 	},
 
@@ -94,18 +98,25 @@ const CampaignView = React.createClass ({
 		if ( !oldPage.className.includes("page-leave") ) {
 			oldPage.className += " page-leave"
 		}
+
+		// Move the page offscreen, measured by the width of the window
+		const endingPosition = window.innerWidth
 		
 		// oldPage.style.height = oldPage.clientHeight
 		return {
-			x: this.props.direction === 'next' ? spring(-100, presets.stiff) : spring(100, presets.stiff)
+			x: this.props.direction === 'next' ? spring(-endingPosition, {stiffness: 160, damping: 20}) : spring(endingPosition, {stiffness: 160, damping: 20})
 		}
 	},
 
 	render: function() {
-		const key = this.getKeyForPage( this.props.pageName )		
+		const key = this.getKeyForPage( this.props.pageName )	
+
+		// Begin pages offscreen, measured by the width of the window
+		const startingPosition = window.innerWidth
+
 		return (
 			<div className='Campaign'>
-				{this.getMap()}
+				{/*this.getMap()*/}
 				{/*<ReactCSSTransitionGroup transitionName={`${this.props.direction}-page`} transitionEnterTimeout={500} transitionLeaveTimeout={500}>*/}
 				<TransitionMotion
 					willEnter={this.pageWillEnter}
@@ -113,13 +124,13 @@ const CampaignView = React.createClass ({
 					defaultStyles={[{
 						key: key,
 						style: {
-							x: this.props.direction === 'next' ? 100 : -100
+							x: this.props.direction === 'next' ? startingPosition : -startingPosition
 						}
 					}]}
 					styles={[{
 						key: key,
 						style: {
-							x: spring(0, presets.stiff)							
+							x: spring(0, {stiffness: 160, damping: 20})							
 						}
 					}]}>
 					{interpolatedStyles =>
