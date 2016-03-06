@@ -145,7 +145,7 @@ const Header = React.createClass({
 
 		// This only applies to the charity icon's position
 		if ( icon !== 'donation-icon') {
-			return 0
+			return 0 
 		}
 
 		// If we're heading to the email page from the contribution page,
