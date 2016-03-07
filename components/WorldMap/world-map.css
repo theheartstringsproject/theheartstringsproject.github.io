@@ -10,6 +10,11 @@
 
 	display: flex;
 
+	background: url(../../images/map.png);
+	background-size: contain;
+	// background-position: center;
+	background-repeat: no-repeat;
+
 	&.top { align-items: flex-start; }
 	&.center { align-items: center; }
 

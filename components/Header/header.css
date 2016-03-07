@@ -6,7 +6,7 @@
 	flex-direction: column;
 	align-items: center;
 
-	padding: calc( $space * 2 );
+	padding: calc( $space );
 	padding-top: $space;
 	padding-bottom: 0;
 

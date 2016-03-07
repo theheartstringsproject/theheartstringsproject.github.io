@@ -47,7 +47,7 @@ const WorldMap = React.createClass ({
 	componentDidMount: function() {
 		// Set a new dot every so often
 		// setTimeout(() => {
-			this.setInterval(this.illumateDots, DOT_INTERVAL)	
+			// this.setInterval(this.illumateDots, DOT_INTERVAL)	
 		// }, 3000)
 
 		// this.illumateDots()
@@ -130,11 +130,11 @@ const WorldMap = React.createClass ({
 
 		return (
 			<div className={`world-map-container ${this.props.position}`}>
-				<div className="world-map">
-					<svg /*width="351px" height="226px"*/ viewBox="0 0 351 226" version="1.1" ref={ref => this.map = ref}>
+				{/*<div className="world-map">
+					<svg width="351px" height="226px" viewBox="0 0 351 226" version="1.1" ref={ref => this.map = ref}>
                 		{dots}
 					</svg>
-				</div>
+				</div>*/}
 			</div>
 		)
 	}

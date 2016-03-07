@@ -15,7 +15,7 @@ body {
 	color: $text-color-light;
 	text-align: center;
 
-	height: 460px;
+	height: 420px;
 	overflow: scroll;
 	position: relative;
 
@@ -145,7 +145,7 @@ body {
 		position: absolute;
 		bottom: $space;
 		margin: auto;
-		width: calc(100% - $space * 4);
+		width: calc(100% - $space * 2);
 
 		display: flex;
 		justify-content: center;
