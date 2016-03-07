@@ -21469,43 +21469,47 @@
 
 	var _WorldMap2 = _interopRequireDefault(_WorldMap);
 
-	var _Header = __webpack_require__(298);
+	var _WorldMapCanvas = __webpack_require__(298);
+
+	var _WorldMapCanvas2 = _interopRequireDefault(_WorldMapCanvas);
+
+	var _Header = __webpack_require__(335);
 
 	var _Header2 = _interopRequireDefault(_Header);
 
-	var _PaymentFlow = __webpack_require__(328);
+	var _PaymentFlow = __webpack_require__(365);
 
 	var _PaymentFlow2 = _interopRequireDefault(_PaymentFlow);
 
-	var _LandingPage = __webpack_require__(329);
+	var _LandingPage = __webpack_require__(366);
 
 	var _LandingPage2 = _interopRequireDefault(_LandingPage);
 
-	var _ContributionPage = __webpack_require__(333);
+	var _ContributionPage = __webpack_require__(370);
 
 	var _ContributionPage2 = _interopRequireDefault(_ContributionPage);
 
-	var _EmailPage = __webpack_require__(337);
+	var _EmailPage = __webpack_require__(374);
 
 	var _EmailPage2 = _interopRequireDefault(_EmailPage);
 
-	var _PaymentPage = __webpack_require__(345);
+	var _PaymentPage = __webpack_require__(382);
 
 	var _PaymentPage2 = _interopRequireDefault(_PaymentPage);
 
-	var _ConfirmationPage = __webpack_require__(352);
+	var _ConfirmationPage = __webpack_require__(389);
 
 	var _ConfirmationPage2 = _interopRequireDefault(_ConfirmationPage);
 
-	var _LoadingPage = __webpack_require__(356);
+	var _LoadingPage = __webpack_require__(393);
 
 	var _LoadingPage2 = _interopRequireDefault(_LoadingPage);
 
-	var _ThanksPage = __webpack_require__(359);
+	var _ThanksPage = __webpack_require__(396);
 
 	var _ThanksPage2 = _interopRequireDefault(_ThanksPage);
 
-	__webpack_require__(365);
+	__webpack_require__(402);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21577,8 +21581,12 @@
 			// const newPage = ReactDOM.findDOMNode(this.currentPage)
 			// newPage.style.height = newPage.clientHeight
 			// newPage.className += " page-enter"
+
+			// Start the page offscreen, measured by the width of the window
+			var startingPosition = window.innerWidth;
+
 			return {
-				x: this.props.direction === 'next' ? 100 : -100
+				x: this.props.direction === 'next' ? startingPosition : -startingPosition
 			};
 		},
 
@@ -21590,9 +21598,12 @@
 				oldPage.className += " page-leave";
 			}
 
+			// Move the page offscreen, measured by the width of the window
+			var endingPosition = window.innerWidth;
+
 			// oldPage.style.height = oldPage.clientHeight
 			return {
-				x: this.props.direction === 'next' ? (0, _reactMotion.spring)(-100, _reactMotion.presets.stiff) : (0, _reactMotion.spring)(100, _reactMotion.presets.stiff)
+				x: this.props.direction === 'next' ? (0, _reactMotion.spring)(-endingPosition, { stiffness: 160, damping: 20 }) : (0, _reactMotion.spring)(endingPosition, { stiffness: 160, damping: 20 })
 			};
 		},
 
@@ -21600,6 +21611,10 @@
 			var _this = this;
 
 			var key = this.getKeyForPage(this.props.pageName);
+
+			// Begin pages offscreen, measured by the width of the window
+			var startingPosition = window.innerWidth;
+
 			return _react2.default.createElement(
 				'div',
 				{ className: 'Campaign' },
@@ -21612,13 +21627,13 @@
 						defaultStyles: [{
 							key: key,
 							style: {
-								x: this.props.direction === 'next' ? 100 : -100
+								x: this.props.direction === 'next' ? startingPosition : -startingPosition
 							}
 						}],
 						styles: [{
 							key: key,
 							style: {
-								x: (0, _reactMotion.spring)(0, _reactMotion.presets.stiff)
+								x: (0, _reactMotion.spring)(0, { stiffness: 160, damping: 20 })
 							}
 						}] },
 					function (interpolatedStyles) {
@@ -31312,6 +31327,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactDom = __webpack_require__(158);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
 	var _WorldMapDot = __webpack_require__(292);
 
 	var _WorldMapDot2 = _interopRequireDefault(_WorldMapDot);
@@ -31326,11 +31345,12 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-	var DOT_AMOUNT = 10;
+	var DOT_AMOUNT = 20;
 	var DOT_INTERVAL = 200;
 	var ANIMATION_DURATION = 100;
+
+	var GIF_LENGTH = 5000;
+	var NUMBER_OF_DOTS = DOT_AMOUNT + GIF_LENGTH / DOT_INTERVAL;
 
 	var SetIntervalMixin = {
 		componentWillMount: function componentWillMount() {
@@ -31360,24 +31380,63 @@
 		mixins: [SetIntervalMixin],
 
 		getInitialState: function getInitialState() {
-			var dots = new Array(DOT_AMOUNT);
+			var dots = new Array();
 			for (var i = 0; i < DOT_AMOUNT; i++) {
 				dots.push(this.getRandomDot());
 			}
+			this.dots = dots;
 			return { illuminatedDotIndices: dots };
+
+			// let dots = new Array()
+			// for ( let i = 0; i < NUMBER_OF_DOTS ; i++ ) {
+			// 	dots.push( this.getRandomDot() )
+			// }
+			// this.dots = dots
+			// this.dots = new Array( NUMBER_OF_DOTS ).map( this.getRandomDot() )
+			// return { illuminatedDotIndices: dots.slice( -DOT_AMOUNT ) }
 		},
 
 		componentDidMount: function componentDidMount() {
 			// Set a new dot every so often
+			// setTimeout(() => {
 			this.setInterval(this.illumateDots, DOT_INTERVAL);
+			// }, 3000)
+
+			// this.illumateDots()
 		},
 
 		illumateDots: function illumateDots() {
-			if (this.state.illuminatedDotIndices.length >= DOT_AMOUNT) {
-				this.setState({ illuminatedDotIndices: [].concat(_toConsumableArray(this.state.illuminatedDotIndices.slice(1)), [this.getRandomDot()]) });
-			} else {
-				this.setState({ illuminatedDotIndices: [].concat(_toConsumableArray(this.state.illuminatedDotIndices), [this.getRandomDot()]) });
+			// if ( this.state.illuminatedDotIndices.length >= DOT_AMOUNT ) {
+			// 	this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices.slice(1), this.getRandomDot()] })	
+			// } else {
+			// 	this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices, this.getRandomDot()] })
+			// }
+
+			// Find the index of the dot we want to turn off,
+			// which is the first one in the dots array
+			if (this.map) {
+				var dotToTurnOff = this.map.getElementsByTagName('ellipse')[this.dots[0]];
+				_reactDom2.default.findDOMNode(dotToTurnOff).className.baseVal = 'off';
+
+				// Get a new dot to turn on
+				var newDotIndex = this.getRandomDot();
+				var dotToTurnOn = this.map.getElementsByTagName('ellipse')[newDotIndex];
+				_reactDom2.default.findDOMNode(dotToTurnOn).className.baseVal = 'on';
+
+				// Make sure that the old dot is removed from the array
+				// and that the new one is added, so it ultimately gets turned off
+				this.dots.shift();
+				this.dots.push(newDotIndex);
 			}
+
+			// if ( this.dots.length ) {
+			// 	this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices.slice(1), this.dots[0]] })	
+			// 	const newDot = this.dots.shift()
+			// }
+
+			// Move the newly illumated dot to the back of the queue
+
+			// this.dots.push( newDot )
 		},
 
 		getRandomDot: function getRandomDot() {
@@ -31430,39 +31489,10 @@
 					{ className: 'world-map' },
 					_react2.default.createElement(
 						'svg',
-						{ /*width="351px" height="226px"*/viewBox: '0 0 351 226', version: '1.1' },
-						_react2.default.createElement(
-							'title',
-							null,
-							'Group'
-						),
-						_react2.default.createElement(
-							'desc',
-							null,
-							'Created with Sketch.'
-						),
-						_react2.default.createElement('defs', null),
-						_react2.default.createElement(
-							'g',
-							{ id: 'Explorations', stroke: 'none', strokeWidth: '1', fill: 'none' },
-							_react2.default.createElement(
-								'g',
-								{ id: 'Heartstrings-Donation-Flow---CNN---01', transform: 'translate(-12.000000, -256.000000)' },
-								_react2.default.createElement(
-									'g',
-									{ id: 'Group', transform: 'translate(12.000000, 256.000000)' },
-									_react2.default.createElement(
-										'g',
-										{ id: 'Oval' },
-										_react2.default.createElement(
-											'g',
-											null,
-											dots
-										)
-									)
-								)
-							)
-						)
+						{ /*width="351px" height="226px"*/viewBox: '0 0 351 226', version: '1.1', ref: function ref(_ref) {
+								return _this.map = _ref;
+							} },
+						dots
 					)
 				)
 			);
@@ -31534,7 +31564,7 @@
 
 
 	// module
-	exports.push([module.id, "/* Fonts */\n\n/* Colors */\n\n/* Spacing */\n\n/* Animation */\n\n.world-map-container {\n\tposition: absolute;\n\twidth: 100%;\n    height: 100%;\n    top: 0; left: 0;\n    z-index: 0;\n\n    display: -webkit-box;\n\n    display: -webkit-flex;\n\n    display: -ms-flexbox;\n\n    display: flex\n\n    /* Animate page transitions */\n\n}\n\n.world-map-container.top {\n\t-webkit-box-align: start;\n\t-webkit-align-items: flex-start;\n\t-ms-flex-align: start;\n\t-ms-grid-row-align: flex-start;\n\talign-items: flex-start;\n\n}\n\n.world-map-container.center {\n\t-webkit-box-align: center;\n\t-webkit-align-items: center;\n\t-ms-flex-align: center;\n\t-ms-grid-row-align: center;\n\talign-items: center;\n\n}\n\n.world-map-container.world-map-enter {\n\topacity: 0;\n\n}\n\n.world-map-container.world-map-enter.world-map-enter-active {\n\topacity: 1;\n\t-webkit-transition: opacity 200ms ease-in-out;\n\ttransition: opacity 200ms ease-in-out;\n\n}\n\n.world-map-container.world-map-leave {\n\topacity: 1;\n\n}\n\n.world-map-container.world-map-leave.world-map-leave-active {\n\topacity: 0;\n\t-webkit-transition: opacity 200ms ease-in-out;\n\ttransition: opacity 200ms ease-in-out;\n\n}\n\n.world-map {\n\twidth: 100%;\n}\n\n.world-map ellipse {\n\t-webkit-transition: opacity 200ms ease-in-out, fill 200ms ease-in-out;\n\ttransition: opacity 200ms ease-in-out, fill 200ms ease-in-out;\n}\n\n.world-map ellipse.on {\n\tfill: #FFFFFF;\n\topacity: 1;\n\n}\n\n.world-map ellipse.off {\n\tfill: #000000;\n\topacity: 0.2;\n\n}", ""]);
+	exports.push([module.id, "/* Fonts */\n\n/* Colors */\n\n/* Spacing */\n\n/* Animation */\n\n.world-map-container {\n\tposition: absolute;\n\twidth: 100%;\n\theight: 100%;\n\ttop: 0; left: 0;\n\tz-index: 0;\n\n\tdisplay: -webkit-box;\n\n\tdisplay: -webkit-flex;\n\n\tdisplay: -ms-flexbox;\n\n\tdisplay: flex\n\n\t/* Animate page transitions */\n\n}\n\n.world-map-container.top {\n\t-webkit-box-align: start;\n\t-webkit-align-items: flex-start;\n\t-ms-flex-align: start;\n\t-ms-grid-row-align: flex-start;\n\talign-items: flex-start;\n\n}\n\n.world-map-container.center {\n\t-webkit-box-align: center;\n\t-webkit-align-items: center;\n\t-ms-flex-align: center;\n\t-ms-grid-row-align: center;\n\talign-items: center;\n\n}\n\n.world-map-container.world-map-enter {\n\topacity: 0;\n\n}\n\n.world-map-container.world-map-enter.world-map-enter-active {\n\topacity: 1;\n\t-webkit-transition: opacity 200ms ease-in-out;\n\ttransition: opacity 200ms ease-in-out;\n\n}\n\n.world-map-container.world-map-leave {\n\topacity: 1;\n\n}\n\n.world-map-container.world-map-leave.world-map-leave-active {\n\topacity: 0;\n\t-webkit-transition: opacity 200ms ease-in-out;\n\ttransition: opacity 200ms ease-in-out;\n\n}\n\n.world-map {\n\twidth: 100%;\n}\n\n.world-map ellipse {\n\t\n\t// fill: rgba(0,0,0,0.2);\n\t// animation: dot 5s infinite;\n\t/* @for $i from 1 to 3228 {\n\t\t&:nth-child($i) { animation-delay: calc(200ms * $(i)) }\n\t} */\n\n\t-webkit-transition: opacity 200ms ease-in-out, fill 200ms ease-in-out;\n\n\ttransition: opacity 200ms ease-in-out, fill 200ms ease-in-out;\n}\n\n.world-map ellipse.on {\n\tfill: #FFFFFF;\n\topacity: 1;\n\n}\n\n.world-map ellipse.off {\n\tfill: #000000;\n\topacity: 0.2;\n\n}\n\n@-webkit-keyframes dot {\n\t0% { fill: rgba(0,0,0,0.2); }\n\t4% { fill: rgba(255,255,255,1); }\n\t96% { fill: rgba(255,255,255,1); }\n\t100% { fill: rgba(0,0,0,0.2); }\n}\n\n@keyframes dot {\n\t0% { fill: rgba(0,0,0,0.2); }\n\t4% { fill: rgba(255,255,255,1); }\n\t96% { fill: rgba(255,255,255,1); }\n\t100% { fill: rgba(0,0,0,0.2); }\n}", ""]);
 
 	// exports
 
@@ -31863,29 +31893,3863 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Link = __webpack_require__(299);
+	var _reactArt = __webpack_require__(299);
+
+	var _reactArt2 = _interopRequireDefault(_reactArt);
+
+	var _WorldMapDotCanvas = __webpack_require__(330);
+
+	var _WorldMapDotCanvas2 = _interopRequireDefault(_WorldMapDotCanvas);
+
+	var _dotMap = __webpack_require__(293);
+
+	var _dotMap2 = _interopRequireDefault(_dotMap);
+
+	var _circle = __webpack_require__(331);
+
+	var _circle2 = _interopRequireDefault(_circle);
+
+	var _rectangle = __webpack_require__(333);
+
+	var _rectangle2 = _interopRequireDefault(_rectangle);
+
+	var _reactMotion = __webpack_require__(277);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+	var Group = _reactArt2.default.Group;
+	var Shape = _reactArt2.default.Shape;
+	var Surface = _reactArt2.default.Surface;
+	var Transform = _reactArt2.default.Transform;
+
+
+	var DOT_AMOUNT = 10;
+	var DOT_INTERVAL = 200;
+	var ANIMATION_DURATION = 100;
+
+	var GIF_LENGTH = 5000;
+	var NUMBER_OF_DOTS = DOT_AMOUNT + GIF_LENGTH / DOT_INTERVAL;
+
+	var SetIntervalMixin = {
+		componentWillMount: function componentWillMount() {
+			this.intervals = [];
+		},
+		setInterval: function (_setInterval) {
+			function setInterval() {
+				return _setInterval.apply(this, arguments);
+			}
+
+			setInterval.toString = function () {
+				return _setInterval.toString();
+			};
+
+			return setInterval;
+		}(function () {
+			this.intervals.push(setInterval.apply(null, arguments));
+		}),
+		componentWillUnmount: function componentWillUnmount() {
+			this.intervals.forEach(clearInterval);
+		}
+	};
+
+	var WorldMapCanvas = _react2.default.createClass({
+		displayName: 'WorldMapCanvas',
+
+		mixins: [SetIntervalMixin],
+
+		getInitialState: function getInitialState() {
+
+			// let dots = new Array(DOT_AMOUNT)
+			// for (let i = 0 ; i < DOT_AMOUNT ; i++ ) {
+			// 	dots.push( this.getRandomDot() )
+			// }
+			// return { illuminatedDotIndices: dots }
+
+			var dots = new Array();
+			for (var i = 0; i < NUMBER_OF_DOTS; i++) {
+				dots.push(this.getRandomDot());
+			}
+			this.dots = dots;
+			return { illuminatedDotIndices: dots.slice(-DOT_AMOUNT) };
+		},
+
+		componentDidMount: function componentDidMount() {
+			// Set a new dot every so often
+			// setTimeout(() => {
+			this.setInterval(this.illumateDots, DOT_INTERVAL);
+			// }, 3000)
+		},
+
+		illumateDots: function illumateDots() {
+			// if ( this.state.illuminatedDotIndices.length >= DOT_AMOUNT ) {
+			// 	this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices.slice(1), this.getRandomDot()] })	
+			// } else {
+			// 	this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices, this.getRandomDot()] })
+			// }
+
+			if (this.dots.length) {
+				this.setState({ illuminatedDotIndices: [].concat(_toConsumableArray(this.state.illuminatedDotIndices.slice(1)), [this.dots[0]]) });
+				var newDot = this.dots.shift();
+				// this.dots.push( newDot )
+			} else {
+					this.intervals.forEach(clearInterval);
+				}
+
+			this.exportMap('map');
+		},
+
+		exportMap: function exportMap(fileName) {
+
+			var canvasElement = document.getElementsByTagName('canvas')[0];
+
+			var MIME_TYPE = "image/png";
+
+			var imgURL = canvasElement.toDataURL(MIME_TYPE);
+
+			var dlLink = document.createElement('a');
+			dlLink.download = fileName;
+			dlLink.href = imgURL;
+			dlLink.dataset.downloadurl = [MIME_TYPE, dlLink.download, dlLink.href].join(':');
+
+			document.body.appendChild(dlLink);
+			dlLink.click();
+			document.body.removeChild(dlLink);
+		},
+
+		getRandomDot: function getRandomDot() {
+			return Math.floor(Math.random() * (_dotMap2.default.length - 0)) + 0;
+		},
+
+		renderDot: function renderDot(index) {
+			var dot = _dotMap2.default[index];
+			return _react2.default.createElement(WorldMapDot, { cx: dot.cx, cy: dot.cy, key: index });
+		},
+
+		render: function render() {
+			var _this = this;
+
+			// Create dot elements
+			var fill = undefined;
+
+			var radius = window.innerWidth * (0.930903078 / 351);
+			var height = window.innerWidth * (226 / 351);
+
+			var dots = _dotMap2.default.map(function (dot, i) {
+
+				var x = dot.cx / 351 * window.innerWidth;
+				var y = dot.cy / 226 * height;
+
+				if (_this.state.illuminatedDotIndices.includes(i)) {
+					fill = '#FFFFFF';
+				} else {
+					fill = 'rgba(0,0,0,0.2)';
+				}
+
+				return _react2.default.createElement(_circle2.default, { x: x, y: y, radius: radius, key: 'dot-' + i, fill: fill });
+			});
+
+			return _react2.default.createElement(
+				Surface,
+				{ width: window.innerWidth, height: window.innerHeight },
+				_react2.default.createElement(_rectangle2.default, { height: height, width: window.innerWidth, fill: '#00AB6B' }),
+				dots
+			);
+		}
+	});
+
+	exports.default = WorldMapCanvas;
+
+	// <Surface width={window.innerWidth} height={window.innerHeight}>
+	// 				{DOT_MAP.map( (dot, i) => {
+	// 					return (
+	// 						<Motion
+	// 							defaultStyle={{
+	// 								opacity: this.state.illuminatedDotIndices.includes( i ) ? 1 : 0.2
+	// 							}}
+	// 							style={{
+	// 								opacity: this.state.illuminatedDotIndices.includes( i ) ? spring(1) : spring(0.2)
+	// 							}}>
+	// 							{interpolatingStyle => {
+	// 								const key = `dot-${dot.cx}--${dot.cy}`
+	// 								const x = ( dot.cx / 351 ) * window.innerWidth
+	// 								const y = ( dot.cy / 226 ) * height
+	// 								return <Circle x={x} y={y} radius={radius} key={key} fill={`rgba(255,255,255,${interpolatingStyle.opacity})`}/>
+	// 							}}
+	// 						</Motion>
+	// 					)	
+	// 				})}
+
+	// 			</Surface>
+
+	// <StaggeredMotion
+	// 				defaultStyles={DOT_MAP.map((dot, i) => {
+	// 					return {
+	// 						opacity: this.state.illuminatedDotIndices.includes( i ) ? 1 : 0.2
+	// 					}
+	// 				})}
+	// 				styles={prevInterpolatedStyles => DOT_MAP.map((dot, i) => {
+	// 					return {
+	// 						opacity: this.state.illuminatedDotIndices.includes( i ) ? spring(1) : spring(0.2)
+	// 					}
+	// 				})}>
+	// 				{interpolatedStyles =>
+	// 					<Surface width={window.innerWidth} height={window.innerHeight}>
+	// 						{interpolatedStyles.map( (style, i) => {
+	// 							const cx = DOT_MAP[i].cx
+	// 							const cy = DOT_MAP[i].cy
+	// 							const key = `dot-${cx}-${cy}`
+	// 							const x = ( cx / 351 ) * window.innerWidth
+	// 							const y = ( cy / 226 ) * height
+	// 							return <Circle x={x} y={y} radius={radius} key={key} fill={`rgba(255,255,255,${style.opacity})`}/>
+	// 						})}
+	// 				</Surface>
+	// 				}
+	// 			</StaggeredMotion>
+
+/***/ },
+/* 299 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014 Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactART
+	 */
+
+	"use strict";
+
+	__webpack_require__(300); // Flip this to DOM mode for debugging
+
+	var Transform = __webpack_require__(311);
+	var Mode = __webpack_require__(319);
+
+	var React = __webpack_require__(1);
+	var ReactInstanceMap = __webpack_require__(47);
+	var ReactMultiChild = __webpack_require__(114);
+	var ReactUpdates = __webpack_require__(54);
+
+	var assign = __webpack_require__(39);
+	var emptyObject = __webpack_require__(329);
+
+	var pooledTransform = new Transform();
+
+	// Utilities
+
+	function childrenAsString(children) {
+	  if (!children) {
+	    return '';
+	  }
+	  if (typeof children === 'string') {
+	    return children;
+	  }
+	  if (children.length) {
+	    return children.join('\n');
+	  }
+	  return '';
+	}
+
+	function createComponent(name) {
+	  var ReactARTComponent = function(props) {
+	    this.node = null;
+	    this.subscriptions = null;
+	    this.listeners = null;
+	    this._mountImage = null;
+	    this._renderedChildren = null;
+	    this._mostRecentlyPlacedChild = null;
+	  };
+	  ReactARTComponent.displayName = name;
+	  for (var i = 1, l = arguments.length; i < l; i++) {
+	    assign(ReactARTComponent.prototype, arguments[i]);
+	  }
+
+	  return ReactARTComponent;
+	}
+
+	// ContainerMixin for components that can hold ART nodes
+
+	var ContainerMixin = assign({}, ReactMultiChild.Mixin, {
+
+	  /**
+	   * Moves a child component to the supplied index.
+	   *
+	   * @param {ReactComponent} child Component to move.
+	   * @param {number} toIndex Destination index of the element.
+	   * @protected
+	   */
+	  moveChild: function(child, toIndex) {
+	    var childNode = child._mountImage;
+	    var mostRecentlyPlacedChild = this._mostRecentlyPlacedChild;
+	    if (mostRecentlyPlacedChild == null) {
+	      // I'm supposed to be first.
+	      if (childNode.previousSibling) {
+	        if (this.node.firstChild) {
+	          childNode.injectBefore(this.node.firstChild);
+	        } else {
+	          childNode.inject(this.node);
+	        }
+	      }
+	    } else {
+	      // I'm supposed to be after the previous one.
+	      if (mostRecentlyPlacedChild.nextSibling !== childNode) {
+	        if (mostRecentlyPlacedChild.nextSibling) {
+	          childNode.injectBefore(mostRecentlyPlacedChild.nextSibling);
+	        } else {
+	          childNode.inject(this.node);
+	        }
+	      }
+	    }
+	    this._mostRecentlyPlacedChild = childNode;
+	  },
+
+	  /**
+	   * Creates a child component.
+	   *
+	   * @param {ReactComponent} child Component to create.
+	   * @param {object} childNode ART node to insert.
+	   * @protected
+	   */
+	  createChild: function(child, childNode) {
+	    child._mountImage = childNode;
+	    var mostRecentlyPlacedChild = this._mostRecentlyPlacedChild;
+	    if (mostRecentlyPlacedChild == null) {
+	      // I'm supposed to be first.
+	      if (this.node.firstChild) {
+	        childNode.injectBefore(this.node.firstChild);
+	      } else {
+	        childNode.inject(this.node);
+	      }
+	    } else {
+	      // I'm supposed to be after the previous one.
+	      if (mostRecentlyPlacedChild.nextSibling) {
+	        childNode.injectBefore(mostRecentlyPlacedChild.nextSibling);
+	      } else {
+	        childNode.inject(this.node);
+	      }
+	    }
+	    this._mostRecentlyPlacedChild = childNode;
+	  },
+
+	  /**
+	   * Removes a child component.
+	   *
+	   * @param {ReactComponent} child Child to remove.
+	   * @protected
+	   */
+	  removeChild: function(child) {
+	    child._mountImage.eject();
+	    child._mountImage = null;
+	  },
+
+	  updateChildrenAtRoot: function(nextChildren, transaction) {
+	    this.updateChildren(nextChildren, transaction, emptyObject);
+	  },
+
+	  mountAndInjectChildrenAtRoot: function(children, transaction) {
+	    this.mountAndInjectChildren(children, transaction, emptyObject);
+	  },
+
+	  /**
+	   * Override to bypass batch updating because it is not necessary.
+	   *
+	   * @param {?object} nextChildren.
+	   * @param {ReactReconcileTransaction} transaction
+	   * @internal
+	   * @override {ReactMultiChild.Mixin.updateChildren}
+	   */
+	  updateChildren: function(nextChildren, transaction, context) {
+	    this._mostRecentlyPlacedChild = null;
+	    this._updateChildren(nextChildren, transaction, context);
+	  },
+
+	  // Shorthands
+
+	  mountAndInjectChildren: function(children, transaction, context) {
+	    var mountedImages = this.mountChildren(
+	      children,
+	      transaction,
+	      context
+	    );
+	    // Each mount image corresponds to one of the flattened children
+	    var i = 0;
+	    for (var key in this._renderedChildren) {
+	      if (this._renderedChildren.hasOwnProperty(key)) {
+	        var child = this._renderedChildren[key];
+	        child._mountImage = mountedImages[i];
+	        mountedImages[i].inject(this.node);
+	        i++;
+	      }
+	    }
+	  }
+
+	});
+
+	// Surface is a React DOM Component, not an ART component. It serves as the
+	// entry point into the ART reconciler.
+
+	var Surface = React.createClass({
+
+	  displayName: 'Surface',
+
+	  mixins: [ContainerMixin],
+
+	  componentDidMount: function() {
+
+	    this.node = Mode.Surface(+this.props.width, +this.props.height, this.domNode);
+
+	    var transaction = ReactUpdates.ReactReconcileTransaction.getPooled();
+	    transaction.perform(
+	      this.mountAndInjectChildren,
+	      this,
+	      this.props.children,
+	      transaction,
+	      ReactInstanceMap.get(this)._context
+	    );
+	    ReactUpdates.ReactReconcileTransaction.release(transaction);
+	  },
+
+	  componentDidUpdate: function(oldProps) {
+	    var node = this.node;
+	    if (this.props.width != oldProps.width ||
+	        this.props.height != oldProps.height) {
+	      node.resize(+this.props.width, +this.props.height);
+	    }
+
+	    var transaction = ReactUpdates.ReactReconcileTransaction.getPooled();
+	    transaction.perform(
+	      this.updateChildren,
+	      this,
+	      this.props.children,
+	      transaction,
+	      ReactInstanceMap.get(this)._context
+	    );
+	    ReactUpdates.ReactReconcileTransaction.release(transaction);
+
+	    if (node.render) {
+	      node.render();
+	    }
+	  },
+
+	  componentWillUnmount: function() {
+	    this.unmountChildren();
+	  },
+
+	  render: function() {
+	    // This is going to be a placeholder because we don't know what it will
+	    // actually resolve to because ART may render canvas, vml or svg tags here.
+	    // We only allow a subset of properties since others might conflict with
+	    // ART's properties.
+	    var props = this.props;
+
+	    // TODO: ART's Canvas Mode overrides surface title and cursor
+	    return (
+	      React.createElement(Mode.Surface.tagName, {
+	        ref: function(c)  {return this.domNode = c;}.bind(this), 
+	        accesskey: props.accesskey, 
+	        className: props.className, 
+	        draggable: props.draggable, 
+	        role: props.role, 
+	        style: props.style, 
+	        tabindex: props.tabindex, 
+	        title: props.title}
+	      )
+	    );
+	  }
+
+	});
+
+	// Various nodes that can go into a surface
+
+	var EventTypes = {
+	  onMouseMove: 'mousemove',
+	  onMouseOver: 'mouseover',
+	  onMouseOut: 'mouseout',
+	  onMouseUp: 'mouseup',
+	  onMouseDown: 'mousedown',
+	  onClick: 'click'
+	};
+
+	var NodeMixin = {
+
+	  construct: function(element) {
+	    this._currentElement = element;
+	  },
+
+	  getPublicInstance: function() {
+	    return this.node;
+	  },
+
+	  putEventListener: function(type, listener) {
+	    var subscriptions = this.subscriptions || (this.subscriptions = {});
+	    var listeners = this.listeners || (this.listeners = {});
+	    listeners[type] = listener;
+	    if (listener) {
+	      if (!subscriptions[type]) {
+	        subscriptions[type] = this.node.subscribe(type, listener, this);
+	      }
+	    } else {
+	      if (subscriptions[type]) {
+	        subscriptions[type]();
+	        delete subscriptions[type];
+	      }
+	    }
+	  },
+
+	  handleEvent: function(event) {
+	    var listener = this.listeners[event.type];
+	    if (!listener) {
+	      return;
+	    }
+	    if (typeof listener === 'function') {
+	      listener.call(this, event);
+	    } else if (listener.handleEvent) {
+	      listener.handleEvent(event);
+	    }
+	  },
+
+	  destroyEventListeners: function() {
+	    var subscriptions = this.subscriptions;
+	    if (subscriptions) {
+	      for (var type in subscriptions) {
+	        subscriptions[type]();
+	      }
+	    }
+	    this.subscriptions = null;
+	    this.listeners = null;
+	  },
+
+	  applyNodeProps: function(oldProps, props) {
+	    var node = this.node;
+
+	    var scaleX = props.scaleX != null ? props.scaleX :
+	                 props.scale != null ? props.scale : 1;
+	    var scaleY = props.scaleY != null ? props.scaleY :
+	                 props.scale != null ? props.scale : 1;
+
+	    pooledTransform
+	      .transformTo(1, 0, 0, 1, 0, 0)
+	      .move(props.x || 0, props.y || 0)
+	      .rotate(props.rotation || 0, props.originX, props.originY)
+	      .scale(scaleX, scaleY, props.originX, props.originY);
+
+	    if (props.transform != null) {
+	      pooledTransform.transform(props.transform);
+	    }
+
+	    if (node.xx !== pooledTransform.xx || node.yx !== pooledTransform.yx ||
+	        node.xy !== pooledTransform.xy || node.yy !== pooledTransform.yy ||
+	        node.x  !== pooledTransform.x  || node.y  !== pooledTransform.y) {
+	      node.transformTo(pooledTransform);
+	    }
+
+	    if (props.cursor !== oldProps.cursor || props.title !== oldProps.title) {
+	      node.indicate(props.cursor, props.title);
+	    }
+
+	    if (node.blend && props.opacity !== oldProps.opacity) {
+	      node.blend(props.opacity == null ? 1 : props.opacity);
+	    }
+
+	    if (props.visible !== oldProps.visible) {
+	      if (props.visible == null || props.visible) {
+	        node.show();
+	      } else {
+	        node.hide();
+	      }
+	    }
+
+	    for (var type in EventTypes) {
+	      this.putEventListener(EventTypes[type], props[type]);
+	    }
+	  },
+
+	  mountComponentIntoNode: function(rootID, container) {
+	    throw new Error(
+	      'You cannot render an ART component standalone. ' +
+	      'You need to wrap it in a Surface.'
+	    );
+	  }
+
+	};
+
+	// Group
+
+	var Group = createComponent('Group', NodeMixin, ContainerMixin, {
+
+	  mountComponent: function(rootID, transaction, context) {
+	    this.node = Mode.Group();
+	    var props = this._currentElement.props;
+	    this.applyGroupProps(emptyObject, props);
+	    this.mountAndInjectChildren(props.children, transaction, context);
+	    return this.node;
+	  },
+
+	  receiveComponent: function(nextComponent, transaction, context) {
+	    var props = nextComponent.props;
+	    var oldProps = this._currentElement.props;
+	    this.applyGroupProps(oldProps, props);
+	    this.updateChildren(props.children, transaction, context);
+	    this._currentElement = nextComponent;
+	  },
+
+	  applyGroupProps: function(oldProps, props) {
+	    this.node.width = props.width;
+	    this.node.height = props.height;
+	    this.applyNodeProps(oldProps, props);
+	  },
+
+	  unmountComponent: function() {
+	    this.destroyEventListeners();
+	    this.unmountChildren();
+	  }
+
+	});
+
+	// ClippingRectangle
+	var ClippingRectangle = createComponent(
+	    'ClippingRectangle', NodeMixin, ContainerMixin, {
+
+	  mountComponent: function(rootID, transaction, context) {
+	    this.node = Mode.ClippingRectangle();
+	    var props = this._currentElement.props;
+	    this.applyClippingProps(emptyObject, props);
+	    this.mountAndInjectChildren(props.children, transaction, context);
+	    return this.node;
+	  },
+
+	  receiveComponent: function(nextComponent, transaction, context) {
+	    var props = nextComponent.props;
+	    var oldProps = this._currentElement.props;
+	    this.applyClippingProps(oldProps, props);
+	    this.updateChildren(props.children, transaction, context);
+	    this._currentElement = nextComponent;
+	  },
+
+	  applyClippingProps: function(oldProps, props) {
+	    this.node.width = props.width;
+	    this.node.height = props.height;
+	    this.node.x = props.x;
+	    this.node.y = props.y;
+	    this.applyNodeProps(oldProps, props);
+	  },
+
+	  unmountComponent: function() {
+	    this.destroyEventListeners();
+	    this.unmountChildren();
+	  }
+
+	});
+
+
+	// Renderables
+
+	var RenderableMixin = assign({}, NodeMixin, {
+
+	  applyRenderableProps: function(oldProps, props) {
+	    if (oldProps.fill !== props.fill) {
+	      if (props.fill && props.fill.applyFill) {
+	        props.fill.applyFill(this.node);
+	      } else {
+	        this.node.fill(props.fill);
+	      }
+	    }
+	    if (
+	      oldProps.stroke !== props.stroke ||
+	      oldProps.strokeWidth !== props.strokeWidth ||
+	      oldProps.strokeCap !== props.strokeCap ||
+	      oldProps.strokeJoin !== props.strokeJoin ||
+	      // TODO: Consider a deep check of stokeDash.
+	      // This may benefit the VML version in IE.
+	      oldProps.strokeDash !== props.strokeDash
+	    ) {
+	      this.node.stroke(
+	        props.stroke,
+	        props.strokeWidth,
+	        props.strokeCap,
+	        props.strokeJoin,
+	        props.strokeDash
+	      );
+	    }
+	    this.applyNodeProps(oldProps, props);
+	  },
+
+	  unmountComponent: function() {
+	    this.destroyEventListeners();
+	  }
+
+	});
+
+	// Shape
+
+	var Shape = createComponent('Shape', RenderableMixin, {
+
+	  construct: function(element) {
+	    this._currentElement = element;
+	    this._oldPath = null;
+	  },
+
+	  mountComponent: function(rootID, transaction, context) {
+	    this.node = Mode.Shape();
+	    var props = this._currentElement.props;
+	    this.applyShapeProps(emptyObject, props);
+	    return this.node;
+	  },
+
+	  receiveComponent: function(nextComponent, transaction, context) {
+	    var props = nextComponent.props;
+	    var oldProps = this._currentElement.props;
+	    this.applyShapeProps(oldProps, props);
+	    this._currentElement = nextComponent;
+	  },
+
+	  applyShapeProps: function(oldProps, props) {
+	    var oldPath = this._oldPath;
+	    var path = props.d || childrenAsString(props.children);
+	    if (path !== oldPath ||
+	        oldProps.width !== props.width ||
+	        oldProps.height !== props.height) {
+	      this.node.draw(
+	        path,
+	        props.width,
+	        props.height
+	      );
+	      this._oldPath = path;
+	    }
+	    this.applyRenderableProps(oldProps, props);
+	  }
+
+	});
+
+	// Text
+
+	var Text = createComponent('Text', RenderableMixin, {
+
+	  construct: function(element) {
+	    this._currentElement = element;
+	    this._oldString = null;
+	  },
+
+	  mountComponent: function(rootID, transaction, context) {
+	    var props = this._currentElement.props;
+	    var newString = childrenAsString(props.children);
+	    this.node = Mode.Text(newString, props.font, props.alignment, props.path);
+	    this._oldString = newString;
+	    this.applyRenderableProps(emptyObject, props);
+	    return this.node;
+	  },
+
+	  isSameFont: function(oldFont, newFont) {
+	    if (oldFont === newFont) {
+	      return true;
+	    }
+	    if (typeof newFont === 'string' || typeof oldFont === 'string') {
+	      return false;
+	    }
+	    return (
+	      newFont.fontSize === oldFont.fontSize &&
+	      newFont.fontStyle === oldFont.fontStyle &&
+	      newFont.fontVariant === oldFont.fontVariant &&
+	      newFont.fontWeight === oldFont.fontWeight &&
+	      newFont.fontFamily === oldFont.fontFamily
+	    );
+	  },
+
+	  receiveComponent: function(nextComponent, transaction, context) {
+	    var props = nextComponent.props;
+	    var oldProps = this._currentElement.props;
+
+	    var oldString = this._oldString;
+	    var newString = childrenAsString(props.children);
+
+	    if (oldString !== newString ||
+	        !this.isSameFont(oldProps.font, props.font) ||
+	        oldProps.alignment !== props.alignment ||
+	        oldProps.path !== props.path) {
+	      this.node.draw(
+	        newString,
+	        props.font,
+	        props.alignment,
+	        props.path
+	      );
+	      this._oldString = newString;
+	    }
+
+	    this.applyRenderableProps(oldProps, props);
+	    this._currentElement = nextComponent;
+	  }
+
+	});
+
+	// Declarative fill type objects - API design not finalized
+
+	var slice = Array.prototype.slice;
+
+	function LinearGradient(stops, x1, y1, x2, y2) {
+	  this.args = slice.call(arguments);
+	};
+	LinearGradient.prototype.applyFill = function(node) {
+	  node.fillLinear.apply(node, this.args);
+	};
+
+	function RadialGradient(stops, fx, fy, rx, ry, cx, cy) {
+	  this.args = slice.call(arguments);
+	};
+	RadialGradient.prototype.applyFill = function(node) {
+	  node.fillRadial.apply(node, this.args);
+	};
+
+	function Pattern(url, width, height, left, top) {
+	  this.args = slice.call(arguments);
+	};
+	Pattern.prototype.applyFill = function(node) {
+	  node.fillImage.apply(node, this.args);
+	};
+
+	var ReactART = {
+
+	  LinearGradient: LinearGradient,
+	  RadialGradient: RadialGradient,
+	  Pattern: Pattern,
+	  Transform: Transform,
+	  Path: Mode.Path,
+	  Surface: Surface,
+	  Group: Group,
+	  ClippingRectangle: ClippingRectangle,
+	  Shape: Shape,
+	  Text: Text
+
+	};
+
+	module.exports = ReactART;
+
+
+/***/ },
+/* 300 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var VML = __webpack_require__(301);
+	var Canvas = __webpack_require__(320);
+	var Base = __webpack_require__(324);
+	//var Flash = require('./flash');
+
+	/*
+	var hasFlash = function(){
+
+		var flash = navigator.plugins && navigator.plugins['Shockwave Flash'];
+		try {
+			flash = flash ? flash.description :
+				new ActiveXObject('ShockwaveFlash.ShockwaveFlash')
+				.GetVariable('$version');
+		} catch (x){ }
+		return flash && flash.match(/\d+/) >= 9;
+
+	};
+	*/
+
+	var MODE = Base._genericContext ? Canvas : /*hasFlash() ? Flash :*/ VML;
+
+	exports.Surface = MODE.Surface;
+	exports.Path = MODE.Path;
+	exports.Shape = MODE.Shape;
+	exports.Group = MODE.Group;
+	exports.ClippingRectangle = MODE.ClippingRectangle;
+	exports.Text = MODE.Text;
+
+	__webpack_require__(319).setCurrent(exports);
+
+
+/***/ },
+/* 301 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports.Surface = __webpack_require__(302);
+	exports.Path = __webpack_require__(307);
+	exports.Shape = __webpack_require__(309);
+	exports.Group = __webpack_require__(316);
+	exports.ClippingRectangle = __webpack_require__(317);
+	exports.Text = __webpack_require__(318);
+
+	var DOM = __webpack_require__(306);
+	if (typeof document !== 'undefined') DOM.init(document);
+
+	__webpack_require__(319).setCurrent(exports);
+
+
+/***/ },
+/* 302 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Class = __webpack_require__(303);
+	var Container = __webpack_require__(304);
+	var Element = __webpack_require__(305);
+	var DOM = __webpack_require__(306);
+
+	var precision = 100;
+
+	var VMLSurface = Class(Element, Container, {
+		
+		initialize: function VMLSurface(width, height, existingElement){
+			this.element = existingElement || document.createElement('vml');
+			this.containerElement = DOM.createElement('group');
+			this.element.appendChild(this.containerElement);
+			if (width != null && height != null) this.resize(width, height);
+		},
+
+		resize: function(width, height){
+			this.width = width;
+			this.height = height;
+			
+			var style = this.element.style;
+			style.pixelWidth = width;
+			style.pixelHeight = height;
+			
+			style = this.containerElement.style;
+			style.width = width;
+			style.height = height;
+			
+			var halfPixel = (0.5 * precision);
+			
+			this.containerElement.coordorigin = halfPixel + ',' + halfPixel;
+			this.containerElement.coordsize = (width * precision) + ',' + (height * precision);
+
+			return this;
+		}
+		
+	});
+
+	VMLSurface.tagName = 'av:vml';
+
+	module.exports = VMLSurface;
+
+/***/ },
+/* 303 */
+/***/ function(module, exports) {
+
+	module.exports = function(mixins){
+		var proto = {};
+		for (var i = 0, l = arguments.length; i < l; i++){
+			var mixin = arguments[i];
+			if (typeof mixin == 'function') mixin = mixin.prototype;
+			for (var key in mixin) proto[key] = mixin[key];
+		}
+		if (!proto.initialize) proto.initialize = function(){};
+		proto.constructor = function(a,b,c,d,e,f,g,h){
+			return new proto.initialize(a,b,c,d,e,f,g,h);
+		};
+		proto.constructor.prototype = proto.initialize.prototype = proto;
+		return proto.constructor;
+	};
+
+
+/***/ },
+/* 304 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Class = __webpack_require__(303);
+
+	module.exports = Class({
+
+		grab: function(){
+			for (var i = 0; i < arguments.length; i++) arguments[i].inject(this);
+			return this;
+		},
+
+		empty: function(){
+			var node;
+			while (node = this.firstChild) node.eject();
+			return this;
+		}
+
+	});
+
+/***/ },
+/* 305 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Class = __webpack_require__(303);
+
+	function elementFrom(node){
+		if (node.toElement) return node.toElement();
+		if (node.getDOMNode) return node.getDOMNode();
+		if (node.getNode) return node.getNode();
+		return node;
+	}
+
+	module.exports = Class({
+
+		// conventions
+
+		toElement: function(){
+			return this.element;
+		},
+
+		getDOMNode: function(){
+			return this.toElement();
+		},
+
+		getNode: function(){
+			return this.toElement();
+		},
+
+		// placement
+
+		inject: function(container){
+			(container.containerElement || elementFrom(container))
+				.appendChild(this.element);
+			return this;
+		},
+
+		injectBefore: function(sibling){
+			var element = elementFrom(sibling);
+			element.parentNode.insertBefore(this.element, element);
+			return this;
+		},
+
+		eject: function(){
+			var element = this.element, parent = element.parentNode;
+			if (parent) parent.removeChild(element); // TODO: VML Nodes are dead after being ejected
+			return this;
+		},
+
+		// events
+
+		subscribe: function(type, fn, bind){
+			if (typeof type != 'string'){ // listen type / fn with object
+				var subscriptions = [];
+				for (var t in type) subscriptions.push(this.subscribe(t, type[t]));
+				return function(){ // unsubscribe
+					for (var i = 0, l = subscriptions.length; i < l; i++)
+						subscriptions[i]();
+					return this;
+				};
+			} else { // listen to one
+				if (!bind) bind = this;
+				var bound;
+				if (typeof fn === 'function'){
+					bound = fn.bind ? fn.bind(bind)
+						: function(){ return fn.apply(bind, arguments); };
+				} else {
+					bound = fn;
+				}
+				var element = this.element;
+				if (element.addEventListener){
+					element.addEventListener(type, bound, false);
+					return function(){ // unsubscribe
+						element.removeEventListener(type, bound, false);
+						return this;
+					};
+				} else {
+					element.attachEvent('on' + type, bound);
+					return function(){ // unsubscribe
+						element.detachEvent('on' + type, bound);
+						return this;
+					};
+				}
+			}
+		}
+
+	});
+
+
+/***/ },
+/* 306 */
+/***/ function(module, exports) {
+
+	var VMLCSS = 'behavior:url(#default#VML);display:inline-block;position:absolute;left:0px;top:0px;';
+
+	var styleSheet, styledTags = {}, styleTag = function(tag){
+		if (styleSheet) styledTags[tag] = styleSheet.addRule('av\\:' + tag, VMLCSS);
+	};
+
+	exports.init = function(document){
+
+		var namespaces;
+		try { // IE9 workaround: sometimes it throws here
+			namespaces = document.namespaces;
+		} catch (e) {
+		}
+		if (!namespaces) return false;
+
+		namespaces.add('av', 'urn:schemas-microsoft-com:vml');
+		namespaces.add('ao', 'urn:schemas-microsoft-com:office:office');
+
+		styleSheet = document.createStyleSheet();
+		styleSheet.addRule('vml', 'display:inline-block;position:relative;overflow:hidden;');
+	/*	styleTag('skew');
+		styleTag('fill');
+		styleTag('stroke');
+		styleTag('path');
+		styleTag('textpath');
+		styleTag('group');*/
+
+		styleTag('vml');
+
+		return true;
+
+	};
+
+	exports.createElement = function(tag){
+		if (!(tag in styledTags)) styleTag(tag);
+		return document.createElement('av:' + tag);
+	};
+
+
+/***/ },
+/* 307 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Class = __webpack_require__(303);
+	var Path = __webpack_require__(308);
+
+	var precision = 100;
+
+	var round = Math.round;
+
+	var VMLPath = Class(Path, {
+
+		initialize: function(path){
+			this.reset();
+			if (path instanceof VMLPath){
+				this.path = [Array.prototype.join.call(path.path, ' ')];
+			} else if (path){
+				if (path.applyToPath)
+					path.applyToPath(this);
+				else
+					this.push(path);
+			}
+		},
+
+		onReset: function(){
+			this.path = [];
+		},
+
+		onMove: function(sx, sy, x, y){
+			this.path.push('m', round(x * precision), round(y * precision));
+		},
+
+		onLine: function(sx, sy, x, y){
+			this.path.push('l', round(x * precision), round(y * precision));
+		},
+
+		onBezierCurve: function(sx, sy, p1x, p1y, p2x, p2y, x, y){
+			this.path.push('c',
+				round(p1x * precision), round(p1y * precision),
+				round(p2x * precision), round(p2y * precision),
+				round(x * precision), round(y * precision)
+			);
+		},
+
+		_arcToBezier: Path.prototype.onArc,
+
+		onArc: function(sx, sy, ex, ey, cx, cy, rx, ry, sa, ea, ccw, rotation){
+			if (rx != ry || rotation) return this._arcToBezier(sx, sy, ex, ey, cx, cy, rx, ry, sa, ea, ccw, rotation);
+			cx *= precision;
+			cy *= precision;
+			rx *= precision;
+			this.path.push(ccw ? 'at' : 'wa',
+				round(cx - rx), round(cy - rx),
+				round(cx + rx), round(cy + rx),
+				round(sx * precision), round(sy * precision),
+				round(ex * precision), round(ey * precision)
+			);
+		},
+
+		onClose: function(){
+			this.path.push('x');
+		},
+
+		toVML: function(){
+			return this.path.join(' ');
+		}
+
+	});
+
+	VMLPath.prototype.toString = VMLPath.prototype.toVML;
+
+	module.exports = VMLPath;
+
+/***/ },
+/* 308 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Class = __webpack_require__(303);
+
+	module.exports = Class({
+		
+		initialize: function(path){
+			this.reset().push(path);
+		},
+
+		/* parser */
+		
+		push: function(){
+			var p = Array.prototype.join.call(arguments, ' ')
+				.match(/[a-df-z]|[\-+]?(?:[\d\.]e[\-+]?|[^\s\-+,a-z])+/ig);
+			if (!p) return this;
+
+			var last, cmd = p[0], i = 1;
+			while (cmd){
+				switch (cmd){
+					case 'm': this.move(p[i++], p[i++]); break;
+					case 'l': this.line(p[i++], p[i++]); break;
+					case 'c': this.curve(p[i++], p[i++], p[i++], p[i++], p[i++], p[i++]); break;
+					case 's': this.curve(p[i++], p[i++], null, null, p[i++], p[i++]); break;
+					case 'q': this.curve(p[i++], p[i++], p[i++], p[i++]); break;
+					case 't': this.curve(p[i++], p[i++]); break;
+					case 'a': this.arc(p[i+5], p[i+6], p[i], p[i+1], p[i+3], !+p[i+4], p[i+2]); i += 7; break;
+					case 'h': this.line(p[i++], 0); break;
+					case 'v': this.line(0, p[i++]); break;
+
+					case 'M': this.moveTo(p[i++], p[i++]); break;
+					case 'L': this.lineTo(p[i++], p[i++]); break;
+					case 'C': this.curveTo(p[i++], p[i++], p[i++], p[i++], p[i++], p[i++]); break;
+					case 'S': this.curveTo(p[i++], p[i++], null, null, p[i++], p[i++]); break;
+					case 'Q': this.curveTo(p[i++], p[i++], p[i++], p[i++]); break;
+					case 'T': this.curveTo(p[i++], p[i++]); break;
+					case 'A': this.arcTo(p[i+5], p[i+6], p[i], p[i+1], p[i+3], !+p[i+4], p[i+2]); i += 7; break;
+					case 'H': this.lineTo(p[i++], this.penY); break;
+					case 'V': this.lineTo(this.penX, p[i++]); break;
+					
+					case 'Z': case 'z': this.close(); break;
+					default: cmd = last; i--; continue;
+				}
+
+				last = cmd;
+				if (last == 'm') last = 'l';
+				else if (last == 'M') last = 'L';
+				cmd = p[i++];
+			}
+			return this;
+		},
+
+		/* utility methods */
+
+		reset: function(){
+			this.penX = this.penY = 0;
+			this.penDownX = this.penDownY = null;
+			this._pivotX = this._pivotY = 0;
+			this.onReset();
+			return this;
+		},
+		
+		move: function(x,y){
+			this.onMove(this.penX, this.penY, this._pivotX = this.penX += (+x), this._pivotY = this.penY += (+y));
+			return this;
+		},
+		moveTo: function(x,y){
+			this.onMove(this.penX, this.penY, this._pivotX = this.penX = (+x), this._pivotY = this.penY = (+y));
+			return this;
+		},
+
+		line: function(x,y){
+			return this.lineTo(this.penX + (+x), this.penY + (+y));
+		},
+		lineTo: function(x,y){
+			if (this.penDownX == null){ this.penDownX = this.penX; this.penDownY = this.penY; }
+			this.onLine(this.penX, this.penY, this._pivotX = this.penX = (+x), this._pivotY = this.penY = (+y));
+			return this;
+		},
+		
+		curve: function(c1x, c1y, c2x, c2y, ex, ey){
+			var x = this.penX, y = this.penY;
+			return this.curveTo(
+				x + (+c1x), y + (+c1y),
+				c2x == null ? null : x + (+c2x),
+				c2y == null ? null : y + (+c2y),
+				ex == null ? null : x + (+ex),
+				ey == null ? null : y + (+ey)
+			);
+		},
+		curveTo: function(c1x, c1y, c2x, c2y, ex, ey){
+			var x = this.penX, y = this.penY;
+			if (c2x == null){
+				c2x = +c1x; c2y = +c1y;
+				c1x = (x * 2) - (this._pivotX || 0); c1y = (y * 2) - (this._pivotY || 0);
+			}
+			if (ex == null){
+				this._pivotX = +c1x; this._pivotY = +c1y;
+				ex = +c2x; ey = +c2y;
+				c2x = (ex + (+c1x) * 2) / 3; c2y = (ey + (+c1y) * 2) / 3;
+				c1x = (x + (+c1x) * 2) / 3; c1y = (y + (+c1y) * 2) / 3;
+			} else {
+				this._pivotX = +c2x; this._pivotY = +c2y;
+			}
+			if (this.penDownX == null){ this.penDownX = x; this.penDownY = y; }
+			this.onBezierCurve(x, y, +c1x, +c1y, +c2x, +c2y, this.penX = +ex, this.penY = +ey);
+			return this;
+		},
+		
+		arc: function(x, y, rx, ry, outer, counterClockwise, rotation){
+			return this.arcTo(this.penX + (+x), this.penY + (+y), rx, ry, outer, counterClockwise, rotation);
+		},
+		arcTo: function(x, y, rx, ry, outer, counterClockwise, rotation){
+			ry = Math.abs(+ry || +rx || (+y - this.penY));
+			rx = Math.abs(+rx || (+x - this.penX));
+
+			if (!rx || !ry || (x == this.penX && y == this.penY)) return this.lineTo(x, y);
+
+			var tX = this.penX, tY = this.penY, clockwise = !+counterClockwise, large = !!+outer;
+
+			var rad = rotation ? rotation * Math.PI / 180 : 0, cos = Math.cos(rad), sin = Math.sin(rad);
+			x -= tX; y -= tY;
+			
+			// Ellipse Center
+			var cx = cos * x / 2 + sin * y / 2,
+				cy = -sin * x / 2 + cos * y / 2,
+				rxry = rx * rx * ry * ry,
+				rycx = ry * ry * cx * cx,
+				rxcy = rx * rx * cy * cy,
+				a = rxry - rxcy - rycx;
+
+			if (a < 0){
+				a = Math.sqrt(1 - a / rxry);
+				rx *= a; ry *= a;
+				cx = x / 2; cy = y / 2;
+			} else {
+				a = Math.sqrt(a / (rxcy + rycx));
+				if (large == clockwise) a = -a;
+				var cxd = -a * cy * rx / ry,
+				    cyd =  a * cx * ry / rx;
+				cx = cos * cxd - sin * cyd + x / 2;
+				cy = sin * cxd + cos * cyd + y / 2;
+			}
+
+			// Rotation + Scale Transform
+			var xx =  cos / rx, yx = sin / rx,
+			    xy = -sin / ry, yy = cos / ry;
+
+			// Start and End Angle
+			var sa = Math.atan2(xy * -cx + yy * -cy, xx * -cx + yx * -cy),
+			    ea = Math.atan2(xy * (x - cx) + yy * (y - cy), xx * (x - cx) + yx * (y - cy));
+
+			cx += tX; cy += tY;
+			x += tX; y += tY;
+
+			// Circular Arc
+			if (this.penDownX == null){ this.penDownX = this.penX; this.penDownY = this.penY; }
+			this.onArc(
+				tX, tY, this._pivotX = this.penX = x, this._pivotY = this.penY = y,
+				cx, cy, rx, ry, sa, ea, !clockwise, rotation
+			);
+			return this;
+		},
+
+		counterArc: function(x, y, rx, ry, outer){
+			return this.arc(x, y, rx, ry, outer, true);
+		},
+		counterArcTo: function(x, y, rx, ry, outer){
+			return this.arcTo(x, y, rx, ry, outer, true);
+		},
+
+		close: function(){
+			if (this.penDownX != null){
+				this.onClose(this.penX, this.penY, this.penX = this.penDownX, this.penY = this.penDownY);
+				this.penDownX = null;
+			}
+			return this;
+		},
+
+		/* overridable handlers */
+		
+		onReset: function(){
+		},
+
+		onMove: function(sx, sy, ex, ey){
+		},
+
+		onLine: function(sx, sy, ex, ey){
+			this.onBezierCurve(sx, sy, sx, sy, ex, ey, ex, ey);
+		},
+
+		onBezierCurve: function(sx, sy, c1x, c1y, c2x, c2y, ex, ey){
+			var gx = ex - sx, gy = ey - sy,
+				g = gx * gx + gy * gy,
+				v1, v2, cx, cy, u;
+
+			cx = c1x - sx; cy = c1y - sy;
+			u = cx * gx + cy * gy;
+
+			if (u > g){
+				cx -= gx;
+				cy -= gy;
+			} else if (u > 0 && g != 0){
+				cx -= u/g * gx;
+				cy -= u/g * gy;
+			}
+
+			v1 = cx * cx + cy * cy;
+
+			cx = c2x - sx; cy = c2y - sy;
+			u = cx * gx + cy * gy;
+
+			if (u > g){
+				cx -= gx;
+				cy -= gy;
+			} else if (u > 0 && g != 0){
+				cx -= u/g * gx;
+				cy -= u/g * gy;
+			}
+
+			v2 = cx * cx + cy * cy;
+
+			if (v1 < 0.01 && v2 < 0.01){
+				this.onLine(sx, sy, ex, ey);
+				return;
+			}
+
+			// Avoid infinite recursion
+			if (isNaN(v1) || isNaN(v2)){
+				throw new Error('Bad input');
+			}
+
+			// Split curve
+			var s1x =   (c1x + c2x) * 0.5,   s1y =   (c1y + c2y) * 0.5,
+			    l1x =   (c1x + sx)  * 0.5,   l1y =   (c1y + sy)  * 0.5,
+			    l2x =   (l1x + s1x) * 0.5,   l2y =   (l1y + s1y) * 0.5,
+			    r2x =   (ex + c2x)  * 0.5,   r2y =   (ey + c2y)  * 0.5,
+			    r1x =   (r2x + s1x) * 0.5,   r1y =   (r2y + s1y) * 0.5,
+			    l2r1x = (l2x + r1x) * 0.5,   l2r1y = (l2y + r1y) * 0.5;
+
+			// TODO: Manual stack if necessary. Currently recursive without tail optimization.
+			this.onBezierCurve(sx, sy, l1x, l1y, l2x, l2y, l2r1x, l2r1y);
+			this.onBezierCurve(l2r1x, l2r1y, r1x, r1y, r2x, r2y, ex, ey);
+		},
+
+		onArc: function(sx, sy, ex, ey, cx, cy, rx, ry, sa, ea, ccw, rotation){
+			// Inverse Rotation + Scale Transform
+			var rad = rotation ? rotation * Math.PI / 180 : 0, cos = Math.cos(rad), sin = Math.sin(rad),
+				xx = cos * rx, yx = -sin * ry,
+			    xy = sin * rx, yy =  cos * ry;
+
+			// Bezier Curve Approximation
+			var arc = ea - sa;
+			if (arc < 0 && !ccw) arc += Math.PI * 2;
+			else if (arc > 0 && ccw) arc -= Math.PI * 2;
+
+			var n = Math.ceil(Math.abs(arc / (Math.PI / 2))),
+			    step = arc / n,
+			    k = (4 / 3) * Math.tan(step / 4);
+
+			var x = Math.cos(sa), y = Math.sin(sa);
+
+			for (var i = 0; i < n; i++){
+				var cp1x = x - k * y, cp1y = y + k * x;
+
+				sa += step;
+				x = Math.cos(sa); y = Math.sin(sa);
+
+				var cp2x = x + k * y, cp2y = y - k * x;
+
+				this.onBezierCurve(
+					sx, sy,
+					cx + xx * cp1x + yx * cp1y, cy + xy * cp1x + yy * cp1y,
+					cx + xx * cp2x + yx * cp2y, cy + xy * cp2x + yy * cp2y,
+					(sx = (cx + xx * x + yx * y)), (sy = (cy + xy * x + yy * y))
+				);
+			}
+		},
+
+		onClose: function(sx, sy, ex, ey){
+			this.onLine(sx, sy, ex, ey);
+		}
+
+	});
+
+/***/ },
+/* 309 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Class = __webpack_require__(303);
+	var Base = __webpack_require__(310);
+	var Path = __webpack_require__(307);
+	var DOM = __webpack_require__(306);
+
+	var precision = 100;
+
+	module.exports = Class(Base, {
+
+		base_initialize: Base.prototype.initialize,
+		
+		initialize: function(path, width, height){
+			this.base_initialize('shape');
+
+			var p = this.pathElement = DOM.createElement('path');
+			p.gradientshapeok = true;
+			this.element.appendChild(p);
+			
+			this.width = width;
+			this.height = height;
+			
+			if (path != null) this.draw(path);
+		},
+		
+		// SVG to VML
+		
+		draw: function(path, width, height){
+			
+			if (!(path instanceof Path)) path = new Path(path);
+			this._vml = path.toVML();
+			//this._size = path.measure();
+			
+			if (width != null) this.width = width;
+			if (height != null) this.height = height;
+			
+			if (!this._boxCoords) this._transform();
+			this._redraw(this._prefix, this._suffix);
+			
+			return this;
+		},
+		
+		// radial gradient workaround
+
+		_redraw: function(prefix, suffix){
+			var vml = this._vml || '';
+
+			this._prefix = prefix;
+			this._suffix = suffix
+			if (prefix){
+				vml = [
+					prefix, vml, suffix,
+					// Don't stroke the path with the extra ellipse, redraw the stroked path separately
+					'ns e', vml, 'nf'
+				].join(' ');
+			}
+
+			this.element.path = vml + 'e';
+		},
+
+		fillRadial: function(stops, focusX, focusY, radiusX, radiusY, centerX, centerY){
+			var fill = this._createGradient('gradientradial', stops);
+			if (focusX == null) focusX = (this.left || 0) + (this.width || 0) * 0.5;
+			if (focusY == null) focusY = (this.top || 0) + (this.height || 0) * 0.5;
+			if (radiusY == null) radiusY = radiusX || (this.height * 0.5) || 0;
+			if (radiusX == null) radiusX = (this.width || 0) * 0.5;
+			if (centerX == null) centerX = focusX;
+			if (centerY == null) centerY = focusY;
+
+			centerX += centerX - focusX;
+			centerY += centerY - focusY;
+			
+			var cx = Math.round(centerX * precision),
+				cy = Math.round(centerY * precision),
+
+				rx = Math.round(radiusX * 2 * precision),
+				ry = Math.round(radiusY * 2 * precision),
+
+				arc = ['wa', cx - rx, cy - ry, cx + rx, cy + ry].join(' ');
+
+			this._redraw(
+				// Resolve rendering bug
+				['m', cx, cy - ry, 'l', cx, cy - ry].join(' '),
+				// Draw an ellipse around the path to force an elliptical gradient on any shape
+				[
+					'm', cx, cy - ry,
+					arc, cx, cy - ry, cx, cy + ry, arc, cx, cy + ry, cx, cy - ry,
+					arc, cx, cy - ry, cx, cy + ry, arc, cx, cy + ry, cx, cy - ry
+				].join(' ')
+			);
+
+			this._boxCoords = { left: focusX - 2, top: focusY - 2, width: 4, height: 4 };
+			
+			fill.focusposition = '0.5,0.5';
+			fill.focussize = '0 0';
+			fill.focus = '50%';
+			
+			this._transform();
+			
+			return this;
+		}
+
+	});
+
+/***/ },
+/* 310 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Class = __webpack_require__(303);
+	var Transform = __webpack_require__(311);
+	var Color = __webpack_require__(312);
+	var Node = __webpack_require__(313);
+	var DOM = __webpack_require__(306);
+
+	var precision = 100;
+
+	var defaultBox = { left: 0, top: 0, width: 500, height: 500 };
+
+	module.exports = Class(Node, {
+
+		element_initialize: Node.prototype.initialize,
+
+		initialize: function(tag){
+			this.element_initialize(tag);
+			var element = this.element;
+			
+			var skew = this.skewElement = DOM.createElement('skew');
+			skew.on = true;
+			element.appendChild(skew);
+
+			var fill = this.fillElement = DOM.createElement('fill');
+			fill.on = false;
+			element.appendChild(fill);
+			
+			var stroke = this.strokeElement = DOM.createElement('stroke');
+			stroke.on = false;
+			element.appendChild(stroke);
+		},
+		
+		/* transform */
+		
+		_transform: function(){
+			var container = this.parentNode;
+			
+			// Active Transformation Matrix
+			var m = container ? new Transform(container._activeTransform).transform(this) : this;
+			
+			// Box in shape user space
+			
+			var box = this._boxCoords || this._size || defaultBox;
+			
+			var originX = box.left || 0,
+				originY = box.top || 0,
+				width = box.width || 1,
+				height = box.height || 1;
+					
+			// Flipped
+		    var flip = m.yx / m.xx > m.yy / m.xy;
+			if (m.xx < 0 ? m.xy >= 0 : m.xy < 0) flip = !flip;
+			flip = flip ? -1 : 1;
+			
+			m = new Transform().scale(flip, 1).transform(m);
+			
+			// Rotation is approximated based on the transform
+			var rotation = Math.atan2(-m.xy, m.yy) * 180 / Math.PI;
+			
+			// Reverse the rotation, leaving the final transform in box space
+			var rad = rotation * Math.PI / 180, sin = Math.sin(rad), cos = Math.cos(rad);
+			
+			var transform = new Transform(
+				(m.xx * cos - m.xy * sin),
+				(m.yx * cos - m.yy * sin) * flip,
+				(m.xy * cos + m.xx * sin) * flip,
+				(m.yy * cos + m.yx * sin)
+			);
+
+			var rotationTransform = new Transform().rotate(rotation, 0, 0);
+
+			var shapeToBox = new Transform().rotate(-rotation, 0, 0).transform(m).moveTo(0,0);
+
+			// Scale box after reversing rotation
+			width *= Math.abs(shapeToBox.xx);
+			height *= Math.abs(shapeToBox.yy);
+			
+			// Place box
+			var left = m.x, top = m.y;
+			
+			// Compensate for offset by center origin rotation
+			var vx = -width / 2, vy = -height / 2;
+			var point = rotationTransform.point(vx, vy);
+			left -= point.x - vx;
+			top -= point.y - vy;
+			
+			// Adjust box position based on offset
+			var rsm = new Transform(m).moveTo(0,0);
+			point = rsm.point(originX, originY);
+			left += point.x;
+			top += point.y;
+			
+			if (flip < 0) left = -left - width;
+			
+			// Place transformation origin
+			var point0 = rsm.point(-originX, -originY);
+			var point1 = rotationTransform.point(width, height);
+			var point2 = rotationTransform.point(width, 0);
+			var point3 = rotationTransform.point(0, height);
+			
+			var minX = Math.min(0, point1.x, point2.x, point3.x),
+			    maxX = Math.max(0, point1.x, point2.x, point3.x),
+			    minY = Math.min(0, point1.y, point2.y, point3.y),
+			    maxY = Math.max(0, point1.y, point2.y, point3.y);
+			
+			var transformOriginX = (point0.x - point1.x / 2) / (maxX - minX) * flip,
+			    transformOriginY = (point0.y - point1.y / 2) / (maxY - minY);
+			
+			// Adjust the origin
+			point = shapeToBox.point(originX, originY);
+			originX = point.x;
+			originY = point.y;
+			
+			// Scale stroke
+			var strokeWidth = this._strokeWidth;
+			if (strokeWidth){
+				// Scale is the hypothenus between the two vectors
+				// TODO: Use area calculation instead
+				var vx = m.xx + m.xy, vy = m.yy + m.yx;
+				strokeWidth *= Math.sqrt(vx * vx + vy * vy) / Math.sqrt(2);
+			}
+			
+			// convert to multiplied precision space
+			originX *= precision;
+			originY *= precision;
+			left *= precision;
+			top *= precision;
+			width *= precision;
+			height *= precision;
+			
+			// Set box
+			var element = this.element;
+			element.coordorigin = originX + ',' + originY;
+			element.coordsize = width + ',' + height;
+			element.style.left = left + 'px';
+			element.style.top = top + 'px';
+			element.style.width = width;
+			element.style.height = height;
+			element.style.rotation = rotation.toFixed(8);
+			element.style.flip = flip < 0 ? 'x' : '';
+			
+			// Set transform
+			var skew = this.skewElement;
+			skew.matrix = [transform.xx.toFixed(4), transform.xy.toFixed(4), transform.yx.toFixed(4), transform.yy.toFixed(4), 0, 0];
+			skew.origin = transformOriginX + ',' + transformOriginY;
+
+			// Set stroke
+			this.strokeElement.weight = strokeWidth + 'px';
+		},
+		
+		/* styles */
+
+		_createGradient: function(style, stops){
+			var fill = this.fillElement;
+
+			// Temporarily eject the fill from the DOM
+			this.element.removeChild(fill);
+
+			fill.type = style;
+			fill.method = 'none';
+			fill.rotate = true;
+
+			var colors = [], color1, color2;
+
+			var addColor = function(offset, color){
+				color = Color.detach(color);
+				if (color1 == null) color1 = color2 = color;
+				else color2 = color;
+				colors.push(offset + ' ' + color[0]);
+			};
+
+			// Enumerate stops, assumes offsets are enumerated in order
+			if ('length' in stops) for (var i = 0, l = stops.length - 1; i <= l; i++) addColor(i / l, stops[i]);
+			else for (var offset in stops) addColor(offset, stops[offset]);
+			
+			fill.color = color1[0];
+			fill.color2 = color2[0];
+			
+			//if (fill.colors) fill.colors.value = colors; else
+			fill.colors = colors;
+
+			// Opacity order gets flipped when color stops are specified
+			fill.opacity = color2[1];
+			fill['ao:opacity2'] = color1[1];
+
+			fill.on = true;
+			this.element.appendChild(fill);
+			return fill;
+		},
+		
+		_setColor: function(type, color){
+			var element = type == 'fill' ? this.fillElement : this.strokeElement;
+			if (color == null){
+				element.on = false;
+			} else {
+				color = Color.detach(color);
+				element.color = color[0];
+				element.opacity = color[1];
+				element.on = true;
+			}
+		},
+		
+		fill: function(color){
+			if (arguments.length > 1){
+				this.fillLinear(arguments);
+			} else {
+				this._boxCoords = defaultBox;
+				var fill = this.fillElement;
+				fill.type = 'solid';
+				fill.color2 = '';
+				fill['ao:opacity2'] = '';
+				if (fill.colors) fill.colors.value = '';
+				this._setColor('fill', color);
+			}
+			return this;
+		},
+
+		fillRadial: function(stops, focusX, focusY, radiusX, radiusY, centerX, centerY){
+			var fill = this._createGradient('gradientradial', stops);
+			if (focusX == null) focusX = this.left + this.width * 0.5;
+			if (focusY == null) focusY = this.top + this.height * 0.5;
+			if (radiusY == null) radiusY = radiusX || (this.height * 0.5);
+			if (radiusX == null) radiusX = this.width * 0.5;
+			if (centerX == null) centerX = focusX;
+			if (centerY == null) centerY = focusY;
+			
+			centerX += centerX - focusX;
+			centerY += centerY - focusY;
+			
+			var box = this._boxCoords = {
+				left: centerX - radiusX * 2,
+				top: centerY - radiusY * 2,
+				width: radiusX * 4,
+				height: radiusY * 4
+			};
+			focusX -= box.left;
+			focusY -= box.top;
+			focusX /= box.width;
+			focusY /= box.height;
+
+			fill.focussize = '0 0';
+			fill.focusposition = focusX + ',' + focusY;
+			fill.focus = '50%';
+			
+			this._transform();
+			
+			return this;
+		},
+
+		fillLinear: function(stops, x1, y1, x2, y2){
+			var fill = this._createGradient('gradient', stops);
+			fill.focus = '100%';
+			if (arguments.length == 5){
+				var w = Math.abs(x2 - x1), h = Math.abs(y2 - y1);
+				this._boxCoords = {
+					left: Math.min(x1, x2),
+					top: Math.min(y1, y2),
+					width: w < 1 ? h : w,
+					height: h < 1 ? w : h
+				};
+				fill.angle = (360 + Math.atan2((x2 - x1) / h, (y2 - y1) / w) * 180 / Math.PI) % 360;
+			} else {
+				this._boxCoords = null;
+				fill.angle = (x1 == null) ? 0 : (90 + x1) % 360;
+			}
+			this._transform();
+			return this;
+		},
+
+		fillImage: function(url, width, height, left, top, color1, color2){
+			var fill = this.fillElement;
+			if (color1 != null){
+				color1 = Color.detach(color1);
+				if (color2 != null) color2 = Color.detach(color2);
+				fill.type = 'pattern';
+				fill.color = color1[0];
+				fill.color2 = color2 == null ? color1[0] : color2[0];
+				fill.opacity = color2 == null ? 0 : color2[1];
+				fill['ao:opacity2'] = color1[1];
+			} else {
+				fill.type = 'tile';
+				fill.color = '';
+				fill.color2 = '';
+				fill.opacity = 1;
+				fill['ao:opacity2'] = 1;
+			}
+			if (fill.colors) fill.colors.value = '';
+			fill.rotate = true;
+			fill.src = url;
+			
+			fill.size = '1,1';
+			fill.position = '0,0';
+			fill.origin = '0,0';
+			fill.aspect = 'ignore'; // ignore, atleast, atmost
+			fill.on = true;
+
+			if (!left) left = 0;
+			if (!top) top = 0;
+			this._boxCoords = width ? { left: left + 0.5, top: top + 0.5, width: width, height: height } : null;
+			this._transform();
+			return this;
+		},
+
+		/* stroke */
+		
+		stroke: function(color, width, cap, join){
+			var stroke = this.strokeElement;
+			this._strokeWidth = (width != null) ? width : 1;
+			stroke.weight = (width != null) ? width + 'px' : 1;
+			stroke.endcap = (cap != null) ? ((cap == 'butt') ? 'flat' : cap) : 'round';
+			stroke.joinstyle = (join != null) ? join : 'round';
+
+			this._setColor('stroke', color);
+			return this;
+		}
+
+	});
+
+/***/ },
+/* 311 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Class = __webpack_require__(303);
+
+	function Transform(xx, yx, xy, yy, x, y){
+		if (xx && typeof xx == 'object'){
+			yx = xx.yx; yy = xx.yy; y = xx.y;
+			xy = xx.xy; x = xx.x; xx = xx.xx;
+		}
+		this.xx = xx == null ? 1 : xx;
+		this.yx = yx || 0;
+		this.xy = xy || 0;
+		this.yy = yy == null ? 1 : yy;
+		this.x = (x == null ? this.x : x) || 0;
+		this.y = (y == null ? this.y : y) || 0;
+		this._transform();
+		return this;
+	};
+
+	module.exports = Class({
+
+		initialize: Transform,
+
+		_transform: function(){},
+
+		xx: 1, yx: 0, x: 0,
+		xy: 0, yy: 1, y: 0,
+
+		transform: function(xx, yx, xy, yy, x, y){
+			var m = this;
+			if (xx && typeof xx == 'object'){
+				yx = xx.yx; yy = xx.yy; y = xx.y;
+				xy = xx.xy; x = xx.x; xx = xx.xx;
+			}
+			if (!x) x = 0;
+			if (!y) y = 0;
+			return this.transformTo(
+				m.xx * xx + m.xy * yx,
+				m.yx * xx + m.yy * yx,
+				m.xx * xy + m.xy * yy,
+				m.yx * xy + m.yy * yy,
+				m.xx * x + m.xy * y + m.x,
+				m.yx * x + m.yy * y + m.y
+			);
+		},
+
+		transformTo: Transform,
+
+		translate: function(x, y){
+			return this.transform(1, 0, 0, 1, x, y);
+		},
+
+		move: function(x, y){
+			this.x += x || 0;
+			this.y += y || 0;
+			this._transform();
+			return this;
+		},
+
+		scale: function(x, y){
+			if (y == null) y = x;
+			return this.transform(x, 0, 0, y, 0, 0);
+		},
+
+		rotate: function(deg, x, y){
+			if (x == null || y == null){
+				x = (this.left || 0) + (this.width || 0) / 2;
+				y = (this.top || 0) + (this.height || 0) / 2;
+			}
+
+			var rad = deg * Math.PI / 180, sin = Math.sin(rad), cos = Math.cos(rad);
+
+			this.transform(1, 0, 0, 1, x, y);
+			var m = this;
+
+			return this.transformTo(
+				cos * m.xx - sin * m.yx,
+				sin * m.xx + cos * m.yx,
+				cos * m.xy - sin * m.yy,
+				sin * m.xy + cos * m.yy,
+				m.x,
+				m.y
+			).transform(1, 0, 0, 1, -x, -y);
+		},
+
+		moveTo: function(x, y){
+			var m = this;
+			return this.transformTo(m.xx, m.yx, m.xy, m.yy, x, y);
+		},
+
+		rotateTo: function(deg, x, y){
+			var m = this;
+			var flip = m.yx / m.xx > m.yy / m.xy ? -1 : 1;
+			if (m.xx < 0 ? m.xy >= 0 : m.xy < 0) flip = -flip;
+			return this.rotate(deg - Math.atan2(flip * m.yx, flip * m.xx) * 180 / Math.PI, x, y);
+		},
+
+		scaleTo: function(x, y){
+			// Normalize
+			var m = this;
+
+			var h = Math.sqrt(m.xx * m.xx + m.yx * m.yx);
+			m.xx /= h; m.yx /= h;
+
+			h = Math.sqrt(m.yy * m.yy + m.xy * m.xy);
+			m.yy /= h; m.xy /= h;
+
+			return this.scale(x, y);
+		},
+
+		resizeTo: function(width, height){
+			var w = this.width, h = this.height;
+			if (!w || !h) return this;
+			return this.scaleTo(width / w, height / h);
+		},
+
+		/*
+		inverse: function(){
+			var a = this.xx, b = this.yx,
+				c = this.xy, d = this.yy,
+				e = this.x, f = this.y;
+			if (a * d - b * c == 0) return null;
+			return new Transform(
+				d/(a * d-b * c), b/(b * c-a * d),
+				c/(b * c-a * d), a/(a * d-b * c),
+				(d * e-c * f)/(b * c-a * d), (b * e-a * f)/(a * d-b * c)
+			);
+		},
+		*/
+
+		inversePoint: function(x, y){
+			var a = this.xx, b = this.yx,
+				c = this.xy, d = this.yy,
+				e = this.x, f = this.y;
+			var det = b * c - a * d;
+			if (det == 0) return null;
+			return {
+				x: (d * (e - x) + c * (y - f)) / det,
+				y: (a * (f - y) + b * (x - e)) / det
+			};
+		},
+
+		point: function(x, y){
+			var m = this;
+			return {
+				x: m.xx * x + m.xy * y + m.x,
+				y: m.yx * x + m.yy * y + m.y
+			};
+		}	
+
+	});
+
+
+/***/ },
+/* 312 */
+/***/ function(module, exports) {
+
+	var colors = {
+		maroon: '#800000', red: '#ff0000', orange: '#ffA500', yellow: '#ffff00', olive: '#808000',
+		purple: '#800080', fuchsia: "#ff00ff", white: '#ffffff', lime: '#00ff00', green: '#008000',
+		navy: '#000080', blue: '#0000ff', aqua: '#00ffff', teal: '#008080',
+		black: '#000000', silver: '#c0c0c0', gray: '#808080'
+	};
+
+	var map = function(array, fn){
+		var results = [];
+		for (var i = 0, l = array.length; i < l; i++)
+			results[i] = fn(array[i], i);
+		return results;
+	};
+
+	var Color = function(color, type){
+		
+		if (color.isColor){
+			
+			this.red = color.red;
+			this.green = color.green;
+			this.blue = color.blue;
+			this.alpha = color.alpha;
+
+		} else {
+			
+			var namedColor = colors[color];
+			if (namedColor){
+				color = namedColor;
+				type = 'hex';
+			}
+
+			switch (typeof color){
+				case 'string': if (!type) type = (type = color.match(/^rgb|^hsb|^hsl/)) ? type[0] : 'hex'; break;
+				case 'object': type = type || 'rgb'; color = color.toString(); break;
+				case 'number': type = 'hex'; color = color.toString(16); break;
+			}
+
+			color = Color['parse' + type.toUpperCase()](color);
+			this.red = color[0];
+			this.green = color[1];
+			this.blue = color[2];
+			this.alpha = color[3];
+		}
+		
+		this.isColor = true;
+
+	};
+
+	var limit = function(number, min, max){
+		return Math.min(max, Math.max(min, number));
+	};
+
+	var listMatch = /([-.\d]+\%?)\s*,\s*([-.\d]+\%?)\s*,\s*([-.\d]+\%?)\s*,?\s*([-.\d]*\%?)/;
+	var hexMatch = /^#?([a-f0-9]{1,2})([a-f0-9]{1,2})([a-f0-9]{1,2})([a-f0-9]{0,2})$/i;
+
+	Color.parseRGB = function(color){
+		return map(color.match(listMatch).slice(1), function(bit, i){
+			if (bit) bit = parseFloat(bit) * (bit[bit.length - 1] == '%' ? 2.55 : 1);
+			return (i < 3) ? Math.round(((bit %= 256) < 0) ? bit + 256 : bit) : limit(((bit === '') ? 1 : Number(bit)), 0, 1);
+		});
+	};
+		
+	Color.parseHEX = function(color){
+		if (color.length == 1) color = color + color + color;
+		return map(color.match(hexMatch).slice(1), function(bit, i){
+			if (i == 3) return (bit) ? parseInt(bit, 16) / 255 : 1;
+			return parseInt((bit.length == 1) ? bit + bit : bit, 16);
+		});
+	};
+		
+	Color.parseHSB = function(color){
+		var hsb = map(color.match(listMatch).slice(1), function(bit, i){
+			if (bit) bit = parseFloat(bit);
+			if (i === 0) return Math.round(((bit %= 360) < 0) ? (bit + 360) : bit);
+			else if (i < 3) return limit(Math.round(bit), 0, 100);
+			else return limit(((bit === '') ? 1 : Number(bit)), 0, 1);
+		});
+		
+		var a = hsb[3];
+		var br = Math.round(hsb[2] / 100 * 255);
+		if (hsb[1] == 0) return [br, br, br, a];
+			
+		var hue = hsb[0];
+		var f = hue % 60;
+		var p = Math.round((hsb[2] * (100 - hsb[1])) / 10000 * 255);
+		var q = Math.round((hsb[2] * (6000 - hsb[1] * f)) / 600000 * 255);
+		var t = Math.round((hsb[2] * (6000 - hsb[1] * (60 - f))) / 600000 * 255);
+
+		switch (Math.floor(hue / 60)){
+			case 0: return [br, t, p, a];
+			case 1: return [q, br, p, a];
+			case 2: return [p, br, t, a];
+			case 3: return [p, q, br, a];
+			case 4: return [t, p, br, a];
+			default: return [br, p, q, a];
+		}
+	};
+
+	Color.parseHSL = function(color){
+		var hsb = map(color.match(listMatch).slice(1), function(bit, i){
+			if (bit) bit = parseFloat(bit);
+			if (i === 0) return Math.round(((bit %= 360) < 0) ? (bit + 360) : bit);
+			else if (i < 3) return limit(Math.round(bit), 0, 100);
+			else return limit(((bit === '') ? 1 : Number(bit)), 0, 1);
+		});
+
+		var h = hsb[0] / 60;
+		var s = hsb[1] / 100;
+		var l = hsb[2] / 100;
+		var a = hsb[3];
+		
+		var c = (1 - Math.abs(2 * l - 1)) * s;
+		var x = c * (1 - Math.abs(h % 2 - 1));
+		var m = l - c / 2;
+		
+		var p = Math.round((c + m) * 255);
+		var q = Math.round((x + m) * 255);
+		var t = Math.round((m) * 255);
+
+		switch (Math.floor(h)){
+			case 0: return [p, q, t, a];
+			case 1: return [q, p, t, a];
+			case 2: return [t, p, q, a];
+			case 3: return [t, q, p, a];
+			case 4: return [q, t, p, a];
+			default: return [p, t, q, a];
+		}
+	};
+
+	var toString = function(type, array){
+		if (array[3] != 1) type += 'a';
+		else array.pop();
+		return type + '(' + array.join(', ') + ')';
+	};
+
+	Color.prototype = {
+
+		toHSB: function(array){
+			var red = this.red, green = this.green, blue = this.blue, alpha = this.alpha;
+
+			var max = Math.max(red, green, blue), min = Math.min(red, green, blue), delta = max - min;
+			var hue = 0, saturation = (delta != 0) ? delta / max : 0, brightness = max / 255;
+			if (saturation){
+				var rr = (max - red) / delta, gr = (max - green) / delta, br = (max - blue) / delta;
+				hue = (red == max) ? br - gr : (green == max) ? 2 + rr - br : 4 + gr - rr;
+				if ((hue /= 6) < 0) hue++;
+			}
+
+			var hsb = [Math.round(hue * 360), Math.round(saturation * 100), Math.round(brightness * 100), alpha];
+
+			return (array) ? hsb : toString('hsb', hsb);
+		},
+
+		toHSL: function(array){
+			var red = this.red, green = this.green, blue = this.blue, alpha = this.alpha;
+
+			var max = Math.max(red, green, blue), min = Math.min(red, green, blue), delta = max - min;
+			var hue = 0, saturation = (delta != 0) ? delta / (255 - Math.abs((max + min) - 255)) : 0, lightness = (max + min) / 512;
+			if (saturation){
+				var rr = (max - red) / delta, gr = (max - green) / delta, br = (max - blue) / delta;
+				hue = (red == max) ? br - gr : (green == max) ? 2 + rr - br : 4 + gr - rr;
+				if ((hue /= 6) < 0) hue++;
+			}
+
+			var hsl = [Math.round(hue * 360), Math.round(saturation * 100), Math.round(lightness * 100), alpha];
+
+			return (array) ? hsl : toString('hsl', hsl);
+		},
+
+		toHEX: function(array){
+
+			var a = this.alpha;
+			var alpha = ((a = Math.round((a * 255)).toString(16)).length == 1) ? a + a : a;
+			
+			var hex = map([this.red, this.green, this.blue], function(bit){
+				bit = bit.toString(16);
+				return (bit.length == 1) ? '0' + bit : bit;
+			});
+			
+			return (array) ? hex.concat(alpha) : '#' + hex.join('') + ((alpha == 'ff') ? '' : alpha);
+		},
+		
+		toRGB: function(array){
+			var rgb = [this.red, this.green, this.blue, this.alpha];
+			return (array) ? rgb : toString('rgb', rgb);
+		}
+
+	};
+
+	Color.prototype.toString = Color.prototype.toRGB;
+
+	Color.hex = function(hex){
+		return new Color(hex, 'hex');
+	};
+
+	if (this.hex == null) this.hex = Color.hex;
+
+	Color.hsb = function(h, s, b, a){
+		return new Color([h || 0, s || 0, b || 0, (a == null) ? 1 : a], 'hsb');
+	};
+
+	if (this.hsb == null) this.hsb = Color.hsb;
+
+	Color.hsl = function(h, s, l, a){
+		return new Color([h || 0, s || 0, l || 0, (a == null) ? 1 : a], 'hsl');
+	};
+
+	if (this.hsl == null) this.hsl = Color.hsl;
+
+	Color.rgb = function(r, g, b, a){
+		return new Color([r || 0, g || 0, b || 0, (a == null) ? 1 : a], 'rgb');
+	};
+
+	if (this.rgb == null) this.rgb = Color.rgb;
+
+	Color.detach = function(color){
+		color = new Color(color);
+		return [Color.rgb(color.red, color.green, color.blue).toString(), color.alpha];
+	};
+
+	module.exports = Color;
+
+/***/ },
+/* 313 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Class = __webpack_require__(303);
+	var Transform = __webpack_require__(311);
+	var Element = __webpack_require__(314);
+	var DOM = __webpack_require__(306);
+
+	module.exports = Class(Element, Transform, {
+
+		initialize: function(tag){
+			//this.uid = uniqueID();
+			var element = this.element = DOM.createElement(tag);
+			//element.setAttribute('id', 'e' + this.uid);
+		},
+
+		_place: function(){
+			if (this.parentNode){
+				this._transform();
+			}
+		},
+
+		// visibility
+
+		hide: function(){
+			this.element.style.display = 'none';
+			return this;
+		},
+
+		show: function(){
+			this.element.style.display = '';
+			return this;
+		},
+
+		// interaction
+
+		indicate: function(cursor, tooltip){
+			if (cursor) this.element.style.cursor = cursor;
+			if (tooltip) this.element.title = tooltip;
+			return this;
+		}
+
+	});
+
+
+/***/ },
+/* 314 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Class = __webpack_require__(303);
+	var Dummy = __webpack_require__(315);
+	var Native = __webpack_require__(305);
+
+	module.exports = Class(Dummy, Native, {
+
+		dummy_inject: Dummy.prototype.inject,
+		dummy_injectBefore: Dummy.prototype.injectBefore,
+		dummy_eject: Dummy.prototype.eject,
+		native_inject: Native.prototype.inject,
+		native_injectBefore: Native.prototype.injectBefore,
+		native_eject: Native.prototype.eject,
+
+		inject: function(container){
+			this.dummy_inject(container);
+			this.native_inject(container);
+			return this;
+		},
+
+		injectBefore: function(sibling){
+			this.dummy_injectBefore(sibling);
+			this.native_injectBefore(sibling);
+			return this;
+		},
+
+		eject: function(){
+			this.dummy_eject();
+			this.native_eject();
+			return this;
+		}
+
+	});
+
+
+/***/ },
+/* 315 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Class = __webpack_require__(303);
+
+	module.exports = Class({
+
+		// placement
+
+		_resetPlacement: function(){
+			var container = this.parentNode;
+			if (container){
+				var previous = this.previousSibling, next = this.nextSibling;
+				if (previous){
+					previous.nextSibling = next;
+				} else {
+					container.firstChild = next;
+				}
+				if (next){
+					next.previousSibling = previous;
+				} else {
+					container.lastChild = this.previousSibling;
+				}
+			}
+			this.previousSibling = null;
+			this.nextSibling = null;
+			this.parentNode = null;
+			return this;
+		},
+
+		inject: function(container){
+			this._resetPlacement();
+			var last = container.lastChild;
+			if (last){
+				last.nextSibling = this;
+				this.previousSibling = last;
+			} else {
+				container.firstChild = this;
+			}
+			container.lastChild = this;
+			this.parentNode = container;
+			this._place();
+			return this;
+		},
+
+		injectBefore: function(sibling){
+			this._resetPlacement();
+			var container = sibling.parentNode;
+			if (!container) return this;
+			var previous = sibling.previousSibling;
+			if (previous){
+				previous.nextSibling = this;
+				this.previousSibling = previous;
+			} else {
+				container.firstChild = this;
+			}
+			sibling.previousSibling = this;
+			this.nextSibling = sibling;
+			this.parentNode = container;
+			this._place();
+			return this;
+		},
+
+		eject: function(){
+			this._resetPlacement();
+			this._place();
+			return this;
+		},
+
+		_place: function(){},
+
+		// events
+
+		dispatch: function(event){
+			var events = this._events,
+				listeners = events && events[event.type];
+			if (listeners){
+				listeners = listeners.slice(0);
+				for (var i = 0, l = listeners.length; i < l; i++){
+					var fn = listeners[i], result;
+					if (typeof fn == 'function')
+						result = fn.call(this, event);
+					else
+						result = fn.handleEvent(event);
+					if (result === false) event.preventDefault();
+				}
+			}
+			if (this.parentNode && this.parentNode.dispatch){
+				this.parentNode.dispatch(event);
+			}
+		},
+
+		subscribe: function(type, fn, bind){
+			if (typeof type != 'string'){ // listen type / fn with object
+				var subscriptions = [];
+				for (var t in type) subscriptions.push(this.subscribe(t, type[t]));
+				return function(){ // unsubscribe
+					for (var i = 0, l = subscriptions.length; i < l; i++)
+						subscriptions[i]();
+					return this;
+				};
+			} else { // listen to one
+				var bound = typeof fn === 'function' ? fn.bind(bind || this) : fn,
+					events = this._events || (this._events = {}),
+					listeners = events[type] || (events[type] = []);
+				listeners.push(bound);
+				return function(){
+					// unsubscribe
+					for (var i = 0, l = listeners.length; i < l; i++){
+						if (listeners[i] === bound){
+							listeners.splice(i, 1);
+							break;
+						}
+					}
+				}
+			}
+		}
+
+	});
+
+
+/***/ },
+/* 316 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Class = __webpack_require__(303);
+	var Transform = __webpack_require__(311);
+	var Container = __webpack_require__(304);
+	var Node = __webpack_require__(313);
+
+	module.exports = Class(Node, Container, {
+		
+		element_initialize: Node.prototype.initialize,
+		
+		initialize: function(width, height){
+			this.element_initialize('group');
+			this.width = width;
+			this.height = height;
+		},
+
+		_transform: function(){
+			var element = this.element;
+			element.coordorigin = '0,0';
+			element.coordsize = '1000,1000';
+			element.style.left = 0;
+			element.style.top = 0;
+			element.style.width = 1000;
+			element.style.height = 1000;
+			element.style.rotation = 0;
+			
+			var container = this.parentNode;
+			this._activeTransform = container ? new Transform(container._activeTransform).transform(this) : this;
+			var node = this.firstChild;
+			while (node){
+				node._transform();
+				node = node.nextSibling;
+			}
+		}
+
+	});
+
+/***/ },
+/* 317 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Class = __webpack_require__(303);
+	var Transform = __webpack_require__(311);
+	var Container = __webpack_require__(304);
+	var Node = __webpack_require__(313);
+
+	module.exports = Class(Node, Container, {
+
+	  element_initialize: Node.prototype.initialize,
+
+	  initialize: function(width, height){
+	    this.element_initialize('clippingrectangle');
+	    this.width = width;
+	    this.height = height;
+	  },
+
+	  _transform: function(){
+	    var element = this.element;
+	    element.clip = true;
+	    element.coordorigin = -this.x + ',' + (-1 * this.y);
+	    element.coordsize = this.width + ',' + this.height;
+	    // IE8 doesn't like clipBottom.  Don't ask me why.
+	    // element.style.clipBottom = this.height + this.y;
+	    element.style.clipLeft = this.x;
+	    element.style.clipRight = this.width + this.x;
+	    element.style.clipTop = this.y;
+	    element.style.left = -this.x;
+	    element.style.top = -this.y;
+	    element.style.width = this.width + this.x;
+	    element.style.height = this.height + this.y;
+	    element.style.rotation = 0;
+
+	    var container = this.parentNode;
+	    this._activeTransform = container ? new Transform(container._activeTransform).transform(this) : this;
+	    var node = this.firstChild;
+	    while (node){
+	      node._transform();
+	      node = node.nextSibling;
+	    }
+	  }
+
+	});
+
+
+/***/ },
+/* 318 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Class = __webpack_require__(303);
+	var Base = __webpack_require__(310);
+	var Path = __webpack_require__(307);
+	var Surface = __webpack_require__(302);
+	var Group = __webpack_require__(316);
+	var DOM = __webpack_require__(306);
+
+	var fontAnchors = { start: 'left', middle: 'center', end: 'right' };
+
+	module.exports = Class(Base, {
+
+		base_initialize: Base.prototype.initialize,
+
+		initialize: function(text, font, alignment, path){
+			this.base_initialize('shape');
+			
+			var p = this.pathElement = DOM.createElement('path');
+			p.textpathok = true;
+			this.element.appendChild(p);
+			
+			p = this.textPathElement = DOM.createElement("textpath");
+			p.on = true;
+			p.style['v-text-align'] = 'left';
+			this.element.appendChild(p);
+			
+			this.draw.apply(this, arguments);
+		},
+		
+		draw: function(text, font, alignment, path){
+			var element = this.element,
+			    textPath = this.textPathElement,
+			    style = textPath.style;
+			
+			textPath.string = text;
+			
+			if (font){
+				if (typeof font == 'string'){
+					style.font = font;
+				} else {
+					for (var key in font){
+						var ckey = key.camelCase ? key.camelCase() : key;
+						if (ckey == 'fontFamily') style[ckey] = "'" + font[key] + "'";
+						// NOT UNIVERSALLY SUPPORTED OPTIONS
+						// else if (ckey == 'kerning') style['v-text-kern'] = !!font[key];
+						// else if (ckey == 'rotateGlyphs') style['v-rotate-letters'] = !!font[key];
+						// else if (ckey == 'letterSpacing') style['v-text-spacing'] = Number(font[key]) + '';
+						else style[ckey] = font[key];
+					}
+				}
+			}
+			
+			if (alignment) style['v-text-align'] = fontAnchors[alignment] || alignment;
+			
+			if (path){
+				this.currentPath = path = new Path(path);
+				this.element.path = path.toVML();
+			} else if (!this.currentPath){
+				var i = -1, offsetRows = '\n';
+				while ((i = text.indexOf('\n', i + 1)) > -1) offsetRows += '\n';
+				textPath.string = offsetRows + textPath.string;
+				this.element.path = 'm0,0l1,0';
+			}
+			
+			// Measuring the bounding box is currently necessary for gradients etc.
+			
+			// Clone element because the element is dead once it has been in the DOM
+			element = element.cloneNode(true);
+			style = element.style;
+			
+			// Reset coordinates while measuring
+			element.coordorigin = '0,0';
+			element.coordsize = '10000,10000';
+			style.left = '0px';
+			style.top = '0px';
+			style.width = '10000px';
+			style.height = '10000px';
+			style.rotation = 0;
+			element.removeChild(element.firstChild); // Remove skew
+			
+			// Inject the clone into the document
+			
+			var canvas = new Surface(1, 1),
+			    group = new Group(), // Wrapping it in a group seems to alleviate some client rect weirdness
+			    body = element.ownerDocument.body;
+			
+			canvas.inject(body);
+			group.element.appendChild(element);
+			group.inject(canvas);
+			
+			var ebb = element.getBoundingClientRect(),
+			    cbb = canvas.toElement().getBoundingClientRect();
+			
+			canvas.eject();
+			
+			this.left = ebb.left - cbb.left;
+			this.top = ebb.top - cbb.top;
+			this.width = ebb.right - ebb.left;
+			this.height = ebb.bottom - ebb.top;
+			this.right = ebb.right - cbb.left;
+			this.bottom = ebb.bottom - cbb.top;
+			
+			this._transform();
+
+			//this._size = { left: this.left, top: this.top, width: this.width, height: this.height};
+			return this;
+		}
+
+	});
+
+
+/***/ },
+/* 319 */
+/***/ function(module, exports) {
+
+	function warning(){
+		throw new Error('You must require a mode before requiring anything else.');
+	}
+
+	exports.Surface = warning;
+	exports.Path = warning;
+	exports.Shape = warning;
+	exports.Group = warning;
+	exports.ClippingRectangle = warning;
+	exports.Text = warning;
+
+	exports.setCurrent = function(mode){
+		for (var key in mode){
+			exports[key] = mode[key];
+		}
+	};
+
+
+/***/ },
+/* 320 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports.Surface = __webpack_require__(321);
+	exports.Path = __webpack_require__(322);
+	exports.Shape = __webpack_require__(323);
+	exports.Group = __webpack_require__(326);
+	exports.ClippingRectangle = __webpack_require__(327);
+	exports.Text = __webpack_require__(328);
+
+
+/***/ },
+/* 321 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Class = __webpack_require__(303);
+	var Container = __webpack_require__(304);
+	var Element = __webpack_require__(305);
+
+	var fps = 1000 / 60, invalids = [], renderTimer, renderInvalids = function(){
+		clearTimeout(renderTimer);
+		renderTimer = null;
+		var canvases = invalids;
+		invalids = [];
+		for (var i = 0, l = canvases.length; i < l; i++){
+			var c = canvases[i];
+			c._valid = true;
+			c.render();
+		}
+	};
+
+	var resolution = typeof window !== 'undefined' && window.devicePixelRatio || 1;
+
+	var previousHit = null, previousHitSurface = null;
+
+	var CanvasSurface = Class(Element, Container, {
+
+		initialize: function(width, height, existingElement){
+			var element = this.element = existingElement || document.createElement('canvas');
+			var context = this.context = element.getContext('2d');
+			this._valid = true;
+			if (width != null && height != null) this.resize(width, height);
+
+			element.addEventListener('mousemove', this, false);
+			element.addEventListener('mouseout', this, false);
+			element.addEventListener('mouseover', this, false);
+			element.addEventListener('mouseup', this, false);
+			element.addEventListener('mousedown', this, false);
+			element.addEventListener('click', this, false);
+		},
+
+		handleEvent: function(event){
+			if (event.clientX == null) return;
+			var element = this.element,
+				rect = element.getBoundingClientRect(),
+				x = event.clientX - rect.left - element.clientLeft,
+				y = event.clientY - rect.top - element.clientTop,
+				hit = this.hitTest(x, y);
+
+			if (hit !== previousHit){
+				if (previousHit){
+					previousHit.dispatch({
+						type: 'mouseout',
+						target: previousHit,
+						relatedTarget: hit,
+						sourceEvent: event
+					});
+				}
+				if (hit){
+					hit.dispatch({
+						type: 'mouseover',
+						target: hit,
+						relatedTarget: previousHit,
+						sourceEvent: event
+					});
+				}
+				previousHit = hit;
+				previousHitSurface = this;
+				this.refreshCursor();
+			}
+
+			if (hit) hit.dispatch(event);
+		},
+
+		refreshCursor: function(){
+			if (previousHitSurface !== this) return;
+			var hit = previousHit, hitCursor = '', hitTooltip = '';
+			while (hit){
+				if (!hitCursor && hit._cursor){
+					hitCursor = hit._cursor;
+					if (hitTooltip) break;
+				}
+				if (!hitTooltip && hit._tooltip){
+					hitTooltip = hit._tooltip;
+					if (hitCursor) break;
+				}
+				hit = hit.parentNode;
+			}
+			// TODO: No way to set cursor/title on the surface
+			this.element.style.cursor = hitCursor;
+			this.element.title = hitTooltip;
+		},
+
+		resize: function(width, height){
+			var element = this.element;
+			element.setAttribute('width', width * resolution);
+			element.setAttribute('height', height * resolution);
+			element.style.width = width + 'px';
+			element.style.height = height + 'px';
+			this.width = width;
+			this.height = height;
+			return this;
+		},
+
+		invalidate: function(left, top, width, height){
+			if (this._valid){
+				this._valid = false;
+				invalids.push(this);
+				if (!renderTimer){
+					if (window.mozRequestAnimationFrame){
+						renderTimer = true;
+						window.mozRequestAnimationFrame(renderInvalids);
+					} else {
+						renderTimer = setTimeout(renderInvalids, fps);
+					}
+				}
+			}
+			return this;
+		},
+
+		hitTest: function(x, y){
+			if (x < 0 || y < 0 || x > this.width || y > this.height) return null;
+			var node = this.lastChild;
+			while (node){
+				var hit = node.hitTest(x, y);
+				if (hit) return hit;
+				node = node.previousSibling;
+			}
+			return null;
+		},
+
+		render: function(){
+			var node = this.firstChild, context = this.context;
+			context.setTransform(resolution, 0, 0, resolution, 0, 0);
+			context.clearRect(0, 0, this.width, this.height);
+			while (node){
+				node.renderTo(context, resolution, 0, 0, resolution, 0, 0);
+				node = node.nextSibling;
+			}
+			this.refreshCursor();
+		}
+
+	});
+
+	CanvasSurface.tagName = 'canvas';
+
+	module.exports = CanvasSurface;
+
+/***/ },
+/* 322 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Class = __webpack_require__(303);
+	var Path = __webpack_require__(308);
+
+	var CanvasPath = Class(Path, {
+
+		initialize: function(path){
+			this.reset();
+			if (path instanceof CanvasPath){
+				this.path = path.path.slice(0);
+			} else if (path){
+				if (path.applyToPath)
+					path.applyToPath(this);
+				else
+					this.push(path);
+			}
+		},
+
+		onReset: function(){
+			this.path = [];
+		},
+
+		onMove: function(sx, sy, x, y){
+			this.path.push(function(context){
+				context.moveTo(x, y);
+			});
+		},
+
+		onLine: function(sx, sy, x, y){
+			this.path.push(function(context){
+				context.lineTo(x, y);
+			});
+		},
+
+		onBezierCurve: function(sx, sy, p1x, p1y, p2x, p2y, x, y){
+			this.path.push(function(context){
+				context.bezierCurveTo(p1x, p1y, p2x, p2y, x, y);
+			});
+		},
+
+		_arcToBezier: Path.prototype.onArc,
+
+		onArc: function(sx, sy, ex, ey, cx, cy, rx, ry, sa, ea, ccw, rotation){
+			if (rx != ry || rotation) return this._arcToBezier(sx, sy, ex, ey, cx, cy, rx, ry, sa, ea, ccw, rotation);
+			this.path.push(function(context){
+				context.arc(cx, cy, rx, sa, ea, ccw);
+			});
+		},
+
+		onClose: function(){
+			this.path.push(function(context){
+				context.closePath();
+			});
+		},
+
+		toCommands: function(){
+			return this.path.slice(0);
+		}
+
+	});
+
+	module.exports = CanvasPath;
+
+/***/ },
+/* 323 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Class = __webpack_require__(303);
+	var Base = __webpack_require__(324);
+	var Path = __webpack_require__(322);
+
+	module.exports = Class(Base, {
+
+		base_initialize: Base.prototype.initialize,
+
+		initialize: function(path, width, height){
+			this.base_initialize();
+			this.width = width;
+			this.height = height;
+			if (path != null) this.draw(path);
+		},
+
+		draw: function(path, width, height){
+			if (!(path instanceof Path)) path = new Path(path);
+			this.path = path;
+			this._commands = path.toCommands();
+			if (width != null) this.width = width;
+			if (height != null) this.height = height;
+			return this.invalidate();
+		},
+
+		localHitTest: function(x, y){
+			if (!this._fill) return null;
+			if (this.width == null || this.height == null){
+				var context = Base._genericContext, commands = this._commands;
+				if (!commands) return null;
+				context.beginPath();
+				for (var i = 0, l = commands.length; i < l; i++)
+					commands[i](context);
+				return context.isPointInPath(x, y) ? this : null;
+			}
+			if (x > 0 && y > 0 && x < this.width && y < this.height){
+				return this;
+			}
+			return null;
+		},
+
+		renderShapeTo: function(context){
+			if (this._invisible || !this._commands || (!this._fill && !this._stroke)) {
+				return null;
+			}
+			context.transform(this.xx, this.yx, this.xy, this.yy, this.x, this.y);
+			var commands = this._commands,
+			    fill = this._fill,
+			    stroke = this._stroke,
+			    dash = this._strokeDash;
+
+			context.beginPath();
+
+			if (dash) {
+				if (context.setLineDash) {
+					context.setLineDash(dash);
+				} else {
+					// TODO: Remove when FF supports setLineDash.
+					context.mozDash = dash;
+				}
+				// TODO: Create fallback to other browsers.
+			} else {
+				if (context.setLineDash) {
+					context.setLineDash([]);
+				} else {
+					context.mozDash = null;
+				}
+			}
+
+			for (var i = 0, l = commands.length; i < l; i++)
+				commands[i](context);
+
+			if (fill){
+				var m = this._fillTransform;
+				if (m){
+					context.save(); // TODO: Optimize away this by restoring the transform before stroking
+					context.transform(m.xx, m.yx, m.xy, m.yy, m.x, m.y);
+					context.fillStyle = fill;
+					context.fill();
+					context.restore();
+				} else {
+					context.fillStyle = fill;
+					context.fill();
+				}
+			}
+			if (stroke){
+				context.strokeStyle = stroke;
+				context.lineWidth = this._strokeWidth;
+				context.lineCap = this._strokeCap;
+				context.lineJoin = this._strokeJoin;
+				context.stroke();
+			}
+		}
+
+	});
+
+
+/***/ },
+/* 324 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Class = __webpack_require__(303);
+	var Color = __webpack_require__(312);
+	var Transform = __webpack_require__(311);
+	var Node = __webpack_require__(325);
+
+	var genericCanvas = typeof document !== 'undefined' && document.createElement('canvas'),
+	    genericContext = genericCanvas && genericCanvas.getContext && genericCanvas.getContext('2d');
+
+	function recolorImage(img, color1, color2){
+		// TODO: Fix this experimental implementation
+		color1 = Color.detach(color1);
+		color2 = Color.detach(color2);
+		var canvas = document.createElement('canvas'),
+			context = canvas.getContext('2d');
+		canvas.width = img.width;
+		canvas.height = img.height;
+		context.fillStyle = color2[0];
+		context.fillRect(0, 0, img.width, img.height);
+		context.globalCompositeOperation = 'lighter';
+		context.drawImage(img, 0, 0);
+		return canvas;
+	}
+
+	var Base = Class(Node, {
+
+		initialize: function(){
+			this._fill = null;
+			this._pendingFill = null;
+			this._fillTransform = null;
+			this._stroke = null;
+			this._strokeCap = null;
+			this._strokeDash = null;
+			this._strokeJoin = null;
+			this._strokeWidth = null;
+		},
+
+		/* styles */
+
+		_addColors: function(gradient, stops){
+			// Enumerate stops, assumes offsets are enumerated in order
+			// TODO: Sort. Chrome doesn't always enumerate in expected order but requires stops to be specified in order.
+			if ('length' in stops) for (var i = 0, l = stops.length - 1; i <= l; i++)
+				gradient.addColorStop(i / l, new Color(stops[i]).toString());
+			else for (var offset in stops)
+				gradient.addColorStop(offset, new Color(stops[offset]).toString());
+			return gradient;
+		},
+
+
+		fill: function(color){
+			if (arguments.length > 1) return this.fillLinear(arguments);
+			if (this._pendingFill) this._pendingFill();
+			this._fill = color ? new Color(color).toString() : null;
+			return this.invalidate();
+		},
+
+		fillRadial: function(stops, focusX, focusY, radiusX, radiusY, centerX, centerY){
+			if (focusX == null) focusX = (this.left || 0) + (this.width || 0) * 0.5;
+			if (focusY == null) focusY = (this.top || 0) + (this.height || 0) * 0.5;
+			if (radiusY == null) radiusY = radiusX || (this.height * 0.5) || 0;
+			if (radiusX == null) radiusX = (this.width || 0) * 0.5;
+			if (centerX == null) centerX = focusX;
+			if (centerY == null) centerY = focusY;
+
+			centerX += centerX - focusX;
+			centerY += centerY - focusY;
+
+			if (radiusX === 0 || radiusX === '0') return this.fillLinear(stops);
+			var ys = radiusY / radiusX;
+
+			if (this._pendingFill) this._pendingFill();
+
+			var gradient = genericContext.createRadialGradient(focusX, focusY / ys, 0, centerX, centerY / ys, radiusX * 2);
+
+			// Double fill radius to simulate repeating gradient
+			if ('length' in stops) for (var i = 0, l = stops.length - 1; i <= l; i++){
+				gradient.addColorStop(i / l / 2, new Color(stops[i]).toString());
+				gradient.addColorStop(1 - i / l / 2, new Color(stops[i]).toString());
+			} else for (var offset in stops){
+				gradient.addColorStop(offset / 2, new Color(stops[offset]).toString());
+				gradient.addColorStop(1- offset / 2, new Color(stops[offset]).toString());
+			}
+
+			this._fill = gradient;
+			this._fillTransform = new Transform(1, 0, 0, ys);
+			return this.invalidate();
+		},
+
+		fillLinear: function(stops, x1, y1, x2, y2){
+			if (arguments.length < 5){
+				var angle = ((x1 == null) ? 270 : x1) * Math.PI / 180;
+
+				var x = Math.cos(angle), y = -Math.sin(angle),
+					l = (Math.abs(x) + Math.abs(y)) / 2,
+					w = this.width || 1, h = this.height || 1;
+
+				x *= l; y *= l;
+
+				x1 = 0.5 - x;
+				x2 = 0.5 + x;
+				y1 = 0.5 - y;
+				y2 = 0.5 + y;
+				this._fillTransform = new Transform(w, 0, 0, h);
+			} else {
+				this._fillTransform = null;
+			}
+			if (this._pendingFill) this._pendingFill();
+			var gradient = genericContext.createLinearGradient(x1, y1, x2, y2);
+			this._addColors(gradient, stops);
+			this._fill = gradient;
+			return this.invalidate();
+		},
+
+		fillImage: function(url, width, height, left, top, color1, color2){
+			if (this._pendingFill) this._pendingFill();
+			var img = url;
+			if (!(img instanceof Image)){
+				img = new Image();
+				img.src = url;
+			}
+			if (img.width && img.height){
+				return this._fillImage(img, width, height, left || 0, top || 0, color1, color2);
+			}
+
+			// Not yet loaded
+			this._fill = null;
+			var self = this,
+				callback = function(){
+					cancel();
+					self._fillImage(img, width, height, left || 0, top || 0, color1, color2);
+				},
+				cancel = function(){
+					img.removeEventListener('load', callback, false);
+					self._pendingFill = null;
+				};
+			this._pendingFill = cancel;
+			img.addEventListener('load', callback, false);
+			return this;
+		},
+
+		_fillImage: function(img, width, height, left, top, color1, color2){
+			var w = width ? width / img.width : 1,
+				h = height ? height / img.height : 1;
+			if (color1 != null) img = recolorImage(img, color1, color2);
+			this._fill = genericContext.createPattern(img, 'repeat');
+			this._fillTransform = new Transform(w, 0, 0, h, left || 0, top || 0);
+			return this.invalidate();
+		},
+
+		stroke: function(color, width, cap, join, dash){
+			this._stroke = color ? new Color(color).toString() : null;
+			this._strokeWidth = (width != null) ? width : 1;
+			this._strokeCap = (cap != null) ? cap : 'round';
+			this._strokeJoin = (join != null) ? join : 'round';
+			this._strokeDash = dash;
+			return this.invalidate();
+		},
+
+		// Rendering
+
+		element_renderTo: Node.prototype.renderTo,
+
+		renderTo: function(context, xx, yx, xy, yy, x, y){
+			var opacity = this._opacity;
+			if (opacity == null || opacity >= 1){
+				return this.renderLayerTo(context, xx, yx, xy, yy, x, y);
+			}
+			if (this._fill && this._stroke){
+				return this.element_renderTo(context, xx, yx, xy, yy, x, y);
+			}
+			context.globalAlpha = opacity;
+			var r = this.renderLayerTo(context, xx, yx, xy, yy, x, y);
+			context.globalAlpha = 1;
+			return r;
+		},
+
+		renderLayerTo: function(context, xx, yx, xy, yy, x, y){
+			context.setTransform(xx, yx, xy, yy, x, y);
+			this.renderShapeTo(context);
+		}
+
+	});
+
+	Base._genericContext = genericContext;
+
+	module.exports = Base;
+
+
+/***/ },
+/* 325 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Class = __webpack_require__(303);
+	var Transform = __webpack_require__(311);
+	var Element = __webpack_require__(315);
+
+	var CanvasNode = Class(Transform, Element, {
+		
+		invalidate: function(){
+			if (this.parentNode) this.parentNode.invalidate();
+			if (this._layer) this._layerCache = null;
+			return this;
+		},
+
+		_place: function(){
+			this.invalidate();
+		},
+		
+		_transform: function(){
+			this.invalidate();
+		},
+		
+		blend: function(opacity){
+			if (opacity >= 1 && this._layer) this._layer = null;
+			this._opacity = opacity;
+			if (this.parentNode) this.parentNode.invalidate();
+			return this;
+		},
+		
+		// visibility
+		
+		hide: function(){
+			this._invisible = true;
+			if (this.parentNode) this.parentNode.invalidate();
+			return this;
+		},
+		
+		show: function(){
+			this._invisible = false;
+			if (this.parentNode) this.parentNode.invalidate();
+			return this;
+		},
+		
+		// interaction
+		
+		indicate: function(cursor, tooltip){
+			this._cursor = cursor;
+			this._tooltip = tooltip;
+			return this.invalidate();
+		},
+
+		hitTest: function(x, y){
+			if (this._invisible) return null;
+			var point = this.inversePoint(x, y);
+			if (!point) return null;
+			return this.localHitTest(point.x, point.y);
+		},
+
+		// rendering
+
+		renderTo: function(context, xx, yx, xy, yy, x, y){
+			var opacity = this._opacity;
+			if (opacity == null || opacity >= 1){
+				return this.renderLayerTo(context, xx, yx, xy, yy, x, y);
+			}
+
+			// Render to a compositing layer and cache it
+
+			var layer = this._layer, canvas, isDirty = true,
+				w = context.canvas.width, h = context.canvas.height;
+			if (layer){
+				layer.setTransform(1, 0, 0, 1, 0, 0);
+				canvas = layer.canvas;
+				if (canvas.width < w || canvas.height < h){
+					canvas.width = w;
+					canvas.height = h;
+				} else {
+					var c = this._layerCache;
+					if (c && c.xx === xx && c.yx === yx && c.xy === xy
+						&& c.yy === yy && c.x === x && c.y === y){
+						isDirty = false;
+					} else {
+						layer.clearRect(0, 0, w, h);
+					}
+				}
+			} else {
+				canvas = document.createElement('canvas');
+				canvas.width = w;
+				canvas.height = h;
+				this._layer = layer = canvas.getContext('2d');
+			}
+
+			if (isDirty){
+				this.renderLayerTo(layer, xx, yx, xy, yy, x, y);
+				this._layerCache = {
+					xx: xx,
+					yx: yx,
+					xy: xy,
+					yy: yy,
+					x: x,
+					y: y
+				};
+			}
+
+			context.globalAlpha = opacity;
+			context.setTransform(1, 0, 0, 1, 0, 0);
+			context.drawImage(
+				canvas,
+				0, 0, w, h,
+				0, 0, w, h
+			);
+			context.globalAlpha = 1;
+		}
+
+	});
+
+	module.exports = CanvasNode;
+
+/***/ },
+/* 326 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Class = __webpack_require__(303);
+	var Container = __webpack_require__(304);
+	var Node = __webpack_require__(325);
+
+	module.exports = Class(Node, Container, {
+		
+		initialize: function(width, height){
+			this.width = width;
+			this.height = height;
+		},
+
+		localHitTest: function(x, y){
+			var node = this.lastChild;
+			while (node){
+				var hit = node.hitTest(x, y);
+				if (hit) return hit;
+				node = node.previousSibling;
+			}
+			return null;
+		},
+
+		renderLayerTo: function(context, xx, yx, xy, yy, x, y){
+			if (this._invisible) return;
+
+			x = xx * this.x + xy * this.y + x;
+			y = yx * this.x + yy * this.y + y;
+
+			var t = xx;
+			xx = t * this.xx + xy * this.yx;
+			xy = t * this.xy + xy * this.yy;
+			t = yx;
+			yx = t * this.xx + yy * this.yx;
+			yy = t * this.xy + yy * this.yy;
+
+			var node = this.firstChild;
+			while (node){
+				node.renderTo(context, xx, yx, xy, yy, x, y);
+				node = node.nextSibling;
+			}
+		}
+
+	});
+
+
+/***/ },
+/* 327 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Class = __webpack_require__(303);
+	var Container = __webpack_require__(304);
+	var Node = __webpack_require__(325);
+
+	module.exports = Class(Node, Container, {
+
+		initialize: function(width, height){
+			this.width = width;
+			this.height = height;
+		},
+
+		localHitTest: function(x, y) {
+			var node = this.lastChild;
+			while (node){
+				var hit = node.hitTest(x, y);
+				if (hit) return hit;
+				node = node.previousSibling;
+			}
+			return null;
+		},
+
+		renderLayerTo: function(context, xx, yx, xy, yy, x, y) {
+			context.setTransform(xx, yx, xy, yy, x, y);
+			context.save();
+			// Need beginPath to fix Firefox bug. See 3354054.
+			context.beginPath();
+			context.rect(this.x, this.y, this.width, this.height);
+			context.clip();
+
+			var node = this.firstChild;
+			while(node) {
+				node.renderTo(context, xx, yx, xy, yy, x, y);
+				node = node.nextSibling;
+			}
+			context.restore();
+		}
+	});
+
+
+/***/ },
+/* 328 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Class = __webpack_require__(303);
+	var Base = __webpack_require__(324);
+
+	var fontAnchors = { middle: 'center' };
+
+	module.exports = Class(Base, {
+
+		base_initialize: Base.prototype.initialize,
+
+		initialize: function(text, font, alignment, path){
+			this.base_initialize();
+			this.draw.apply(this, arguments);
+		},
+
+		draw: function(text, font, alignment, path){
+			var em;
+			if (typeof font == 'string'){
+				em = Number(/(\d+)/.exec(font)[0]);
+			} else if (font){
+				em = parseFloat(font.fontSize || font['font-size'] || '12');
+				font = (font.fontStyle || font['font-style'] || '') + ' ' +
+					(font.fontVariant || font['font-variant'] || '') + ' ' +
+					(font.fontWeight || font['font-weight'] || '') + ' ' +
+					em + 'px ' +
+					(font.fontFamily || font['font-family'] || 'Arial');
+			} else {
+				font = this._font;
+			}
+
+			var lines = text && text.split(/\r?\n/);
+			this._font = font;
+			this._fontSize = em;
+			this._text = lines;
+			this._alignment = fontAnchors[alignment] || alignment || 'left';
+
+			var context = Base._genericContext;
+
+			context.font = this._font;
+			context.textAlign = this._alignment;
+			context.textBaseline = 'middle';
+
+			lines = this._text;
+			var l = lines.length, width = 0;
+			for (var i = 0; i < l; i++){
+				var w = context.measureText(lines[i]).width;
+				if (w > width) width = w;
+			}
+			this.width = width;
+			this.height = l ? l * 1.1 * em : 0;
+			return this.invalidate();
+		},
+
+		// Interaction
+
+		localHitTest: function(x, y){
+			if (!this._fill) return null;
+			if (x > 0 && y > 0 && x < this.width && y < this.height){
+				return this;
+			}
+			return null;
+		},
+
+		// Rendering
+
+		renderShapeTo: function(context){
+			if (this._invisible || !this._text || (!this._fill && !this._stroke)) {
+				return null;
+			}
+			context.transform(this.xx, this.yx, this.xy, this.yy, this.x, this.y);
+			var fill = this._fill,
+			    stroke = this._stroke,
+			    text = this._text,
+			    dash = this._strokeDash;
+
+			context.font = this._font;
+			context.textAlign = this._alignment;
+			context.textBaseline = 'middle';
+
+			var em = this._fontSize,
+			    y = em / 2,
+			    lineHeight = 1.1 * em,
+			    lines = text,
+			    l = lines.length;
+
+			if (fill){
+				context.fillStyle = fill;
+				for (var i = 0; i < l; i++)
+					context.fillText(lines[i], 0, y + i * lineHeight);
+			}
+			if (stroke){
+				if (dash) {
+					if (context.setLineDash) {
+						context.setLineDash(dash);
+					} else {
+						// TODO: Remove when FF supports setLineDash.
+						context.mozDash = dash;
+					}
+					// TODO: Create fallback to other browsers.
+				} else {
+					if (context.setLineDash) {
+						context.setLineDash([]);
+					} else {
+						context.mozDash = null;
+					}
+				}
+
+				context.strokeStyle = stroke;
+				context.lineWidth = this._strokeWidth;
+				context.lineCap = this._strokeCap;
+				context.lineJoin = this._strokeJoin;
+				for (i = 0; i < l; i++)
+					context.strokeText(lines[i], 0, y + i * lineHeight);
+			}
+		}
+
+	});
+
+
+/***/ },
+/* 329 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule emptyObject
+	 */
+
+	'use strict';
+
+	var emptyObject = {};
+
+	if (process.env.NODE_ENV !== 'production') {
+	  Object.freeze(emptyObject);
+	}
+
+	module.exports = emptyObject;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 330 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactArt = __webpack_require__(299);
+
+	var _reactArt2 = _interopRequireDefault(_reactArt);
+
+	var _circle = __webpack_require__(331);
+
+	var _circle2 = _interopRequireDefault(_circle);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Group = _reactArt2.default.Group;
+	var Shape = _reactArt2.default.Shape;
+	var Surface = _reactArt2.default.Surface;
+	var Transform = _reactArt2.default.Transform;
+
+	var WorldMapCanvas = function WorldMapCanvas(props) {
+		return _react2.default.createElement(Shape, { className: props.className /*fillOpacity={props.fillOpacity} fill={props.fill} */, cx: props.cx, cy: props.cy, radius: '0.930903078' });
+	};
+
+	exports.default = WorldMapCanvas;
+
+/***/ },
+/* 331 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014 Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 */
+
+	module.exports = __webpack_require__(332);
+
+
+/***/ },
+/* 332 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014 Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule Circle.art
+	 * @typechecks
+	 *
+	 * Example usage:
+	 * <Circle
+	 *   radius={10}
+	 *   stroke="green"
+	 *   strokeWidth={3}
+	 *   fill="blue"
+	 * />
+	 *
+	 */
+
+	var React = __webpack_require__(1);
+	var ReactART = __webpack_require__(299);
+
+	var Props = React.PropTypes;
+	var Shape = ReactART.Shape;
+	var Path = ReactART.Path;
+
+	/**
+	 * Circle is a React component for drawing circles. Like other ReactART
+	 * components, it must be used in a <Surface>.
+	 */
+	var Circle = React.createClass({displayName: "Circle",
+
+	  propTypes: {
+	    radius: Props.number.isRequired
+	  },
+
+	  render: function() {
+	    var radius = this.props.radius;
+
+	    var path = Path().moveTo(0, -radius)
+	        .arc(0, radius * 2, radius)
+	        .arc(0, radius * -2, radius)
+	        .close();
+	    return React.createElement(Shape, React.__spread({},  this.props, {d: path}));
+	  }
+
+	});
+
+	module.exports = Circle;
+
+
+/***/ },
+/* 333 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014 Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 */
+
+	module.exports = __webpack_require__(334);
+
+
+/***/ },
+/* 334 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014 Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule Rectangle.art
+	 * @typechecks
+	 *
+	 * Example usage:
+	 * <Rectangle
+	 *   width={50}
+	 *   height={50}
+	 *   stroke="green"
+	 *   fill="blue"
+	 * />
+	 *
+	 * Additional optional properties:
+	 *   (Number) radius
+	 *   (Number) radiusTopLeft
+	 *   (Number) radiusTopRight
+	 *   (Number) radiusBottomLeft
+	 *   (Number) radiusBottomRight
+	 *
+	 */
+
+	var React = __webpack_require__(1);
+	var ReactART = __webpack_require__(299);
+
+	var Props = React.PropTypes;
+	var Shape = ReactART.Shape;
+	var Path = ReactART.Path;
+
+	/**
+	 * Rectangle is a React component for drawing rectangles. Like other ReactART
+	 * components, it must be used in a <Surface>.
+	 */
+	var Rectangle = React.createClass({displayName: "Rectangle",
+
+	  propTypes: {
+	    width: Props.number.isRequired,
+	    height: Props.number.isRequired,
+	    radius: Props.number,
+	    radiusTopLeft: Props.number,
+	    radiusTopRight: Props.number,
+	    radiusBottomRight: Props.number,
+	    radiusBottomLeft: Props.number
+	  },
+
+	  render: function() {
+	    var width = this.props.width;
+	    var height = this.props.height;
+	    var radius = this.props.radius ? this.props.radius : 0;
+
+	    // if unspecified, radius(Top|Bottom)(Left|Right) defaults to the radius
+	    // property
+	    var tl = this.props.radiusTopLeft ? this.props.radiusTopLeft : radius;
+	    var tr = this.props.radiusTopRight ? this.props.radiusTopRight : radius;
+	    var br = this.props.radiusBottomRight ?
+	      this.props.radiusBottomRight : radius;
+	    var bl = this.props.radiusBottomLeft ? this.props.radiusBottomLeft : radius;
+
+	    var path = Path();
+
+	    // for negative width/height, offset the rectangle in the negative x/y
+	    // direction. for negative radius, just default to 0.
+	    if (width < 0) {
+	      path.move(width, 0);
+	      width = -width;
+	    }
+	    if (height < 0) {
+	      path.move(0, height);
+	      height = -height;
+	    }
+	    if (tl < 0) { tl = 0; }
+	    if (tr < 0) { tr = 0; }
+	    if (br < 0) { br = 0; }
+	    if (bl < 0) { bl = 0; }
+
+	    // disable border radius if it doesn't fit within the specified
+	    // width/height
+	    if (tl + tr > width) { tl = 0; tr = 0; }
+	    if (bl + br > width) { bl = 0; br = 0; }
+	    if (tl + bl > height) { tl = 0; bl = 0; }
+	    if (tr + br > height) { tr = 0; br = 0; }
+
+	    path.move(0, tl);
+
+	    if (tl > 0) { path.arc(tl, -tl); }
+	    path.line(width - (tr + tl), 0);
+
+	    if (tr > 0) { path.arc(tr, tr); }
+	    path.line(0, height - (tr + br));
+
+	    if (br > 0) { path.arc(-br, br); }
+	    path.line(- width + (br + bl), 0);
+
+	    if (bl > 0) { path.arc(-bl, -bl); }
+	    path.line(0, - height + (bl + tl));
+
+	    return React.createElement(Shape, React.__spread({},  this.props, {d: path}));
+	  }
+
+	});
+
+	module.exports = Rectangle;
+
+
+/***/ },
+/* 335 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Link = __webpack_require__(336);
 
 	var _Link2 = _interopRequireDefault(_Link);
 
-	var _Button = __webpack_require__(300);
+	var _Button = __webpack_require__(337);
 
 	var _Button2 = _interopRequireDefault(_Button);
 
-	var _BackButton = __webpack_require__(321);
+	var _BackButton = __webpack_require__(358);
 
 	var _BackButton2 = _interopRequireDefault(_BackButton);
 
-	var _svgInlineReact = __webpack_require__(301);
+	var _svgInlineReact = __webpack_require__(338);
 
 	var _svgInlineReact2 = _interopRequireDefault(_svgInlineReact);
 
 	var _reactMotion = __webpack_require__(277);
 
-	var _reactAddonsCloneWithProps = __webpack_require__(322);
+	var _reactAddonsCloneWithProps = __webpack_require__(359);
 
 	var _reactAddonsCloneWithProps2 = _interopRequireDefault(_reactAddonsCloneWithProps);
 
-	__webpack_require__(326);
+	__webpack_require__(363);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -31893,7 +35757,7 @@
 	// import DonationIcon from './DonationIcon'
 
 
-	var CAMPAIGN_HEIGHT = 400;
+	var CAMPAIGN_HEIGHT = 400 - 48;
 
 	var Header = _react2.default.createClass({
 		displayName: 'Header',
@@ -32027,7 +35891,7 @@
 		},
 
 		amountIconWillExit: function amountIconWillExit() {
-			return { scale: (0, _reactMotion.spring)(0.8, _reactMotion.presets.stiff), opacity: (0, _reactMotion.spring)(0), x: (0, _reactMotion.spring)(0, _reactMotion.presets.stiff) };
+			return { scale: (0, _reactMotion.spring)(0.8, { stiffness: 160, damping: 20 }), opacity: (0, _reactMotion.spring)(0), x: (0, _reactMotion.spring)(0, { stiffness: 160, damping: 20 }) };
 		},
 
 		getAmountIcon: function getAmountIcon() {
@@ -32035,7 +35899,7 @@
 			return _react2.default.createElement(
 				'div',
 				{ className: 'donation-amount-icon', key: 'donation-amount-icon' },
-				_react2.default.createElement(_svgInlineReact2.default, { src: __webpack_require__(310) }),
+				_react2.default.createElement(_svgInlineReact2.default, { src: __webpack_require__(347) }),
 				_react2.default.createElement(
 					'span',
 					{ className: 'donation-amount' },
@@ -32049,7 +35913,7 @@
 			return _react2.default.createElement(
 				'div',
 				{ className: 'charity-icon', key: 'charity-icon' },
-				_react2.default.createElement(_svgInlineReact2.default, { src: __webpack_require__(315) })
+				_react2.default.createElement(_svgInlineReact2.default, { src: __webpack_require__(352) })
 			);
 		},
 
@@ -32057,7 +35921,7 @@
 			return _react2.default.createElement(
 				'div',
 				{ className: 'thanks-icon', key: 'thanks-icon' },
-				_react2.default.createElement(_svgInlineReact2.default, { src: __webpack_require__(306) })
+				_react2.default.createElement(_svgInlineReact2.default, { src: __webpack_require__(343) })
 			);
 		},
 
@@ -32098,7 +35962,7 @@
 
 			var style = {
 				opacity: this.props.pageName === 'LandingPage' ? (0, _reactMotion.spring)(0) : (0, _reactMotion.spring)(1),
-				y: this.props.pageName === 'LoadingPage' ? (0, _reactMotion.spring)((CAMPAIGN_HEIGHT - this.header.clientHeight) / 2) : (0, _reactMotion.spring)(0)
+				y: this.props.pageName === 'LoadingPage' ? (0, _reactMotion.spring)((CAMPAIGN_HEIGHT - this.header.offsetHeight) / 2, { stiffness: 160, damping: 20 }) : (0, _reactMotion.spring)(0, { stiffness: 160, damping: 20 })
 			};
 
 			var donationIcons = this.getDonationIconKeys();
@@ -32137,7 +36001,7 @@
 									styles: donationIcons.map(function (key) {
 										return {
 											key: key,
-											style: { scale: (0, _reactMotion.spring)(1, _reactMotion.presets.stiff), opacity: (0, _reactMotion.spring)(1), x: (0, _reactMotion.spring)(_this.getXForIcon(key), _reactMotion.presets.stiff) }
+											style: { scale: (0, _reactMotion.spring)(1, { stiffness: 160, damping: 20 }), opacity: (0, _reactMotion.spring)(1), x: (0, _reactMotion.spring)(_this.getXForIcon(key), { stiffness: 160, damping: 20 }) }
 										};
 									}) },
 								function (interpolatedStyles) {
@@ -32151,7 +36015,7 @@
 											return _react2.default.cloneElement(_this.getDonationIconForKey(key), {
 												style: {
 													WebkitTransform: 'translate3d(' + style.x + 'px, 0px, 0) scale(' + style.scale + ')',
-													// transform: `scale(${style.scale}) transitionX(${style.x}px)`,
+													transform: 'translate3d(' + style.x + 'px, 0px, 0) scale(' + style.scale + ')',
 													opacity: style.opacity
 												},
 												key: key
@@ -32172,7 +36036,7 @@
 	exports.default = Header;
 
 /***/ },
-/* 299 */
+/* 336 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32203,7 +36067,7 @@
 	exports.default = Link;
 
 /***/ },
-/* 300 */
+/* 337 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32216,17 +36080,17 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _svgInlineReact = __webpack_require__(301);
+	var _svgInlineReact = __webpack_require__(338);
 
 	var _svgInlineReact2 = _interopRequireDefault(_svgInlineReact);
 
-	__webpack_require__(302);
+	__webpack_require__(339);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Button = function Button(props) {
 		var icon = null;
-		if (props.icon) icon = _react2.default.createElement(_svgInlineReact2.default, { src: __webpack_require__(304)("./" + props.icon + '.svg') });
+		if (props.icon) icon = _react2.default.createElement(_svgInlineReact2.default, { src: __webpack_require__(341)("./" + props.icon + '.svg') });
 
 		return _react2.default.createElement(
 			'button',
@@ -32252,7 +36116,7 @@
 	exports.default = Button;
 
 /***/ },
-/* 301 */
+/* 338 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32381,13 +36245,13 @@
 
 
 /***/ },
-/* 302 */
+/* 339 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(303);
+	var content = __webpack_require__(340);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(297)(content, {});
@@ -32407,7 +36271,7 @@
 	}
 
 /***/ },
-/* 303 */
+/* 340 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(296)();
@@ -32415,32 +36279,32 @@
 
 
 	// module
-	exports.push([module.id, "/* Fonts */\n/* Colors */\n/* Spacing */\n/* Animation */\n\nbutton {\n\t/* Reset browser defaults */\n\t-webkit-appearance: none;\n\t   -moz-appearance: none;\n\t        appearance: none;\n\toutline: none;\n\tbackground: none;\n\tborder: none;\n\tfont-family: \"Avenir\",helvetica,sans-serif;\n\t\n\tborder: 1px solid #ffffff;\n\tpadding: 0 24px;\n\n\tfont-size: .75rem;\n\tline-height: 1.375em;\n\ttext-transform: uppercase;\n\tletter-spacing: 1px;\n\tfont-weight: 500;\n\n\tcursor: pointer;\n\t\n\tposition: relative;\n\tdisplay: -webkit-box;\n\tdisplay: -webkit-flex;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-align: center;\n\t-webkit-align-items: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n\t-webkit-box-pack: center;\n\t-webkit-justify-content: center;\n\t    -ms-flex-pack: center;\n\t        justify-content: center;\n\n\t/* Default size */\n\theight: 48px;\n\tborder-radius: calc(48px / 2);\n\tbox-sizing: border-box;\n\n}\n\n/* Style an optional icon */\n\nbutton i {\n\tposition: absolute;\n\tleft: 24px;\n\ttop: calc(48px / 4);\n\theight: calc(48px / 2);\n\n}\n\n/* Darken button on highlight */\n\nbutton svg {\n\theight: calc(48px / 2);\n\n}\n\nbutton:focus, button:active {\n\t-webkit-appearance: none;\n\t-moz-appearance: none;\n\tappearance: none;\n\toutline: none;\n\t-webkit-tap-highlight-color: transparent;\n\n}\n\nbutton:focus, button:hover {\n\tbackground-image: -webkit-linear-gradient(45deg, rgba(0,0,0,0.04), rgba(0,0,0,0.04));\n\tbackground-image: linear-gradient(45deg, rgba(0,0,0,0.04), rgba(0,0,0,0.04));\n\n}\n\nbutton:active {\n\tbackground-image: -webkit-linear-gradient(45deg, rgba(0,0,0,0.08), rgba(0,0,0,0.08));\n\tbackground-image: linear-gradient(45deg, rgba(0,0,0,0.08), rgba(0,0,0,0.08));\n\n}\n\nbutton.circle {\n\twidth: 48px;\n\tpadding: 0;\n\n}\n\nbutton.circle i {\n\tposition: relative;\n\tleft: auto;\n\ttop: auto;\n\n}\n\nbutton.icon:not(.circle) {\n\tpadding: 0 calc(24px * 2 + 48px / 2);\n\n}\n\nbutton.icon.right i {\n\tleft: auto;\n\tright: 24px;\n\n}\n\nbutton.primary {\n\tbackground-color: #ffffff;\n\tcolor: #00AB6B;\n\n}\n\n/* Style an optional icon */\n\nbutton.primary path {\n\tstroke: #00AB6B;\n\tfill: #00AB6B;\n\n}\n\nbutton.secondary {\n\tcolor: #ffffff;\n\n}\n\n/* Style an optional icon */\n\nbutton.secondary path {\n\tstroke: #ffffff;\n\tfill: #ffffff;\n\n}\n\nbutton.tertiary {\n\tcolor: #ffffff;\n\tborder: none;\n\n}\n\n/* Style an optional icon */\n\nbutton.tertiary path {\n\tstroke: #ffffff;\n\tfill: #ffffff;\n\n}\n\nbutton.quaternary {\n\tcolor: rgba(255, 255, 255, 0.7);\n\tfont-size: .75rem;\n\tline-height: 1.375em;\n\tborder: none;\n\ttext-transform: none;\n\tletter-spacing: 0px;\n\n}\n\n/* Style an optional icon */\n\nbutton.quaternary path {\n\tstroke: rgba(255, 255, 255, 0.7);\n\tfill: rgba(255, 255, 255, 0.7);\n\n}\n\nbutton.large {\n\theight: 72px;\n\tborder-radius: calc(72px / 2);\n\n}\n\n/* Style an optional icon */\n\nbutton.large i {\n\tposition: absolute;\n\tleft: 24px;\n\ttop: calc(72px / 4);\n\theight: calc(72px / 2);\n\n}\n\nbutton.large svg {\n\theight: calc(72px / 2);\n\n}\n\nbutton.large.circle {\n\twidth: 72px;\n\tfont-size: 24px;\n\tfont-weight: 100;\n\n}\n\nbutton.large.circle i {\n\tposition: relative;\n\tleft: auto;\n\ttop: auto;\n\n}\n\nbutton.large.icon:not(.circle) {\n\tpadding: 0 calc(24px * 2 + 72px / 2);\n\n}\n\nbutton.small {\n\theight: 32px;\n\tborder-radius: calc(32px / 2);\n\n}\n\n/* Style an optional icon */\n\nbutton.small svg {\n\theight: calc(32px / 2);\n\n}\n\nbutton.small i {\n\tposition: absolute;\n\tleft: 24px;\n\ttop: calc(32px / 4);\n\theight: calc(32px / 2);\n\n}\n\nbutton.small.circle {\n\twidth: 32px;\n\n}\n\nbutton.small.circle i {\n\tposition: relative;\n\tleft: auto;\n\ttop: auto;\n\n}", ""]);
+	exports.push([module.id, "/* Fonts */\n/* Colors */\n/* Spacing */\n/* Animation */\n\nbutton {\n\t/* Reset browser defaults */\n\t-webkit-appearance: none;\n\t   -moz-appearance: none;\n\t        appearance: none;\n\toutline: none;\n\tbackground: none;\n\tborder: none;\n\tfont-family: \"Avenir\",helvetica,sans-serif;\n\t\n\tborder: 1px solid #ffffff;\n\tpadding: 0 24px;\n\n\tfont-size: .75rem;\n\tline-height: 1.375em;\n\ttext-transform: uppercase;\n\tletter-spacing: 1px;\n\tfont-weight: 500;\n\n\tcursor: pointer;\n\t\n\tposition: relative;\n\n\t/* Default size */\n\theight: 48px;\n\tborder-radius: calc(48px / 2);\n\tbox-sizing: border-box;\n\n}\n\n/*  Because Safari doesn't currently support displaying buttons as flex containers,\n\t\twe can add the flex container functionality to React's inner span isntead */\n\nbutton>span, button i {\n\tdisplay: -webkit-box;\n\tdisplay: -webkit-flex;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-align: center;\n\t-webkit-align-items: center;\n\t-ms-flex-align: center;\n\talign-items: center;\n\t-webkit-box-pack: center;\n\t-webkit-justify-content: center;\n\t-ms-flex-pack: center;\n\tjustify-content: center;\n\n}\n\n/* Style an optional icon */\n\nbutton i {\n\tposition: absolute;\n\tleft: 24px;\n\ttop: calc(48px / 4);\n\theight: calc(48px / 2);\n\n}\n\n/* Darken button on highlight */\n\nbutton svg {\n\theight: calc(48px / 2);\n\n}\n\nbutton:focus, button:active {\n\t-webkit-appearance: none;\n\t-moz-appearance: none;\n\tappearance: none;\n\toutline: none;\n\t-webkit-tap-highlight-color: transparent;\n\n}\n\nbutton:focus, button:hover {\n\tbackground-image: -webkit-linear-gradient(45deg, rgba(0,0,0,0.04), rgba(0,0,0,0.04));\n\tbackground-image: linear-gradient(45deg, rgba(0,0,0,0.04), rgba(0,0,0,0.04));\n\n}\n\nbutton:active {\n\tbackground-image: -webkit-linear-gradient(45deg, rgba(0,0,0,0.08), rgba(0,0,0,0.08));\n\tbackground-image: linear-gradient(45deg, rgba(0,0,0,0.08), rgba(0,0,0,0.08));\n\n}\n\nbutton.circle {\n\twidth: 48px;\n\tpadding: 0;\n\n}\n\nbutton.circle i {\n\tposition: relative;\n\tleft: auto;\n\ttop: auto;\n\n}\n\nbutton.icon:not(.circle) {\n\tpadding: 0 calc(24px * 2 + 48px / 2);\n\n}\n\nbutton.icon.right i {\n\tleft: auto;\n\tright: 24px;\n\n}\n\nbutton.primary {\n\tbackground-color: #ffffff;\n\tcolor: #00AB6B;\n\n}\n\n/* Style an optional icon */\n\nbutton.primary path {\n\tstroke: #00AB6B;\n\tfill: #00AB6B;\n\n}\n\nbutton.secondary {\n\tcolor: #ffffff;\n\n}\n\n/* Style an optional icon */\n\nbutton.secondary path {\n\tstroke: #ffffff;\n\tfill: #ffffff;\n\n}\n\nbutton.tertiary {\n\tcolor: #ffffff;\n\tborder: none;\n\n}\n\n/* Style an optional icon */\n\nbutton.tertiary path {\n\tstroke: #ffffff;\n\tfill: #ffffff;\n\n}\n\nbutton.quaternary {\n\tcolor: rgba(255, 255, 255, 0.7);\n\tfont-size: .75rem;\n\tline-height: 1.375em;\n\tborder: none;\n\ttext-transform: none;\n\tletter-spacing: 0px;\n\n}\n\n/* Style an optional icon */\n\nbutton.quaternary path {\n\tstroke: rgba(255, 255, 255, 0.7);\n\tfill: rgba(255, 255, 255, 0.7);\n\n}\n\nbutton.large {\n\theight: 72px;\n\tborder-radius: calc(72px / 2);\n\n}\n\n/* Style an optional icon */\n\nbutton.large i {\n\tposition: absolute;\n\tleft: 24px;\n\ttop: calc(72px / 4);\n\theight: calc(72px / 2);\n\n}\n\nbutton.large svg {\n\theight: calc(72px / 2);\n\n}\n\nbutton.large.circle {\n\twidth: 72px;\n\tfont-size: 24px;\n\tfont-weight: 100;\n\n}\n\nbutton.large.circle i {\n\tposition: relative;\n\tleft: auto;\n\ttop: auto;\n\n}\n\nbutton.large.icon:not(.circle) {\n\tpadding: 0 calc(24px * 2 + 72px / 2);\n\n}\n\nbutton.small {\n\theight: 32px;\n\tborder-radius: calc(32px / 2);\n\n}\n\n/* Style an optional icon */\n\nbutton.small svg {\n\theight: calc(32px / 2);\n\n}\n\nbutton.small i {\n\tposition: absolute;\n\tleft: 24px;\n\ttop: calc(32px / 4);\n\theight: calc(32px / 2);\n\n}\n\nbutton.small.circle {\n\twidth: 32px;\n\n}\n\nbutton.small.circle i {\n\tposition: relative;\n\tleft: auto;\n\ttop: auto;\n\n}", ""]);
 
 	// exports
 
 
 /***/ },
-/* 304 */
+/* 341 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./back.svg": 305,
-		"./check-circle-large.svg": 306,
-		"./circle-check.svg": 307,
-		"./circle-thin.svg": 308,
-		"./credit-card.svg": 309,
-		"./donate-amount-circle.svg": 310,
-		"./email.svg": 311,
-		"./envelope.svg": 312,
-		"./facebook.svg": 313,
-		"./forward.svg": 314,
-		"./heart-hands-circle.svg": 315,
-		"./heart-hands.svg": 316,
-		"./heartstrings.svg": 317,
-		"./info.svg": 318,
-		"./twitter.svg": 319,
-		"./world-map.svg": 320
+		"./back.svg": 342,
+		"./check-circle-large.svg": 343,
+		"./circle-check.svg": 344,
+		"./circle-thin.svg": 345,
+		"./credit-card.svg": 346,
+		"./donate-amount-circle.svg": 347,
+		"./email.svg": 348,
+		"./envelope.svg": 349,
+		"./facebook.svg": 350,
+		"./forward.svg": 351,
+		"./heart-hands-circle.svg": 352,
+		"./heart-hands.svg": 353,
+		"./heartstrings.svg": 354,
+		"./info.svg": 355,
+		"./twitter.svg": 356,
+		"./world-map.svg": 357
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -32453,107 +36317,107 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 304;
+	webpackContext.id = 341;
 
 
 /***/ },
-/* 305 */
+/* 342 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>back</title><desc>Created with Sketch.</desc><defs></defs><g id=\"24x24\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"back\" sketch:type=\"MSArtboardGroup\" stroke-linecap=\"round\" stroke=\"#3E97BD\" stroke-width=\"2\"><g id=\"Left-Arrow-:-Glyph\" sketch:type=\"MSLayerGroup\" transform=\"translate(5.000000, 8.000000)\"><path d=\"M0,4 L14,4\" id=\"Path-1\" sketch:type=\"MSShapeGroup\"></path><path d=\"M2.84217094e-14,4 L4,0\" id=\"Path-2\" sketch:type=\"MSShapeGroup\"></path><path d=\"M2.84217094e-14,4 L4,8\" id=\"Path-3\" sketch:type=\"MSShapeGroup\"></path></g></g></g></svg>"
 
 /***/ },
-/* 306 */
+/* 343 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 60 60\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>Group 2</title><desc>Created with Sketch.</desc><defs></defs><g id=\"Explorations\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"Desktop\" sketch:type=\"MSArtboardGroup\" transform=\"translate(-484.000000, -291.000000)\" stroke=\"#FFFFFF\" stroke-width=\"2\"><g id=\"Group\" sketch:type=\"MSLayerGroup\" transform=\"translate(162.000000, 265.000000)\"><g id=\"Header\" transform=\"translate(222.000000, 26.000000)\" sketch:type=\"MSShapeGroup\"><g id=\"Group-2\" transform=\"translate(100.000000, 0.000000)\"><circle id=\"Oval-1\" cx=\"30\" cy=\"30\" r=\"29\"></circle><path d=\"M18,32 L26.5,39 L42,22\" id=\"Check-:-Glyph\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path></g></g></g></g></g></svg>"
 
 /***/ },
-/* 307 */
+/* 344 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>circle-check</title><desc>Created with Sketch.</desc><defs></defs><g id=\"24x24\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"circle-check\" sketch:type=\"MSArtboardGroup\" fill=\"#FFFFFF\"><path d=\"M22.0055144,5.37271088 C23.2658363,7.27166391 24,9.5500954 24,12 C24,18.627417 18.627417,24 12,24 C5.372583,24 0,18.627417 0,12 C0,5.372583 5.372583,0 12,0 C15.4481289,0 18.556582,1.45432521 20.7454267,3.78304311 L11.845703,13.6780395 L7.62469505,10.2191312 C7.19343311,9.87412164 6.56414074,9.94404302 6.21913119,10.375305 C5.87412164,10.8065669 5.94404302,11.4358593 6.37530495,11.7808688 L11.375305,15.7808688 C11.7889619,16.1117944 12.3889172,16.0627169 12.7432941,15.6689647 L22.0055144,5.37271088 Z\" id=\"Background\" sketch:type=\"MSShapeGroup\"></path></g></g></svg>"
 
 /***/ },
-/* 308 */
+/* 345 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>circle-thin</title><desc>Created with Sketch.</desc><defs></defs><g id=\"24x24\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"circle-thin\" sketch:type=\"MSArtboardGroup\" stroke=\"#FFFFFF\"><circle id=\"Background\" sketch:type=\"MSShapeGroup\" cx=\"12\" cy=\"12\" r=\"11\"></circle></g></g></svg>"
 
 /***/ },
-/* 309 */
+/* 346 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>credit-card</title><desc>Created with Sketch.</desc><defs></defs><g id=\"24x24\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"credit-card\" sketch:type=\"MSArtboardGroup\" stroke=\"#3E97BD\" stroke-width=\"2\"><g id=\"Credit-Card-:-Glyph\" sketch:type=\"MSLayerGroup\" transform=\"translate(5.000000, 7.000000)\"><path d=\"M12.9370688,10 C12.3741377,10 1.41041379,10 1,10 C0.5,10 4.72107065e-09,9.5 2.71210432e-09,9 C7.03137965e-10,8.5 3.52928353e-10,1.5 0,1 C-3.52928298e-10,0.500000002 0.50000011,4.17682067e-09 1,-2.93098879e-14 C1.49999989,-4.17687926e-09 12.3741379,-2.84217094e-14 12.9370689,-2.93098879e-14 C13.5,-2.84217094e-14 14,0.499999998 14,1 C14,1.5 14,6.33452938 14,9 C14,9.5 13.5,10 12.9370688,10 Z\" id=\"Path-34\" stroke-linejoin=\"round\" sketch:type=\"MSShapeGroup\"></path><path d=\"M2,4 L12,4\" id=\"Path-35\" stroke-linecap=\"square\" sketch:type=\"MSShapeGroup\"></path></g></g></g></svg>"
 
 /***/ },
-/* 310 */
+/* 347 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 56 60\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>Background</title><desc>Created with Sketch.</desc><defs></defs><g id=\"Mocks\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"Heartstrings-Medium-03\" sketch:type=\"MSArtboardGroup\" transform=\"translate(-188.000000, -210.000000)\" stroke=\"#00AB6B\" stroke-opacity=\"0\" stroke-width=\"2\" fill=\"#FFFFFF\"><g id=\"Widget\" sketch:type=\"MSLayerGroup\" transform=\"translate(11.000000, 186.000000)\"><g id=\"Donate-Icons\" transform=\"translate(120.000000, 24.000000)\" sketch:type=\"MSShapeGroup\"><g id=\"Donation-Amount-:-Circle\" transform=\"translate(57.000000, 0.000000)\"><path d=\"M0.5,14.1887305 C5.79263031,5.67099567 15.2340492,0 26,0 C42.5685425,0 56,13.4314575 56,30 C56,46.5685425 42.5685425,60 26,60 C15.2340492,60 5.79263031,54.3290043 0.5,45.8112695 C3.35260195,41.2204129 5,35.8025916 5,30 C5,24.1974084 3.35260195,18.7795871 0.5,14.1887305 Z\" id=\"Background\"></path></g></g></g></g></g></svg>"
 
 /***/ },
-/* 311 */
+/* 348 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 48 48\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>email</title><desc>Created with Sketch.</desc><defs></defs><g id=\"48x48\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"email\" sketch:type=\"MSArtboardGroup\" fill=\"#3E97BD\"><path d=\"M9.03666678,38.5154197 L11.7395467,26.8105837 C11.8462393,26.3125056 12.2730098,25.9211585 12.806473,25.8500045 L27.921262,24.2846161 C28.3480325,24.2490391 28.3480325,23.6086529 27.921262,23.5374989 L12.806473,22.0788415 C12.2730098,22.0432645 11.8462393,21.6519174 11.7395467,21.1538393 L9.03666678,9.48458033 C8.78771732,8.48842408 9.8546436,7.67015287 10.779313,8.13265399 L40.3331711,22.9326897 C41.2222763,23.3951908 41.2222763,24.6759632 40.3331711,25.1384643 L10.779313,39.867346 C9.8546436,40.3298471 8.78771732,39.5115759 9.03666678,38.5154197 L9.03666678,38.5154197 Z\" id=\"Shape\" sketch:type=\"MSShapeGroup\"></path></g></g></svg>"
 
 /***/ },
-/* 312 */
+/* 349 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>envelope</title><desc>Created with Sketch.</desc><defs></defs><g id=\"24x24\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"envelope\" sketch:type=\"MSArtboardGroup\" stroke=\"#3E97BD\" stroke-width=\"2\" stroke-linejoin=\"round\"><g id=\"Envelope-:-Glyph\" sketch:type=\"MSLayerGroup\" transform=\"translate(5.000000, 7.000000)\"><path d=\"M12.9370688,10 C12.3741377,10 1.41041379,10 1,10 C0.5,10 4.72107065e-09,9.5 2.71210432e-09,9 C7.03137965e-10,8.5 3.52928353e-10,1.5 0,1 C-3.52928298e-10,0.500000002 0.50000011,4.17682067e-09 1,-2.93098879e-14 C1.49999989,-4.17687926e-09 12.3741379,-2.84217094e-14 12.9370689,-2.93098879e-14 C13.5,-2.84217094e-14 14,0.499999998 14,1 C14,1.5 14,6.33452938 14,9 C14,9.5 13.5,10 12.9370688,10 Z\" id=\"Path-34\" sketch:type=\"MSShapeGroup\"></path><path d=\"M1,1 L7,6 L13,1\" id=\"Path-38\" sketch:type=\"MSShapeGroup\"></path></g></g></g></svg>"
 
 /***/ },
-/* 313 */
+/* 350 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 48 48\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>facebook</title><desc>Created with Sketch.</desc><defs></defs><g id=\"48x48\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"facebook\" sketch:type=\"MSArtboardGroup\" fill=\"#3E97BD\"><path d=\"M19.3205007,40 L19.3205007,25.4033824 L14,25.4033824 L14,19.7147195 L19.3205007,19.7147195 L19.3205007,15.5195424 C19.3205007,10.6509904 22.5411621,8 27.2454937,8 C29.4987635,8 31.4353823,8.15492709 32,8.2241288 L32,13.3120079 L28.7371185,13.3134202 C26.1788236,13.3134202 25.683502,14.4357589 25.683502,16.0827596 L25.683502,19.7147195 L31.7849221,19.7147195 L30.9903883,25.4033824 L25.683502,25.4033824 L25.683502,40\" id=\"Facebook-:-Icon\" sketch:type=\"MSShapeGroup\"></path></g></g></svg>"
 
 /***/ },
-/* 314 */
+/* 351 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>forward</title><desc>Created with Sketch.</desc><defs></defs><g id=\"24x24\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"forward\" sketch:type=\"MSArtboardGroup\" stroke-linecap=\"round\" stroke=\"#3E97BD\" stroke-width=\"2\"><g id=\"Left-Arrow-:-Glyph\" sketch:type=\"MSLayerGroup\" transform=\"translate(12.000000, 12.000000) rotate(-180.000000) translate(-12.000000, -12.000000) translate(5.000000, 8.000000)\"><path d=\"M0,4 L14,4\" id=\"Path-1\" sketch:type=\"MSShapeGroup\"></path><path d=\"M2.84217094e-14,4 L4,0\" id=\"Path-2\" sketch:type=\"MSShapeGroup\"></path><path d=\"M2.84217094e-14,4 L4,8\" id=\"Path-3\" sketch:type=\"MSShapeGroup\"></path></g></g></g></svg>"
 
 /***/ },
-/* 315 */
+/* 352 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 60 60\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>Oval 1</title><desc>Created with Sketch.</desc><defs><radialGradient cx=\"50%\" cy=\"50%\" fx=\"50%\" fy=\"50%\" r=\"50%\" id=\"radialGradient-1\"><stop stop-color=\"#000000\" stop-opacity=\"0\" offset=\"0%\"></stop><stop stop-color=\"#000000\" stop-opacity=\"0.3\" offset=\"100%\"></stop></radialGradient></defs><g id=\"Mocks\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"Heartstrings-Medium-02\" sketch:type=\"MSArtboardGroup\" transform=\"translate(-158.000000, -210.000000)\" fill=\"#FFFFFF\"><g id=\"Group\" sketch:type=\"MSLayerGroup\" transform=\"translate(11.000000, 186.000000)\"><g id=\"Header\" transform=\"translate(24.000000, 24.000000)\" sketch:type=\"MSShapeGroup\"><path d=\"M153,60 C169.568542,60 183,46.5685425 183,30 C183,13.4314575 169.568542,0 153,0 C136.431458,0 123,13.4314575 123,30 C123,46.5685425 136.431458,60 153,60 Z M173,25.2954545 C173.0036,28.4446591 171.6788,31.5 169.2664,33.9026705 C167.8308,35.3261364 166.1772,36.9703409 164.4868,38.6511364 L154.7312,48.2697727 C154.3088,48.6897727 153.7424,48.9184659 153.1352,48.9184659 C152.4868,48.9184659 151.8716,48.6615341 151.408,48.1961932 C150.9528,47.7431818 150.6984,47.1481818 150.686,46.5197727 C150.6736,45.9040909 150.9032,45.3246023 151.3344,44.891875 L160.8188,35.4569886 L159.9336,34.575625 L150.4484,44.0117045 C150.0256,44.4277273 149.4556,44.6596023 148.8524,44.6596023 C148.2084,44.6596023 147.5932,44.4026705 147.1248,43.9385227 C146.6576,43.4731818 146.3992,42.8654545 146.3992,42.2211364 C146.3992,41.6169886 146.6288,41.0538068 147.0512,40.6338068 L156.536,31.198125 L155.5276,30.1950568 L146.0376,39.6259659 C145.6152,40.0463636 145.0488,40.2746591 144.442,40.2746591 C143.794,40.2746591 143.178,40.0177273 142.7144,39.5535795 C142.2592,39.1001705 142.0048,38.5047727 141.9924,37.8767614 C141.9756,37.2610795 142.2096,36.6811932 142.6404,36.2484659 L151.67,27.2705682 L151.9448,27.5438068 C152.6752,28.2660795 153.6596,28.6618182 154.714,28.6618182 C155.8672,28.6618182 157.0204,28.1761932 157.8776,27.3322159 C159.568,25.6430682 159.666,22.9957955 158.0908,21.4295455 L153.6932,17.0557386 C155.826,15.0818182 158.5908,14.0003977 161.5168,14.0003977 C164.5728,14.0003977 167.4532,15.1836364 169.6272,17.329375 C171.798,19.4743182 172.9964,22.3053409 173,25.2954545 Z M150.7844,26.3884091 L141.7552,35.3671023 C141.3328,35.783125 140.762,36.0157955 140.1596,36.0157955 C139.5152,36.0157955 138.9,35.7588636 138.4324,35.2939205 C137.9648,34.829375 137.7068,34.2216477 137.7068,33.5765341 C137.7068,32.9731818 137.9356,32.41 138.3588,31.99 L147.388,23.0113068 L150.7844,26.3884091 Z M157.1476,26.6047727 C156.4908,27.2574432 155.6056,27.6328977 154.7148,27.6328977 C153.9312,27.6328977 153.2052,27.3429545 152.6716,26.8171591 L144.6064,18.7930114 L143.876,19.5188636 L146.662,22.2886364 L137.632,31.2673295 C137.3656,31.5326136 137.152,31.8388636 136.992,32.1769318 C136.742,32.703125 136.6392,33.2826136 136.6884,33.858125 C134.3044,31.4634091 132.996,28.4239773 133,25.2954545 C133.004,22.3053409 134.202,19.4743182 136.3728,17.3285795 C138.5424,15.1832386 141.4224,14 144.4832,14 C146.2924,14 148.0156,14.4040909 149.6076,15.1951705 C150.2556,15.5133523 150.8872,15.9051136 151.4824,16.3656818 L151.7656,16.5860227 L157.3652,22.1502273 C158.5344,23.3211364 158.44,25.3193182 157.1476,26.6047727 Z\" id=\"Oval-1\"></path></g></g></g></g></svg>"
 
 /***/ },
-/* 316 */
+/* 353 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>heart-hands</title><desc>Created with Sketch.</desc><defs></defs><g id=\"24x24\" stroke=\"none\" stroke-width=\"0\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"heart-hands\" sketch:type=\"MSArtboardGroup\" fill=\"#3E97BD\"><path d=\"M13.6590397,10.0536819 C13.3963198,10.3153596 13.0422399,10.4658921 12.6859201,10.4658921 C12.3724802,10.4658921 12.0820803,10.3496441 11.8686404,10.1388348 L8.64256175,6.92168119 L8.35040187,7.21270004 L9.46480141,8.32319608 L5.8528029,11.9230594 C5.74624294,12.0294208 5.66080297,12.1522068 5.596803,12.2877499 C5.49680304,12.4987186 5.45568306,12.7310553 5.47536305,12.9617974 C4.52176344,12.0016744 3.99840366,10.7830628 4.00000366,9.5287317 C4.00160366,8.3298935 4.48080346,7.19484025 5.3491231,6.33454069 C6.21696275,5.47440059 7.36896227,5 8.59328177,5 C9.31696147,5 10.0062412,5.16201378 10.6430409,5.47918446 C10.9022408,5.60675437 11.1548807,5.76382482 11.3929606,5.94848226 L11.5062406,6.03682442 L13.7460796,8.26770317 C14.2137595,8.73716043 14.1759995,9.53829945 13.6590397,10.0536819 Z M11.1137607,9.96693434 L7.50208222,13.5667977 C7.33312229,13.7335953 7.10480238,13.8268808 6.86384248,13.8268808 C6.60608259,13.8268808 6.36000269,13.7238681 6.17296276,13.5374566 C5.98592284,13.3512045 5.88272288,13.107546 5.88272288,12.848898 C5.88272288,12.6069936 5.97424285,12.3811948 6.14352278,12.2128026 L9.75520129,8.61293923 L11.1137607,9.96693434 Z M19.9999971,9.5287317 C20.0014371,10.7913549 19.4715173,12.0163449 18.5065577,12.9796572 C17.9323179,13.550373 17.2708782,14.2095905 16.5947185,14.8834786 L12.6924801,18.7399169 C12.5235201,18.9083091 12.2969602,19 12.0540803,19 C11.7947204,19 11.5486406,18.8969873 11.3632006,18.7104163 C11.1811207,18.5287887 11.0793607,18.2902329 11.0744007,18.0382824 C11.0694407,17.7914346 11.1612807,17.5590979 11.3337606,17.3856028 L15.1275191,13.6028362 L14.7734392,13.2494675 L10.9793608,17.0327126 C10.8102409,17.1995102 10.5822409,17.2924768 10.340961,17.2924768 C10.0833612,17.2924768 9.83728126,17.1894641 9.64992133,17.0033715 C9.46304141,16.8168005 9.35968145,16.573142 9.35968145,16.3148129 C9.35968145,16.0725896 9.45152141,15.8467908 9.62048134,15.6783985 L13.4143998,11.8953129 L13.0110399,11.4931488 L9.21504151,15.2743209 C9.04608158,15.4428726 8.81952167,15.534404 8.57680177,15.534404 C8.31760188,15.534404 8.07120198,15.4313913 7.88576206,15.2452987 C7.70368213,15.0635116 7.60192218,14.8247964 7.59696218,14.5730053 C7.59024218,14.3261575 7.68384214,14.0936614 7.85616207,13.9201663 L11.4680006,10.3206219 L11.5779205,10.4301726 C11.8700804,10.7197563 12.2638403,10.8784213 12.6856001,10.8784213 C13.1468799,10.8784213 13.6081597,10.6837178 13.9510396,10.3453386 C14.6271993,9.66810183 14.6663993,8.6067202 14.0363195,7.97875733 L12.2772803,6.2251495 C13.1303999,5.43373768 14.2363194,5.00015946 15.406719,5.00015946 C16.6291185,5.00015946 17.781278,5.47456005 18.6508776,6.33485962 C19.5191973,7.19484025 19.9985571,8.3298935 19.9999971,9.5287317 Z\" id=\"Shape\" sketch:type=\"MSShapeGroup\"></path></g></g></svg>"
 
 /***/ },
-/* 317 */
+/* 354 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>heartstrings</title><desc>Created with Sketch.</desc><defs></defs><g id=\"24x24\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"heartstrings\" sketch:type=\"MSArtboardGroup\" fill=\"#3E97BD\"><path d=\"M16.6060606,5.10879954 C15.8681663,4.93869631 15.0883554,4.96229963 14.3434343,5.22038751 L14.3434343,17.0353348 C14.6577308,16.8023573 15.0213717,16.5329652 15.4478114,16.2152964 C15.8204019,15.9379935 16.2129947,15.6407392 16.6060606,15.3225646 L16.6060606,5.10879954 Z M17.7373737,5.53904365 C19.1267504,6.29384838 20.1616162,7.78499304 20.1616162,9.65126453 C20.1616162,11.5139343 19.0654663,13.0601973 17.7373737,14.3329281 L17.7373737,5.53904365 Z M13.2121212,5.82518598 C12.802986,6.13179954 12.4204802,6.52908707 12.0808081,7.0256518 C11.6967774,6.4642395 11.2579949,6.0297272 10.7878788,5.7097731 L10.7878788,17.7807794 C11.3686314,18.2147948 11.7121024,18.48151 12.0808081,18.8409091 C12.4161988,18.5139841 12.7241945,18.2551206 13.2121212,17.8815267 L13.2121212,5.82518598 Z M9.65656566,5.16871882 C8.90608523,4.944374 8.12617907,4.95250562 7.39393939,5.15248456 L7.39393939,15.1720071 C7.84264214,15.5438349 8.29269759,15.8906308 8.71380471,16.2152964 C9.06856458,16.4887315 9.38026407,16.7259389 9.65656566,16.934507 L9.65656566,5.16871882 Z M6.26262626,5.63723411 C4.95537089,6.42181554 4,7.87634451 4,9.68277189 C4,11.4634338 5.01270537,12.9308579 6.26262626,14.1593024 L6.26262626,5.63723411 Z\" id=\"Imported-Layers\" sketch:type=\"MSShapeGroup\"></path></g></g></svg>"
 
 /***/ },
-/* 318 */
+/* 355 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>info</title><desc>Created with Sketch.</desc><defs></defs><g id=\"24x24\" stroke=\"none\" stroke-width=\"0\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"info\" sketch:type=\"MSArtboardGroup\" fill=\"#3E97BD\"><g id=\"Info-:-Glyph\" sketch:type=\"MSLayerGroup\" transform=\"translate(4.000000, 4.000000)\"><path d=\"M8,16 C12.418278,16 16,12.418278 16,8 C16,3.581722 12.418278,0 8,0 C3.581722,0 0,3.581722 0,8 C0,12.418278 3.581722,16 8,16 Z M8.86489391,3 C9.14751015,3 9.38567914,3.09800255 9.57940802,3.29401059 C9.7731369,3.49001863 9.86999989,3.72704806 9.86999989,4.00510598 C9.86999989,4.2831639 9.77199733,4.52019332 9.57598929,4.71620136 C9.37998125,4.9122094 9.14295183,5.01021195 8.86489391,5.01021195 C8.59139432,5.01021195 8.35664402,4.9122094 8.16063598,4.71620136 C7.96462794,4.52019332 7.86662539,4.2831639 7.86662539,4.00510598 C7.86662539,3.72704806 7.96348837,3.49001863 8.15721725,3.29401059 C8.35094613,3.09800255 8.58683599,3 8.86489391,3 Z M9.28881616,6.14522959 L7.88713775,11.0066605 C7.8096462,11.2847185 7.77090101,11.4670488 7.77090101,11.553657 C7.77090101,11.6037986 7.79141317,11.6505207 7.83243811,11.6938248 C7.87346305,11.7371289 7.9167665,11.7587807 7.96234977,11.7587807 C8.03984132,11.7587807 8.11733171,11.7245937 8.19482326,11.6562188 C8.39994795,11.4875607 8.64609389,11.1821574 8.93326846,10.7399998 L9.16574196,10.8767489 C8.47743465,12.0755888 7.74583421,12.6749997 6.9709187,12.6749997 C6.67462747,12.6749997 6.43873761,12.5918115 6.26324204,12.4254326 C6.08774647,12.2590537 6,12.0482342 6,11.7929679 C6,11.6243099 6.03874519,11.4100717 6.11623675,11.1502471 L7.06664308,7.88194332 C7.15780961,7.56741879 7.20339219,7.33038936 7.20339219,7.17084793 C7.20339219,7.07056475 7.16008874,6.98167871 7.07348053,6.90418716 C6.98687233,6.82669561 6.86835762,6.78795042 6.71793284,6.78795042 C6.64955794,6.78795042 6.5675093,6.79022955 6.47178444,6.79478787 L6.56067136,6.52128965 L8.87856882,6.14522959 L9.28881616,6.14522959 Z\" id=\"Oval-5\" sketch:type=\"MSShapeGroup\"></path></g></g></g></svg>"
 
 /***/ },
-/* 319 */
+/* 356 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 48 48\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>twitter</title><desc>Created with Sketch.</desc><defs></defs><g id=\"48x48\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"twitter\" sketch:type=\"MSArtboardGroup\" fill=\"#3E97BD\"><path d=\"M40,14.0778295 C38.8226051,14.5998704 37.5573064,14.9526956 36.2292695,15.1113792 C37.5848129,14.2990035 38.6257288,13.0126835 39.1159296,11.4800295 C37.8474706,12.2321382 36.4424156,12.7784029 34.9469988,13.0728335 C33.7493544,11.7971626 32.0431325,11 30.1548996,11 C26.5290757,11 23.5895095,13.9388058 23.5895095,17.5636022 C23.5895095,18.0780365 23.6476828,18.5790132 23.7595816,19.0593938 C18.3032298,18.7856763 13.4657156,16.1725463 10.2276748,12.2014781 C9.66256264,13.170899 9.33880537,14.2984184 9.33880537,15.5013008 C9.33880537,17.7784569 10.4979407,19.7875127 12.2595267,20.9645329 C11.183262,20.9304792 10.1710231,20.6352294 9.28578222,20.1436146 C9.28531402,20.170998 9.28531402,20.1984985 9.28531402,20.226116 C9.28531402,23.4063409 11.5483375,26.0592588 14.5516954,26.6621628 C14.0007462,26.8121866 13.4207689,26.8923476 12.8219467,26.8923476 C12.3989319,26.8923476 11.9876221,26.8512724 11.5868466,26.7746221 C12.4222247,29.3823691 14.8467757,31.2800187 17.719624,31.3330303 C15.4727532,33.0934116 12.6419255,34.1427594 9.56611434,34.1427594 C9.03623395,34.1427594 8.51361059,34.1117482 8,34.0511302 C10.9053879,35.9134388 14.3563408,37 18.0638648,37 C30.1395662,37 36.7429972,26.9983707 36.7429972,18.3247216 C36.7429972,18.040121 36.7366765,17.7570417 36.7240353,17.4756006 C38.0066572,16.5501805 39.1197922,15.3941074 40,14.0778295\" id=\"Twitter-:-Logo\" sketch:type=\"MSShapeGroup\"></path></g></g></svg>"
 
 /***/ },
-/* 320 */
+/* 357 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 351 226\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>Group</title><desc>Created with Sketch.</desc><defs></defs><g id=\"Explorations\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"Heartstrings-Donation-Flow---CNN---01\" sketch:type=\"MSArtboardGroup\" transform=\"translate(-12.000000, -256.000000)\"><g id=\"Group\" sketch:type=\"MSLayerGroup\" transform=\"translate(12.000000, 256.000000)\"><g id=\"Oval\" sketch:type=\"MSShapeGroup\"><g><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7678085\" cy=\"224.990652\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9367905\" cy=\"222.159522\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7678085\" cy=\"222.159522\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9367905\" cy=\"219.32074\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9367905\" cy=\"216.493436\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7678085\" cy=\"216.493436\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1249269\" cy=\"213.67761\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"213.67761\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"213.67761\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.594996\" cy=\"213.67761\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"210.850306\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"210.850306\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"208.011525\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"208.011525\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.594996\" cy=\"208.011525\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"205.184221\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"205.184221\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.594996\" cy=\"205.184221\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.448999\" cy=\"205.184221\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"202.353091\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"202.353091\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.594996\" cy=\"202.353091\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.45283\" cy=\"202.353091\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.272355\" cy=\"202.353091\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.118697\" cy=\"202.353091\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"199.529613\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"199.529613\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.594996\" cy=\"199.529613\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.45283\" cy=\"199.529613\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.272355\" cy=\"199.529613\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.118697\" cy=\"199.529613\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"196.687005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.594996\" cy=\"196.687005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.45283\" cy=\"196.687005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.272355\" cy=\"196.687005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.118697\" cy=\"196.687005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.938222\" cy=\"196.687005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"193.859701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"193.859701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.594996\" cy=\"193.859701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.45283\" cy=\"193.859701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.272355\" cy=\"193.859701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.118697\" cy=\"193.859701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.938222\" cy=\"193.859701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.796056\" cy=\"193.859701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7678085\" cy=\"191.059178\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.583503\" cy=\"191.059178\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.441337\" cy=\"191.059178\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.260863\" cy=\"191.059178\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.107204\" cy=\"191.059178\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.926729\" cy=\"191.059178\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.784564\" cy=\"191.059178\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.604089\" cy=\"191.059178\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7678085\" cy=\"188.2357\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.583503\" cy=\"188.2357\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.441337\" cy=\"188.2357\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.260863\" cy=\"188.2357\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.107204\" cy=\"188.2357\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.926729\" cy=\"188.2357\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.784564\" cy=\"188.2357\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.604089\" cy=\"188.2357\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7678085\" cy=\"185.393093\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.583503\" cy=\"185.393093\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.441337\" cy=\"185.393093\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.260863\" cy=\"185.393093\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.107204\" cy=\"185.393093\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.926729\" cy=\"185.393093\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.784564\" cy=\"185.393093\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.604089\" cy=\"185.393093\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7678085\" cy=\"182.569615\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.583503\" cy=\"182.569615\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.441337\" cy=\"182.569615\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.260863\" cy=\"182.569615\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.107204\" cy=\"182.569615\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.926729\" cy=\"182.569615\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.784564\" cy=\"182.569615\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.604089\" cy=\"182.569615\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.435107\" cy=\"182.569615\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.250801\" cy=\"182.569615\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.108636\" cy=\"182.569615\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7678085\" cy=\"179.738485\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.587334\" cy=\"179.738485\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.445168\" cy=\"179.738485\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.264693\" cy=\"179.738485\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.107204\" cy=\"179.738485\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.926729\" cy=\"179.738485\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.784564\" cy=\"179.738485\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.604089\" cy=\"179.738485\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.435107\" cy=\"179.738485\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.254632\" cy=\"179.738485\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.112466\" cy=\"179.738485\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1172651\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9367905\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7678085\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.587334\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.445168\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.264693\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.107204\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.926729\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.784564\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.604089\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.435107\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.254632\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.112466\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1172651\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9367905\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7678085\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.587334\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.445168\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.264693\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.107204\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.926729\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.784564\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.604089\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.435107\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.254632\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.112466\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.259431\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1172651\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9367905\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7678085\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.587334\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.445168\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.264693\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.107204\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.926729\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.784564\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.604089\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.435107\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.254632\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.112466\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.931992\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2670927\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1249269\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.594996\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.45283\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill=\"#FFFFFF\" cx=\"106.272355\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.114866\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.934391\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.792225\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.611751\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.442769\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.262294\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.120128\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.935823\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.770672\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4475674\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2670927\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1249269\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.594996\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.45283\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.272355\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.114866\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.934391\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.792225\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.611751\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.442769\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.262294\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.120128\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4475674\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2670927\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1249269\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.594996\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.45283\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.272355\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.114866\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.934391\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.792225\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.611751\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.442769\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.258927\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2670927\" cy=\"159.93588\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1249269\" cy=\"159.93588\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"159.93588\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"159.93588\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.594996\" cy=\"159.93588\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.45283\" cy=\"159.93588\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.272355\" cy=\"159.93588\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.114866\" cy=\"159.93588\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.934391\" cy=\"159.93588\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.792225\" cy=\"159.93588\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1287577\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7793011\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.598826\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.45283\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.272355\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.118697\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.938222\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.796056\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.257495\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.934855\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.443232\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4475674\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2709236\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1287577\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7793011\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.598826\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.45283\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.272355\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"154.441801\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.257495\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.115329\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.934855\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.765873\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.585398\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.443232\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.262758\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6203802\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1287577\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7793011\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.598826\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.45283\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"151.595459\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"154.441801\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.257495\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.115329\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.934855\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.765873\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.585398\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.443232\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.262758\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8008549\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6203802\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.272355\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"148.775934\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"151.595459\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"154.441801\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.257495\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.115329\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.934855\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.765873\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.585398\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.443232\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.262758\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.2924773\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1234953\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9430207\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8008549\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"148.779765\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"151.59929\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"154.441801\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.257495\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.11916\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.938686\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.769704\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.589229\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.447063\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill=\"#FFFFFF\" cx=\"174.266589\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.7955924\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6151178\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.472952\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.2924773\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1234953\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9430207\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9482831\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7793011\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.598826\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"151.59929\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"154.441801\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.257495\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.11916\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.938686\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.769704\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.589229\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.447063\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.266589\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.7955924\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6151178\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.472952\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9430207\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4513982\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2709236\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"148.779765\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"151.59929\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"154.441801\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.257495\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.11916\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.938686\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.769704\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.589229\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.447063\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.266589\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1335564\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9530818\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.7955924\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6151178\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"151.59929\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"154.441801\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.257495\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.11916\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.938686\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.769704\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.589229\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.447063\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.266589\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2795532\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1373873\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9569127\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.7994233\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6189487\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4767828\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4513982\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"154.445632\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.265157\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.122991\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.938686\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.769704\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.589229\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.450894\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.266589\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4600278\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2795532\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1373873\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9569127\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.7994233\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6189487\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4767828\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.2963082\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9468516\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6242111\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.265157\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.122991\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.938686\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.769704\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.589229\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.450894\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.266589\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4600278\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2795532\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1373873\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9569127\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.7994233\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6189487\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4767828\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.2963082\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1273262\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9468516\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8046857\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6242111\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.265157\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.122991\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.938686\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.769704\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.589229\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.450894\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.266589\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4600278\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2795532\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1373873\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9569127\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.7994233\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6189487\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4767828\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.2963082\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1273262\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9468516\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8046857\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6242111\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4513982\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.122991\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.938686\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.769704\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.589229\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.450894\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.266589\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8133153\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6328407\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4638587\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.283384\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1412182\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9607436\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8070851\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6266104\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4844446\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.30397\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1311571\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9506825\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8123475\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.628042\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.45906\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2785854\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.458556\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.27425\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8133153\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6328407\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4638587\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.283384\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1412182\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9607436\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8070851\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6266104\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4844446\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.30397\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1311571\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9506825\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8123475\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.628042\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.45906\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2785854\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.268988\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.126822\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.946347\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.959312\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8133153\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6328407\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4638587\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.283384\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1412182\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9607436\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8070851\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6266104\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4844446\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.30397\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1311571\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9506825\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8123475\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.628042\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.45906\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2785854\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1364195\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.268988\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.126822\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.946347\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.777365\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.27425\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.959312\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8133153\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6328407\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4638587\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.283384\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1412182\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9607436\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8070851\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6266104\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4844446\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.30397\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1311571\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9506825\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8123475\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.628042\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.45906\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2785854\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1364195\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9559449\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.268988\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.126822\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.946347\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.777365\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.59306\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.458556\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.959312\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8171462\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6366715\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4676896\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2872149\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1450491\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9645744\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8070851\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6266104\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4844446\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.30397\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.134988\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9545133\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8123475\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6318729\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4628909\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2824162\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1402504\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9597757\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7907937\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.610319\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.468153\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.781196\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.600722\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.458556\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.27425\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.959312\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8171462\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6366715\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4676896\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2872149\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1450491\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9645744\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8070851\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6266104\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4844446\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.30397\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.134988\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9545133\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8123475\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6318729\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4628909\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2824162\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1402504\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9597757\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7907937\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.610319\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.949715\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.950178\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.781196\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.600722\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.458556\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.27425\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8171462\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6366715\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4676896\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2872149\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1450491\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9645744\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8070851\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6266104\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4844446\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.30397\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.134988\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9545133\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8123475\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6318729\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4628909\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2824162\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1402504\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9597757\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7907937\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.130189\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.949715\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.781196\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.600722\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.458556\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.27425\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1397867\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.959312\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8171462\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6366715\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4676896\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2872149\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1450491\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9645744\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8070851\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6266104\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4844446\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.30397\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.134988\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9545133\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8123475\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6318729\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4628909\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2824162\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1402504\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9597757\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7907937\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.610319\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.468153\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.287679\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.272819\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.950178\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.600722\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.458556\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.27425\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1551102\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9746355\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8286388\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6481642\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4791822\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2987076\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill=\"#FFFFFF\" cx=\"58.1565417\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9760671\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8224086\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.641934\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4997681\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3154626\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1464806\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.966006\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.827671\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6433655\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2939089\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.151743\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9712684\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8022864\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.621812\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.479646\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.299171\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.145513\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.284311\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.142146\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.961671\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.792689\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.470049\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.289574\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"4.32505998\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.3202613\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1551102\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9746355\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8286388\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6481642\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4791822\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2987076\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1565417\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9760671\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8224086\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.641934\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4997681\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3154626\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1464806\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.966006\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.827671\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6433655\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2939089\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.151743\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9712684\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8022864\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.621812\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.479646\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.299171\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.145513\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.284311\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.142146\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.961671\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.289574\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"7.15990886\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"9.97560336\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.3202613\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1551102\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9746355\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8286388\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6481642\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4791822\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2987076\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1565417\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9760671\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8224086\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.641934\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4997681\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3154626\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1464806\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.966006\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.151743\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9712684\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8022864\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.621812\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.479646\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.299171\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.142146\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.961671\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.289574\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8372684\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"15.6529629\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"32.6429018\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"35.5045668\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.3202613\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1551102\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9746355\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8286388\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6481642\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4791822\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2987076\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1565417\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9760671\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8224086\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.641934\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4997681\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3154626\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.151743\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9712684\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8022864\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.621812\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.479646\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.142146\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.961671\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"7.15990886\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8372684\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"32.6467326\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"35.5045668\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.3240922\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1551102\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9746355\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8324697\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6481642\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4830131\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3025384\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1603726\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9760671\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8224086\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.641934\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4997681\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3154626\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2977397\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1555739\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9750993\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.483477\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.473879\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.289574\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"4.32889086\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"7.15990886\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"9.97943424\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8372684\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"15.6529629\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"18.4993044\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"24.1766639\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"26.9961893\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"29.8272073\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"32.6467326\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"35.5045668\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.3240922\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1551102\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9746355\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8324697\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6481642\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4830131\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3025384\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1603726\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9760671\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8224086\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.641934\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4997681\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3154626\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1555739\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9750993\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.473416\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.292941\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.473879\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.289574\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"4.32889086\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"7.15990886\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"9.97943424\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8372684\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"15.6529629\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"18.4993044\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"21.3188298\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"24.1766639\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"26.9961893\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"29.8272073\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"32.6467326\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"35.5045668\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.3240922\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1551102\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9746355\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8324697\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6481642\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4830131\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3025384\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1603726\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9760671\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8224086\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.641934\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4997681\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3154626\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2977397\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1555739\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.625643\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.638567\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.473416\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.292941\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.473879\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.289574\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"7.15990886\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"9.97943424\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8372684\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"15.6529629\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"18.4993044\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"21.3188298\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"24.1766639\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"26.9961893\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"29.8272073\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"32.6467326\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"35.5045668\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.3240922\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1551102\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9746355\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8324697\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6481642\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4830131\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3025384\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1603726\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9760671\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8224086\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.641934\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4997681\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3154626\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1503115\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4782144\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8061173\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.625643\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.638567\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.473416\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.292941\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.289574\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"9.98709599\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8449301\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill=\"#FFFFFF\" cx=\"15.6606246\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"18.5069661\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"21.3264915\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"24.1843257\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"27.003851\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"29.834869\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"32.6543944\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"35.5122285\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.327923\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1627719\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9784664\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8401314\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6558259\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4906748\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3102002\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1680343\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9837288\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8300703\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6495957\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.5074299\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3231243\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1579732\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9736677\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8353327\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6510272\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3054015\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1632356\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9789301\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8099481\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.633304\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.830534\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.646229\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.481077\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.296772\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"145.952578\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"148.810412\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"151.629937\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"1.51702724\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"4.33272174\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"7.16757062\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"9.98709599\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8449301\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"15.6606246\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"18.5069661\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"21.3264915\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"24.1843257\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"27.003851\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"29.834869\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"32.6543944\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"35.5122285\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.327923\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1627719\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9784664\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8401314\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6558259\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4906748\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3102002\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1680343\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9837288\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8300703\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6495957\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.5074299\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3231243\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1579732\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9736677\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8353327\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1632356\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9789301\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8099481\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.491139\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.830534\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.646229\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.481077\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.296772\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.974131\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.136883\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"145.952578\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"148.810412\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"7.16757062\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"9.98326511\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8449301\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"15.6606246\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"18.5069661\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"21.3264915\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"24.1804948\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"27.003851\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"29.834869\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"32.6543944\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"35.5122285\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.327923\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1627719\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9784664\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8401314\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6558259\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4906748\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3102002\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1680343\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9837288\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8300703\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6495957\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.5074299\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3231243\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1579732\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9736677\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8353327\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6510272\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9789301\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8099481\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.633304\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.491139\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.830534\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.646229\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.481077\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.296772\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.974131\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"4.33272174\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"7.16757062\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"9.98326511\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8449301\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"15.6606246\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"18.5069661\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"21.3264915\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"24.1804948\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"27.003851\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"29.834869\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"32.6543944\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"35.5122285\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.327923\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1627719\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9784664\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8401314\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6558259\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9837288\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8300703\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.5074299\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3231243\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1579732\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9736677\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8353327\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6510272\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3054015\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9789301\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8099481\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.633304\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.830534\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.646229\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.481077\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.296772\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.974131\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.624675\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"7.16757062\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"9.98709599\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8449301\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"15.6644555\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"18.510797\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"21.3264915\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"24.1843257\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"27.003851\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"29.8386999\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.3317539\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1666028\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9822973\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8401314\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3102002\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1680343\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8339012\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.5074299\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3269552\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1579732\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9774986\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6548581\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1632356\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9789301\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.813779\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.650059\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.481077\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.628506\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.302034\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"7.16757062\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"9.98709599\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8449301\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"15.6644555\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"18.510797\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"21.3264915\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"24.1843257\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4906748\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3102002\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1680343\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9875597\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8339012\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6495957\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3269552\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1579732\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6548581\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4858761\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3054015\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1632356\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9789301\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.813779\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.9727\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.830534\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.650059\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.481077\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.628506\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.302034\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8449301\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"15.6644555\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6596568\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4906748\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3102002\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1680343\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9875597\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3269552\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8353327\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6548581\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4858761\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3054015\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1632356\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9789301\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.830534\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.650059\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.481077\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.628506\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.136883\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9822973\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8401314\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6596568\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4906748\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3102002\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1680343\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9875597\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.5074299\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3269552\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9774986\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8353327\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6548581\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4858761\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3054015\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1632356\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.9727\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.830534\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.650059\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.481077\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.628506\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.302034\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9822973\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8439623\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4945057\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3102002\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1718652\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9875597\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6534266\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.5112607\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3269552\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1618041\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9774986\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6548581\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.489707\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3054015\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.9727\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.834365\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.650059\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.484908\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.628506\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9822973\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8439623\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6596568\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.5112607\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3269552\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1618041\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8391636\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6548581\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.9727\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.834365\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.650059\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.484908\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.628506\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.305865\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.136883\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9822973\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8439623\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3102002\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.9727\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.834365\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.650059\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.484908\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.628506\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.305865\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.136883\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"145.960239\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4945057\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3102002\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1718652\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9875597\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.5112607\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1618041\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9774986\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8391636\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6548581\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.489707\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.157005\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.9727\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.834365\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.650059\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.484908\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.628506\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.305865\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.136883\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4945057\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3140311\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1718652\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9913906\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6534266\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.5112607\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1618041\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.637135\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.157005\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.976531\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.834365\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.65389\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.484908\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.166099\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.981793\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.812811\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.632337\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.490171\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.305865\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.140714\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"145.960239\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8439623\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6634877\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1718652\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3307861\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1618041\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8391636\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.658689\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.489707\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3092324\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8176099\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.637135\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.494969\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.314495\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.157005\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.976531\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.834365\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.65389\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.484908\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.166099\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.981793\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.812811\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.632337\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.490171\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.305865\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.140714\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6634877\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8391636\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.658689\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.637135\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.494969\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.314495\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.157005\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.976531\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.834365\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.65389\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill=\"#FFFFFF\" cx=\"120.484908\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.166099\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.981793\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.812811\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.632337\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.490171\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.305865\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.140714\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"145.960239\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3140311\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1718652\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6534266\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8391636\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.658689\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.489707\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3092324\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9865919\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8176099\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.637135\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.494969\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.314495\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.157005\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.976531\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.834365\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.65389\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.484908\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.166099\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.981793\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.812811\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.632337\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.490171\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.305865\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.140714\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"145.960239\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8453938\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6610883\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.5189225\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1694659\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9889912\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8468254\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6625199\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4973688\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3168941\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9904228\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8252716\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.640966\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.502631\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.318326\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.164667\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.984193\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.842027\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.661552\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.496401\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.312095\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.16993\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.985624\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.820473\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.639998\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.494002\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.313527\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.144545\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8453938\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1694659\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9889912\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4973688\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3168941\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1747283\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8252716\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.640966\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.502631\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.318326\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.164667\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.984193\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.842027\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.661552\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.496401\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.312095\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.16993\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.985624\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.820473\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.639998\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.494002\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.313527\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.144545\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"145.967901\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1694659\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9889912\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6625199\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4973688\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3168941\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1747283\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.502631\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.318326\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.164667\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.984193\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.842027\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.661552\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.496401\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.312095\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.16993\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.985624\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.820473\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.639998\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.494002\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.313527\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.144545\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"145.967901\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3384479\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1694659\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9889912\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6625199\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4973688\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3168941\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1747283\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9904228\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.640966\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.502631\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.318326\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.164667\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.984193\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.842027\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.661552\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.496401\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.312095\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.16993\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.985624\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.820473\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.639998\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.494002\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.313527\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.144545\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3384479\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1732967\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3168941\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1785591\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9942536\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.644797\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.502631\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.322157\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.168498\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.984193\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.845858\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.661552\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.496401\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.312095\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.16993\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.985624\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.820473\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.639998\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.497832\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.317358\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.148376\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"145.967901\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"148.825735\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1732967\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6663507\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4973688\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3168941\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1785591\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9942536\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8252716\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.502631\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.322157\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.168498\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.984193\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.845858\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.661552\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.496401\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.312095\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.16993\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.985624\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.820473\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.639998\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.497832\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.317358\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"145.967901\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"148.825735\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"151.64143\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9889912\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8468254\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6663507\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4973688\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3168941\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1785591\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9942536\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8252716\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.644797\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.322157\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.168498\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.984193\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.845858\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.661552\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.496401\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.312095\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.16993\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.985624\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.820473\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.639998\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.497832\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.317358\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"145.967901\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"148.825735\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"151.64143\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9889912\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8468254\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6663507\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4973688\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3168941\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1785591\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9942536\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8252716\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.322157\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.168498\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.984193\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.845858\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.661552\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.312095\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.16993\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.985624\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.820473\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.148376\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3054015\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1670665\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.982761\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8176099\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.633304\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.494969\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.976531\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.650059\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.632337\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.305865\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.489707\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3054015\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1670665\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.982761\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8176099\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.633304\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.494969\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.632337\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.305865\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.136883\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1670665\" cy=\"4.65223494\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.982761\" cy=\"4.65223494\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.484908\" cy=\"4.65223494\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"4.65223494\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"4.65223494\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"4.65223494\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.632337\" cy=\"4.65223494\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"4.65223494\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.305865\" cy=\"4.65223494\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"1.82493098\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"1.82493098\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.632337\" cy=\"1.82493098\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"1.82493098\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"329.765711\" cy=\"210.869435\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"332.581406\" cy=\"210.869435\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.929431\" cy=\"208.026828\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"332.581406\" cy=\"208.026828\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.109906\" cy=\"205.199524\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.929431\" cy=\"205.199524\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"338.247273\" cy=\"205.199524\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.252072\" cy=\"202.37222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"338.247273\" cy=\"202.37222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.252072\" cy=\"199.544916\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.113737\" cy=\"199.544916\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.929431\" cy=\"199.544916\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.76428\" cy=\"199.544916\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"335.431578\" cy=\"199.544916\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.291852\" cy=\"196.706134\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.942396\" cy=\"196.706134\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.769079\" cy=\"196.706134\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.584773\" cy=\"196.706134\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.262133\" cy=\"196.706134\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.605359\" cy=\"196.706134\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.436377\" cy=\"196.706134\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.252072\" cy=\"196.706134\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.113737\" cy=\"196.706134\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.929431\" cy=\"196.706134\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.76428\" cy=\"196.706134\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.291852\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.119039\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.942396\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.80023\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.584773\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.442607\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.262133\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.108474\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.785834\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.605359\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.436377\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.252072\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.113737\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.929431\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.76428\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"315.579974\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.28036\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.111378\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.930903\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.788737\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.608263\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.757586\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.573281\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.434946\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.25064\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.100812\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.916507\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.774341\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.593866\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.428715\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.24441\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.102244\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.917938\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.752787\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.460834\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.28036\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.111378\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.930903\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.788737\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.608263\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.926568\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.757586\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.573281\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.434946\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.25064\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.100812\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.916507\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.774341\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.593866\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.428715\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.24441\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.102244\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.917938\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.752787\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.460834\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.28036\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.111378\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.930903\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.788737\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.608263\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.450773\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.778676\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.757586\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.573281\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.434946\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.25064\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.100812\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.916507\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.774341\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.593866\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.428715\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.24441\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.102244\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.917938\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.752787\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.603\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.460834\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.28036\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.111378\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.930903\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.788737\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.608263\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.450773\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.778676\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.757586\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.573281\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.434946\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.25064\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.100812\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.916507\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.774341\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.593866\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.428715\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.24441\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.102244\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.917938\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.606831\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.464665\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.28419\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.115208\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.934734\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.792568\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.608263\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.450773\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.782507\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.602032\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.434946\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.254471\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.100812\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.920338\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.778172\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.593866\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.428715\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.24441\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.102244\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.783475\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.606831\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.464665\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.28419\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.115208\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.934734\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.792568\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.608263\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.450773\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.274129\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.131964\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.602032\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.254471\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.100812\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.920338\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.778172\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.593866\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.24441\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.102244\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.603\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.464665\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill=\"#FFFFFF\" cx=\"185.28419\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.115208\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.934734\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.792568\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.608263\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.450773\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.274129\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.131964\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.602032\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.920338\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.778172\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.593866\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.24441\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.603\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.464665\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.28419\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.115208\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.934734\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.792568\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.608263\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.450773\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.274129\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.131964\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.434946\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.254471\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.917938\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.756618\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.614493\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.472327\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.288021\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.119039\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.938565\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.796399\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.615924\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.458435\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.281791\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.25687\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.114704\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.93423\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.436377\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.252072\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.113737\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.794967\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.614493\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.472327\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.288021\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.119039\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.938565\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.796399\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.615924\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.458435\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.281791\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.441176\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.442607\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.782003\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.597697\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.436377\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.252072\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.113737\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.76428\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.794967\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.614493\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.472327\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.288021\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.119039\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.938565\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.796399\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.615924\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.458435\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.281791\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.135794\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.606327\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.441176\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.114704\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.93423\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.769079\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.442607\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.782003\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.794967\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.614493\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.472327\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.288021\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.119039\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.938565\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.796399\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.615924\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.458435\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.281791\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.135794\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.95532\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.606327\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.441176\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.114704\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.93423\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.769079\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.442607\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.258302\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.794967\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.614493\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.472327\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.291852\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.12287\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.946226\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.80023\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.619755\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.462266\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.281791\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.139625\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.959151\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.790169\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.932798\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.790632\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.606327\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.769079\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.794967\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.614493\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill=\"#FFFFFF\" cx=\"182.472327\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.291852\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.12287\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.946226\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.80023\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.619755\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.462266\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.281791\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.139625\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.959151\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.790169\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.609694\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.781539\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.606327\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.446438\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.262133\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.794967\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.614493\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.472327\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.291852\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.12287\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.946226\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.80023\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.619755\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.462266\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.281791\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.139625\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.959151\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.790169\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.609694\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.939028\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.790632\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.260701\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.588604\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.262133\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.794967\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.614493\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.472327\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.291852\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.12287\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.946226\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.80023\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.619755\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.462266\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.281791\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.139625\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.123334\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.939028\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.790632\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.606327\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.441176\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.260701\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.446438\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.262133\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.798798\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.618324\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.476158\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.291852\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.12287\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.946226\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.80023\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.619755\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.462266\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.285622\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.959151\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.790169\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.609694\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.467528\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.123334\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.939028\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.932798\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.790632\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.606327\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.441176\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.260701\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.446438\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.798798\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.618324\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.476158\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.291852\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.12287\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.946226\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.80023\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.619755\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.462266\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.285622\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.959151\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.790169\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.609694\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.467528\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.283223\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.123334\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.939028\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.789201\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.608726\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.932798\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.790632\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.606327\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.441176\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.118535\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.446438\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.798798\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.618324\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.476158\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.291852\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.12287\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.946226\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.80023\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.619755\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.462266\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.143456\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.959151\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.790169\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.609694\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.467528\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.283223\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.118072\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.445974\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.123334\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.939028\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.789201\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.608726\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.46656\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.113273\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.932798\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.790632\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.606327\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.441176\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.118535\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.798798\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.618324\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.476158\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.291852\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.12287\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.946226\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.80023\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.619755\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.462266\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.143456\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.959151\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.790169\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.609694\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.467528\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.283223\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.445974\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.2655\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.123334\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.939028\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.789201\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.608726\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.46656\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.282255\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.113273\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.932798\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.790632\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.606327\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.441176\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.260701\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.118535\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.938061\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.769079\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.446438\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.798798\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.618324\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.476158\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.295683\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.12287\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.946226\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.804061\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.623586\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.285622\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.143456\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.962982\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.794\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.613525\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.121902\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.941428\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.799262\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.614956\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.445974\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.2655\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.123334\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.94669\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.789201\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.608726\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.46656\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.286086\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.113273\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.936629\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.794463\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.613989\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.445007\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.264532\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.122366\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.938061\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.77291\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.588604\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.798798\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.618324\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.476158\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.295683\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.12287\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.946226\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.804061\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.623586\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.466097\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.285622\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.143456\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.962982\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.794\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.47519\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.290884\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.121902\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.941428\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.799262\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.614956\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.445974\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.2655\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.123334\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.94669\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.789201\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.608726\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.46656\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.286086\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.113273\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.936629\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.794463\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.613989\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.445007\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.264532\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.122366\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.938061\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.77291\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.588604\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.450269\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.798798\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.618324\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.295683\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.12287\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.466097\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.285622\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.143456\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.962982\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.794\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.613525\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.47519\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.290884\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.121902\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.941428\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.799262\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.614956\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.445974\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.2655\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.123334\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.94669\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.789201\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.608726\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.46656\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.286086\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.113273\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.936629\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.794463\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.613989\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.445007\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.264532\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.122366\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.938061\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.77291\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.588604\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.450269\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.93183\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.285622\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.143456\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.962982\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.794\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.613525\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.47519\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.290884\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.121902\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.941428\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.799262\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.614956\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.445974\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.2655\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.123334\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.94669\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.789201\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.608726\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.46656\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.286086\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.113273\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.936629\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.794463\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.613989\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.445007\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.264532\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.122366\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.938061\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.77291\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.588604\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.785834\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.605359\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.625985\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.134363\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.627417\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.297115\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.151118\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.970643\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.801661\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.621187\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.298546\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.125733\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.945259\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.806924\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.622618\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.453636\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.273162\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.130996\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.950521\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.796863\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.616388\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.474222\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.289917\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.124765\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.944291\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.802125\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.617819\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.448838\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.268363\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.130028\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.945722\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.77674\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.596266\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.457931\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.116136\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.613021\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.44787\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.134363\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.811722\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.627417\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.469928\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.297115\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.151118\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.970643\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.801661\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.298546\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.125733\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.945259\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.806924\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.622618\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.453636\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.273162\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.130996\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.950521\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.796863\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.616388\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.474222\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.289917\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.124765\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.944291\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.802125\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.617819\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.448838\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.268363\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.130028\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.945722\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.77674\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.596266\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.116136\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.267395\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.625985\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.303345\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.134363\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.953888\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.811722\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.627417\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.469928\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.151118\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.970643\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.801661\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.621187\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.298546\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.125733\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.945259\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.806924\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.622618\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.453636\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.273162\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.130996\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.950521\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.796863\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.616388\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.474222\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.289917\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.124765\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.944291\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.802125\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.617819\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.448838\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.268363\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.130028\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.945722\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.77674\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.596266\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.457931\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.273625\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.116136\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.267395\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.80646\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.483819\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.303345\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.134363\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.953888\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.970643\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.801661\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.479021\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.298546\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.125733\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.945259\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.806924\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.622618\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.453636\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.273162\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.130996\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.950521\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.796863\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.616388\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.474222\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.289917\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.124765\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.944291\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.802125\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.617819\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.448838\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.268363\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.130028\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.945722\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.77674\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.596266\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.457931\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.273625\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.116136\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.939492\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.797326\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.267395\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.125229\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.810291\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.629816\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.48765\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.303345\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.134363\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.953888\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.811722\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.473758\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.151118\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.970643\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.801661\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.482852\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.298546\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.129564\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.95292\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.810755\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.626449\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.457467\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.276992\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.134827\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.954352\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.796863\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.616388\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.474222\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.293747\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.124765\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.948122\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.802125\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.62165\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.452668\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.272194\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.130028\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.949553\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.780571\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.600097\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.457931\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.273625\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.119967\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.939492\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.797326\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.613021\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.267395\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.810291\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.629816\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.48765\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.303345\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.134363\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.953888\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.811722\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.631248\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.473758\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.297115\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.151118\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.970643\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.801661\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.621187\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.298546\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.129564\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.95292\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.810755\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.626449\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.457467\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.276992\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.134827\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.954352\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.796863\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.616388\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.474222\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.293747\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.124765\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.948122\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.802125\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.62165\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.452668\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.272194\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.130028\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.949553\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.780571\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.600097\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.457931\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.273625\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.119967\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.939492\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.797326\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.613021\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.267395\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.810291\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.629816\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.48765\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.303345\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.134363\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.953888\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.811722\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.631248\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.473758\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.297115\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.151118\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.970643\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.801661\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.621187\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.482852\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.298546\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.129564\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.95292\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.810755\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.626449\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.457467\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.276992\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.134827\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.954352\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.796863\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.616388\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.474222\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.293747\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.124765\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.948122\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.802125\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.62165\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.452668\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.272194\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.130028\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill=\"#FFFFFF\" cx=\"275.949553\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.780571\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.600097\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.457931\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.273625\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.119967\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.939492\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.797326\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.613021\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.44787\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.125229\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.810291\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.629816\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.48765\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.303345\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.134363\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.953888\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.811722\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.631248\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.473758\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.297115\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.151118\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.970643\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.801661\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.621187\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.482852\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.298546\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.129564\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.95292\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.810755\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.626449\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.457467\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.276992\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.134827\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.954352\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.796863\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.616388\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.474222\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.293747\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.124765\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.948122\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.802125\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.62165\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.452668\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.272194\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.130028\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.949553\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.780571\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.600097\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.457931\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.273625\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.119967\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.939492\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.797326\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.613021\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.44787\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.821783\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.637478\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.495312\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.318668\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.145856\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.969212\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.827046\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.64274\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.485251\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.312438\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.166441\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.985967\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.816985\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.63651\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.494344\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.310039\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.141057\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.960582\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.822247\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.637942\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.46896\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.292316\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.15015\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.965845\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.812186\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.631711\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.489546\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.30524\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.140089\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.959614\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.817449\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.633143\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.464161\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.283686\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.141521\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.961046\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.788233\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.61542\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.473254\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.288949\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.131459\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.954816\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.81265\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.628344\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.463193\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.282719\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.464625\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.495312\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.318668\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.145856\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.969212\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.827046\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.64274\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.485251\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.312438\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.166441\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.985967\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.816985\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.63651\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.494344\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.310039\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.141057\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.960582\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.822247\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.637942\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill=\"#FFFFFF\" cx=\"233.46896\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.292316\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.15015\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.965845\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.812186\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.631711\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.489546\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.30524\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.140089\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.959614\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.817449\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.633143\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.464161\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.283686\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.141521\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.961046\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.788233\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.61542\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.473254\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.288949\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.131459\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.954816\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.81265\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.628344\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.463193\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.464625\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"321.28415\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.821783\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.637478\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.145856\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.969212\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.827046\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.64274\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.485251\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.312438\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.166441\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.985967\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.816985\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.63651\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.494344\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.310039\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.141057\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.960582\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.822247\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.637942\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.46896\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.292316\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.15015\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.965845\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.812186\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.631711\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.489546\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.30524\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.140089\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.959614\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.817449\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.633143\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.464161\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.283686\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.141521\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.961046\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.788233\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.61542\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.473254\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.288949\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.131459\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.954816\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.81265\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.628344\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.464625\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"321.28415\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"324.111337\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.637478\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.969212\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.827046\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.64274\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.485251\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.312438\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.166441\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.985967\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.816985\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.63651\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.494344\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.310039\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.141057\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.960582\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.822247\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.637942\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.46896\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.292316\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.15015\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.965845\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.812186\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.631711\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.489546\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.30524\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.140089\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.959614\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.817449\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.633143\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.464161\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.283686\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.141521\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.961046\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.788233\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.61542\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.473254\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.288949\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.131459\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.954816\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.81265\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.628344\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.463193\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"321.28415\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"324.111337\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.821783\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.64514\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.502974\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.149686\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.969212\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.827046\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.646571\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.489082\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.312438\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.166441\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.985967\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.816985\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.640341\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.494344\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.31387\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.144888\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.968244\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.826078\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.641773\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.472791\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.292316\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.15015\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.965845\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.812186\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.631711\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.489546\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.309071\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.140089\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.959614\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.817449\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.636974\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.464161\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.291348\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.145351\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.964877\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.795895\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.61542\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.473254\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.288949\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.131459\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.954816\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.81265\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.628344\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.463193\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.282719\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.960078\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"315.610621\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"324.118999\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.821783\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.64514\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.502974\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.149686\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.827046\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.646571\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.489082\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.312438\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.166441\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.985967\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.816985\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.640341\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.494344\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.31387\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.144888\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.968244\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.826078\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.641773\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.472791\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.292316\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.15015\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.965845\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.812186\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.631711\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.489546\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.309071\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.140089\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.959614\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.817449\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.636974\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.464161\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.291348\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.145351\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.964877\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.795895\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.61542\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.473254\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.288949\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.131459\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.954816\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.81265\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.628344\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.463193\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.282719\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.140553\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.960078\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.787265\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"315.610621\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"324.118999\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"326.938524\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"329.796358\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"332.612053\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.821783\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.64514\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.502974\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.149686\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.969212\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.827046\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.646571\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.489082\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.312438\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.166441\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.985967\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.816985\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.640341\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.494344\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.31387\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.144888\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.968244\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.826078\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.641773\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.472791\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.292316\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.15015\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.965845\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.812186\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.631711\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.489546\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.309071\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.140089\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.959614\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.817449\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.636974\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.464161\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.291348\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.145351\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.964877\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.795895\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.61542\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.473254\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.288949\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.131459\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.954816\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.81265\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.628344\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.463193\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.282719\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.140553\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.960078\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.787265\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"315.610621\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.468456\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"321.28415\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"324.118999\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"326.938524\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"329.796358\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"332.612053\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"335.454564\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.821783\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.64514\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.502974\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.149686\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.969212\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.827046\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.646571\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.489082\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.312438\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.166441\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.985967\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.816985\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.640341\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.494344\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.31387\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.144888\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.968244\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.826078\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.641773\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.472791\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.292316\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.15015\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.965845\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.812186\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.631711\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.489546\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.309071\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.140089\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.959614\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.817449\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.636974\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.464161\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.291348\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.145351\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.964877\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.795895\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.61542\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.473254\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.288949\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.131459\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.954816\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.81265\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.628344\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.463193\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.282719\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.140553\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.960078\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.787265\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"315.610621\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.468456\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"321.28415\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"324.118999\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"326.938524\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"329.796358\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"332.612053\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"335.454564\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"338.27792\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.829445\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.648971\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.510636\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.32633\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.976874\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.834708\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.654233\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.496744\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.316269\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.174103\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.993629\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.824647\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.648003\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.502006\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.321531\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.152549\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.972075\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.829909\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.649434\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.476621\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.296147\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.157812\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.977337\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.819848\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.639373\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.497207\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.316733\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.14392\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.82511\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.644636\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.295179\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.153013\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.968708\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.799726\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.619251\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.477085\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.296611\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.139121\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.962477\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.820312\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.636006\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.467024\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.29038\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.148214\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.963909\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.798758\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"315.618283\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.476117\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"321.291812\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"324.12283\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"326.942355\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"329.800189\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"332.619715\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"335.462225\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.648971\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.510636\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.32633\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.976874\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.834708\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.654233\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.993629\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.824647\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.648003\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.502006\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.321531\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.152549\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.972075\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.829909\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.649434\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.476621\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.296147\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.157812\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.977337\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.819848\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.639373\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.497207\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.316733\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.14392\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.82511\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.644636\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.295179\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.153013\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.968708\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.799726\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.619251\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.477085\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.296611\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.139121\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.962477\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.820312\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.636006\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.467024\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.29038\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.148214\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.963909\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.798758\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"315.618283\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.476117\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"321.291812\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"324.12283\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"326.942355\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"329.800189\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"332.619715\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"335.462225\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"338.285582\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"341.139585\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"343.95911\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"346.790128\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.648971\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.506805\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.32633\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.153517\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.976874\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.834708\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.650402\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.496744\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.316269\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.174103\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.648003\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.502006\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.321531\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.152549\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.972075\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.829909\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.649434\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.476621\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.296147\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.157812\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.977337\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.819848\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.639373\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.497207\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.316733\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.14392\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.82511\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.644636\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.295179\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.153013\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.968708\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.799726\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.619251\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.477085\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.296611\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.139121\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.962477\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.820312\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.636006\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.467024\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.29038\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.148214\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.963909\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.798758\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"315.618283\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.476117\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"321.291812\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"324.12283\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"326.942355\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"329.800189\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"332.619715\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"335.462225\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"338.285582\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"341.139585\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"343.95911\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"346.790128\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"349.613485\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.506805\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.32633\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.153517\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.976874\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.834708\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.650402\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.496744\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.316269\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.824647\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.502006\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.321531\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.152549\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.972075\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.829909\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.649434\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.476621\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.296147\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.157812\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.977337\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.819848\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.639373\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.497207\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.316733\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.14392\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.82511\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.644636\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.295179\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.153013\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.968708\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.799726\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.619251\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.477085\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.296611\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.139121\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.962477\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.820312\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.636006\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.467024\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.29038\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.148214\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.963909\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.798758\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"315.618283\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.476117\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"321.291812\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"324.12283\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"326.942355\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"329.800189\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"332.619715\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"335.462225\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"338.285582\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"341.139585\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"343.95911\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.510636\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.330161\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.161179\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.980704\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.838539\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.654233\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.500575\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.316269\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.975906\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.83374\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.480452\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.303809\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.161643\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.977337\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.819848\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.643204\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.501038\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.316733\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.147751\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.82511\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.644636\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.29901\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.153013\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.972539\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.803557\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.626913\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.480916\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.300441\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.142952\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.966308\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.824142\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.639837\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.470855\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.29038\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.148214\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill=\"#FFFFFF\" cx=\"309.963909\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.798758\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"315.618283\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.476117\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"321.295643\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"324.126661\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"326.946186\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"329.80402\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"332.619715\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"335.462225\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"338.285582\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"341.143416\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.161179\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.980704\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.838539\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.480452\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.303809\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.161643\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.977337\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.819848\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.643204\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.501038\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.316733\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.147751\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.82511\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.644636\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill=\"#FFFFFF\" cx=\"270.29901\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.153013\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.972539\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.803557\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.626913\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.480916\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.300441\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.142952\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.966308\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.824142\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.639837\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.470855\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.29038\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.148214\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.963909\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.798758\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"315.618283\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.476117\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"321.295643\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"332.619715\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.980704\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.325362\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.649434\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.480452\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.303809\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.161643\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.977337\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.819848\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.643204\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.501038\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.316733\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.147751\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.82511\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.644636\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.29901\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.153013\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.972539\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.803557\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.626913\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.480916\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.300441\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.142952\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.966308\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.824142\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.639837\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.470855\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.29038\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.148214\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.963909\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.798758\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.476117\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.325362\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.480452\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.303809\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.161643\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.977337\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.643204\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.501038\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.316733\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.147751\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.82511\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.644636\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.29901\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.153013\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.972539\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.803557\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.626913\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.480916\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.300441\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.142952\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.29038\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.148214\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.963909\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.325362\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.484283\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.303809\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.823679\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.643204\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.501038\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.320564\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.151582\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.828941\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.648467\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.29901\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.156844\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.972539\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.803557\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.626913\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.480916\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.300441\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.146783\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.294211\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.325362\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.501038\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.320564\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.151582\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.828941\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.648467\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.29901\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.156844\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.803557\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.300441\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.152549\" cy=\"49.9197052\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.501038\" cy=\"49.9197052\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.320564\" cy=\"49.9197052\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.151582\" cy=\"49.9197052\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"49.9197052\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.828941\" cy=\"49.9197052\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.648467\" cy=\"49.9197052\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"49.9197052\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.29901\" cy=\"49.9197052\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.156844\" cy=\"49.9197052\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.152549\" cy=\"47.0924012\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.975906\" cy=\"47.0924012\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.320564\" cy=\"47.0924012\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.151582\" cy=\"47.0924012\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"47.0924012\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.828941\" cy=\"47.0924012\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.648467\" cy=\"47.0924012\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"47.0924012\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.29901\" cy=\"47.0924012\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.156844\" cy=\"47.0924012\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.972539\" cy=\"47.0924012\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.975906\" cy=\"44.2612714\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.837571\" cy=\"44.2612714\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.653265\" cy=\"44.2612714\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.974938\" cy=\"44.2612714\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.832772\" cy=\"44.2612714\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.648467\" cy=\"44.2612714\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.479485\" cy=\"44.2612714\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.29901\" cy=\"44.2612714\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.156844\" cy=\"44.2612714\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.976369\" cy=\"44.2612714\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.510636\" cy=\"41.4339675\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.653265\" cy=\"41.4339675\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.484283\" cy=\"41.4339675\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.974938\" cy=\"41.4339675\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.832772\" cy=\"41.4339675\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.648467\" cy=\"41.4339675\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.479485\" cy=\"41.4339675\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.29901\" cy=\"41.4339675\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.156844\" cy=\"41.4339675\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.510636\" cy=\"38.5951859\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.479485\" cy=\"38.5951859\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.652801\" cy=\"35.767882\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.510636\" cy=\"35.767882\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.660463\" cy=\"32.9520556\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.522128\" cy=\"32.9520556\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.660463\" cy=\"30.1247516\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.522128\" cy=\"30.1247516\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.337823\" cy=\"30.1247516\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.168841\" cy=\"30.1247516\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.844769\" cy=\"27.2821442\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.660463\" cy=\"27.2821442\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.522128\" cy=\"27.2821442\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.168841\" cy=\"27.2821442\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.988366\" cy=\"27.2821442\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.337823\" cy=\"24.4586661\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.168841\" cy=\"24.4586661\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.988366\" cy=\"24.4586661\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.341654\" cy=\"21.6275363\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.168841\" cy=\"21.6275363\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse></g></g></g></g></g></svg>"
 
 /***/ },
-/* 321 */
+/* 358 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32566,7 +36430,7 @@
 
 	var _actions = __webpack_require__(186);
 
-	var _Button = __webpack_require__(300);
+	var _Button = __webpack_require__(337);
 
 	var _Button2 = _interopRequireDefault(_Button);
 
@@ -32585,13 +36449,13 @@
 	exports.default = BackButton;
 
 /***/ },
-/* 322 */
+/* 359 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(323);
+	module.exports = __webpack_require__(360);
 
 /***/ },
-/* 323 */
+/* 360 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -32609,7 +36473,7 @@
 	'use strict';
 
 	var ReactElement = __webpack_require__(42);
-	var ReactPropTransferer = __webpack_require__(324);
+	var ReactPropTransferer = __webpack_require__(361);
 
 	var keyOf = __webpack_require__(79);
 	var warning = __webpack_require__(25);
@@ -32651,7 +36515,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 324 */
+/* 361 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32669,7 +36533,7 @@
 
 	var assign = __webpack_require__(39);
 	var emptyFunction = __webpack_require__(15);
-	var joinClasses = __webpack_require__(325);
+	var joinClasses = __webpack_require__(362);
 
 	/**
 	 * Creates a transfer strategy that will merge prop values using the supplied
@@ -32764,7 +36628,7 @@
 	module.exports = ReactPropTransferer;
 
 /***/ },
-/* 325 */
+/* 362 */
 /***/ function(module, exports) {
 
 	/**
@@ -32808,13 +36672,13 @@
 	module.exports = joinClasses;
 
 /***/ },
-/* 326 */
+/* 363 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(327);
+	var content = __webpack_require__(364);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(297)(content, {});
@@ -32834,7 +36698,7 @@
 	}
 
 /***/ },
-/* 327 */
+/* 364 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(296)();
@@ -32848,7 +36712,7 @@
 
 
 /***/ },
-/* 328 */
+/* 365 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -32877,39 +36741,39 @@
 
 	var _WorldMap2 = _interopRequireDefault(_WorldMap);
 
-	var _Header = __webpack_require__(298);
+	var _Header = __webpack_require__(335);
 
 	var _Header2 = _interopRequireDefault(_Header);
 
-	var _LandingPage = __webpack_require__(329);
+	var _LandingPage = __webpack_require__(366);
 
 	var _LandingPage2 = _interopRequireDefault(_LandingPage);
 
-	var _ContributionPage = __webpack_require__(333);
+	var _ContributionPage = __webpack_require__(370);
 
 	var _ContributionPage2 = _interopRequireDefault(_ContributionPage);
 
-	var _EmailPage = __webpack_require__(337);
+	var _EmailPage = __webpack_require__(374);
 
 	var _EmailPage2 = _interopRequireDefault(_EmailPage);
 
-	var _PaymentPage = __webpack_require__(345);
+	var _PaymentPage = __webpack_require__(382);
 
 	var _PaymentPage2 = _interopRequireDefault(_PaymentPage);
 
-	var _ConfirmationPage = __webpack_require__(352);
+	var _ConfirmationPage = __webpack_require__(389);
 
 	var _ConfirmationPage2 = _interopRequireDefault(_ConfirmationPage);
 
-	var _LoadingPage = __webpack_require__(356);
+	var _LoadingPage = __webpack_require__(393);
 
 	var _LoadingPage2 = _interopRequireDefault(_LoadingPage);
 
-	var _ThanksPage = __webpack_require__(359);
+	var _ThanksPage = __webpack_require__(396);
 
 	var _ThanksPage2 = _interopRequireDefault(_ThanksPage);
 
-	__webpack_require__(363);
+	__webpack_require__(400);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32955,13 +36819,16 @@
 			// newPage.style.height = newPage.clientHeight
 			// newPage.className += " page-enter"
 
+			// Begin pages offscreen, measured by the width of the window
+			var startingPosition = window.innerWidth;
+
 			// Don't do any animation if we're transitioning out of the payment flow,
 			if (this.props.pageName === 'LandingPage' || this.props.pageName === 'ThanksPage') {
 				return { x: 0 };
 			}
 
 			return {
-				x: this.props.direction === 'next' ? 100 : -100
+				x: this.props.direction === 'next' ? startingPosition : -startingPosition
 			};
 		},
 
@@ -32977,8 +36844,12 @@
 			// oldPage.style.height = oldPage.clientHeight
 			oldPage.className += " page-leave";
 			oldPage.style.height = oldPage.clientHeight + 'px';
+
+			// Transition pages offscreen, measured by the width of the window
+			var endingPosition = window.innerWidth;
+
 			return {
-				x: this.props.direction === 'next' ? (0, _reactMotion.spring)(-100, _reactMotion.presets.stiff) : (0, _reactMotion.spring)(100, _reactMotion.presets.stiff)
+				x: this.props.direction === 'next' ? (0, _reactMotion.spring)(-endingPosition, { stiffness: 160, damping: 20 }) : (0, _reactMotion.spring)(endingPosition, { stiffness: 160, damping: 20 })
 			};
 		},
 
@@ -32986,6 +36857,10 @@
 			var _this = this;
 
 			var key = this.getKeyForPageName(this.props.pageName);
+
+			// Begin pages offscreen, measured by the width of the window
+			var startingPosition = window.innerWidth;
+
 			return _react2.default.createElement(
 				'div',
 				{ className: 'Page PaymentFlow', style: this.props.style },
@@ -32998,13 +36873,13 @@
 						defaultStyles: [{
 							key: key,
 							style: {
-								x: this.props.direction === 'next' ? 100 : -100
+								x: this.props.direction === 'next' ? startingPosition : -startingPosition
 							}
 						}],
 						styles: [{
 							key: key,
 							style: {
-								x: (0, _reactMotion.spring)(0, _reactMotion.presets.stiff)
+								x: (0, _reactMotion.spring)(0, { stiffness: 160, damping: 20 })
 							}
 						}] },
 					function (interpolatedStyles) {
@@ -33039,7 +36914,7 @@
 	exports.default = PaymentFlow;
 
 /***/ },
-/* 329 */
+/* 366 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33052,7 +36927,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _svgInlineReact = __webpack_require__(301);
+	var _svgInlineReact = __webpack_require__(338);
 
 	var _svgInlineReact2 = _interopRequireDefault(_svgInlineReact);
 
@@ -33060,19 +36935,19 @@
 
 	var _WorldMap2 = _interopRequireDefault(_WorldMap);
 
-	var _Link = __webpack_require__(299);
+	var _Link = __webpack_require__(336);
 
 	var _Link2 = _interopRequireDefault(_Link);
 
-	var _Button = __webpack_require__(300);
+	var _Button = __webpack_require__(337);
 
 	var _Button2 = _interopRequireDefault(_Button);
 
-	var _MakeContributionButton = __webpack_require__(330);
+	var _MakeContributionButton = __webpack_require__(367);
 
 	var _MakeContributionButton2 = _interopRequireDefault(_MakeContributionButton);
 
-	__webpack_require__(331);
+	__webpack_require__(368);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33107,7 +36982,7 @@
 						'Brought to you by ',
 						_react2.default.createElement(_Link2.default, { text: "The Heartstrings Project" })
 					),
-					_react2.default.createElement(_svgInlineReact2.default, { src: __webpack_require__(317) })
+					_react2.default.createElement(_svgInlineReact2.default, { src: __webpack_require__(354) })
 				)
 			);
 		}
@@ -33116,7 +36991,7 @@
 	exports.default = LandingPage;
 
 /***/ },
-/* 330 */
+/* 367 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33129,7 +37004,7 @@
 
 	var _actions = __webpack_require__(186);
 
-	var _Button = __webpack_require__(300);
+	var _Button = __webpack_require__(337);
 
 	var _Button2 = _interopRequireDefault(_Button);
 
@@ -33148,13 +37023,13 @@
 	exports.default = MakeContributionButton;
 
 /***/ },
-/* 331 */
+/* 368 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(332);
+	var content = __webpack_require__(369);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(297)(content, {});
@@ -33174,7 +37049,7 @@
 	}
 
 /***/ },
-/* 332 */
+/* 369 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(296)();
@@ -33188,7 +37063,7 @@
 
 
 /***/ },
-/* 333 */
+/* 370 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33201,27 +37076,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _svgInlineReact = __webpack_require__(301);
+	var _svgInlineReact = __webpack_require__(338);
 
 	var _svgInlineReact2 = _interopRequireDefault(_svgInlineReact);
 
-	var _Link = __webpack_require__(299);
+	var _Link = __webpack_require__(336);
 
 	var _Link2 = _interopRequireDefault(_Link);
 
-	var _Button = __webpack_require__(300);
+	var _Button = __webpack_require__(337);
 
 	var _Button2 = _interopRequireDefault(_Button);
 
-	var _BackButton = __webpack_require__(321);
+	var _BackButton = __webpack_require__(358);
 
 	var _BackButton2 = _interopRequireDefault(_BackButton);
 
-	var _ChooseAmountButton = __webpack_require__(334);
+	var _ChooseAmountButton = __webpack_require__(371);
 
 	var _ChooseAmountButton2 = _interopRequireDefault(_ChooseAmountButton);
 
-	__webpack_require__(335);
+	__webpack_require__(372);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33246,7 +37121,7 @@
 	exports.default = ContributionPage;
 
 /***/ },
-/* 334 */
+/* 371 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33259,7 +37134,7 @@
 
 	var _actions = __webpack_require__(186);
 
-	var _Button = __webpack_require__(300);
+	var _Button = __webpack_require__(337);
 
 	var _Button2 = _interopRequireDefault(_Button);
 
@@ -33279,13 +37154,13 @@
 	exports.default = MakeContributionButton;
 
 /***/ },
-/* 335 */
+/* 372 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(336);
+	var content = __webpack_require__(373);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(297)(content, {});
@@ -33305,7 +37180,7 @@
 	}
 
 /***/ },
-/* 336 */
+/* 373 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(296)();
@@ -33319,7 +37194,7 @@
 
 
 /***/ },
-/* 337 */
+/* 374 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33332,35 +37207,35 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _svgInlineReact = __webpack_require__(301);
+	var _svgInlineReact = __webpack_require__(338);
 
 	var _svgInlineReact2 = _interopRequireDefault(_svgInlineReact);
 
-	var _Link = __webpack_require__(299);
+	var _Link = __webpack_require__(336);
 
 	var _Link2 = _interopRequireDefault(_Link);
 
-	var _Button = __webpack_require__(300);
+	var _Button = __webpack_require__(337);
 
 	var _Button2 = _interopRequireDefault(_Button);
 
-	var _BackButton = __webpack_require__(321);
+	var _BackButton = __webpack_require__(358);
 
 	var _BackButton2 = _interopRequireDefault(_BackButton);
 
-	var _NextButton = __webpack_require__(338);
+	var _NextButton = __webpack_require__(375);
 
 	var _NextButton2 = _interopRequireDefault(_NextButton);
 
-	var _Input = __webpack_require__(339);
+	var _Input = __webpack_require__(376);
 
 	var _Input2 = _interopRequireDefault(_Input);
 
-	var _EmailInput = __webpack_require__(342);
+	var _EmailInput = __webpack_require__(379);
 
 	var _EmailInput2 = _interopRequireDefault(_EmailInput);
 
-	__webpack_require__(343);
+	__webpack_require__(380);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33385,7 +37260,7 @@
 	exports.default = EmailPage;
 
 /***/ },
-/* 338 */
+/* 375 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33398,7 +37273,7 @@
 
 	var _actions = __webpack_require__(186);
 
-	var _Button = __webpack_require__(300);
+	var _Button = __webpack_require__(337);
 
 	var _Button2 = _interopRequireDefault(_Button);
 
@@ -33417,7 +37292,7 @@
 	exports.default = NextButton;
 
 /***/ },
-/* 339 */
+/* 376 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33434,11 +37309,11 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _svgInlineReact = __webpack_require__(301);
+	var _svgInlineReact = __webpack_require__(338);
 
 	var _svgInlineReact2 = _interopRequireDefault(_svgInlineReact);
 
-	__webpack_require__(340);
+	__webpack_require__(377);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33459,7 +37334,7 @@
 			return _react2.default.createElement(
 				'div',
 				{ className: 'Input' },
-				_react2.default.createElement(_svgInlineReact2.default, { src: __webpack_require__(304)("./" + this.props.icon + '.svg') }),
+				_react2.default.createElement(_svgInlineReact2.default, { src: __webpack_require__(341)("./" + this.props.icon + '.svg') }),
 				_react2.default.createElement('input', { placeholder: this.props.placeholder,
 					value: this.props.value,
 					onChange: function onChange(e) {
@@ -33474,13 +37349,13 @@
 	exports.default = Input;
 
 /***/ },
-/* 340 */
+/* 377 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(341);
+	var content = __webpack_require__(378);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(297)(content, {});
@@ -33500,7 +37375,7 @@
 	}
 
 /***/ },
-/* 341 */
+/* 378 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(296)();
@@ -33514,7 +37389,7 @@
 
 
 /***/ },
-/* 342 */
+/* 379 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33527,7 +37402,7 @@
 
 	var _actions = __webpack_require__(186);
 
-	var _Input = __webpack_require__(339);
+	var _Input = __webpack_require__(376);
 
 	var _Input2 = _interopRequireDefault(_Input);
 
@@ -33546,13 +37421,13 @@
 	exports.default = EmailInput;
 
 /***/ },
-/* 343 */
+/* 380 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(344);
+	var content = __webpack_require__(381);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(297)(content, {});
@@ -33572,7 +37447,7 @@
 	}
 
 /***/ },
-/* 344 */
+/* 381 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(296)();
@@ -33586,7 +37461,7 @@
 
 
 /***/ },
-/* 345 */
+/* 382 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33599,39 +37474,39 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _svgInlineReact = __webpack_require__(301);
+	var _svgInlineReact = __webpack_require__(338);
 
 	var _svgInlineReact2 = _interopRequireDefault(_svgInlineReact);
 
-	var _Link = __webpack_require__(299);
+	var _Link = __webpack_require__(336);
 
 	var _Link2 = _interopRequireDefault(_Link);
 
-	var _Button = __webpack_require__(300);
+	var _Button = __webpack_require__(337);
 
 	var _Button2 = _interopRequireDefault(_Button);
 
-	var _BackButton = __webpack_require__(321);
+	var _BackButton = __webpack_require__(358);
 
 	var _BackButton2 = _interopRequireDefault(_BackButton);
 
-	var _NextButton = __webpack_require__(338);
+	var _NextButton = __webpack_require__(375);
 
 	var _NextButton2 = _interopRequireDefault(_NextButton);
 
-	var _Input = __webpack_require__(339);
+	var _Input = __webpack_require__(376);
 
 	var _Input2 = _interopRequireDefault(_Input);
 
-	var _PaymentInput = __webpack_require__(346);
+	var _PaymentInput = __webpack_require__(383);
 
 	var _PaymentInput2 = _interopRequireDefault(_PaymentInput);
 
-	var _Checkbox = __webpack_require__(347);
+	var _Checkbox = __webpack_require__(384);
 
 	var _Checkbox2 = _interopRequireDefault(_Checkbox);
 
-	__webpack_require__(350);
+	__webpack_require__(387);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33675,7 +37550,7 @@
 	exports.default = PaymentPage;
 
 /***/ },
-/* 346 */
+/* 383 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33688,7 +37563,7 @@
 
 	var _actions = __webpack_require__(186);
 
-	var _Input = __webpack_require__(339);
+	var _Input = __webpack_require__(376);
 
 	var _Input2 = _interopRequireDefault(_Input);
 
@@ -33707,7 +37582,7 @@
 	exports.default = PaymentInput;
 
 /***/ },
-/* 347 */
+/* 384 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33720,7 +37595,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	__webpack_require__(348);
+	__webpack_require__(385);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33740,13 +37615,13 @@
 	exports.default = Checkbox;
 
 /***/ },
-/* 348 */
+/* 385 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(349);
+	var content = __webpack_require__(386);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(297)(content, {});
@@ -33766,7 +37641,7 @@
 	}
 
 /***/ },
-/* 349 */
+/* 386 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(296)();
@@ -33780,13 +37655,13 @@
 
 
 /***/ },
-/* 350 */
+/* 387 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(351);
+	var content = __webpack_require__(388);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(297)(content, {});
@@ -33806,7 +37681,7 @@
 	}
 
 /***/ },
-/* 351 */
+/* 388 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(296)();
@@ -33820,7 +37695,7 @@
 
 
 /***/ },
-/* 352 */
+/* 389 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33833,27 +37708,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _svgInlineReact = __webpack_require__(301);
+	var _svgInlineReact = __webpack_require__(338);
 
 	var _svgInlineReact2 = _interopRequireDefault(_svgInlineReact);
 
-	var _Link = __webpack_require__(299);
+	var _Link = __webpack_require__(336);
 
 	var _Link2 = _interopRequireDefault(_Link);
 
-	var _Button = __webpack_require__(300);
+	var _Button = __webpack_require__(337);
 
 	var _Button2 = _interopRequireDefault(_Button);
 
-	var _BackButton = __webpack_require__(321);
+	var _BackButton = __webpack_require__(358);
 
 	var _BackButton2 = _interopRequireDefault(_BackButton);
 
-	var _ConfirmContributionButton = __webpack_require__(353);
+	var _ConfirmContributionButton = __webpack_require__(390);
 
 	var _ConfirmContributionButton2 = _interopRequireDefault(_ConfirmContributionButton);
 
-	__webpack_require__(354);
+	__webpack_require__(391);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33919,7 +37794,7 @@
 	exports.default = ConfirmationPage;
 
 /***/ },
-/* 353 */
+/* 390 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33932,7 +37807,7 @@
 
 	var _actions = __webpack_require__(186);
 
-	var _Button = __webpack_require__(300);
+	var _Button = __webpack_require__(337);
 
 	var _Button2 = _interopRequireDefault(_Button);
 
@@ -33955,13 +37830,13 @@
 	exports.default = ConfirmContributionButton;
 
 /***/ },
-/* 354 */
+/* 391 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(355);
+	var content = __webpack_require__(392);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(297)(content, {});
@@ -33981,7 +37856,7 @@
 	}
 
 /***/ },
-/* 355 */
+/* 392 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(296)();
@@ -33995,7 +37870,7 @@
 
 
 /***/ },
-/* 356 */
+/* 393 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34008,11 +37883,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _svgInlineReact = __webpack_require__(301);
+	var _svgInlineReact = __webpack_require__(338);
 
 	var _svgInlineReact2 = _interopRequireDefault(_svgInlineReact);
 
-	__webpack_require__(357);
+	__webpack_require__(394);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -34029,13 +37904,13 @@
 	exports.default = LoadingPage;
 
 /***/ },
-/* 357 */
+/* 394 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(358);
+	var content = __webpack_require__(395);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(297)(content, {});
@@ -34055,7 +37930,7 @@
 	}
 
 /***/ },
-/* 358 */
+/* 395 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(296)();
@@ -34069,7 +37944,7 @@
 
 
 /***/ },
-/* 359 */
+/* 396 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34082,27 +37957,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _svgInlineReact = __webpack_require__(301);
+	var _svgInlineReact = __webpack_require__(338);
 
 	var _svgInlineReact2 = _interopRequireDefault(_svgInlineReact);
 
-	var _Link = __webpack_require__(299);
+	var _Link = __webpack_require__(336);
 
 	var _Link2 = _interopRequireDefault(_Link);
 
-	var _Button = __webpack_require__(300);
+	var _Button = __webpack_require__(337);
 
 	var _Button2 = _interopRequireDefault(_Button);
 
-	var _Header = __webpack_require__(298);
+	var _Header = __webpack_require__(335);
 
 	var _Header2 = _interopRequireDefault(_Header);
 
-	var _MakeAnotherContributionButton = __webpack_require__(360);
+	var _MakeAnotherContributionButton = __webpack_require__(397);
 
 	var _MakeAnotherContributionButton2 = _interopRequireDefault(_MakeAnotherContributionButton);
 
-	__webpack_require__(361);
+	__webpack_require__(398);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -34140,7 +38015,7 @@
 	exports.default = ThanksPage;
 
 /***/ },
-/* 360 */
+/* 397 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34153,7 +38028,7 @@
 
 	var _actions = __webpack_require__(186);
 
-	var _Button = __webpack_require__(300);
+	var _Button = __webpack_require__(337);
 
 	var _Button2 = _interopRequireDefault(_Button);
 
@@ -34172,13 +38047,13 @@
 	exports.default = MakeAnotherContributionButton;
 
 /***/ },
-/* 361 */
+/* 398 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(362);
+	var content = __webpack_require__(399);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(297)(content, {});
@@ -34198,7 +38073,7 @@
 	}
 
 /***/ },
-/* 362 */
+/* 399 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(296)();
@@ -34212,13 +38087,13 @@
 
 
 /***/ },
-/* 363 */
+/* 400 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(364);
+	var content = __webpack_require__(401);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(297)(content, {});
@@ -34238,7 +38113,7 @@
 	}
 
 /***/ },
-/* 364 */
+/* 401 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(296)();
@@ -34252,13 +38127,13 @@
 
 
 /***/ },
-/* 365 */
+/* 402 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(366);
+	var content = __webpack_require__(403);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(297)(content, {});
@@ -34278,7 +38153,7 @@
 	}
 
 /***/ },
-/* 366 */
+/* 403 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(296)();
@@ -34286,7 +38161,7 @@
 
 
 	// module
-	exports.push([module.id, "/* Fonts */\n/* Colors */\n/* Spacing */\n/* Animation */\n\nbody {\n\tmargin: 0;\n}\n\n.Campaign {\n\tbackground: #00AB6B;\n\tbackground-image: -webkit-radial-gradient(50% 100%, rgba(0,0,0,0.00) 50%, rgba(0,0,0,0.20) 100%);\n\tbackground-image: radial-gradient(50% 100%, rgba(0,0,0,0.00) 50%, rgba(0,0,0,0.20) 100%);\n\n\tfont: 16px \"Avenir\",helvetica,sans-serif;\n\tline-height: 1.375em;\n\tcolor: #ffffff;\n\ttext-align: center;\n\n\theight: 400px;\n\toverflow: scroll;\n\tposition: relative;\n\n\tdisplay: -webkit-box;\n\n\tdisplay: -webkit-flex;\n\n\tdisplay: -ms-flexbox;\n\n\tdisplay: flex;\n\t-webkit-box-orient: vertical;\n\t-webkit-box-direction: normal;\n\t-webkit-flex-direction: column;\n\t    -ms-flex-direction: column;\n\t        flex-direction: column;\n\t-webkit-box-pack: start;\n\t-webkit-justify-content: flex-start;\n\t    -ms-flex-pack: start;\n\t        justify-content: flex-start;\n\t-webkit-box-align: stretch;\n\t-webkit-align-items: stretch;\n\t    -ms-flex-align: stretch;\n\t        align-items: stretch;\n}\n\n.Campaign h1 {\n\tfont-family: Avenir-Heavy;\n\tfont-size: 24px;\n\tcolor: #ffffff;\n\tmargin-top: 24px;\n\tmargin-bottom: 24px;\n}\n\n.Campaign p {\n\tcolor: rgba(255, 255, 255, 0.7);\n\tfont-size: 1rem;\n\tline-height: 1.375em;\n\tfont-weight: 300;\n\tmargin-top: calc(24px / 2);\n\tmargin-bottom: calc(24px / 2);\n}\n\n.Campaign small {\n\t/* color: $text-color-light-secondary;\n\t\tfont-size: .75rem;\n\t\tline-height: 1.375em; */\n\tcolor: rgba(255, 255, 255, 0.7);\n\tfont-size: .75rem;\n\tline-height: 1.375em;\n\tmargin-top: calc(24px / 2);\n\tmargin-bottom: calc(24px / 2);\n}\n\n.Campaign a {\n\tcolor: #ffffff;\n\ttext-decoration: none;\n}\n\n.Campaign .Page {\n\tmax-width: 375px;\n\t/*min-height: 400px;*/\n\tbox-sizing: border-box;\n\tpadding: calc(24px * 2);\n\tpadding-top: 0;\n\tmargin: 0 auto;\n\t/* Center each page within the campaigin */\n\tdisplay: -webkit-box;\n\tdisplay: -webkit-flex;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-orient: vertical;\n\t-webkit-box-direction: normal;\n\t-webkit-flex-direction: column;\n\t-ms-flex-direction: column;\n\tflex-direction: column;\n\t-webkit-box-align: center;\n\t-webkit-align-items: center;\n\t-ms-flex-align: center;\n\talign-items: center;\n\tposition: relative;\n\t-webkit-box-flex: 1;\n\t-webkit-flex-grow: 1;\n\t-ms-flex-positive: 1;\n\tflex-grow: 1\n\t/* Animate page transitions */\n}\n\n.Campaign .Page.page-leave {\n\tposition: absolute;\n\tbottom: 0;\n\tleft: 0;\n\twidth: 100%;\n\theight: 100%;\n\t//: flex-end;\n}\n\n.Campaign .Page.next-page-enter {\n\t-webkit-transform: translateX(100%);\n\ttransform: translateX(100%);\n}\n\n.Campaign .Page.next-page-enter.next-page-enter-active {\n\t-webkit-transform: translateX(0);\n\ttransform: translateX(0);\n\t-webkit-transition: -webkit-transform 200ms ease-in-out;\n\ttransition: -webkit-transform 200ms ease-in-out;\n\ttransition: transform 200ms ease-in-out;\n\ttransition: transform 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n}\n\n.Campaign .Page.next-page-leave {\n\t-webkit-transform: translateX(0);\n\ttransform: translateX(0);\n\t/* Make sure the page is out of the way */\n\t//: absolute;\n\t//: 0;\n\t//: 0;\n\tposition: absolute;\n\tbottom: 0;\n\tleft: 0;\n\twidth: 100%;\n}\n\n.Campaign .Page.next-page-leave.next-page-leave-active {\n\t-webkit-transform: translateX(-100%);\n\ttransform: translateX(-100%);\n\t-webkit-transition: -webkit-transform 200ms ease-in-out;\n\ttransition: -webkit-transform 200ms ease-in-out;\n\ttransition: transform 200ms ease-in-out;\n\ttransition: transform 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n}\n\n.Campaign .Page.prev-page-enter {\n\t-webkit-transform: translateX(-100%);\n\ttransform: translateX(-100%);\n}\n\n.Campaign .Page.prev-page-enter.prev-page-enter-active {\n\t-webkit-transform: translateX(0);\n\ttransform: translateX(0);\n\t-webkit-transition: -webkit-transform 200ms ease-in-out;\n\ttransition: -webkit-transform 200ms ease-in-out;\n\ttransition: transform 200ms ease-in-out;\n\ttransition: transform 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n}\n\n.Campaign .Page.prev-page-leave {\n\t-webkit-transform: translateX(0);\n\ttransform: translateX(0);\n\t/* Make sure the page is out of the way */\n\tposition: absolute;\n\tbottom: 0;\n\twidth: 100%;\n\t//: 0;\n\t//: 0;\n}\n\n.Campaign .Page.prev-page-leave.prev-page-leave-active {\n\t-webkit-transform: translateX(100%);\n\ttransform: translateX(100%);\n\t-webkit-transition: -webkit-transform 200ms ease-in-out;\n\ttransition: -webkit-transform 200ms ease-in-out;\n\ttransition: transform 200ms ease-in-out;\n\ttransition: transform 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n}\n\n.Campaign .Footer {\n\tposition: absolute;\n\tbottom: 24px;\n\tmargin: auto;\n\twidth: calc(100% - 24px * 4);\n\tdisplay: -webkit-box;\n\tdisplay: -webkit-flex;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-pack: center;\n\t-webkit-justify-content: center;\n\t-ms-flex-pack: center;\n\tjustify-content: center;\n\t-webkit-box-align: center;\n\t-webkit-align-items: center;\n\t-ms-flex-align: center;\n\talign-items: center;\n}\n\n.Campaign .Footer small {\n\tmargin: 0;\n}\n\n.Campaign> .pages {\n\tdisplay: -webkit-box;\n\tdisplay: -webkit-flex;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-flex: 1;\n\t-webkit-flex-grow: 1;\n\t-ms-flex-positive: 1;\n\tflex-grow: 1;\n}", ""]);
+	exports.push([module.id, "/* Fonts */\n/* Colors */\n/* Spacing */\n/* Animation */\n\n\nbody {\n\tmargin: 0;\n}\n\n.Campaign {\n\tbackground: #00AB6B;\n\tbackground-image: -webkit-radial-gradient(50% 100%, rgba(0,0,0,0.00) 50%, rgba(0,0,0,0.20) 100%);\n\tbackground-image: radial-gradient(50% 100%, rgba(0,0,0,0.00) 50%, rgba(0,0,0,0.20) 100%);\n\n\tfont: 16px \"Avenir\",helvetica,sans-serif;\n\tline-height: 1.375em;\n\tcolor: #ffffff;\n\ttext-align: center;\n\n\theight: 400px;\n\toverflow: scroll;\n\tposition: relative;\n\n\tdisplay: -webkit-box;\n\n\tdisplay: -webkit-flex;\n\n\tdisplay: -ms-flexbox;\n\n\tdisplay: flex;\n\t-webkit-box-orient: vertical;\n\t-webkit-box-direction: normal;\n\t-webkit-flex-direction: column;\n\t    -ms-flex-direction: column;\n\t        flex-direction: column;\n\t-webkit-box-pack: start;\n\t-webkit-justify-content: flex-start;\n\t    -ms-flex-pack: start;\n\t        justify-content: flex-start;\n\t-webkit-box-align: stretch;\n\t-webkit-align-items: stretch;\n\t    -ms-flex-align: stretch;\n\t        align-items: stretch;\n}\n\n.Campaign h1 {\n\tfont-family: Avenir-Heavy;\n\tfont-size: 24px;\n\tcolor: #ffffff;\n\tmargin-top: 24px;\n\tmargin-bottom: 24px;\n}\n\n.Campaign p {\n\tcolor: rgba(255, 255, 255, 0.7);\n\tfont-size: 1rem;\n\tline-height: 1.375em;\n\tfont-weight: 300;\n\tmargin-top: calc(24px / 2);\n\tmargin-bottom: calc(24px / 2);\n}\n\n.Campaign small {\n\t/* color: $text-color-light-secondary;\n\t\tfont-size: .75rem;\n\t\tline-height: 1.375em; */\n\tcolor: rgba(255, 255, 255, 0.7);\n\tfont-size: .75rem;\n\tline-height: 1.375em;\n\tmargin-top: calc(24px / 2);\n\tmargin-bottom: calc(24px / 2);\n}\n\n.Campaign a {\n\tcolor: #ffffff;\n\ttext-decoration: none;\n}\n\n.Campaign .Page {\n\tmax-width: 375px;\n\t/*min-height: 400px;*/\n\tbox-sizing: border-box;\n\tpadding: calc(24px * 2);\n\tpadding-top: 0;\n\tmargin: 0 auto;\n\t/* Center each page within the campaigin */\n\tdisplay: -webkit-box;\n\tdisplay: -webkit-flex;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-orient: vertical;\n\t-webkit-box-direction: normal;\n\t-webkit-flex-direction: column;\n\t-ms-flex-direction: column;\n\tflex-direction: column;\n\t-webkit-box-align: center;\n\t-webkit-align-items: center;\n\t-ms-flex-align: center;\n\talign-items: center;\n\tposition: relative;\n\t-webkit-box-flex: 1;\n\t-webkit-flex-grow: 1;\n\t-ms-flex-positive: 1;\n\tflex-grow: 1\n\t/* Animate page transitions */\n}\n\n.Campaign .Page.page-leave {\n\tposition: absolute;\n\tbottom: 0;\n\tleft: 0;\n\twidth: 100%;\n\theight: 100%;\n\t//: flex-end;\n}\n\n.Campaign .Page.next-page-enter {\n\t-webkit-transform: translateX(100%);\n\ttransform: translateX(100%);\n}\n\n.Campaign .Page.next-page-enter.next-page-enter-active {\n\t-webkit-transform: translateX(0);\n\ttransform: translateX(0);\n\t-webkit-transition: -webkit-transform 200ms ease-in-out;\n\ttransition: -webkit-transform 200ms ease-in-out;\n\ttransition: transform 200ms ease-in-out;\n\ttransition: transform 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n}\n\n.Campaign .Page.next-page-leave {\n\t-webkit-transform: translateX(0);\n\ttransform: translateX(0);\n\t/* Make sure the page is out of the way */\n\t//: absolute;\n\t//: 0;\n\t//: 0;\n\tposition: absolute;\n\tbottom: 0;\n\tleft: 0;\n\twidth: 100%;\n}\n\n.Campaign .Page.next-page-leave.next-page-leave-active {\n\t-webkit-transform: translateX(-100%);\n\ttransform: translateX(-100%);\n\t-webkit-transition: -webkit-transform 200ms ease-in-out;\n\ttransition: -webkit-transform 200ms ease-in-out;\n\ttransition: transform 200ms ease-in-out;\n\ttransition: transform 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n}\n\n.Campaign .Page.prev-page-enter {\n\t-webkit-transform: translateX(-100%);\n\ttransform: translateX(-100%);\n}\n\n.Campaign .Page.prev-page-enter.prev-page-enter-active {\n\t-webkit-transform: translateX(0);\n\ttransform: translateX(0);\n\t-webkit-transition: -webkit-transform 200ms ease-in-out;\n\ttransition: -webkit-transform 200ms ease-in-out;\n\ttransition: transform 200ms ease-in-out;\n\ttransition: transform 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n}\n\n.Campaign .Page.prev-page-leave {\n\t-webkit-transform: translateX(0);\n\ttransform: translateX(0);\n\t/* Make sure the page is out of the way */\n\tposition: absolute;\n\tbottom: 0;\n\twidth: 100%;\n\t//: 0;\n\t//: 0;\n}\n\n.Campaign .Page.prev-page-leave.prev-page-leave-active {\n\t-webkit-transform: translateX(100%);\n\ttransform: translateX(100%);\n\t-webkit-transition: -webkit-transform 200ms ease-in-out;\n\ttransition: -webkit-transform 200ms ease-in-out;\n\ttransition: transform 200ms ease-in-out;\n\ttransition: transform 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n}\n\n.Campaign .Footer {\n\tposition: absolute;\n\tbottom: 24px;\n\tmargin: auto;\n\twidth: calc(100% - 24px * 4);\n\tdisplay: -webkit-box;\n\tdisplay: -webkit-flex;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-pack: center;\n\t-webkit-justify-content: center;\n\t-ms-flex-pack: center;\n\tjustify-content: center;\n\t-webkit-box-align: center;\n\t-webkit-align-items: center;\n\t-ms-flex-align: center;\n\talign-items: center;\n}\n\n.Campaign .Footer small {\n\tmargin: 0;\n}\n\n.Campaign> .pages {\n\tdisplay: -webkit-box;\n\tdisplay: -webkit-flex;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-flex: 1;\n\t-webkit-flex-grow: 1;\n\t-ms-flex-positive: 1;\n\tflex-grow: 1;\n}", ""]);
 
 	// exports
 
