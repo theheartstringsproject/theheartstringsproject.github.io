@@ -4,6 +4,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { VelocityComponent } from 'velocity-react';
 import { presets, spring, Motion, TransitionMotion } from 'react-motion'
 import WorldMap from '../WorldMap/WorldMap'
+import WorldMapCanvas from '../WorldMap/WorldMapCanvas'
 import Header from '../Header/Header'
 import PaymentFlow from '../PaymentFlow/PaymentFlow'
 import LandingPage from '../pages/LandingPage'
@@ -116,7 +117,7 @@ const CampaignView = React.createClass ({
 
 		return (
 			<div className='Campaign'>
-				{/*this.getMap()*/}
+				{this.getMap()}
 				{/*<ReactCSSTransitionGroup transitionName={`${this.props.direction}-page`} transitionEnterTimeout={500} transitionLeaveTimeout={500}>*/}
 				<TransitionMotion
 					willEnter={this.pageWillEnter}
