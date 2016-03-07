@@ -1,10 +1,11 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import WorldMapDot from './WorldMapDot'
 import DOT_MAP from './dot-map.js'
 import { VelocityComponent } from 'velocity-react';
 import './world-map.css'
 
-const DOT_AMOUNT = 30
+const DOT_AMOUNT = 20
 const DOT_INTERVAL = 200
 const ANIMATION_DURATION = 100
 
@@ -27,11 +28,11 @@ const WorldMap = React.createClass ({
 	mixins: [SetIntervalMixin],
 
 	getInitialState: function() {
-		let dots = new Array(DOT_AMOUNT)
+		let dots = new Array()
 		for (let i = 0 ; i < DOT_AMOUNT ; i++ ) {
 			dots.push( this.getRandomDot() )
 		}
-		console.log(dots)
+		this.dots = dots
 		return { illuminatedDotIndices: dots }
 
 		// let dots = new Array()
@@ -46,18 +47,35 @@ const WorldMap = React.createClass ({
 	componentDidMount: function() {
 		// Set a new dot every so often
 		// setTimeout(() => {
-		// 	this.setInterval(this.illumateDots, DOT_INTERVAL)	
+			this.setInterval(this.illumateDots, DOT_INTERVAL)	
 		// }, 3000)
 
-		this.illumateDots()
+		// this.illumateDots()
 		
 	},
 
 	illumateDots: function() {
-		if ( this.state.illuminatedDotIndices.length >= DOT_AMOUNT ) {
-			this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices.slice(1), this.getRandomDot()] })	
-		} else {
-			this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices, this.getRandomDot()] })
+		// if ( this.state.illuminatedDotIndices.length >= DOT_AMOUNT ) {
+		// 	this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices.slice(1), this.getRandomDot()] })	
+		// } else {
+		// 	this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices, this.getRandomDot()] })
+		// }
+
+		// Find the index of the dot we want to turn off,
+		// which is the first one in the dots array
+		if ( this.map ) {
+			const dotToTurnOff = this.map.getElementsByTagName('ellipse')[ this.dots[0] ]
+			ReactDOM.findDOMNode( dotToTurnOff ).className.baseVal = 'off'
+
+			// Get a new dot to turn on
+			const newDotIndex = this.getRandomDot()
+			const dotToTurnOn = this.map.getElementsByTagName('ellipse')[ newDotIndex ]
+			ReactDOM.findDOMNode( dotToTurnOn ).className.baseVal = 'on'
+
+			// Make sure that the old dot is removed from the array
+			// and that the new one is added, so it ultimately gets turned off
+			this.dots.shift()
+			this.dots.push( newDotIndex )
 		}
 
 		// if ( this.dots.length ) {
@@ -113,11 +131,8 @@ const WorldMap = React.createClass ({
 		return (
 			<div className={`world-map-container ${this.props.position}`}>
 				<div className="world-map">
-					<svg /*width="351px" height="226px"*/ viewBox="0 0 351 226" version="1.1">
-					    
-					                    <g>
-				                    		{dots}
-					                    </g>
+					<svg /*width="351px" height="226px"*/ viewBox="0 0 351 226" version="1.1" ref={ref => this.map = ref}>
+                		{dots}
 					</svg>
 				</div>
 			</div>
