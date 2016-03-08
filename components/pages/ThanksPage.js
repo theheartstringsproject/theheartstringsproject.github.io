@@ -16,7 +16,7 @@ const ThanksPage = React.createClass({
 					<Button type='primary circle share-button' icon='facebook'/>
 					<Button type='primary circle share-button' icon='email'/>
 				</div>
-				<MakeAnotherContributionButton text='Make Another Donation' type='secondary small another-donation-button' iconPosition='right'/>
+				<MakeAnotherContributionButton text='Make Another Donation' type='secondary another-donation-button' iconPosition='right'/>
 				<div className='Footer'>
 					<small>
 						XOXO,<br />

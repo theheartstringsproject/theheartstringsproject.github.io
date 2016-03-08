@@ -11,7 +11,7 @@ const LandingPage = React.createClass({
 		return  (
 			<div className='Page landing-page' style={this.props.style}>
 				<h1>This story isn't over.</h1>
-				<p>The author invites you contribute to the <Link text={this.props.charityName} /> to support {this.props.reason}.</p>
+				<p>The author invites you to contribute to the <Link text={this.props.charityName} /> to support {this.props.reason}.</p>
 				<MakeContributionButton text='Make a contribution' type='large primary contribute-button'/>
 				<div className='Footer'>
 					<small>Brought to you by <Link text={"The Heartstrings Project"} /></small>
