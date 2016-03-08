@@ -7,7 +7,6 @@ import './input.css'
 const Input = React.createClass({
 
 	componentDidMount: function() {
-		console.log(ReactDOM.findDOMNode(this))
 		// debugger;
 		// ReactDOM.findDOMNode(this).setSelectionRange( this.props.cardCursorPosition, this.props.cardCursorPosition );
 	},

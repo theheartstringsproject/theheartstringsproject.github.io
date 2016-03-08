@@ -82,7 +82,12 @@ const PaymentFlow = React.createClass ({
 		const oldPage = ReactDOM.findDOMNode(this.previousPage)
 		// oldPage.style.height = oldPage.clientHeight
 		oldPage.className += " page-leave"
-		oldPage.style.height = oldPage.clientHeight + 'px'
+		console.log(oldPage)
+		console.log(oldPage.offsetHeight)
+		// if ( !oldPage.style.height ) {
+			oldPage.style.height = oldPage.offsetHeight + 'px'	
+		// }
+		
 
 		// Transition pages offscreen, measured by the width of the window
 		const endingPosition = window.innerWidth

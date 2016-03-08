@@ -12,11 +12,11 @@
 
 	background: url(../../images/map.png);
 	background-size: contain;
-	// background-position: center;
+	background-position: center;
 	background-repeat: no-repeat;
 
-	&.top { align-items: flex-start; }
-	&.center { align-items: center; }
+	&.top { align-items: flex-start; background-position: center top }
+	&.center { align-items: center; background-position: center }
 
 	/* Animate page transitions */
 	&.world-map-enter {
