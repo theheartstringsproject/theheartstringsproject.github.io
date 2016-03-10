@@ -69,8 +69,8 @@
 	var store = (0, _redux.createStore)(_reducers2.default, {
 		contribution: {
 			// charityName: 'United States Association for UNHCR',
-			charityName: 'Association for Women\'s Rights in Development',
-			reason: 'Gender Equality',
+			charityName: 'Global Citizen Year',
+			reason: 'mindful study abroad',
 			amount: 0
 		},
 		pages: ['LandingPage', 'ContributionPage', 'EmailPage', 'PaymentPage', 'ConfirmationPage', 'LoadingPage', 'ThanksPage']
@@ -35759,7 +35759,7 @@
 					return _react2.default.createElement(
 						'p',
 						null,
-						'How much would you like to donate to the ',
+						'How much would you like to donate to ',
 						_react2.default.createElement(_Link2.default, { text: this.props.charityName }),
 						'?'
 					);
@@ -35769,7 +35769,7 @@
 						null,
 						'$',
 						this.props.amount,
-						' to the ',
+						' to ',
 						_react2.default.createElement(_Link2.default, { text: this.props.charityName })
 					);
 				case 'PaymentPage':
@@ -35778,7 +35778,7 @@
 						null,
 						'$',
 						this.props.amount,
-						' to the ',
+						' to ',
 						_react2.default.createElement(_Link2.default, { text: this.props.charityName })
 					);
 				case 'ConfirmationPage':
@@ -35787,7 +35787,7 @@
 						null,
 						'$',
 						this.props.amount,
-						' to the ',
+						' to ',
 						_react2.default.createElement(_Link2.default, { text: this.props.charityName })
 					);
 				case 'LoadingPage':
@@ -36958,7 +36958,7 @@
 				_react2.default.createElement(
 					'p',
 					null,
-					'The author invites you to contribute to the ',
+					'The author invites you to contribute to ',
 					_react2.default.createElement(_Link2.default, { text: this.props.charityName }),
 					' to support ',
 					this.props.reason,

@@ -24,13 +24,13 @@ const Header = React.createClass({
 			case 'LandingPage':
 				return
 			case 'ContributionPage':
-				return <p>How much would you like to donate to the <Link text={this.props.charityName} />?</p>
+				return <p>How much would you like to donate to <Link text={this.props.charityName} />?</p>
 			case 'EmailPage':
-				return <p>${this.props.amount} to the <Link text={this.props.charityName} /></p>
+				return <p>${this.props.amount} to <Link text={this.props.charityName} /></p>
 			case 'PaymentPage':
-				return <p>${this.props.amount} to the <Link text={this.props.charityName} /></p>
+				return <p>${this.props.amount} to <Link text={this.props.charityName} /></p>
 			case 'ConfirmationPage':
-				return <p>${this.props.amount} to the <Link text={this.props.charityName} /></p>
+				return <p>${this.props.amount} to <Link text={this.props.charityName} /></p>
 			case 'LoadingPage':
 				return <p>Processing your donation...</p>
 			case 'ThanksPage':
