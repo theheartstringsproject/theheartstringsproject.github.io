@@ -7,8 +7,9 @@ import Campaign from './containers/Campaign'
 
 let store = createStore(campaign, {
 	contribution: {
-		charityName: 'United States Association for UNHCR',
-		reason: 'Syrian refugees',
+		// charityName: 'United States Association for UNHCR',
+		charityName: 'Association for Women\'s Rights in Development',
+		reason: 'Gender Equality',
 		amount: 0
 	},
 	pages: [

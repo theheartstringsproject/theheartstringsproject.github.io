@@ -68,8 +68,9 @@
 
 	var store = (0, _redux.createStore)(_reducers2.default, {
 		contribution: {
-			charityName: 'United States Association for UNHCR',
-			reason: 'Syrian refugees',
+			// charityName: 'United States Association for UNHCR',
+			charityName: 'Association for Women\'s Rights in Development',
+			reason: 'Gender Equality',
 			amount: 0
 		},
 		pages: ['LandingPage', 'ContributionPage', 'EmailPage', 'PaymentPage', 'ConfirmationPage', 'LoadingPage', 'ThanksPage']
@@ -37373,7 +37374,7 @@
 
 
 	// module
-	exports.push([module.id, "/* Fonts */\n\n/* Colors */\n\n/* Spacing */\n\n/* Animation */\n\n.Input {\n\tbackground: #ffffff;\n\tborder: 1px solid #ffffff;\n\tborder-radius: 3px;\n\tbox-sizing: border-box;\n\n\tdisplay: -webkit-box;\n\n\tdisplay: -webkit-flex;\n\n\tdisplay: -ms-flexbox;\n\n\tdisplay: flex;\n\t-webkit-box-flex: 0;\n\t-webkit-flex-grow: 0;\n\t    -ms-flex-positive: 0;\n\t        flex-grow: 0;\n\twidth: 100%;\n\n}\n\n.Input input {\n\t-webkit-appearance: none;\n\t-moz-appearance: none;\n\tappearance: none;\n\tborder: none;\n\toutline: none;\n\tbackground: none;\n\tfont-family: \"Avenir\",helvetica,sans-serif;\n\twidth: 100%;\n\theight: 48px;\n\tfont-size: 1rem;\n\tfont-weight: 300;\n\tcolor: #555555\n\n}\n\n.Input input:focus, .Input input:active {\n\tborder: none;\n\toutline: none;\n\n}\n\n/* Position the icon on the left side of the input */\n\n.Input i {\n\theight: 48px;\n\twidth: 48px;\n\tdisplay: -webkit-box;\n\tdisplay: -webkit-flex;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-flex-basis: 48px;\n\t-ms-flex-preferred-size: 48px;\n\tflex-basis: 48px;\n\t-webkit-box-align: center;\n\t-webkit-align-items: center;\n\t-ms-flex-align: center;\n\talign-items: center;\n\t-webkit-box-pack: center;\n\t-webkit-justify-content: center;\n\t-ms-flex-pack: center;\n\tjustify-content: center;\n\n}\n\n.Input i svg {\n\theight: 24px;\n\n}\n\n.Input i svg path {\n\tstroke: #555555;\n\n}", ""]);
+	exports.push([module.id, "/* Fonts */\n\n/* Colors */\n\n/* Spacing */\n\n/* Animation */\n\n.Input {\n\tbackground: #ffffff;\n\tborder: 1px solid #ffffff;\n\tborder-radius: 3px;\n\tbox-sizing: border-box;\n\n\tdisplay: -webkit-box;\n\n\tdisplay: -webkit-flex;\n\n\tdisplay: -ms-flexbox;\n\n\tdisplay: flex;\n\t-webkit-box-align: center;\n\t-webkit-align-items: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n\t-webkit-box-flex: 0;\n\t-webkit-flex-grow: 0;\n\t    -ms-flex-positive: 0;\n\t        flex-grow: 0;\n\twidth: 100%;\n\n}\n\n.Input input {\n\t-webkit-appearance: none;\n\t-moz-appearance: none;\n\tappearance: none;\n\tborder: none;\n\toutline: none;\n\tbackground: none;\n\tfont-family: \"Avenir\",helvetica,sans-serif;\n\twidth: 100%;\n\theight: 48px;\n\tfont-size: 1rem;\n\tfont-weight: 300;\n\tcolor: #555555\n\n}\n\n.Input input:focus, .Input input:active {\n\tborder: none;\n\toutline: none;\n\n}\n\n/* Position the icon on the left side of the input */\n\n.Input i {\n\theight: 48px;\n\twidth: 48px;\n\tdisplay: -webkit-box;\n\tdisplay: -webkit-flex;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-flex-basis: 48px;\n\t-ms-flex-preferred-size: 48px;\n\tflex-basis: 48px;\n\t-webkit-box-align: center;\n\t-webkit-align-items: center;\n\t-ms-flex-align: center;\n\talign-items: center;\n\t-webkit-box-pack: center;\n\t-webkit-justify-content: center;\n\t-ms-flex-pack: center;\n\tjustify-content: center;\n\n}\n\n.Input i svg {\n\theight: 24px;\n\n}\n\n.Input i svg path {\n\tstroke: #555555;\n\n}", ""]);
 
 	// exports
 

@@ -9,6 +9,7 @@ $inputHeight: 48px;
 	box-sizing: border-box;
 
 	display: flex;
+	align-items: center;
 	flex-grow: 0;
 	width: 100%;
 
