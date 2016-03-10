@@ -9,6 +9,7 @@
 	padding: calc( $space );
 	padding-top: $space;
 	padding-bottom: 0;
+	width: calc( 100% - $space*2 );
 
 	flex-grow: 0;
 	flex-shrink: 0;
