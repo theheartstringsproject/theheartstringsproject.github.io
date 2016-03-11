@@ -68,9 +68,9 @@
 
 	var store = (0, _redux.createStore)(_reducers2.default, {
 		contribution: {
-			// charityName: 'United States Association for UNHCR',
-			charityName: 'Global Citizen Year',
-			reason: 'mindful study abroad',
+			charityName: 'The United States Association for UNHCR',
+			// charityName: 'Global Citizen Year',
+			reason: 'global refugees',
 			amount: 0
 		},
 		pages: ['LandingPage', 'ContributionPage', 'EmailPage', 'PaymentPage', 'ConfirmationPage', 'LoadingPage', 'ThanksPage']
