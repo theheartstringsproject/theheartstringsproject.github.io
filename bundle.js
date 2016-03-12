@@ -68,9 +68,9 @@
 
 	var store = (0, _redux.createStore)(_reducers2.default, {
 		contribution: {
-			charityName: 'The United States Association for UNHCR',
+			charityName: 'The Community Foundation of Greater Flint',
 			// charityName: 'Global Citizen Year',
-			reason: 'global refugees',
+			reason: 'the children of the Flint water crisis',
 			amount: 0
 		},
 		pages: ['LandingPage', 'ContributionPage', 'EmailPage', 'PaymentPage', 'ConfirmationPage', 'LoadingPage', 'ThanksPage']
