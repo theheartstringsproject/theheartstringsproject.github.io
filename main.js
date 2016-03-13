@@ -7,9 +7,9 @@ import Campaign from './containers/Campaign'
 
 let store = createStore(campaign, {
 	contribution: {
-		charityName: 'The Community Foundation of Greater Flint',
+		charityName: 'The Herren Project',
 		// charityName: 'Global Citizen Year',
-		reason: 'the children of the Flint water crisis',
+		reason: 'individuals suffering from addiction',
 		amount: 0
 	},
 	pages: [
