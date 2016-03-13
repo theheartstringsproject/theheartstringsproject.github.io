@@ -64,13 +64,20 @@
 
 	var _Campaign2 = _interopRequireDefault(_Campaign);
 
+	var _parseUri = __webpack_require__(404);
+
+	var _parseUri2 = _interopRequireDefault(_parseUri);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var charity = decodeURI((0, _parseUri2.default)(window.location).queryKey['charity']);
+	var reason = decodeURI((0, _parseUri2.default)(window.location).queryKey['reason']);
 
 	var store = (0, _redux.createStore)(_reducers2.default, {
 		contribution: {
-			charityName: 'The Herren Project',
+			charityName: charity === "undefined" ? 'United States Association for UNHCR' : charity,
 			// charityName: 'Global Citizen Year',
-			reason: 'individuals suffering from addiction',
+			reason: reason === "undefined" ? 'Syrian refugees' : reason,
 			amount: 0
 		},
 		pages: ['LandingPage', 'ContributionPage', 'EmailPage', 'PaymentPage', 'ConfirmationPage', 'LoadingPage', 'ThanksPage']
@@ -21514,6 +21521,8 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 	var CampaignView = _react2.default.createClass({
 		displayName: 'CampaignView',
 
@@ -21532,7 +21541,7 @@
 				case 'PaymentFlow':
 					return _react2.default.createElement(_PaymentFlow2.default, { direction: this.props.direction, contribution: this.props.contribution, payment: this.props.payment, key: key, pageName: this.props.pageName, previousPageName: this.props.previousPageName });
 				case 'ThanksPage':
-					return _react2.default.createElement(_ThanksPage2.default, { contribution: this.props.contribution, payment: this.props.payment, key: key, pageName: this.props.pageName, key: key });
+					return _react2.default.createElement(_ThanksPage2.default, _defineProperty({ contribution: this.props.contribution, payment: this.props.payment, key: key, pageName: this.props.pageName }, 'key', key));
 				default:
 					/* TODO Update to return error page */
 					return _react2.default.createElement(_LandingPage2.default, { charityName: charityName, reason: reason, key: key });
@@ -28470,9 +28479,9 @@
 	    // By finishing a "leave" on the element, we put it in the right state to be animated in. Useful
 	    // if "leave" includes a rotation or something that we'd like to have as our starting point, for
 	    // symmetry.
-	    // We use overrideOpts to prevent any "complete" callback from triggering in this case, since
+	    // We use overrideOpts to prevent any "begin" or "complete" callback from triggering in this case, since
 	    // it doesn't make a ton of sense.
-	    this._finishAnimation(node, this.props.leave, {complete: undefined});
+	    this._finishAnimation(node, this.props.leave, {begin: undefined, complete: undefined});
 
 	    // We're not going to start the animation for a tick, so set the node's display to none (or any
 	    // custom "hide" style provided) so that it doesn't flash in.
@@ -31455,10 +31464,10 @@
 
 			// Create dot elements
 			// let animationProps = { duration: ANIMATION_DURATION }
-			var opacity = undefined,
-			    fill = undefined,
-			    key = undefined,
-			    className = undefined;
+			var opacity = void 0,
+			    fill = void 0,
+			    key = void 0,
+			    className = void 0;
 			var dots = _dotMap2.default.map(function (dot, i) {
 				if (_this.state.illuminatedDotIndices.includes(i)) {
 					// animationProps.animation = {
@@ -32019,7 +32028,7 @@
 			var _this = this;
 
 			// Create dot elements
-			var fill = undefined;
+			var fill = void 0;
 
 			var radius = window.innerWidth * (0.930903078 / 351);
 			var height = window.innerWidth * (226 / 351);
@@ -38156,6 +38165,43 @@
 
 	// exports
 
+
+/***/ },
+/* 404 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	function parseUri(str) {
+		var o = parseUri.options,
+		    m = o.parser[o.strictMode ? "strict" : "loose"].exec(str),
+		    uri = {},
+		    i = 14;
+
+		while (i--) {
+			uri[o.key[i]] = m[i] || "";
+		}uri[o.q.name] = {};
+		uri[o.key[12]].replace(o.q.parser, function ($0, $1, $2) {
+			if ($1) uri[o.q.name][$1] = $2;
+		});
+
+		return uri;
+	};
+
+	parseUri.options = {
+		strictMode: false,
+		key: ["source", "protocol", "authority", "userInfo", "user", "password", "host", "port", "relative", "path", "directory", "file", "query", "anchor"],
+		q: {
+			name: "queryKey",
+			parser: /(?:^|&)([^&=]*)=?([^&]*)/g
+		},
+		parser: {
+			strict: /^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/,
+			loose: /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/
+		}
+	};
+
+	module.exports = parseUri;
 
 /***/ }
 /******/ ]);
