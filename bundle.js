@@ -31355,6 +31355,8 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 	var DOT_AMOUNT = 20;
 	var DOT_INTERVAL = 200;
 	var ANIMATION_DURATION = 100;
@@ -31409,36 +31411,35 @@
 		componentDidMount: function componentDidMount() {
 			// Set a new dot every so often
 			// setTimeout(() => {
-			// this.setInterval(this.illumateDots, DOT_INTERVAL)	
+			this.setInterval(this.illumateDots, DOT_INTERVAL);
 			// }, 3000)
 
 			// this.illumateDots()
-
 		},
 
 		illumateDots: function illumateDots() {
-			// if ( this.state.illuminatedDotIndices.length >= DOT_AMOUNT ) {
-			// 	this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices.slice(1), this.getRandomDot()] })	
-			// } else {
-			// 	this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices, this.getRandomDot()] })
-			// }
+			if (this.state.illuminatedDotIndices.length >= DOT_AMOUNT) {
+				this.setState({ illuminatedDotIndices: [].concat(_toConsumableArray(this.state.illuminatedDotIndices.slice(1)), [this.getRandomDot()]) });
+			} else {
+				this.setState({ illuminatedDotIndices: [].concat(_toConsumableArray(this.state.illuminatedDotIndices), [this.getRandomDot()]) });
+			}
 
 			// Find the index of the dot we want to turn off,
 			// which is the first one in the dots array
-			if (this.map) {
-				var dotToTurnOff = this.map.getElementsByTagName('ellipse')[this.dots[0]];
-				_reactDom2.default.findDOMNode(dotToTurnOff).className.baseVal = 'off';
+			// if ( this.map ) {
+			// 	const dotToTurnOff = this.map.getElementsByTagName('ellipse')[ this.dots[0] ]
+			// 	ReactDOM.findDOMNode( dotToTurnOff ).className.baseVal = 'off'
 
-				// Get a new dot to turn on
-				var newDotIndex = this.getRandomDot();
-				var dotToTurnOn = this.map.getElementsByTagName('ellipse')[newDotIndex];
-				_reactDom2.default.findDOMNode(dotToTurnOn).className.baseVal = 'on';
+			// 	// Get a new dot to turn on
+			// 	const newDotIndex = this.getRandomDot()
+			// 	const dotToTurnOn = this.map.getElementsByTagName('ellipse')[ newDotIndex ]
+			// 	ReactDOM.findDOMNode( dotToTurnOn ).className.baseVal = 'on'
 
-				// Make sure that the old dot is removed from the array
-				// and that the new one is added, so it ultimately gets turned off
-				this.dots.shift();
-				this.dots.push(newDotIndex);
-			}
+			// 	// Make sure that the old dot is removed from the array
+			// 	// and that the new one is added, so it ultimately gets turned off
+			// 	this.dots.shift()
+			// 	this.dots.push( newDotIndex )
+			// }
 
 			// if ( this.dots.length ) {
 			// 	this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices.slice(1), this.dots[0]] })	
@@ -31464,35 +31465,52 @@
 
 			// Create dot elements
 			// let animationProps = { duration: ANIMATION_DURATION }
-			var opacity = void 0,
-			    fill = void 0,
-			    key = void 0,
-			    className = void 0;
-			var dots = _dotMap2.default.map(function (dot, i) {
-				if (_this.state.illuminatedDotIndices.includes(i)) {
-					// animationProps.animation = {
-					// 	opacity: 1.0,
-					// 	fill: "#FFFFFF"
-					// }
-					opacity = 1.0;
-					fill = '#FFFFFF';
-					key = 'on';
-					className = 'on';
-				} else {
-					// animationProps.animation = {
-					// 	opacity: 0.2,
-					// 	fill: "#000000"
-					// }
-					opacity = 0.2;
-					fill = '#000000';
-					key = 'off';
-				}
+			// let opacity, fill, key, className
+			// const dots = DOT_MAP.map((dot, i) => {			
+			// 	if (this.state.illuminatedDotIndices.includes( i )) {
+			// 		// animationProps.animation = {
+			// 		// 	opacity: 1.0,
+			// 		// 	fill: "#FFFFFF"
+			// 		// }
+			// 		opacity = 1.0
+			// 		fill = '#FFFFFF'
+			// 		key = 'on'
+			// 		className='on'
+			// 	} else {
+			// 		// animationProps.animation = {
+			// 		// 	opacity: 0.2,
+			// 		// 	fill: "#000000"
+			// 		// }
+			// 		opacity = 0.2
+			// 		fill = '#000000'
+			// 		key = 'off'
+			// 	}
 
-				// return <VelocityComponent {...animationProps} key={i}>{this.renderDot(i)}</VelocityComponent>
-				return _react2.default.createElement(_WorldMapDot2.default, { fillOpacity: opacity, fill: fill, cx: dot.cx, cy: dot.cy, key: 'dot-' + i, className: key });
+			// 	// return <VelocityComponent {...animationProps} key={i}>{this.renderDot(i)}</VelocityComponent>
+			// 	return <WorldMapDot fillOpacity={opacity} fill={fill} cx={dot.cx} cy={dot.cy} key={`dot-${i}`} className={key}/>
+
+			// })
+
+			var dots = this.state.illuminatedDotIndices.map(function (i) {
+				var dot = _dotMap2.default[i];
+				return _react2.default.createElement(_WorldMapDot2.default, { fillOpacity: '1', fill: '#FFFFFF', cx: dot.cx, cy: dot.cy, key: 'dot-' + i, className: 'on' });
 			});
 
-			return _react2.default.createElement('div', { className: 'world-map-container ' + this.props.position });
+			return _react2.default.createElement(
+				'div',
+				{ className: 'world-map-container ' + this.props.position },
+				_react2.default.createElement(
+					'div',
+					{ className: 'world-map' },
+					_react2.default.createElement(
+						'svg',
+						{ width: '351px', height: '226px', viewBox: '0 0 351 226', version: '1.1', ref: function ref(_ref) {
+								return _this.map = _ref;
+							} },
+						dots
+					)
+				)
+			);
 		}
 	});
 
@@ -31502,7 +31520,7 @@
 /* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 		value: true
@@ -31512,10 +31530,14 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactAddonsCssTransitionGroup = __webpack_require__(188);
+
+	var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var WorldMap = function WorldMap(props) {
-		return _react2.default.createElement("ellipse", { className: props.className /*fillOpacity={props.fillOpacity} fill={props.fill} */, cx: props.cx, cy: props.cy, rx: "0.930903078", ry: "0.929681818" });
+		return _react2.default.createElement('ellipse', { className: props.className, fillOpacity: props.fillOpacity, fill: props.fill, cx: props.cx, cy: props.cy, rx: '0.930903078', ry: '0.929681818' });
 	};
 
 	exports.default = WorldMap;
@@ -31561,7 +31583,7 @@
 
 
 	// module
-	exports.push([module.id, "/* Fonts */\n\n/* Colors */\n\n/* Spacing */\n\n/* Animation */\n\n.world-map-container {\n\tposition: absolute;\n\twidth: 100%;\n\theight: 100%;\n\ttop: 0; left: 0;\n\tz-index: 0;\n\n\tdisplay: -webkit-box;\n\n\tdisplay: -webkit-flex;\n\n\tdisplay: -ms-flexbox;\n\n\tdisplay: flex;\n\n\tbackground: url(../../images/map.png);\n\tbackground-size: contain;\n\tbackground-position: center;\n\tbackground-repeat: no-repeat;\n\n\t-webkit-transition: background-position 200ms ease-in-out;\n\n\ttransition: background-position 200ms ease-in-out\n\n\t/* Animate page transitions */\n\n}\n\n.world-map-container.top {\n\t-webkit-box-align: start;\n\t-webkit-align-items: flex-start;\n\t-ms-flex-align: start;\n\t-ms-grid-row-align: flex-start;\n\talign-items: flex-start;\n\tbackground-position: center top;\n\n}\n\n.world-map-container.center {\n\t-webkit-box-align: center;\n\t-webkit-align-items: center;\n\t-ms-flex-align: center;\n\t-ms-grid-row-align: center;\n\talign-items: center;\n\tbackground-position: center;\n\n}\n\n.world-map-container.world-map-enter {\n\topacity: 0;\n\n}\n\n.world-map-container.world-map-enter.world-map-enter-active {\n\topacity: 1;\n\t-webkit-transition: opacity 200ms ease-in-out;\n\ttransition: opacity 200ms ease-in-out;\n\n}\n\n.world-map-container.world-map-leave {\n\topacity: 1;\n\n}\n\n.world-map-container.world-map-leave.world-map-leave-active {\n\topacity: 0;\n\t-webkit-transition: opacity 200ms ease-in-out;\n\ttransition: opacity 200ms ease-in-out;\n\n}\n\n.world-map {\n\twidth: 100%;\n}\n\n.world-map ellipse {\n\t\n\t// fill: rgba(0,0,0,0.2);\n\t// animation: dot 5s infinite;\n\t/* @for $i from 1 to 3228 {\n\t\t&:nth-child($i) { animation-delay: calc(200ms * $(i)) }\n\t} */\n\n\t-webkit-transition: opacity 200ms ease-in-out, fill 200ms ease-in-out;\n\n\ttransition: opacity 200ms ease-in-out, fill 200ms ease-in-out;\n}\n\n.world-map ellipse.on {\n\tfill: #FFFFFF;\n\topacity: 1;\n\n}\n\n.world-map ellipse.off {\n\tfill: #000000;\n\topacity: 0.2;\n\n}\n\n@-webkit-keyframes dot {\n\t0% { fill: rgba(0,0,0,0.2); }\n\t4% { fill: rgba(255,255,255,1); }\n\t96% { fill: rgba(255,255,255,1); }\n\t100% { fill: rgba(0,0,0,0.2); }\n}\n\n@keyframes dot {\n\t0% { fill: rgba(0,0,0,0.2); }\n\t4% { fill: rgba(255,255,255,1); }\n\t96% { fill: rgba(255,255,255,1); }\n\t100% { fill: rgba(0,0,0,0.2); }\n}", ""]);
+	exports.push([module.id, "/* Fonts */\n\n/* Colors */\n\n/* Spacing */\n\n/* Animation */\n\n.world-map-container {\n\tposition: absolute;\n\twidth: 100%;\n\theight: 100%;\n\ttop: 0; left: 0;\n\tz-index: 0;\n\n\tdisplay: -webkit-box;\n\n\tdisplay: -webkit-flex;\n\n\tdisplay: -ms-flexbox;\n\n\tdisplay: flex;\n\n\tbackground: url(../../images/map-blank.png);\n\tbackground-size: contain;\n\tbackground-position: center;\n\tbackground-repeat: no-repeat;\n\n\t-webkit-transition: background-position 200ms ease-in-out;\n\n\ttransition: background-position 200ms ease-in-out\n\n\t/* Animate page transitions */\n\n}\n\n.world-map-container.top {\n\t-webkit-box-align: start;\n\t-webkit-align-items: flex-start;\n\t-ms-flex-align: start;\n\t-ms-grid-row-align: flex-start;\n\talign-items: flex-start;\n\tbackground-position: center top;\n\n}\n\n.world-map-container.center {\n\t-webkit-box-align: center;\n\t-webkit-align-items: center;\n\t-ms-flex-align: center;\n\t-ms-grid-row-align: center;\n\talign-items: center;\n\tbackground-position: center;\n\n}\n\n.world-map-container.world-map-enter {\n\topacity: 0;\n\n}\n\n.world-map-container.world-map-enter.world-map-enter-active {\n\topacity: 1;\n\t-webkit-transition: opacity 200ms ease-in-out;\n\ttransition: opacity 200ms ease-in-out;\n\n}\n\n.world-map-container.world-map-leave {\n\topacity: 1;\n\n}\n\n.world-map-container.world-map-leave.world-map-leave-active {\n\topacity: 0;\n\t-webkit-transition: opacity 200ms ease-in-out;\n\ttransition: opacity 200ms ease-in-out;\n\n}\n\n.world-map {\n\twidth: 100%;\n}\n\n.world-map ellipse {\n\t\n\t// fill: rgba(0,0,0,0.2);\n\t// animation: dot 5s infinite\n\t/* @for $i from 1 to 3228 {\n\t\t&:nth-child($i) { animation-delay: calc(200ms * $(i)) }\n\t} */\n\n\t/* Animate dot transitions */\n\t\n\n\t/*&.on {\n\t\tfill: #FFFFFF;\n\t\topacity: 1\n\t}\n\n\t&.off {\n\t\tfill: #000000;\n\t\topacity: 0.2;\n\t}*/\n\n\t/* transition: opacity $animation-duration ease-in-out, fill $animation-duration ease-in-out; */\n}\n\n.world-map ellipse.world-map-dot-enter {\n\topacity: 0;\n\n}\n\n.world-map ellipse.world-map-dot-enter.world-map-dot-enter-active {\n\topacity: 1;\n\t-webkit-transition: opacity 200ms ease-in-out;\n\ttransition: opacity 200ms ease-in-out;\n\n}\n\n.world-map ellipse.world-map-dot-leave {\n\topacity: 1;\n\n}\n\n.world-map ellipse.world-map-dot-leave.world-map-dot-leave-active {\n\topacity: 0;\n\t-webkit-transition: opacity 200ms ease-in-out;\n\ttransition: opacity 200ms ease-in-out;\n\n}\n\n@-webkit-keyframes dot {\n\t0% { fill: rgba(0,0,0,0.2); }\n\t4% { fill: rgba(255,255,255,1); }\n\t96% { fill: rgba(255,255,255,1); }\n\t100% { fill: rgba(0,0,0,0.2); }\n}\n\n@keyframes dot {\n\t0% { fill: rgba(0,0,0,0.2); }\n\t4% { fill: rgba(255,255,255,1); }\n\t96% { fill: rgba(255,255,255,1); }\n\t100% { fill: rgba(0,0,0,0.2); }\n}", ""]);
 
 	// exports
 

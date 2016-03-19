@@ -47,7 +47,7 @@ const WorldMap = React.createClass ({
 	componentDidMount: function() {
 		// Set a new dot every so often
 		// setTimeout(() => {
-			// this.setInterval(this.illumateDots, DOT_INTERVAL)	
+			this.setInterval(this.illumateDots, DOT_INTERVAL)	
 		// }, 3000)
 
 		// this.illumateDots()
@@ -55,28 +55,28 @@ const WorldMap = React.createClass ({
 	},
 
 	illumateDots: function() {
-		// if ( this.state.illuminatedDotIndices.length >= DOT_AMOUNT ) {
-		// 	this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices.slice(1), this.getRandomDot()] })	
-		// } else {
-		// 	this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices, this.getRandomDot()] })
-		// }
+		if ( this.state.illuminatedDotIndices.length >= DOT_AMOUNT ) {
+			this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices.slice(1), this.getRandomDot()] })	
+		} else {
+			this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices, this.getRandomDot()] })
+		}
 
 		// Find the index of the dot we want to turn off,
 		// which is the first one in the dots array
-		if ( this.map ) {
-			const dotToTurnOff = this.map.getElementsByTagName('ellipse')[ this.dots[0] ]
-			ReactDOM.findDOMNode( dotToTurnOff ).className.baseVal = 'off'
+		// if ( this.map ) {
+		// 	const dotToTurnOff = this.map.getElementsByTagName('ellipse')[ this.dots[0] ]
+		// 	ReactDOM.findDOMNode( dotToTurnOff ).className.baseVal = 'off'
 
-			// Get a new dot to turn on
-			const newDotIndex = this.getRandomDot()
-			const dotToTurnOn = this.map.getElementsByTagName('ellipse')[ newDotIndex ]
-			ReactDOM.findDOMNode( dotToTurnOn ).className.baseVal = 'on'
+		// 	// Get a new dot to turn on
+		// 	const newDotIndex = this.getRandomDot()
+		// 	const dotToTurnOn = this.map.getElementsByTagName('ellipse')[ newDotIndex ]
+		// 	ReactDOM.findDOMNode( dotToTurnOn ).className.baseVal = 'on'
 
-			// Make sure that the old dot is removed from the array
-			// and that the new one is added, so it ultimately gets turned off
-			this.dots.shift()
-			this.dots.push( newDotIndex )
-		}
+		// 	// Make sure that the old dot is removed from the array
+		// 	// and that the new one is added, so it ultimately gets turned off
+		// 	this.dots.shift()
+		// 	this.dots.push( newDotIndex )
+		// }
 
 		// if ( this.dots.length ) {
 		// 	this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices.slice(1), this.dots[0]] })	
@@ -102,39 +102,44 @@ const WorldMap = React.createClass ({
 
 		// Create dot elements
 		// let animationProps = { duration: ANIMATION_DURATION }
-		let opacity, fill, key, className
-		const dots = DOT_MAP.map((dot, i) => {			
-			if (this.state.illuminatedDotIndices.includes( i )) {
-				// animationProps.animation = {
-				// 	opacity: 1.0,
-				// 	fill: "#FFFFFF"
-				// }
-				opacity = 1.0
-				fill = '#FFFFFF'
-				key = 'on'
-				className='on'
-			} else {
-				// animationProps.animation = {
-				// 	opacity: 0.2,
-				// 	fill: "#000000"
-				// }
-				opacity = 0.2
-				fill = '#000000'
-				key = 'off'
-			}
+		// let opacity, fill, key, className
+		// const dots = DOT_MAP.map((dot, i) => {			
+		// 	if (this.state.illuminatedDotIndices.includes( i )) {
+		// 		// animationProps.animation = {
+		// 		// 	opacity: 1.0,
+		// 		// 	fill: "#FFFFFF"
+		// 		// }
+		// 		opacity = 1.0
+		// 		fill = '#FFFFFF'
+		// 		key = 'on'
+		// 		className='on'
+		// 	} else {
+		// 		// animationProps.animation = {
+		// 		// 	opacity: 0.2,
+		// 		// 	fill: "#000000"
+		// 		// }
+		// 		opacity = 0.2
+		// 		fill = '#000000'
+		// 		key = 'off'
+		// 	}
 
-			// return <VelocityComponent {...animationProps} key={i}>{this.renderDot(i)}</VelocityComponent>
-			return <WorldMapDot fillOpacity={opacity} fill={fill} cx={dot.cx} cy={dot.cy} key={`dot-${i}`} className={key}/>
+		// 	// return <VelocityComponent {...animationProps} key={i}>{this.renderDot(i)}</VelocityComponent>
+		// 	return <WorldMapDot fillOpacity={opacity} fill={fill} cx={dot.cx} cy={dot.cy} key={`dot-${i}`} className={key}/>
 					
+		// })
+
+		const dots = this.state.illuminatedDotIndices.map((i) => {
+			const dot = DOT_MAP[i]
+			return <WorldMapDot fillOpacity="1" fill="#FFFFFF" cx={dot.cx} cy={dot.cy} key={`dot-${i}`} className="on"/>
 		})
 
 		return (
 			<div className={`world-map-container ${this.props.position}`}>
-				{/*<div className="world-map">
+				{<div className="world-map">
 					<svg width="351px" height="226px" viewBox="0 0 351 226" version="1.1" ref={ref => this.map = ref}>
                 		{dots}
 					</svg>
-				</div>*/}
+				</div>}
 			</div>
 		)
 	}

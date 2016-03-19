@@ -10,7 +10,7 @@
 
 	display: flex;
 
-	background: url(../../images/map.png);
+	background: url(../../images/map-blank.png);
 	background-size: contain;
 	background-position: center;
 	background-repeat: no-repeat;
@@ -52,9 +52,28 @@
 	/* @for $i from 1 to 3228 {
 		&:nth-child($i) { animation-delay: calc(200ms * $(i)) }
 	} */
+
+	/* Animate dot transitions */
+	&.world-map-dot-enter {
+		opacity: 0;
+	}
+
+	&.world-map-dot-enter.world-map-dot-enter-active {
+		opacity: 1;
+		transition: opacity $animation-duration ease-in-out;
+	}
+
+	&.world-map-dot-leave {
+		opacity: 1;
+	}
+
+	&.world-map-dot-leave.world-map-dot-leave-active {
+		opacity: 0;
+		transition: opacity $animation-duration ease-in-out;
+	}
 	
 
-	&.on {
+	/*&.on {
 		fill: #FFFFFF;
 		opacity: 1
 	}
@@ -62,9 +81,9 @@
 	&.off {
 		fill: #000000;
 		opacity: 0.2;
-	}
+	}*/
 
-	transition: opacity $animation-duration ease-in-out, fill $animation-duration ease-in-out;
+	/* transition: opacity $animation-duration ease-in-out, fill $animation-duration ease-in-out; */
 }
 
 @keyframes dot {
