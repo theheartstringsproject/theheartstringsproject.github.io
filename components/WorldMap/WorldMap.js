@@ -56,9 +56,9 @@ const WorldMap = React.createClass ({
 
 	illumateDots: function() {
 		if ( this.state.illuminatedDotIndices.length >= DOT_AMOUNT ) {
-			this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices.slice(1), this.getUniqueRandomDot( this.state.illuminatedDots )] })	
+			this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices.slice(1), this.getUniqueRandomDot( this.state.illuminatedDotIndices )] })	
 		} else {
-			this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices, this.getUniqueRandomDot( this.state.illuminatedDots )] })
+			this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices, this.getUniqueRandomDot( this.state.illuminatedDotIndices )] })
 		}
 
 		// Find the index of the dot we want to turn off,
