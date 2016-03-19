@@ -5,9 +5,9 @@ import DOT_MAP from './dot-map.js'
 import { VelocityComponent } from 'velocity-react';
 import './world-map.css'
 
-const DOT_AMOUNT = 20
+const DOT_AMOUNT = 20 + 2 // Extra two dots to accomodate render the incoming and outgoing dot in order to animate transition
 const DOT_INTERVAL = 200
-const ANIMATION_DURATION = 100
+const ANIMATION_DURATION = 200
 
 const GIF_LENGTH = 5000
 const NUMBER_OF_DOTS = DOT_AMOUNT + ( ( GIF_LENGTH / DOT_INTERVAL) )
@@ -30,7 +30,7 @@ const WorldMap = React.createClass ({
 	getInitialState: function() {
 		let dots = new Array()
 		for (let i = 0 ; i < DOT_AMOUNT ; i++ ) {
-			dots.push( this.getRandomDot() )
+			dots.push( this.getUniqueRandomDot( dots ) )
 		}
 		this.dots = dots
 		return { illuminatedDotIndices: dots }
@@ -56,9 +56,9 @@ const WorldMap = React.createClass ({
 
 	illumateDots: function() {
 		if ( this.state.illuminatedDotIndices.length >= DOT_AMOUNT ) {
-			this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices.slice(1), this.getRandomDot()] })	
+			this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices.slice(1), this.getUniqueRandomDot( this.state.illuminatedDots )] })	
 		} else {
-			this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices, this.getRandomDot()] })
+			this.setState({ illuminatedDotIndices: [...this.state.illuminatedDotIndices, this.getUniqueRandomDot( this.state.illuminatedDots )] })
 		}
 
 		// Find the index of the dot we want to turn off,
@@ -88,8 +88,18 @@ const WorldMap = React.createClass ({
 		// this.dots.push( newDot )
 	},
 
+	getUniqueRandomDot: function( dots ) {
+		let dot = this.getRandomDot()
+
+		if ( dots )
+			while( dots.includes( dot ) )
+				dot = this.getRandomDot()
+
+		return dot
+	},
+
 	getRandomDot: function() {
-		return Math.floor(Math.random() * (DOT_MAP.length - 0)) + 0;
+		return Math.floor(Math.random() * (DOT_MAP.length - 0)) + 0
 	},
 
 	renderDot: function( index ) {
@@ -127,16 +137,24 @@ const WorldMap = React.createClass ({
 		// 	return <WorldMapDot fillOpacity={opacity} fill={fill} cx={dot.cx} cy={dot.cy} key={`dot-${i}`} className={key}/>
 					
 		// })
+		let className
+		const dots = this.state.illuminatedDotIndices.map((dotMapIndex, i) => {
+			const dot = DOT_MAP[dotMapIndex]
 
-		const dots = this.state.illuminatedDotIndices.map((i) => {
-			const dot = DOT_MAP[i]
-			return <WorldMapDot fillOpacity="1" fill="#FFFFFF" cx={dot.cx} cy={dot.cy} key={`dot-${i}`} className="on"/>
+			if ( i === 0 || i === DOT_AMOUNT - 1)  {
+				// First or last dot
+				className = 'off'
+			} else {
+				className = 'on'
+			}
+
+			return <WorldMapDot cx={dot.cx} cy={dot.cy} key={`dot-${dotMapIndex}`} className={className}/>
 		})
 
 		return (
 			<div className={`world-map-container ${this.props.position}`}>
 				{<div className="world-map">
-					<svg width="351px" height="226px" viewBox="0 0 351 226" version="1.1" ref={ref => this.map = ref}>
+					<svg /*width="351px" height="226px"*/ viewBox="0 0 351 226" version="1.1" ref={ref => this.map = ref}>
                 		{dots}
 					</svg>
 				</div>}

@@ -45,6 +45,10 @@
 	width: 100%;
 }
 
+.world-map svg {
+	max-height: $widget-height;
+}
+
 .world-map ellipse {
 	
 	// fill: rgba(0,0,0,0.2);
@@ -54,7 +58,7 @@
 	} */
 
 	/* Animate dot transitions */
-	&.world-map-dot-enter {
+	/*&.world-map-dot-enter {
 		opacity: 0;
 	}
 
@@ -70,20 +74,20 @@
 	&.world-map-dot-leave.world-map-dot-leave-active {
 		opacity: 0;
 		transition: opacity $animation-duration ease-in-out;
-	}
+	}*/
 	
 
-	/*&.on {
+	&.on {
 		fill: #FFFFFF;
 		opacity: 1
 	}
 
 	&.off {
-		fill: #000000;
-		opacity: 0.2;
-	}*/
+		fill: #FFFFFF;
+		opacity: 0;
+	}
 
-	/* transition: opacity $animation-duration ease-in-out, fill $animation-duration ease-in-out; */
+	transition: opacity $animation-duration ease-in-out, fill $animation-duration ease-in-out;
 }
 
 @keyframes dot {

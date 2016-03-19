@@ -15,7 +15,7 @@ body {
 	color: $text-color-light;
 	text-align: center;
 
-	height: 420px;
+	height: $widget-height;
 	overflow: scroll;
 	position: relative;
 

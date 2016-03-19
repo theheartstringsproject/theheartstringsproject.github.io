@@ -10,5 +10,8 @@ $background-color: #00AB6B;
 /* Spacing */
 $space: 24px;
 
+/* Sizing */
+$widget-height: 420px;
+
 /* Animation */
 $animation-duration: 200ms;
