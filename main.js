@@ -12,7 +12,6 @@ const reason = decodeURI( parseUri( window.location ).queryKey['reason'] )
 let store = createStore(campaign, {
 	contribution: {
 		charityName: charity === "undefined" ? 'United States Association for UNHCR' : charity,
-		// charityName: 'Global Citizen Year',
 		reason: reason === "undefined" ? 'Syrian refugees' : reason,
 		amount: 0
 	},
