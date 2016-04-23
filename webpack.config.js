@@ -23,6 +23,9 @@ module.exports = {
 			loader: "svg-inline-loader"
 		}*/]
 	},
+	externals: {
+		"jsdom": "window"
+	},
 	postcss: function () {
         return [require('autoprefixer'), require('precss')];
     }
