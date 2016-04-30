@@ -43,7 +43,7 @@ const PaymentFlow = React.createClass ({
 			case 'EmailPage':
 				return <EmailPage charityName={charityName} amount={amount} email={email} key={key}/>
 			case 'PaymentPage':
-				return <PaymentPage charityName={charityName} amount={amount} cardNumber={cardNumber} key={key}/>
+				return <PaymentPage charityName={charityName} amount={amount} payment={this.props.payment} key={key}/>
 			case 'ConfirmationPage':
 				return <ConfirmationPage charityName={charityName} amount={amount} email={email} cardNumber={cardNumber} cardCursorPosition={cardCursorPosition} key={key}/>
 			case 'LoadingPage':
@@ -82,8 +82,6 @@ const PaymentFlow = React.createClass ({
 		const oldPage = ReactDOM.findDOMNode(this.previousPage)
 		// oldPage.style.height = oldPage.clientHeight
 		oldPage.className += " page-leave"
-		console.log(oldPage)
-		console.log(oldPage.offsetHeight)
 		// if ( !oldPage.style.height ) {
 			oldPage.style.height = oldPage.offsetHeight + 'px'	
 		// }

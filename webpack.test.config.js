@@ -3,7 +3,7 @@ var webpack 		= require("webpack");
 
 module.exports = {
 	// entry: "./test/main.js",
-	entry: glob.sync("./test/**/*.spec.js"),
+	entry: glob.sync("./test/**/*.test.js"),
 	output: {
 		path: "test/",
 		filename: "test.bundle.js"

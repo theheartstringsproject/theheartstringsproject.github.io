@@ -1,13 +1,17 @@
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
-import CreditCardPaymentInput from '../components/Input/CreditCardPaymentInput'
+import CreditCardPaymentInput from '../../components/Input/CreditCardPaymentInput'
 
 function setup() {
 	let props = {
 		icon: 'back',
 		placeholder: 'hi',
-		value: 'there',
+		payment: {
+			cardNumber: '1234567891098876',
+			expirationDate: '12/20',
+			securityCode: '1234'
+		},
 		onchange: expect.createSpy()
 	}
 
@@ -34,6 +38,14 @@ describe('CreditCardPaymentInput', function() {
 	})
 
 	describe('Credit Card Number Field', function() {
+
+		it('should return a blank string when given an undefined input', function() {
+
+			const { renderer } = setup()
+			let instance = renderer.getMountedInstance()
+
+			expect( instance.formatCardNumber( undefined ) ).toBe('')
+		})
 
 		it('should add a space after the 4th character in a credit card number', function() {
 
@@ -62,6 +74,14 @@ describe('CreditCardPaymentInput', function() {
 	})
 
 	describe('Credit Card Expiration Date Field', function() {
+
+		it('should return a blank string when given an undefined input', function() {
+
+			const { renderer } = setup()
+			let instance = renderer.getMountedInstance()
+
+			expect( instance.formatExpirationDate( undefined ) ).toBe('')
+		})
 
 		it('should only accept numbers', function() {
 
@@ -93,6 +113,7 @@ describe('CreditCardPaymentInput', function() {
 			const { renderer } = setup()
 			let instance = renderer.getMountedInstance()
 
+			expect( instance.formatExpirationDate('12') ).toBe('12/')
 			expect( instance.formatExpirationDate('1216') ).toBe('12/16')
 		})
 
@@ -102,6 +123,34 @@ describe('CreditCardPaymentInput', function() {
 			let instance = renderer.getMountedInstance()
 
 			expect( instance.formatExpirationDate('1316') ).toBe('12/16')
+		})
+	})
+
+	describe('Credit Card Security Code Field', function() {
+
+		it('should return a blank string when given an undefined input', function() {
+
+			const { renderer } = setup()
+			let instance = renderer.getMountedInstance()
+
+			expect( instance.formatSecurityCode( undefined ) ).toBe('')
+		})
+
+		it('should only accept numbers', function() {
+
+			const { renderer } = setup()
+			let instance = renderer.getMountedInstance()
+
+			expect( instance.formatSecurityCode('abcde') ).toBe('')
+
+		})
+
+		it('should accept a maximum of 4 digits', function() {
+
+			const { renderer } = setup()
+			let instance = renderer.getMountedInstance()
+
+			expect( instance.formatSecurityCode('12345').length ).toBe( 4 )
 		})
 	})
 

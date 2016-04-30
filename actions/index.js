@@ -37,10 +37,26 @@ export const setEmail = ( email ) => {
 	}
 }
 
-export const setCardNumber = ( cardNumber, cardCursorPosition ) => {
+export const setCreditCardNumber = ( cardNumber, cardNumberCursorPosition ) => {
 	return {
-		type: 'SET_CARD_NUMBER',
+		type: 'SET_CREDIT_CARD_NUMBER',
 		cardNumber: cardNumber,
-		cardCursorPosition: cardCursorPosition
+		cardNumberCursorPosition: cardNumberCursorPosition
+	}
+}
+
+export const setCreditCardExpirationDate = ( expirationDate, expirationDateCursorPosition ) => {
+	return {
+		type: 'SET_CREDIT_CARD_EXPIRATION_DATE',
+		expirationDate: expirationDate,
+		expirationDateCursorPosition: expirationDateCursorPosition
+	}
+}
+
+export const setCreditCardSecurityCode = ( securityCode, securityCodeCursorPosition ) => {
+	return {
+		type: 'SET_CREDIT_CARD_SECURITY_CODE',
+		securityCode: securityCode,
+		securityCodeCursorPosition: securityCodeCursorPosition
 	}
 }

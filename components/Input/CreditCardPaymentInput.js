@@ -11,7 +11,7 @@ const Input = React.createClass({
 		// ReactDOM.findDOMNode(this).setSelectionRange( this.props.cardCursorPosition, this.props.cardCursorPosition );
 	},
 
-	formatCardNumber: function( cardNumber ) {
+	formatCardNumber: function( cardNumber = '' ) {
 
 		let newString = cardNumber
 
@@ -32,7 +32,7 @@ const Input = React.createClass({
 		return newString
 	},
 
-	formatExpirationDate: function( date ) {
+	formatExpirationDate: function( date = '' ) {
 
 		let newString = date
 
@@ -45,7 +45,7 @@ const Input = React.createClass({
 		}
 
 		// Add a slash as the 3rd character
-		if ( newString.length > 2 ) {
+		if ( newString.length >= 2 ) {
 			newString = [newString.slice(0, 2), '/', newString.slice(2)].join('')
 		}
 
@@ -57,20 +57,45 @@ const Input = React.createClass({
 		return newString
 	},
 
+	formatSecurityCode: function( code = '' ) {
+
+		let newString = code
+
+		// Remove any non-numercal characters
+		newString = newString.replace(/\D/g, '')
+
+		// Return a maximum of 4 characters
+		if ( newString.length > 4 ) {
+			newString = newString.slice( 0, 4 )
+		}
+
+		return newString
+
+	},
+
 	render: function() {
 		return (<div className="Input">
 					<InlineSVG src={require(`svg-inline!../../icons/${this.props.icon}.svg`)} />
 					<input  placeholder="Card Number"
-							value={this.formatCardNumber( this.props.value )}
+							value={this.formatCardNumber( this.props.payment.cardNumber )}
 							onChange={e => {
 								e.preventDefault()
-								this.props.onChange(e, ReactDOM.findDOMNode(this).selectionStart)
+								this.props.onCardNumberChange(e, ReactDOM.findDOMNode(this).selectionStart)
 							}}
 					/>
 					<input  placeholder="MM/YY"
-
+							value={this.formatExpirationDate( this.props.payment.expirationDate )}
+							onChange={e => {
+								e.preventDefault()
+								this.props.onExpirationDateChange(e, ReactDOM.findDOMNode(this).selectionStart)
+							}}
 					/>
 					<input  placeholder="CVV"
+							value={this.formatSecurityCode( this.props.payment.securityCode )}
+							onChange={e => {
+								e.preventDefault()
+								this.props.onSecurityCodeChange(e, ReactDOM.findDOMNode(this).selectionStart)
+							}}
 
 					/>
 				</div>

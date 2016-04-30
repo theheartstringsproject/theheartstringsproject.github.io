@@ -13,7 +13,7 @@ const PaymentPage = React.createClass({
 	render: function() {
 		return (
 			<div className='Page payment-page' style={this.props.style}>
-				<PaymentInput placeholder="Card Number" icon="credit-card" value={this.props.cardNumber}/>
+				<PaymentInput icon="credit-card" payment={this.props.payment}/>
 				<Checkbox name='remember-card' label='Remember my payment info on this device for future donations.' /*checked={this.props.savePaymentInfo}*/ />
 				<NextButton text='Next' type='secondary next-page-button' icon='forward' iconPosition='right'/>
 			</div>

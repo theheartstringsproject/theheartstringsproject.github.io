@@ -14,20 +14,19 @@ const payment = (state = initialState, action) => {
 				email: action.email
 			})
 
-		case 'SET_CARD_NUMBER':
+		case 'SET_CREDIT_CARD_NUMBER':
 
 			return Object.assign({}, state, {
 				cardNumber: action.cardNumber,
-				cardCursorPosition: action.cardCursorPosition
+				cardCursorPosition: action.cardNumberCursorPosition
 			})
 
-		case 'SET_EXPIRATION_DATE':
-
+		case 'SET_CREDIT_CARD_EXPIRATION_DATE':
 			return Object.assign({}, state, {
 				expirationDate: action.expirationDate
 			})
 
-		case 'SET_SECURITY_CODE':
+		case 'SET_CREDIT_CARD_SECURITY_CODE':
 
 			return Object.assign({}, state, {
 				securityCode: action.securityCode
