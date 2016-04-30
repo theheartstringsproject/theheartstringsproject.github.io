@@ -13,17 +13,13 @@ const Input = React.createClass({
 
 	formatCardNumber: function( cardNumber ) {
 
-		let newString = cardNumber,
-			i = 0
+		let newString = cardNumber
+
+		// Remove any non-numerical characters
+		newString = newString.replace(/\D/g,'')
 
 		if ( newString.length <= 4 )
 			return newString
-
-		// for ( ; i < cardNumber.length - 4 ; i++ ) {
-		// 	newString += '•'
-		// }
-
-		// newString += cardNumber.slice(-4)
 
 		if ( newString.length > 4 ) {
 			newString = [newString.slice(0, 4), ' ', newString.slice(4)].join('')
@@ -36,15 +32,46 @@ const Input = React.createClass({
 		return newString
 	},
 
+	formatExpirationDate: function( date ) {
+
+		let newString = date
+
+		// Remove any non-numerical characters
+		newString = newString.replace(/\D/g, '')
+
+		// Return a maximum of 4 characters
+		if ( newString.length > 4 ) {
+			newString = newString.slice( 0, 4 )
+		}
+
+		// Add a slash as the 3rd character
+		if ( newString.length > 2 ) {
+			newString = [newString.slice(0, 2), '/', newString.slice(2)].join('')
+		}
+
+		// Don't allow a month greater than 12
+		if ( newString.slice( 0, 2 ) > 12 ) {
+			newString = newString.slice(0, 1) + '2' + newString.slice(2, newString.length)
+		}
+
+		return newString
+	},
+
 	render: function() {
 		return (<div className="Input">
 					<InlineSVG src={require(`svg-inline!../../icons/${this.props.icon}.svg`)} />
-					<input  placeholder={this.props.placeholder}
+					<input  placeholder="Card Number"
 							value={this.formatCardNumber( this.props.value )}
 							onChange={e => {
 								e.preventDefault()
 								this.props.onChange(e, ReactDOM.findDOMNode(this).selectionStart)
 							}}
+					/>
+					<input  placeholder="MM/YY"
+
+					/>
+					<input  placeholder="CVV"
+
 					/>
 				</div>
 		)

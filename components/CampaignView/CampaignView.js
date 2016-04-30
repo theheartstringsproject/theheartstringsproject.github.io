@@ -4,7 +4,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { VelocityComponent } from 'velocity-react';
 import { presets, spring, Motion, TransitionMotion } from 'react-motion'
 import WorldMap from '../WorldMap/WorldMap'
-import WorldMapCanvas from '../WorldMap/WorldMapCanvas'
+// import WorldMapCanvas from '../WorldMap/WorldMapCanvas'
 import Header from '../Header/Header'
 import PaymentFlow from '../PaymentFlow/PaymentFlow'
 import LandingPage from '../pages/LandingPage'

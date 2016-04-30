@@ -1,6 +1,7 @@
 import { connect } from 'react-redux'
 import { setCardNumber } from '../actions'
 import Input from '../components/Input/Input'
+import CreditCardPaymentInput from '../components/Input/CreditCardPaymentInput'
 
 const mapDispatchToProps = (dispatch, ownProps) => {
 	return {
@@ -13,6 +14,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 const PaymentInput = connect(
 	null,
 	mapDispatchToProps
-)(Input)
+)(CreditCardPaymentInput)
 
 export default PaymentInput

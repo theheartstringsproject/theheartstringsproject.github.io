@@ -5,7 +5,6 @@ import BackButton from '../../containers/BackButton'
 import InlineSVG from 'svg-inline-react'
 // import DonationIcon from './DonationIcon'
 import { presets, spring, Motion, TransitionMotion } from 'react-motion'
-import cloneWithProps from 'react-addons-clone-with-props';
 import './header.css'
 
 const pagesWithNavigation = [
