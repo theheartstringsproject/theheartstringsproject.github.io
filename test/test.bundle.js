@@ -2600,34 +2600,38 @@
 		});
 	
 		describe('Credit Card Security Code Field', function () {
-			it('should return a blank string when given an undefined input', function () {
-				var _setup16 = setup();
+			describe('Formatting a Security Code', function () {
+				it('should return a blank string when given an undefined input', function () {
+					var _setup16 = setup();
 	
-				var renderer = _setup16.renderer;
+					var renderer = _setup16.renderer;
 	
-				var instance = renderer.getMountedInstance();
+					var instance = renderer.getMountedInstance();
 	
-				(0, _expect2.default)(instance.formatSecurityCode(undefined)).toBe('');
+					(0, _expect2.default)(instance.formatSecurityCode(undefined)).toBe('');
+				});
 			});
 	
-			it('should only accept numbers', function () {
-				var _setup17 = setup();
+			describe('Unformatting a Security Code', function () {
+				it('should only accept numbers', function () {
+					var _setup17 = setup();
 	
-				var renderer = _setup17.renderer;
+					var renderer = _setup17.renderer;
 	
-				var instance = renderer.getMountedInstance();
+					var instance = renderer.getMountedInstance();
 	
-				(0, _expect2.default)(instance.formatSecurityCode('abcde')).toBe('');
-			});
+					(0, _expect2.default)(instance.unformatSecurityCode('abcde')).toBe('');
+				});
 	
-			it('should accept a maximum of 4 digits', function () {
-				var _setup18 = setup();
+				it('should accept a maximum of 4 digits', function () {
+					var _setup18 = setup();
 	
-				var renderer = _setup18.renderer;
+					var renderer = _setup18.renderer;
 	
-				var instance = renderer.getMountedInstance();
+					var instance = renderer.getMountedInstance();
 	
-				(0, _expect2.default)(instance.formatSecurityCode('12345').length).toBe(4);
+					(0, _expect2.default)(instance.unformatSecurityCode('12345').length).toBe(4);
+				});
 			});
 		});
 	});
@@ -23044,17 +23048,7 @@
 			var code = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
 	
 	
-			var newString = code;
-	
-			// Remove any non-numercal characters
-			newString = newString.replace(/\D/g, '');
-	
-			// Return a maximum of 4 characters
-			if (newString.length > 4) {
-				newString = newString.slice(0, 4);
-			}
-	
-			return newString;
+			return code;
 		},
 	
 		unformatCardNumber: function unformatCardNumber() {
@@ -23101,6 +23095,23 @@
 	
 			// Remove the slash that we'd previously added
 			// newString = newString.replace(/\//, '')
+			return newString;
+		},
+	
+		unformatSecurityCode: function unformatSecurityCode() {
+			var code = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+	
+	
+			var newString = code;
+	
+			// Remove any non-numercal characters
+			newString = newString.replace(/\D/g, '');
+	
+			// Return a maximum of 4 characters
+			if (newString.length > 4) {
+				newString = newString.slice(0, 4);
+			}
+	
 			return newString;
 		},
 	

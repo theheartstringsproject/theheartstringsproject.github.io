@@ -11,8 +11,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 		onExpirationDateChange: ( value, cursorPosition ) => {
 			dispatch( setCreditCardExpirationDate ( value, cursorPosition ))
 		},
-		onSecurityCodeChange: ( e, cursorPosition ) => {
-			dispatch( setCreditCardSecurityCode ( e.target.value.trim().replace(/\D/g, ''), cursorPosition ))
+		onSecurityCodeChange: ( value, cursorPosition ) => {
+			dispatch( setCreditCardSecurityCode ( value, cursorPosition ))
 		}
 	}
 }

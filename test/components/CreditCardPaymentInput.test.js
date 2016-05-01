@@ -211,30 +211,35 @@ describe('CreditCardPaymentInput', function() {
 	})
 
 	describe('Credit Card Security Code Field', function() {
-		it('should return a blank string when given an undefined input', function() {
+		describe('Formatting a Security Code', function() {
+			it('should return a blank string when given an undefined input', function() {
 
-			const { renderer } = setup()
-			let instance = renderer.getMountedInstance()
+				const { renderer } = setup()
+				let instance = renderer.getMountedInstance()
 
-			expect( instance.formatSecurityCode( undefined ) ).toBe('')
+				expect( instance.formatSecurityCode( undefined ) ).toBe('')
+			})
 		})
 
-		it('should only accept numbers', function() {
+		describe('Unformatting a Security Code', function() {
+			it('should only accept numbers', function() {
 
-			const { renderer } = setup()
-			let instance = renderer.getMountedInstance()
+				const { renderer } = setup()
+				let instance = renderer.getMountedInstance()
 
-			expect( instance.formatSecurityCode('abcde') ).toBe('')
+				expect( instance.unformatSecurityCode('abcde') ).toBe('')
 
+			})
+
+			it('should accept a maximum of 4 digits', function() {
+
+				const { renderer } = setup()
+				let instance = renderer.getMountedInstance()
+
+				expect( instance.unformatSecurityCode('12345').length ).toBe( 4 )
+			})
 		})
-
-		it('should accept a maximum of 4 digits', function() {
-
-			const { renderer } = setup()
-			let instance = renderer.getMountedInstance()
-
-			expect( instance.formatSecurityCode('12345').length ).toBe( 4 )
-		})
+			
 	})
 
 })

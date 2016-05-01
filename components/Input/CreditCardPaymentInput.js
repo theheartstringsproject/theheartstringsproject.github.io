@@ -57,17 +57,7 @@ const Input = React.createClass({
 
 	formatSecurityCode: function( code = '' ) {
 
-		let newString = code
-
-		// Remove any non-numercal characters
-		newString = newString.replace(/\D/g, '')
-
-		// Return a maximum of 4 characters
-		if ( newString.length > 4 ) {
-			newString = newString.slice( 0, 4 )
-		}
-
-		return newString
+		return code
 
 	},
 
@@ -114,6 +104,21 @@ const Input = React.createClass({
 		return newString
 	},
 
+	unformatSecurityCode: function( code = '' ) {
+
+		let newString = code
+
+		// Remove any non-numercal characters
+		newString = newString.replace(/\D/g, '')
+
+		// Return a maximum of 4 characters
+		if ( newString.length > 4 ) {
+			newString = newString.slice( 0, 4 )
+		}
+
+		return newString
+	},
+
 	render: function() {
 		return (<div className="Input">
 					<InlineSVG src={require(`svg-inline!../../icons/${this.props.icon}.svg`)} />
@@ -141,7 +146,10 @@ const Input = React.createClass({
 							value={this.formatSecurityCode( this.props.payment.securityCode )}
 							onChange={e => {
 								e.preventDefault()
-								this.props.onSecurityCodeChange(e, ReactDOM.findDOMNode(this).selectionStart)
+								this.props.onSecurityCodeChange(
+									this.unformatSecurityCode( e.target.value.trim() ),
+									e.target.selectionStart
+								)
 							}}
 
 					/>
