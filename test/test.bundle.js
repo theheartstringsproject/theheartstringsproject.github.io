@@ -2329,17 +2329,19 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	function setup() {
-		var props = {
+	// const DELETE_KEY_CODE = 46
+	
+	function setup(propOverrides) {
+		var props = Object.assign({
 			icon: 'back',
 			placeholder: 'hi',
 			payment: {
 				cardNumber: '1234567891098876',
-				expirationDate: '12/20',
+				expirationDate: '1220',
 				securityCode: '1234'
 			},
 			onchange: _expect2.default.createSpy()
-		};
+		}, propOverrides);
 	
 		var renderer = _reactAddonsTestUtils2.default.createRenderer();
 		renderer.render(_react2.default.createElement(_CreditCardPaymentInput2.default, props));
@@ -2353,7 +2355,6 @@
 	}
 	
 	describe('CreditCardPaymentInput', function () {
-	
 		it('should render an input field', function () {
 			var _setup = setup();
 	
@@ -2370,116 +2371,181 @@
 		});
 	
 		describe('Credit Card Number Field', function () {
+			describe('Formatting a Number', function () {
+				it('should return a blank string when given an undefined input', function () {
+					var _setup2 = setup();
 	
-			it('should return a blank string when given an undefined input', function () {
-				var _setup2 = setup();
+					var renderer = _setup2.renderer;
 	
-				var renderer = _setup2.renderer;
+					var instance = renderer.getMountedInstance();
 	
-				var instance = renderer.getMountedInstance();
+					(0, _expect2.default)(instance.formatCardNumber(undefined)).toBe('');
+				});
 	
-				(0, _expect2.default)(instance.formatCardNumber(undefined)).toBe('');
+				it('should add a space after the 4th character in a credit card number', function () {
+					var _setup3 = setup();
+	
+					var renderer = _setup3.renderer;
+	
+					var instance = renderer.getMountedInstance();
+	
+					(0, _expect2.default)(instance.formatCardNumber('12345')).toBe('1234 5');
+				});
+	
+				it('should add a space after the 11th characters in a credit card number', function () {
+					var _setup4 = setup();
+	
+					var renderer = _setup4.renderer;
+	
+					var instance = renderer.getMountedInstance();
+	
+					(0, _expect2.default)(instance.formatCardNumber('123456789109876')).toBe('1234 567891 09876');
+				});
+	
+				it('should only accept numbers', function () {
+					var _setup5 = setup();
+	
+					var renderer = _setup5.renderer;
+	
+					var instance = renderer.getMountedInstance();
+	
+					(0, _expect2.default)(instance.formatCardNumber('abcde')).toBe('');
+				});
 			});
 	
-			it('should add a space after the 4th character in a credit card number', function () {
-				var _setup3 = setup();
+			describe('Unformatting a Number', function () {
+				it('return a blank string when given an undefined input', function () {
+					var _setup6 = setup();
 	
-				var renderer = _setup3.renderer;
+					var renderer = _setup6.renderer;
 	
-				var instance = renderer.getMountedInstance();
+					var instance = renderer.getMountedInstance();
 	
-				(0, _expect2.default)(instance.formatCardNumber('12345')).toBe('1234 5');
-			});
+					(0, _expect2.default)(instance.unformatCardNumber(undefined)).toBe('');
+				});
 	
-			it('should add a space after the 11th characters in a credit card number', function () {
-				var _setup4 = setup();
+				it('should remove the spaces we previously added', function () {
+					var _setup7 = setup();
 	
-				var renderer = _setup4.renderer;
+					var renderer = _setup7.renderer;
 	
-				var instance = renderer.getMountedInstance();
+					var instance = renderer.getMountedInstance();
 	
-				(0, _expect2.default)(instance.formatCardNumber('123456789109876')).toBe('1234 567891 09876');
-			});
-	
-			it('should only accept numbers', function () {
-				var _setup5 = setup();
-	
-				var renderer = _setup5.renderer;
-	
-				var instance = renderer.getMountedInstance();
-	
-				(0, _expect2.default)(instance.formatCardNumber('abcde')).toBe('');
+					(0, _expect2.default)(instance.unformatCardNumber('1234 567891 09876')).toBe('123456789109876');
+				});
 			});
 		});
 	
 		describe('Credit Card Expiration Date Field', function () {
+			describe('Formatting an Expiration Date', function () {
+				it('should return a blank string when given an undefined input', function () {
+					var _setup8 = setup();
 	
-			it('should return a blank string when given an undefined input', function () {
-				var _setup6 = setup();
+					var renderer = _setup8.renderer;
 	
-				var renderer = _setup6.renderer;
+					var instance = renderer.getMountedInstance();
 	
-				var instance = renderer.getMountedInstance();
+					(0, _expect2.default)(instance.formatExpirationDate(undefined)).toBe('');
+				});
 	
-				(0, _expect2.default)(instance.formatExpirationDate(undefined)).toBe('');
+				it('should only accept numbers', function () {
+					var _setup9 = setup();
+	
+					var renderer = _setup9.renderer;
+	
+					var instance = renderer.getMountedInstance();
+	
+					(0, _expect2.default)(instance.formatExpirationDate('abcde')).toBe('');
+				});
+	
+				it('should accept a maximum of 4 digits', function () {
+					var _setup10 = setup();
+	
+					var renderer = _setup10.renderer;
+	
+					var instance = renderer.getMountedInstance();
+	
+					(0, _expect2.default)(instance.formatExpirationDate('12345').replace(/\D/g, '').length).toBe(4); // Remove the added slash before counting
+				});
+	
+				// it('should not allow a date in the past', function() {
+	
+				// 	const { renderer } = setup()
+				// 	let instance = renderer.getMountedInstance()
+	
+				// 	expect( instance.formatExpirationDate('abcde') ).toBe('')
+				// })
+	
+				it('should add a slash between the month and year', function () {
+					var _setup11 = setup();
+	
+					var renderer = _setup11.renderer;
+	
+					var instance = renderer.getMountedInstance();
+	
+					(0, _expect2.default)(instance.formatExpirationDate('12')).toBe('12/');
+					(0, _expect2.default)(instance.formatExpirationDate('1216')).toBe('12/16');
+				});
+	
+				it('should not allow a month greater than 12', function () {
+					var _setup12 = setup();
+	
+					var renderer = _setup12.renderer;
+	
+					var instance = renderer.getMountedInstance();
+	
+					(0, _expect2.default)(instance.formatExpirationDate('1316')).toBe('12/16');
+					(0, _expect2.default)(instance.formatExpirationDate('4316')).toBe('12/16');
+				});
 			});
 	
-			it('should only accept numbers', function () {
-				var _setup7 = setup();
+			describe('Unformatting an Expiration Date', function () {
+				it('should return a blank string when given an undefined input', function () {
+					var _setup13 = setup();
 	
-				var renderer = _setup7.renderer;
+					var renderer = _setup13.renderer;
 	
-				var instance = renderer.getMountedInstance();
+					var instance = renderer.getMountedInstance();
 	
-				(0, _expect2.default)(instance.formatExpirationDate('abcde')).toBe('');
-			});
+					(0, _expect2.default)(instance.unformatExpirationDate(undefined)).toBe('');
+				});
 	
-			it('should accept a maximum of 4 digits', function () {
-				var _setup8 = setup();
+				it('should remove the slash we previously added', function () {
+					var _setup14 = setup();
 	
-				var renderer = _setup8.renderer;
+					var renderer = _setup14.renderer;
 	
-				var instance = renderer.getMountedInstance();
+					var instance = renderer.getMountedInstance();
 	
-				(0, _expect2.default)(instance.formatExpirationDate('12345').replace(/\D/g, '').length).toBe(4); // Remove the added slash before counting
-			});
+					(0, _expect2.default)(instance.unformatExpirationDate('12/20')).toBe('1220');
+				});
 	
-			// it('should not allow a date in the past', function() {
+				it('should remove the digit before the slash when the user deletes the slash character', function () {
+					var _setup15 = setup({
+						payment: {
+							expirationDate: '12'
+						}
+					});
 	
-			// 	const { renderer } = setup()
-			// 	let instance = renderer.getMountedInstance()
+					var renderer = _setup15.renderer;
 	
-			// 	expect( instance.formatExpirationDate('abcde') ).toBe('')
-			// })
+					var instance = renderer.getMountedInstance();
 	
-			it('should add a slash between the month and year', function () {
-				var _setup9 = setup();
-	
-				var renderer = _setup9.renderer;
-	
-				var instance = renderer.getMountedInstance();
-	
-				(0, _expect2.default)(instance.formatExpirationDate('12')).toBe('12/');
-				(0, _expect2.default)(instance.formatExpirationDate('1216')).toBe('12/16');
-			});
-	
-			it('should not allow a month greater than 12', function () {
-				var _setup10 = setup();
-	
-				var renderer = _setup10.renderer;
-	
-				var instance = renderer.getMountedInstance();
-	
-				(0, _expect2.default)(instance.formatExpirationDate('1316')).toBe('12/16');
+					// The function should know that if
+					// 1) the input value matches the expirationDate prop
+					// 2) they're both 2 digits
+					// 3) the caret position is at the end of the string
+					// the user deleted the slash and we should also delete the digit prior to it
+					(0, _expect2.default)(instance.unformatExpirationDate('12', 2)).toBe('1');
+				});
 			});
 		});
 	
 		describe('Credit Card Security Code Field', function () {
-	
 			it('should return a blank string when given an undefined input', function () {
-				var _setup11 = setup();
+				var _setup16 = setup();
 	
-				var renderer = _setup11.renderer;
+				var renderer = _setup16.renderer;
 	
 				var instance = renderer.getMountedInstance();
 	
@@ -2487,9 +2553,9 @@
 			});
 	
 			it('should only accept numbers', function () {
-				var _setup12 = setup();
+				var _setup17 = setup();
 	
-				var renderer = _setup12.renderer;
+				var renderer = _setup17.renderer;
 	
 				var instance = renderer.getMountedInstance();
 	
@@ -2497,9 +2563,9 @@
 			});
 	
 			it('should accept a maximum of 4 digits', function () {
-				var _setup13 = setup();
+				var _setup18 = setup();
 	
-				var renderer = _setup13.renderer;
+				var renderer = _setup18.renderer;
 	
 				var instance = renderer.getMountedInstance();
 	
@@ -22859,6 +22925,8 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	// const DELETE_KEY_CODE = 46
+	
 	// const Input = (props) => (
 	var Input = _react2.default.createClass({
 		displayName: 'Input',
@@ -22912,7 +22980,7 @@
 	
 			// Don't allow a month greater than 12
 			if (newString.slice(0, 2) > 12) {
-				newString = newString.slice(0, 1) + '2' + newString.slice(2, newString.length);
+				newString = '12' + newString.slice(2, newString.length);
 			}
 	
 			return newString;
@@ -22935,6 +23003,41 @@
 			return newString;
 		},
 	
+		unformatCardNumber: function unformatCardNumber() {
+			var cardNumber = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+	
+	
+			var newString = cardNumber;
+	
+			// Remove any spaces we'd previously added
+			newString = newString.replace(/ /g, '');
+	
+			return newString;
+		},
+	
+		unformatExpirationDate: function unformatExpirationDate() {
+			var date = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+			var cursorPosition = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+	
+	
+			var newString = date;
+	
+			// If the user has just deleted the slash,
+			// remove both the slash and the digit just before it.
+			// We know the slash was deleted if
+			if (newString === this.props.payment.expirationDate && // 1) the input value matches the expirationDate prop
+			newString.length === 2 && // 2) they're both 2 digits
+			cursorPosition === 2 // 3) the caret position is at the end of the string
+			) {
+					newString = newString.slice(0, newString.length - 1);
+				}
+	
+			// Remove the slash that we'd previously added
+			newString = newString.replace(/\//, '');
+	
+			return newString;
+		},
+	
 		render: function render() {
 			var _this = this;
 	
@@ -22946,14 +23049,15 @@
 					value: this.formatCardNumber(this.props.payment.cardNumber),
 					onChange: function onChange(e) {
 						e.preventDefault();
-						_this.props.onCardNumberChange(e, _reactDom2.default.findDOMNode(_this).selectionStart);
+						_this.props.onCardNumberChange(_this.unformatCardNumber(e.target.value.trim()), e.target.selectionStart);
 					}
 				}),
 				_react2.default.createElement('input', { placeholder: 'MM/YY',
 					value: this.formatExpirationDate(this.props.payment.expirationDate),
 					onChange: function onChange(e) {
 						e.preventDefault();
-						_this.props.onExpirationDateChange(e, _reactDom2.default.findDOMNode(_this).selectionStart);
+						console.log(_this.props.payment.expirationDateCursorPosition);
+						_this.props.onExpirationDateChange(_this.unformatExpirationDate(e.target.value.trim(), e.target.selectionStart), e.target.selectionStart);
 					}
 				}),
 				_react2.default.createElement('input', { placeholder: 'CVV',

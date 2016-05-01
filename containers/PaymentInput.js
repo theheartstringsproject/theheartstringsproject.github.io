@@ -5,11 +5,11 @@ import CreditCardPaymentInput from '../components/Input/CreditCardPaymentInput'
 
 const mapDispatchToProps = (dispatch, ownProps) => {
 	return {
-		onCardNumberChange: ( e, cursorPosition ) => {
-			dispatch( setCreditCardNumber( e.target.value.trim().replace(/ /g, ''), cursorPosition ))
+		onCardNumberChange: ( value, cursorPosition ) => {
+			dispatch( setCreditCardNumber( value, cursorPosition ))
 		},
-		onExpirationDateChange: ( e, cursorPosition ) => {
-			dispatch( setCreditCardExpirationDate ( e.target.value.trim().replace(/\D/g, ''), cursorPosition ))
+		onExpirationDateChange: ( value, cursorPosition ) => {
+			dispatch( setCreditCardExpirationDate ( value, cursorPosition ))
 		},
 		onSecurityCodeChange: ( e, cursorPosition ) => {
 			dispatch( setCreditCardSecurityCode ( e.target.value.trim().replace(/\D/g, ''), cursorPosition ))
