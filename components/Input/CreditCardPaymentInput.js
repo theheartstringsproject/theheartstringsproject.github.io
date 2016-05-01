@@ -34,29 +34,33 @@ const Input = React.createClass({
 		return newString
 	},
 
-	formatExpirationDate: function( date = '' ) {
+	formatExpirationDate: function( month = '', year = '' ) {
 
-		let newString = date
+		let newMonth = month,
+			newYear = year
 
-		// Remove any non-numerical characters
-		newString = newString.replace(/\D/g, '')
+		// Format the Month
+		// -----------------
+		// 1) Make sure it's not greater than 12
+		newMonth = parseInt(newMonth) > 12 ? '12' : newMonth
 
-		// Return a maximum of 4 characters
-		if ( newString.length > 4 ) {
-			newString = newString.slice( 0, 4 )
+		// Format the Year
+		// ----------------
+		// 1) Remove the '20' from the beginning
+		newYear = newYear.slice( 2, newYear.length )
+
+		if ( newYear === '' ) {
+			if ( newMonth.length === 2 ) {
+				return newMonth + '/'
+			} else {
+				return newMonth
+			}
+		} else if ( newMonth === '' ) {
+			return ''
+		} else {
+			return newMonth + '/' + newYear
 		}
-
-		// Add a slash as the 3rd character
-		if ( newString.length >= 2 ) {
-			newString = [newString.slice(0, 2), '/', newString.slice(2)].join('')
-		}
-
-		// Don't allow a month greater than 12
-		if ( newString.slice( 0, 2 ) > 12 ) {
-			newString = '12' + newString.slice(2, newString.length)
-		}
-
-		return newString
+		
 	},
 
 	formatSecurityCode: function( code = '' ) {
@@ -89,20 +93,33 @@ const Input = React.createClass({
 
 		let newString = date
 
+		// Remove any non-numeric characters
+		// with the exception of the slash
+		newString = newString.replace( /[^0-9\/]/g, '' )
+
+		// Cap the string at 4 numbers and a slash
+		let allowedLength = newString.includes('/') ? 5 : 4
+		if ( newString.length > allowedLength ) {
+			newString = newString.slice( 0, allowedLength )
+		}
+
+
 		// If the user has just deleted the slash,
 		// remove both the slash and the digit just before it.
 		// We know the slash was deleted if
-		if ( 	newString === this.props.payment.expirationDate && 		// 1) the input value matches the expirationDate prop
-			 	newString.length === 2 &&								// 2) they're both 2 digits
-			 	cursorPosition === 2									// 3) the caret position is at the end of the string
+		let previousMonthString = this.props.payment.expirationMonth ? this.props.payment.expirationMonth.toString() : ''
+		let previousYearString = this.props.payment.expirationYear ? this.props.payment.expirationYear.toString().slice( 2, this.props.payment.expirationYear.toString().length ) : ''
+		let dateString = previousMonthString + previousYearString
+		if ( 	newString === dateString &&						// 1) the input value matches the expirationDate prop
+			 	newString.length === dateString.length &&		// 2) they're both 2 digits
+			 	cursorPosition === 2							// 3) the caret position is at the end of the string
 			)
 		{
-			newString = newString.slice( 0, newString.length - 1 )
+			newString = newString.slice( 0, 1 ) + '/' + newString.slice( 2, newString.length )
 		}
 
 		// Remove the slash that we'd previously added
-		newString = newString.replace(/\//, '')
-
+		// newString = newString.replace(/\//, '')
 		return newString
 	},
 
@@ -120,10 +137,9 @@ const Input = React.createClass({
 							}}
 					/>
 					<input  placeholder="MM/YY"
-							value={this.formatExpirationDate( this.props.payment.expirationDate )}
+							value={this.formatExpirationDate( this.props.payment.expirationMonth, this.props.payment.expirationYear  )}
 							onChange={e => {
 								e.preventDefault()
-								console.log(this.props.payment.expirationDateCursorPosition)
 								this.props.onExpirationDateChange(
 									this.unformatExpirationDate( e.target.value.trim(), e.target.selectionStart ),
 									e.target.selectionStart

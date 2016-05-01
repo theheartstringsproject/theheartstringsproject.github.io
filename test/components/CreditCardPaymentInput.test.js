@@ -11,7 +11,8 @@ function setup( propOverrides ) {
 		placeholder: 'hi',
 		payment: {
 			cardNumber: '1234567891098876',
-			expirationDate: '1220',
+			expirationMonth: '12',
+			expirationYear: '20',
 			securityCode: '1234'
 		},
 		onchange: expect.createSpy()
@@ -102,24 +103,15 @@ describe('CreditCardPaymentInput', function() {
 				const { renderer } = setup()
 				let instance = renderer.getMountedInstance()
 
-				expect( instance.formatExpirationDate( undefined ) ).toBe('')
+				expect( instance.formatExpirationDate( undefined, undefined ) ).toBe('')
 			})
 
-			it('should only accept numbers', function() {
+			it('should return a blank string if only a year is provided', function() {
 
 				const { renderer } = setup()
 				let instance = renderer.getMountedInstance()
 
-				expect( instance.formatExpirationDate('abcde') ).toBe('')
-
-			})
-
-			it('should accept a maximum of 4 digits', function() {
-
-				const { renderer } = setup()
-				let instance = renderer.getMountedInstance()
-
-				expect( instance.formatExpirationDate('12345').replace(/\D/g, '').length ).toBe( 4 ) // Remove the added slash before counting
+				expect( instance.formatExpirationDate( undefined, '2016' ) ).toBe('')
 			})
 
 			// it('should not allow a date in the past', function() {
@@ -135,8 +127,8 @@ describe('CreditCardPaymentInput', function() {
 				const { renderer } = setup()
 				let instance = renderer.getMountedInstance()
 
-				expect( instance.formatExpirationDate('12') ).toBe('12/')
-				expect( instance.formatExpirationDate('1216') ).toBe('12/16')
+				expect( instance.formatExpirationDate( '12' ) ).toBe('12/')
+				expect( instance.formatExpirationDate( '12', '2016' ) ).toBe('12/16')
 			})
 
 			it('should not allow a month greater than 12', function() {
@@ -144,8 +136,10 @@ describe('CreditCardPaymentInput', function() {
 				const { renderer } = setup()
 				let instance = renderer.getMountedInstance()
 
-				expect( instance.formatExpirationDate('1316') ).toBe('12/16')
-				expect( instance.formatExpirationDate('4316') ).toBe('12/16')
+				expect( instance.formatExpirationDate( '13' ) ).toBe( '12/' )
+				expect( instance.formatExpirationDate( '43' ) ).toBe( '12/' )
+				expect( instance.formatExpirationDate( '13', '2016' ) ).toBe('12/16')
+				expect( instance.formatExpirationDate( '43', '2016' ) ).toBe('12/16')
 			})
 		})
 
@@ -155,22 +149,40 @@ describe('CreditCardPaymentInput', function() {
 				const { renderer } = setup()
 				let instance = renderer.getMountedInstance()
 
-				expect( instance.unformatExpirationDate( undefined ) ).toBe('')
+				expect( instance.unformatExpirationDate( undefined, undefined ) ).toBe('')
 			})
 
-			it('should remove the slash we previously added', function() {
+			it('should only accept numbers', function() {
 
 				const { renderer } = setup()
 				let instance = renderer.getMountedInstance()
 
-				expect( instance.unformatExpirationDate( '12/20' ) ).toBe( '1220' )
+				expect( instance.unformatExpirationDate('abcd') ).toBe('')
+
 			})
 
-			it('should remove the digit before the slash when the user deletes the slash character', function() {
+			it('should accept a maximum of 4 digits', function() {
 
-				const { renderer } = setup({
+				const { renderer } = setup()
+				let instance = renderer.getMountedInstance()
+
+				expect( instance.unformatExpirationDate('12345').replace(/\D/g, '').length ).toBe( 4 ) // Remove the added slash before counting
+			})
+
+			// it('should remove the slash we previously added', function() {
+
+			// 	const { renderer } = setup()
+			// 	let instance = renderer.getMountedInstance()
+
+			// 	expect( instance.unformatExpirationDate( '12/20' ) ).toBe( '1220' )
+			// })
+
+			it('should remove the digit before the slash when the user deletes the slash character and there is no year', function() {
+
+				let { renderer } = setup({
 					payment: {
-						expirationDate: '12'
+						expirationMonth: '12',
+						expirationYear: ''
 					}
 				})
 				let instance = renderer.getMountedInstance()
@@ -180,7 +192,20 @@ describe('CreditCardPaymentInput', function() {
 				// 2) they're both 2 digits
 				// 3) the caret position is at the end of the string
 				// the user deleted the slash and we should also delete the digit prior to it
-				expect( instance.unformatExpirationDate( '12', 2 ) ).toBe( '1' )
+				expect( instance.unformatExpirationDate( '12', 2 ) ).toBe( '1/' )
+			})
+
+			it('should remove the digit before the slash when the user deletes the slash character and there is a year', function() {
+
+				let { renderer } = setup({
+					payment: {
+						expirationMonth: '12',
+						expirationYear: '2020'
+					}
+				})
+				let instance = renderer.getMountedInstance()
+
+				expect( instance.unformatExpirationDate( '1220', 2 ) ).toBe( '1/20' )
 			})
 		})
 	})

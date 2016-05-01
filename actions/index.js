@@ -1,45 +1,47 @@
+import * as types from '../constants/ActionTypes'
+
 export const advancePage = () => {
 	return {
-		type: 'ADVANCE_PAGE'
+		type: types.ADVANCE_PAGE
 	}
 }
 
 export const recedePage = () => {
 	return {
-		type: 'RECEDE_PAGE'
+		type: types.RECEDE_PAGE
 	}
 }
 
 export const jumpToPage = ( page ) => {
 	return {
-		type: 'JUMP_TO_PAGE',
+		type: types.JUMP_TO_PAGE,
 		page: page
 	}	
 }
 
 export const chooseContributionAmount = ( amount ) => {
 	return {
-		type: 'CHOOSE_CONTRIBUTION_AMOUNT',
+		type: types.CHOOSE_CONTRIBUTION_AMOUNT,
 		amount: amount
 	}
 }
 
 export const confirmContribution = () => {
 	return {
-		type: 'CONFIRM_CONTRIBUTION'
+		type: types.CONFIRM_CONTRIBUTION
 	}
 }
 
 export const setEmail = ( email ) => {
 	return {
-		type: 'SET_EMAIL',
+		type: types.SET_EMAIL,
 		email: email
 	}
 }
 
 export const setCreditCardNumber = ( cardNumber, cardNumberCursorPosition ) => {
 	return {
-		type: 'SET_CREDIT_CARD_NUMBER',
+		type: types.SET_CREDIT_CARD_NUMBER,
 		cardNumber: cardNumber,
 		cardNumberCursorPosition: cardNumberCursorPosition
 	}
@@ -47,7 +49,7 @@ export const setCreditCardNumber = ( cardNumber, cardNumberCursorPosition ) => {
 
 export const setCreditCardExpirationDate = ( expirationDate, expirationDateCursorPosition ) => {
 	return {
-		type: 'SET_CREDIT_CARD_EXPIRATION_DATE',
+		type: types.SET_CREDIT_CARD_EXPIRATION_DATE,
 		expirationDate: expirationDate,
 		expirationDateCursorPosition: expirationDateCursorPosition
 	}
@@ -55,7 +57,7 @@ export const setCreditCardExpirationDate = ( expirationDate, expirationDateCurso
 
 export const setCreditCardSecurityCode = ( securityCode, securityCodeCursorPosition ) => {
 	return {
-		type: 'SET_CREDIT_CARD_SECURITY_CODE',
+		type: types.SET_CREDIT_CARD_SECURITY_CODE,
 		securityCode: securityCode,
 		securityCodeCursorPosition: securityCodeCursorPosition
 	}

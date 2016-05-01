@@ -1,36 +1,51 @@
+import * as types from '../constants/ActionTypes'
+
 let initialState = {
 	email: '',
 	cardNumber: '',
-	expirationDate: '',
+	expirationMonth: '',
+	expirationYear: '',
 	securityCode: ''
 }
 
 const payment = (state = initialState, action) => {
 
 	switch (action.type) {
-		case 'SET_EMAIL':
+		case types.SET_EMAIL:
 			
 			return Object.assign({}, state, {
 				email: action.email
 			})
 
-		case 'SET_CREDIT_CARD_NUMBER':
+		case types.SET_CREDIT_CARD_NUMBER:
 
 			return Object.assign({}, state, {
 				cardNumber: action.cardNumber,
-				cardCursorPosition: action.cardNumberCursorPosition
+				cardNumberCursorPosition: action.cardNumberCursorPosition
 			})
 
-		case 'SET_CREDIT_CARD_EXPIRATION_DATE':
+		case types.SET_CREDIT_CARD_EXPIRATION_DATE:
+
+			// Split the date into month and year by the slash
+			let [ expirationMonth, expirationYear ] = action.expirationDate.split('/')
+
+			// Append the century digits to the year
+			// TODO update so this can go higher than 2099
+			if ( expirationYear ) {
+				expirationYear = '20' + expirationYear
+			}
+
 			return Object.assign({}, state, {
-				expirationDate: action.expirationDate,
+				expirationMonth: expirationMonth,
+				expirationYear: expirationYear,
 				expirationDateCursorPosition: action.expirationDateCursorPosition
 			})
 
-		case 'SET_CREDIT_CARD_SECURITY_CODE':
+		case types.SET_CREDIT_CARD_SECURITY_CODE:
 
 			return Object.assign({}, state, {
-				securityCode: action.securityCode
+				securityCode: action.securityCode,
+				securityCodeCursorPosition: action.securityCodeCursorPosition
 			})
 
 		default:
