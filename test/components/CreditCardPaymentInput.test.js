@@ -65,14 +65,6 @@ describe('CreditCardPaymentInput', function() {
 
 				expect( instance.formatCardNumber('123456789109876') ).toBe( '1234 567891 09876' )
 			})
-
-			it('should only accept numbers', function() {
-
-				const { renderer } = setup()
-				let instance = renderer.getMountedInstance()
-
-				expect( instance.formatCardNumber('abcde') ).toBe('')
-			})
 		})
 
 		describe('Unformatting a Number', function() {
@@ -90,6 +82,14 @@ describe('CreditCardPaymentInput', function() {
 				let instance = renderer.getMountedInstance()
 
 				expect( instance.unformatCardNumber( '1234 567891 09876' ) ).toBe('123456789109876')
+			})
+
+			it('should only accept numbers', function() {
+
+				const { renderer } = setup()
+				let instance = renderer.getMountedInstance()
+
+				expect( instance.unformatCardNumber('abcde') ).toBe('')
 			})
 		})
 
@@ -130,17 +130,6 @@ describe('CreditCardPaymentInput', function() {
 				expect( instance.formatExpirationDate( '12' ) ).toBe('12/')
 				expect( instance.formatExpirationDate( '12', '2016' ) ).toBe('12/16')
 			})
-
-			it('should not allow a month greater than 12', function() {
-
-				const { renderer } = setup()
-				let instance = renderer.getMountedInstance()
-
-				expect( instance.formatExpirationDate( '13' ) ).toBe( '12/' )
-				expect( instance.formatExpirationDate( '43' ) ).toBe( '12/' )
-				expect( instance.formatExpirationDate( '13', '2016' ) ).toBe('12/16')
-				expect( instance.formatExpirationDate( '43', '2016' ) ).toBe('12/16')
-			})
 		})
 
 		describe('Unformatting an Expiration Date', function() {
@@ -160,6 +149,17 @@ describe('CreditCardPaymentInput', function() {
 				expect( instance.unformatExpirationDate('abcd') ).toBe('')
 
 			})
+
+			// it('should not allow a month greater than 12', function() {
+
+			// 	const { renderer } = setup()
+			// 	let instance = renderer.getMountedInstance()
+
+			// 	expect( instance.unformatExpirationDate( '13/' ) ).toBe( '12/' )
+			// 	expect( instance.unformatExpirationDate( '43/' ) ).toBe( '12/' )
+			// 	expect( instance.unformatExpirationDate( '13/16' ) ).toBe('12/16')
+			// 	expect( instance.unformatExpirationDate( '43/16' ) ).toBe('12/16')
+			// })
 
 			it('should accept a maximum of 4 digits', function() {
 

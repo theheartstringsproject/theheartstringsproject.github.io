@@ -17,9 +17,6 @@ const Input = React.createClass({
 
 		let newString = cardNumber
 
-		// Remove any non-numerical characters
-		newString = newString.replace(/\D/g,'')
-
 		if ( newString.length <= 4 )
 			return newString
 
@@ -39,14 +36,9 @@ const Input = React.createClass({
 		let newMonth = month,
 			newYear = year
 
-		// Format the Month
-		// -----------------
-		// 1) Make sure it's not greater than 12
-		newMonth = parseInt(newMonth) > 12 ? '12' : newMonth
-
 		// Format the Year
 		// ----------------
-		// 1) Remove the '20' from the beginning
+		// Remove the '20' from the beginning of the year
 		newYear = newYear.slice( 2, newYear.length )
 
 		if ( newYear === '' ) {
@@ -83,8 +75,8 @@ const Input = React.createClass({
 
 		let newString = cardNumber
 
-		// Remove any spaces we'd previously added
-		newString = newString.replace(/ /g, '')
+		// Remove any non-numerical characters
+		newString = newString.replace(/\D/g,'')
 
 		return newString
 	},
@@ -102,7 +94,6 @@ const Input = React.createClass({
 		if ( newString.length > allowedLength ) {
 			newString = newString.slice( 0, allowedLength )
 		}
-
 
 		// If the user has just deleted the slash,
 		// remove both the slash and the digit just before it.

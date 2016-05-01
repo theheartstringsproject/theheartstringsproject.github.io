@@ -35,6 +35,10 @@ describe('Payment Reducer', function() {
 			expirationDateCursorPosition: 2
 		})
 
+		expect()
+	})
+
+	it('should handle SET_CREDIT_CARD_EXPIRATION_DATE without a year', function() {
 		expect( reducer( [], {
 			type: types.SET_CREDIT_CARD_EXPIRATION_DATE,
 			expirationDate: '12/',
@@ -44,8 +48,28 @@ describe('Payment Reducer', function() {
 			expirationYear: '',
 			expirationDateCursorPosition: 2
 		})
+	})
 
+	it('should handle SET_CREDIT_CARD_EXPIRATION_DATE with an invalid month', function() {
+		expect( reducer( [], {
+			type: types.SET_CREDIT_CARD_EXPIRATION_DATE,
+			expirationDate: '16/',
+			expirationDateCursorPosition: 2
+		})).toEqual({
+			expirationMonth: '12',
+			expirationYear: '',
+			expirationDateCursorPosition: 2
+		})
 
+		expect( reducer( [], {
+			type: types.SET_CREDIT_CARD_EXPIRATION_DATE,
+			expirationDate: '43/16',
+			expirationDateCursorPosition: 2
+		})).toEqual({
+			expirationMonth: '12',
+			expirationYear: '2016',
+			expirationDateCursorPosition: 2
+		})
 	})
 
 	it('should handle SET_CREDIT_CARD_SECURITY_CODE', function() {

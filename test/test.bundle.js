@@ -2435,23 +2435,13 @@
 	
 					(0, _expect2.default)(instance.formatCardNumber('123456789109876')).toBe('1234 567891 09876');
 				});
-	
-				it('should only accept numbers', function () {
-					var _setup5 = setup();
-	
-					var renderer = _setup5.renderer;
-	
-					var instance = renderer.getMountedInstance();
-	
-					(0, _expect2.default)(instance.formatCardNumber('abcde')).toBe('');
-				});
 			});
 	
 			describe('Unformatting a Number', function () {
 				it('return a blank string when given an undefined input', function () {
-					var _setup6 = setup();
+					var _setup5 = setup();
 	
-					var renderer = _setup6.renderer;
+					var renderer = _setup5.renderer;
 	
 					var instance = renderer.getMountedInstance();
 	
@@ -2459,13 +2449,23 @@
 				});
 	
 				it('should remove the spaces we previously added', function () {
+					var _setup6 = setup();
+	
+					var renderer = _setup6.renderer;
+	
+					var instance = renderer.getMountedInstance();
+	
+					(0, _expect2.default)(instance.unformatCardNumber('1234 567891 09876')).toBe('123456789109876');
+				});
+	
+				it('should only accept numbers', function () {
 					var _setup7 = setup();
 	
 					var renderer = _setup7.renderer;
 	
 					var instance = renderer.getMountedInstance();
 	
-					(0, _expect2.default)(instance.unformatCardNumber('1234 567891 09876')).toBe('123456789109876');
+					(0, _expect2.default)(instance.unformatCardNumber('abcde')).toBe('');
 				});
 			});
 		});
@@ -2510,26 +2510,13 @@
 					(0, _expect2.default)(instance.formatExpirationDate('12')).toBe('12/');
 					(0, _expect2.default)(instance.formatExpirationDate('12', '2016')).toBe('12/16');
 				});
-	
-				it('should not allow a month greater than 12', function () {
-					var _setup11 = setup();
-	
-					var renderer = _setup11.renderer;
-	
-					var instance = renderer.getMountedInstance();
-	
-					(0, _expect2.default)(instance.formatExpirationDate('13')).toBe('12/');
-					(0, _expect2.default)(instance.formatExpirationDate('43')).toBe('12/');
-					(0, _expect2.default)(instance.formatExpirationDate('13', '2016')).toBe('12/16');
-					(0, _expect2.default)(instance.formatExpirationDate('43', '2016')).toBe('12/16');
-				});
 			});
 	
 			describe('Unformatting an Expiration Date', function () {
 				it('should return a blank string when given an undefined input', function () {
-					var _setup12 = setup();
+					var _setup11 = setup();
 	
-					var renderer = _setup12.renderer;
+					var renderer = _setup11.renderer;
 	
 					var instance = renderer.getMountedInstance();
 	
@@ -2537,19 +2524,30 @@
 				});
 	
 				it('should only accept numbers', function () {
-					var _setup13 = setup();
+					var _setup12 = setup();
 	
-					var renderer = _setup13.renderer;
+					var renderer = _setup12.renderer;
 	
 					var instance = renderer.getMountedInstance();
 	
 					(0, _expect2.default)(instance.unformatExpirationDate('abcd')).toBe('');
 				});
 	
-				it('should accept a maximum of 4 digits', function () {
-					var _setup14 = setup();
+				// it('should not allow a month greater than 12', function() {
 	
-					var renderer = _setup14.renderer;
+				// 	const { renderer } = setup()
+				// 	let instance = renderer.getMountedInstance()
+	
+				// 	expect( instance.unformatExpirationDate( '13/' ) ).toBe( '12/' )
+				// 	expect( instance.unformatExpirationDate( '43/' ) ).toBe( '12/' )
+				// 	expect( instance.unformatExpirationDate( '13/16' ) ).toBe('12/16')
+				// 	expect( instance.unformatExpirationDate( '43/16' ) ).toBe('12/16')
+				// })
+	
+				it('should accept a maximum of 4 digits', function () {
+					var _setup13 = setup();
+	
+					var renderer = _setup13.renderer;
 	
 					var instance = renderer.getMountedInstance();
 	
@@ -2565,14 +2563,14 @@
 				// })
 	
 				it('should remove the digit before the slash when the user deletes the slash character and there is no year', function () {
-					var _setup15 = setup({
+					var _setup14 = setup({
 						payment: {
 							expirationMonth: '12',
 							expirationYear: ''
 						}
 					});
 	
-					var renderer = _setup15.renderer;
+					var renderer = _setup14.renderer;
 	
 					var instance = renderer.getMountedInstance();
 	
@@ -2585,14 +2583,14 @@
 				});
 	
 				it('should remove the digit before the slash when the user deletes the slash character and there is a year', function () {
-					var _setup16 = setup({
+					var _setup15 = setup({
 						payment: {
 							expirationMonth: '12',
 							expirationYear: '2020'
 						}
 					});
 	
-					var renderer = _setup16.renderer;
+					var renderer = _setup15.renderer;
 	
 					var instance = renderer.getMountedInstance();
 	
@@ -2603,9 +2601,9 @@
 	
 		describe('Credit Card Security Code Field', function () {
 			it('should return a blank string when given an undefined input', function () {
-				var _setup17 = setup();
+				var _setup16 = setup();
 	
-				var renderer = _setup17.renderer;
+				var renderer = _setup16.renderer;
 	
 				var instance = renderer.getMountedInstance();
 	
@@ -2613,9 +2611,9 @@
 			});
 	
 			it('should only accept numbers', function () {
-				var _setup18 = setup();
+				var _setup17 = setup();
 	
-				var renderer = _setup18.renderer;
+				var renderer = _setup17.renderer;
 	
 				var instance = renderer.getMountedInstance();
 	
@@ -2623,9 +2621,9 @@
 			});
 	
 			it('should accept a maximum of 4 digits', function () {
-				var _setup19 = setup();
+				var _setup18 = setup();
 	
-				var renderer = _setup19.renderer;
+				var renderer = _setup18.renderer;
 	
 				var instance = renderer.getMountedInstance();
 	
@@ -23003,9 +23001,6 @@
 	
 			var newString = cardNumber;
 	
-			// Remove any non-numerical characters
-			newString = newString.replace(/\D/g, '');
-	
 			if (newString.length <= 4) return newString;
 	
 			if (newString.length > 4) {
@@ -23027,14 +23022,9 @@
 			var newMonth = month,
 			    newYear = year;
 	
-			// Format the Month
-			// -----------------
-			// 1) Make sure it's not greater than 12
-			newMonth = parseInt(newMonth) > 12 ? '12' : newMonth;
-	
 			// Format the Year
 			// ----------------
-			// 1) Remove the '20' from the beginning
+			// Remove the '20' from the beginning of the year
 			newYear = newYear.slice(2, newYear.length);
 	
 			if (newYear === '') {
@@ -23073,8 +23063,8 @@
 	
 			var newString = cardNumber;
 	
-			// Remove any spaces we'd previously added
-			newString = newString.replace(/ /g, '');
+			// Remove any non-numerical characters
+			newString = newString.replace(/\D/g, '');
 	
 			return newString;
 		},
@@ -23864,6 +23854,10 @@
 				expirationDateCursorPosition: 2
 			});
 	
+			(0, _expect2.default)();
+		});
+	
+		it('should handle SET_CREDIT_CARD_EXPIRATION_DATE without a year', function () {
 			(0, _expect2.default)((0, _payment2.default)([], {
 				type: types.SET_CREDIT_CARD_EXPIRATION_DATE,
 				expirationDate: '12/',
@@ -23871,6 +23865,28 @@
 			})).toEqual({
 				expirationMonth: '12',
 				expirationYear: '',
+				expirationDateCursorPosition: 2
+			});
+		});
+	
+		it('should handle SET_CREDIT_CARD_EXPIRATION_DATE with an invalid month', function () {
+			(0, _expect2.default)((0, _payment2.default)([], {
+				type: types.SET_CREDIT_CARD_EXPIRATION_DATE,
+				expirationDate: '16/',
+				expirationDateCursorPosition: 2
+			})).toEqual({
+				expirationMonth: '12',
+				expirationYear: '',
+				expirationDateCursorPosition: 2
+			});
+	
+			(0, _expect2.default)((0, _payment2.default)([], {
+				type: types.SET_CREDIT_CARD_EXPIRATION_DATE,
+				expirationDate: '43/16',
+				expirationDateCursorPosition: 2
+			})).toEqual({
+				expirationMonth: '12',
+				expirationYear: '2016',
 				expirationDateCursorPosition: 2
 			});
 		});
@@ -23943,9 +23959,12 @@
 				var expirationMonth = _action$expirationDat2[0];
 				var expirationYear = _action$expirationDat2[1];
 	
+				// Make sure the month is valid
+	
+				expirationMonth = parseInt(expirationMonth) > 12 ? '12' : expirationMonth;
+	
 				// Append the century digits to the year
 				// TODO update so this can go higher than 2099
-	
 				if (expirationYear) {
 					expirationYear = '20' + expirationYear;
 				}

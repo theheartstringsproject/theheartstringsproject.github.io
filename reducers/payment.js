@@ -29,6 +29,9 @@ const payment = (state = initialState, action) => {
 			// Split the date into month and year by the slash
 			let [ expirationMonth, expirationYear ] = action.expirationDate.split('/')
 
+			// Make sure the month is valid
+			expirationMonth = parseInt(expirationMonth) > 12 ? '12' : expirationMonth
+			
 			// Append the century digits to the year
 			// TODO update so this can go higher than 2099
 			if ( expirationYear ) {
