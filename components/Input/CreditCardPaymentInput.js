@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import InlineSVG from 'svg-inline-react'
 import './input.css'
+import './credit-card-payment-input.css'
+import { spring, Motion } from 'react-motion'
 
 // const DELETE_KEY_CODE = 46
 
@@ -11,6 +13,11 @@ const Input = React.createClass({
 	componentDidMount: function() {
 		// debugger;
 		// ReactDOM.findDOMNode(this).setSelectionRange( this.props.cardCursorPosition, this.props.cardCursorPosition );
+
+		// Get the original width of the credit card input field
+		if ( !this.originalCreditCardInputWidth ) {
+			this.originalCreditCardInputWidth = this.creditCardInput.scrollWidth
+		}
 	},
 
 	formatCardNumber: function( cardNumber = '' ) {
@@ -120,39 +127,98 @@ const Input = React.createClass({
 	},
 
 	render: function() {
-		return (<div className="Input">
-					<InlineSVG src={require(`svg-inline!../../icons/${this.props.icon}.svg`)} />
-					<input  placeholder="Card Number"
-							value={this.formatCardNumber( this.props.payment.cardNumber )}
-							onChange={e => {
-								e.preventDefault()
-								this.props.onCardNumberChange(
-									this.unformatCardNumber( e.target.value.trim() ),
-									e.target.selectionStart
-								)
-							}}
-					/>
-					<input  placeholder="MM/YY"
-							value={this.formatExpirationDate( this.props.payment.expirationMonth, this.props.payment.expirationYear  )}
-							onChange={e => {
-								e.preventDefault()
-								this.props.onExpirationDateChange(
-									this.unformatExpirationDate( e.target.value.trim(), e.target.selectionStart ),
-									e.target.selectionStart
-								)
-							}}
-					/>
-					<input  placeholder="CVV"
-							value={this.formatSecurityCode( this.props.payment.securityCode )}
-							onChange={e => {
-								e.preventDefault()
-								this.props.onSecurityCodeChange(
-									this.unformatSecurityCode( e.target.value.trim() ),
-									e.target.selectionStart
-								)
-							}}
+		let creditCardNumberInputWidthWhenCurrentField = this.originalCreditCardInputWidth ? this.originalCreditCardInputWidth : 180
+		let style = {
+			cardNumberWidth: this.props.payment.currentField === 'CreditCardNumber' ? spring(creditCardNumberInputWidthWhenCurrentField) : spring(this.cardNumberGhost.scrollWidth),
+			otherFieldsWidth: this.props.payment.currentField === 'CreditCardNumber' ? spring(2) : spring( ( (this.fields.scrollWidth - this.abbreviatedCardNumberGhost.scrollWidth) / 2) - 24 ),
+			x: this.props.payment.currentField === 'CreditCardNumber' ? spring(0) : spring( -(this.cardNumberGhost.scrollWidth - this.abbreviatedCardNumberGhost.scrollWidth) )
+		}
+		if ( this.fields )
+			console.log(this.fields.scrollWidth)
 
-					/>
+		return (<div className={`Input CreditCardPaymentInput ${this.props.payment.currentField}`}>
+					<InlineSVG src={require(`svg-inline!../../icons/${this.props.icon}.svg`)} />
+					<div className="fields-container">
+						<Motion style={style}>
+						{interpolatedStyle => {
+							return (
+								<div 	className="fields"
+									 	key='fields'
+										style={{
+											// WebkitTransform: `translateX(${interpolatedStyle.x}px)`,
+	          // 								transform: `translateX(${interpolatedStyle.x}px)`
+										}}
+										ref={(ref) => this.fields = ref}
+								>
+									<div 	className='AbbreviatedCardNumberGhost'
+											ref={(ref) => this.abbreviatedCardNumberGhost = ref}>
+												{this.formatCardNumber( this.props.payment.cardNumber ).slice( -5 )}
+									</div>
+									<div 	className='CardNumberGhost'
+											ref={(ref) => this.cardNumberGhost = ref}>
+												{this.formatCardNumber( this.props.payment.cardNumber )}
+									</div>
+									<input  placeholder="Card Number"
+											className="CardNumber"
+											value={this.formatCardNumber( this.props.payment.cardNumber )}
+											style={{
+												width: interpolatedStyle.cardNumberWidth + 'px',
+												// WebkitTransform: `translateX(${interpolatedStyle.x}px)`,
+	          									// transform: `translateX(${interpolatedStyle.x}px)`
+	          									marginLeft: interpolatedStyle.x + 'px'
+											}}
+											ref={(ref) => this.creditCardInput = ref}
+											onChange={e => {
+												e.preventDefault()
+												this.props.onCardNumberChange(
+													this.unformatCardNumber( e.target.value.trim() ),
+													e.target.selectionStart
+												)
+											}}
+											onFocus={e => {
+												this.props.onCardNumberFocus()
+											}}
+									/>
+									<input  placeholder="MM/YY"
+											className="ExpirationDate"
+											value={this.formatExpirationDate( this.props.payment.expirationMonth, this.props.payment.expirationYear  )}
+											style={{
+												width: interpolatedStyle.otherFieldsWidth + 'px'
+											}}
+											onChange={e => {
+												e.preventDefault()
+												this.props.onExpirationDateChange(
+													this.unformatExpirationDate( e.target.value.trim(), e.target.selectionStart ),
+													e.target.selectionStart
+												)
+											}}
+											onFocus={e => {
+												this.props.onExpirationDateFocus()
+											}}
+									/>
+									<input  placeholder="CVV"
+											className="SecurityCode"
+											value={this.formatSecurityCode( this.props.payment.securityCode )}
+											style={{
+												width: interpolatedStyle.otherFieldsWidth + 'px'
+											}}
+											onChange={e => {
+												e.preventDefault()
+												this.props.onSecurityCodeChange(
+													this.unformatSecurityCode( e.target.value.trim() ),
+													e.target.selectionStart
+												)
+											}}
+											onFocus={e => {
+												this.props.onSecurityCodeFocus()
+											}}
+									
+									/>
+								</div>
+							)
+						}}
+						</Motion>
+					</div>
 				</div>
 		)
 	}

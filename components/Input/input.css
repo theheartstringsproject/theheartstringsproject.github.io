@@ -1,7 +1,5 @@
 @import '../variables.css';
 
-$inputHeight: 48px;
-
 .Input {
 	background: #ffffff;
 	border: 1px solid #ffffff;
@@ -21,7 +19,7 @@ $inputHeight: 48px;
 		font-family: $font-family;
 
 		width: 100%;
-		height: $inputHeight;
+		height: $input-height;
 
 		font-size: 1rem;
 		font-weight: 300;
@@ -35,11 +33,12 @@ $inputHeight: 48px;
 
 	/* Position the icon on the left side of the input */
 	i {
-		height: $inputHeight;
-		width: $inputHeight;
+		height: $input-height;
+		width: $input-height;
 
 		display: flex;
-		flex-basis: $inputHeight;
+		flex-shrink: 0;
+		flex-basis: $input-height;
 		align-items: center;
 		justify-content: center;
 	} 

@@ -1,6 +1,7 @@
 import expect from 'expect'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
+import ReactDOM from 'react-dom'
 import CreditCardPaymentInput from '../../components/Input/CreditCardPaymentInput'
 
 // const DELETE_KEY_CODE = 46
@@ -13,9 +14,11 @@ function setup( propOverrides ) {
 			cardNumber: '1234567891098876',
 			expirationMonth: '12',
 			expirationYear: '20',
-			securityCode: '1234'
+			securityCode: '1234',
+			currentField: 'CreditCardNumber'
 		},
-		onchange: expect.createSpy()
+		onCreditCardChange: expect.createSpy(),
+		onCreditCardFocus: expect.createSpy(),
 	},  propOverrides)
 
 	let renderer = TestUtils.createRenderer()
@@ -33,13 +36,33 @@ describe('CreditCardPaymentInput', function() {
 	it('should render an input field', function() {
 		
 		const { output } = setup()
-		let [ svg, input ] = output.props.children
+		let [ svg, fields ] = output.props.children
+		let [ cardNumberInput, expirationDateInput, securityCodeInput ] = fields.props.children
 
 		expect( output.type ).toBe('div')
-		expect( input.type ).toBe('input')
+		expect( output.props.className ).toBe('Input CreditCardPaymentInput CreditCardNumber')
+
+		expect( cardNumberInput.type ).toBe('input')
+		expect( cardNumberInput.props.className ).toBe('CardNumber')
+
+		expect( expirationDateInput.type ).toBe('input')
+		expect( expirationDateInput.props.className ).toBe('ExpirationDate')
+
+		expect( securityCodeInput.type ).toBe('input')
+		expect( securityCodeInput.props.className ).toBe('SecurityCode')
 	})
 
 	describe('Credit Card Number Field', function() {
+		// describe('Responding to Events', function() {
+		// 	it('should respond to a change event', function() {
+		// 		const { output } = setup()
+		// 		let [ svg, cardNumberInput, expirationDateInput, securityCodeInput  ] = output.props.children
+
+		// 		TestUtils.Simulate.change( ReactDOM.findDOMNode( cardNumberInput ) )
+		// 		expect( props.onCreditCardChange ).toHaveBeenCalled()
+		// 	})
+		// })
+
 		describe('Formatting a Number', function() {
 			it('should return a blank string when given an undefined input', function() {
 

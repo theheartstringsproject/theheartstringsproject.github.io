@@ -1,5 +1,6 @@
 import expect from 'expect'
 import * as actions from '../../actions/'
+import * as types from '../../constants/ActionTypes'
 
 describe('Actions', function() {
 
@@ -37,5 +38,29 @@ describe('Actions', function() {
 		}
 
 		expect( actions.setCreditCardSecurityCode( securityCode, securityCodeCursorPosition ) ).toEqual( expectedAction )
+	})
+
+	it('should create an action for beginning to edit the credit card number', function() {
+		const expectedAction = {
+			type: types.DID_START_EDITING_CREDIT_CARD_NUMBER
+		}
+
+		expect( actions.didStartEditingCreditCardNumber() ).toEqual( expectedAction )
+	})
+
+	it('should create an action for beginning to edit the credit card expiration date', function() {
+		const expectedAction = {
+			type: types.DID_START_EDITING_CREDIT_CARD_EXPIRATION_DATE
+		}
+
+		expect( actions.didStartEditingCreditCardExpirationDate() ).toEqual( expectedAction )
+	})
+
+	it('should create an action for beginning to edit the credit card security code', function() {
+		const expectedAction = {
+			type: types.DID_START_EDITING_CREDIT_CARD_SECURITY_CODE
+		}
+
+		expect( actions.didStartEditingCreditCardSecurityCode() ).toEqual( expectedAction )
 	})
 })

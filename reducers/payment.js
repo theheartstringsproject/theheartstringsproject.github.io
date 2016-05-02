@@ -5,7 +5,11 @@ let initialState = {
 	cardNumber: '',
 	expirationMonth: '',
 	expirationYear: '',
-	securityCode: ''
+	securityCode: '',
+	cardNumberCursorPosition: null,
+	expirationDateCursorPosition: null,
+	securityCodeCursorPosition: null,
+	currentField: 'CreditCardNumber'
 }
 
 const payment = (state = initialState, action) => {
@@ -49,6 +53,24 @@ const payment = (state = initialState, action) => {
 			return Object.assign({}, state, {
 				securityCode: action.securityCode,
 				securityCodeCursorPosition: action.securityCodeCursorPosition
+			})
+
+		case types.DID_START_EDITING_CREDIT_CARD_NUMBER:
+
+			return Object.assign({}, state, {
+				currentField: 'CreditCardNumber'
+			})
+
+		case types.DID_START_EDITING_CREDIT_CARD_EXPIRATION_DATE:
+
+			return Object.assign({}, state, {
+				currentField: 'CreditCardExpirationDate'
+			})
+
+		case types.DID_START_EDITING_CREDIT_CARD_SECURITY_CODE:
+
+			return Object.assign({}, state, {
+				currentField: 'CreditCardSecurityCode'
 			})
 
 		default:

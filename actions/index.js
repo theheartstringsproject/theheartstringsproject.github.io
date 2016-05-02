@@ -62,3 +62,21 @@ export const setCreditCardSecurityCode = ( securityCode, securityCodeCursorPosit
 		securityCodeCursorPosition: securityCodeCursorPosition
 	}
 }
+
+export const didStartEditingCreditCardNumber = () => {
+	return {
+		type: types.DID_START_EDITING_CREDIT_CARD_NUMBER
+	}
+}
+
+export const didStartEditingCreditCardExpirationDate = () => {
+	return {
+		type: types.DID_START_EDITING_CREDIT_CARD_EXPIRATION_DATE
+	}
+}
+
+export const didStartEditingCreditCardSecurityCode = () => {
+	return {
+		type: types.DID_START_EDITING_CREDIT_CARD_SECURITY_CODE
+	}
+}

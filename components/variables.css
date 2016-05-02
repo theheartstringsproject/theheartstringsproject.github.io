@@ -12,6 +12,7 @@ $space: 24px;
 
 /* Sizing */
 $widget-height: 420px;
+$input-height: 48px;
 
 /* Animation */
 $animation-duration: 200ms;
