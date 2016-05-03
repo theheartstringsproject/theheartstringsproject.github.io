@@ -26,6 +26,7 @@
 		margin-right: calc( $space / 2 );
 		width: calc( 100% - ( $space ) );
 		float: left;
+		box-sizing: border-box;
 		// flex: 0 0 180;
 		// width: 50%;
 	}
@@ -36,6 +37,7 @@
 		width: 2px;
 		float: left;
 		text-align: center;
+		box-sizing: border-box;
 	}
 
 	/* 	Position a ghost card number field over the container
@@ -56,6 +58,10 @@
 		color: $text-color-dark;
 
 		visibility: hidden;
+	}
+
+	.CardNumberGhost {
+		padding: 0 calc($space/3);
 	}
 }
 
