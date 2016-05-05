@@ -6,13 +6,24 @@ describe('Payment Reducer', function() {
 	it('should return the initial state', function() {
 		expect( reducer( undefined, {} ) ).toEqual({
 				email: '',
-				cardNumber: '',
-				expirationMonth: '',
-				expirationYear: '',
-				securityCode: '',
-				cardNumberCursorPosition: null,
-				expirationDateCursorPosition: null,
-				securityCodeCursorPosition: null,
+				cardNumber: {
+					status: '',
+					value: '',
+					cursorPosition: null
+				},
+				expirationDate: {
+					status: '',
+					values: {
+						expirationMonth: '',
+						expirationYear: '',
+					},
+					cursorPosition: null
+				},
+				securityCode: {
+					status: '',
+					value: '',
+					cursorPosition: null
+				}
 				currentField: 'CreditCardNumber'
 		})
 	})
