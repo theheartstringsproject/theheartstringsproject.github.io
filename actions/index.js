@@ -39,27 +39,30 @@ export const setEmail = ( email ) => {
 	}
 }
 
-export const setCreditCardNumber = ( cardNumber, cardNumberCursorPosition ) => {
+export const setCreditCardNumber = ( cardNumber, status, cardNumberCursorPosition ) => {
 	return {
 		type: types.SET_CREDIT_CARD_NUMBER,
-		cardNumber: cardNumber,
-		cardNumberCursorPosition: cardNumberCursorPosition
+		status,
+		cardNumber,
+		cardNumberCursorPosition
 	}
 }
 
-export const setCreditCardExpirationDate = ( expirationDate, expirationDateCursorPosition ) => {
+export const setCreditCardExpirationDate = ( expirationDate, status, expirationDateCursorPosition ) => {
 	return {
 		type: types.SET_CREDIT_CARD_EXPIRATION_DATE,
-		expirationDate: expirationDate,
-		expirationDateCursorPosition: expirationDateCursorPosition
+		status,
+		expirationDate,
+		expirationDateCursorPosition
 	}
 }
 
-export const setCreditCardSecurityCode = ( securityCode, securityCodeCursorPosition ) => {
+export const setCreditCardSecurityCode = ( securityCode, status, securityCodeCursorPosition ) => {
 	return {
 		type: types.SET_CREDIT_CARD_SECURITY_CODE,
-		securityCode: securityCode,
-		securityCodeCursorPosition: securityCodeCursorPosition
+		status,
+		securityCode,
+		securityCodeCursorPosition
 	}
 }
 

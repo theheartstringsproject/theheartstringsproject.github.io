@@ -45,8 +45,11 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	__webpack_require__(30);
-	module.exports = __webpack_require__(236);
+	__webpack_require__(31);
+	__webpack_require__(206);
+	__webpack_require__(208);
+	__webpack_require__(273);
+	module.exports = __webpack_require__(274);
 
 
 /***/ },
@@ -67,6 +70,10 @@
 	
 	var types = _interopRequireWildcard(_ActionTypes);
 	
+	var _CreditCardInputStates = __webpack_require__(30);
+	
+	var cardStates = _interopRequireWildcard(_CreditCardInputStates);
+	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -75,38 +82,44 @@
 	
 		it('should create an action for setting credit card number', function () {
 			var cardNumber = '1234567891098876',
-			    cardNumberCursorPosition = '3';
+			    cardNumberCursorPosition = '3',
+			    status = cardStates.VALID;
 			var expectedAction = {
 				type: 'SET_CREDIT_CARD_NUMBER',
+				status: status,
 				cardNumber: cardNumber,
 				cardNumberCursorPosition: cardNumberCursorPosition
 			};
 	
-			(0, _expect2.default)(actions.setCreditCardNumber(cardNumber, cardNumberCursorPosition)).toEqual(expectedAction);
+			(0, _expect2.default)(actions.setCreditCardNumber(cardNumber, status, cardNumberCursorPosition)).toEqual(expectedAction);
 		});
 	
 		it('should create an action for setting credit card expiration date', function () {
-			var expirationDate = '1220',
-			    expirationDateCursorPosition = '3';
+			var expirationDate = '12/20',
+			    expirationDateCursorPosition = '3',
+			    status = cardStates.VALID;
 			var expectedAction = {
 				type: 'SET_CREDIT_CARD_EXPIRATION_DATE',
+				status: status,
 				expirationDate: expirationDate,
 				expirationDateCursorPosition: expirationDateCursorPosition
 			};
 	
-			(0, _expect2.default)(actions.setCreditCardExpirationDate(expirationDate, expirationDateCursorPosition)).toEqual(expectedAction);
+			(0, _expect2.default)(actions.setCreditCardExpirationDate(expirationDate, status, expirationDateCursorPosition)).toEqual(expectedAction);
 		});
 	
 		it('should create an action for setting credit card security code', function () {
 			var securityCode = '1220',
-			    securityCodeCursorPosition = '3';
+			    securityCodeCursorPosition = '3',
+			    status = cardStates.VALID;
 			var expectedAction = {
 				type: 'SET_CREDIT_CARD_SECURITY_CODE',
+				status: status,
 				securityCode: securityCode,
 				securityCodeCursorPosition: securityCodeCursorPosition
 			};
 	
-			(0, _expect2.default)(actions.setCreditCardSecurityCode(securityCode, securityCodeCursorPosition)).toEqual(expectedAction);
+			(0, _expect2.default)(actions.setCreditCardSecurityCode(securityCode, status, securityCodeCursorPosition)).toEqual(expectedAction);
 		});
 	
 		it('should create an action for beginning to edit the credit card number', function () {
@@ -2316,25 +2329,28 @@
 		};
 	};
 	
-	var setCreditCardNumber = exports.setCreditCardNumber = function setCreditCardNumber(cardNumber, cardNumberCursorPosition) {
+	var setCreditCardNumber = exports.setCreditCardNumber = function setCreditCardNumber(cardNumber, status, cardNumberCursorPosition) {
 		return {
 			type: types.SET_CREDIT_CARD_NUMBER,
+			status: status,
 			cardNumber: cardNumber,
 			cardNumberCursorPosition: cardNumberCursorPosition
 		};
 	};
 	
-	var setCreditCardExpirationDate = exports.setCreditCardExpirationDate = function setCreditCardExpirationDate(expirationDate, expirationDateCursorPosition) {
+	var setCreditCardExpirationDate = exports.setCreditCardExpirationDate = function setCreditCardExpirationDate(expirationDate, status, expirationDateCursorPosition) {
 		return {
 			type: types.SET_CREDIT_CARD_EXPIRATION_DATE,
+			status: status,
 			expirationDate: expirationDate,
 			expirationDateCursorPosition: expirationDateCursorPosition
 		};
 	};
 	
-	var setCreditCardSecurityCode = exports.setCreditCardSecurityCode = function setCreditCardSecurityCode(securityCode, securityCodeCursorPosition) {
+	var setCreditCardSecurityCode = exports.setCreditCardSecurityCode = function setCreditCardSecurityCode(securityCode, status, securityCodeCursorPosition) {
 		return {
 			type: types.SET_CREDIT_CARD_SECURITY_CODE,
+			status: status,
 			securityCode: securityCode,
 			securityCodeCursorPosition: securityCodeCursorPosition
 		};
@@ -2389,6 +2405,20 @@
 
 /***/ },
 /* 30 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var BLANK = exports.BLANK = 'BLANK';
+	var INCOMPLETE = exports.INCOMPLETE = 'INCOMPLETE';
+	var VALID = exports.VALID = 'VALID';
+	var INVALID = exports.INVALID = 'INVALID';
+
+/***/ },
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2397,21 +2427,27 @@
 	
 	var _expect2 = _interopRequireDefault(_expect);
 	
-	var _react = __webpack_require__(31);
+	var _react = __webpack_require__(32);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactAddonsTestUtils = __webpack_require__(61);
+	var _reactAddonsTestUtils = __webpack_require__(62);
 	
 	var _reactAddonsTestUtils2 = _interopRequireDefault(_reactAddonsTestUtils);
 	
-	var _reactDom = __webpack_require__(196);
+	var _reactDom = __webpack_require__(197);
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _CreditCardPaymentInput = __webpack_require__(197);
+	var _CreditCardExpirationDateInput = __webpack_require__(198);
 	
-	var _CreditCardPaymentInput2 = _interopRequireDefault(_CreditCardPaymentInput);
+	var _CreditCardExpirationDateInput2 = _interopRequireDefault(_CreditCardExpirationDateInput);
+	
+	var _CreditCardInputStates = __webpack_require__(30);
+	
+	var cardStates = _interopRequireWildcard(_CreditCardInputStates);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -2419,28 +2455,25 @@
 	
 	function setup(propOverrides) {
 		var props = Object.assign({
-			icon: 'back',
+			style: '',
 			placeholder: 'hi',
-			payment: {
-				cardNumber: '1234567891098876',
-				expirationMonth: '12',
-				expirationYear: '20',
-				securityCode: '1234',
-				currentField: 'CreditCardNumber'
+			className: 'there',
+			expirationDate: {
+				status: cardStates.VALID,
+				values: {
+					month: '',
+					year: ''
+				},
+				cursorPosition: 2
 			},
-			onCreditCardChange: _expect2.default.createSpy(),
-			onCreditCardFocus: _expect2.default.createSpy()
+			onChange: _expect2.default.createSpy(),
+			onFocus: _expect2.default.createSpy()
 		}, propOverrides);
 	
 		var renderer = _reactAddonsTestUtils2.default.createRenderer();
-		renderer.render(_react2.default.createElement(_CreditCardPaymentInput2.default, props));
+		renderer.render(_react2.default.createElement(_CreditCardExpirationDateInput2.default, props));
 		var output = renderer.getRenderOutput();
 		var instance = renderer.getMountedInstance();
-		// instance.abbreviatedCardNumberGhost = document.createElement('div')
-		// instance.cardNumberGhost = document.createElement('div')
-		// instance.creditCardInput = document.createElement('div')
-		// instance.originalCreditCardInputWidth = document.createElement('div')
-		// instance.fields = document.createElement('div')
 	
 		return {
 			props: props,
@@ -2450,306 +2483,139 @@
 		};
 	}
 	
-	describe('CreditCardPaymentInput', function () {
+	describe('CreditCardExpirationDateInput', function () {
 		it('should render an input field', function () {
 			var _setup = setup();
 	
 			var output = _setup.output;
-			// let [ svg, fieldsContainer ] = output.props.children
-			// let fields = fieldsContainer.props.children
-			// let [ cardNumberInput, expirationDateInput, securityCodeInput ] = fields.props.children
 	
-			(0, _expect2.default)(output.type).toBe('div');
-			(0, _expect2.default)(output.props.className).toBe('Input CreditCardPaymentInput CreditCardNumber');
 	
-			// Can't test types of children because they're wrapped in <Motion> object
-			// expect( cardNumberInput.type ).toBe('input')
-			// expect( cardNumberInput.props.className ).toBe('CardNumber')
-	
-			// expect( expirationDateInput.type ).toBe('input')
-			// expect( expirationDateInput.props.className ).toBe('ExpirationDate')
-	
-			// expect( securityCodeInput.type ).toBe('input')
-			// expect( securityCodeInput.props.className ).toBe('SecurityCode')
+			(0, _expect2.default)(output.type).toBe('input');
+			(0, _expect2.default)(output.props.className).toBe('ExpirationDate');
 		});
 	
-		describe('Credit Card Number Field', function () {
-			// describe('Responding to Events', function() {
-			// 	it('should respond to a change event', function() {
-			// 		const { output } = setup()
-			// 		let [ svg, cardNumberInput, expirationDateInput, securityCodeInput  ] = output.props.children
+		describe('Formatting an Expiration Date', function () {
+			it('should return a blank string when given an undefined input', function () {
+				var _setup2 = setup();
 	
-			// 		TestUtils.Simulate.change( ReactDOM.findDOMNode( cardNumberInput ) )
-			// 		expect( props.onCreditCardChange ).toHaveBeenCalled()
-			// 	})
+				var instance = _setup2.instance;
+	
+				(0, _expect2.default)(instance.format(undefined, undefined)).toBe('');
+			});
+	
+			it('should return a blank string if only a year is provided', function () {
+				var _setup3 = setup();
+	
+				var instance = _setup3.instance;
+	
+				(0, _expect2.default)(instance.format(undefined, '2016')).toBe('');
+			});
+	
+			// it('should not allow a date in the past', function() {
+			// 	const { instance } = setup()
+			// 	expect( instance.formatExpirationDate('abcde') ).toBe('')
 			// })
 	
-			describe('Formatting a Number', function () {
-				it('should return a blank string when given an undefined input', function () {
-					var _setup2 = setup();
+			it('should add a slash between the month and year', function () {
+				var _setup4 = setup();
 	
-					var instance = _setup2.instance;
+				var instance = _setup4.instance;
 	
-					(0, _expect2.default)(instance.formatCardNumber(undefined)).toBe('');
-				});
-	
-				it('should add a space after the 4th character in a credit card number', function () {
-					var _setup3 = setup();
-	
-					var instance = _setup3.instance;
-	
-					(0, _expect2.default)(instance.formatCardNumber('12345')).toBe('1234 5');
-				});
-	
-				it('should add a space after the 11th characters in a credit card number', function () {
-					var _setup4 = setup();
-	
-					var instance = _setup4.instance;
-	
-					(0, _expect2.default)(instance.formatCardNumber('123456789109876')).toBe('1234 567891 09876');
-				});
-			});
-	
-			describe('Unformatting a Number', function () {
-				it('return a blank string when given an undefined input', function () {
-					var _setup5 = setup();
-	
-					var instance = _setup5.instance;
-	
-					(0, _expect2.default)(instance.unformatCardNumber(undefined)).toBe('');
-				});
-	
-				it('should remove the spaces we previously added', function () {
-					var _setup6 = setup();
-	
-					var instance = _setup6.instance;
-	
-					(0, _expect2.default)(instance.unformatCardNumber('1234 567891 09876')).toBe('123456789109876');
-				});
-	
-				it('should only accept numbers', function () {
-					var _setup7 = setup();
-	
-					var instance = _setup7.instance;
-	
-					(0, _expect2.default)(instance.unformatCardNumber('abcde')).toBe('');
-				});
+				(0, _expect2.default)(instance.format('12')).toBe('12/');
+				(0, _expect2.default)(instance.format('12', '2016')).toBe('12/16');
 			});
 		});
 	
-		describe('Credit Card Expiration Date Field', function () {
-			describe('Formatting an Expiration Date', function () {
-				it('should return a blank string when given an undefined input', function () {
-					var _setup8 = setup();
+		describe('Unformatting an Expiration Date', function () {
+			it('should return a blank string when given an undefined input', function () {
+				var _setup5 = setup();
 	
-					var instance = _setup8.instance;
+				var instance = _setup5.instance;
 	
-					(0, _expect2.default)(instance.formatExpirationDate(undefined, undefined)).toBe('');
-				});
-	
-				it('should return a blank string if only a year is provided', function () {
-					var _setup9 = setup();
-	
-					var instance = _setup9.instance;
-	
-					(0, _expect2.default)(instance.formatExpirationDate(undefined, '2016')).toBe('');
-				});
-	
-				// it('should not allow a date in the past', function() {
-				// 	const { instance } = setup()
-				// 	expect( instance.formatExpirationDate('abcde') ).toBe('')
-				// })
-	
-				it('should add a slash between the month and year', function () {
-					var _setup10 = setup();
-	
-					var instance = _setup10.instance;
-	
-					(0, _expect2.default)(instance.formatExpirationDate('12')).toBe('12/');
-					(0, _expect2.default)(instance.formatExpirationDate('12', '2016')).toBe('12/16');
-				});
+				(0, _expect2.default)(instance.unformat(undefined, undefined)).toBe('');
 			});
 	
-			describe('Unformatting an Expiration Date', function () {
-				it('should return a blank string when given an undefined input', function () {
-					var _setup11 = setup();
+			it('should only accept numbers', function () {
+				var _setup6 = setup();
 	
-					var instance = _setup11.instance;
+				var instance = _setup6.instance;
 	
-					(0, _expect2.default)(instance.unformatExpirationDate(undefined, undefined)).toBe('');
-				});
+				(0, _expect2.default)(instance.unformat('abcd')).toBe('');
+			});
 	
-				it('should only accept numbers', function () {
-					var _setup12 = setup();
+			// it('should not allow a month greater than 12', function() {
 	
-					var instance = _setup12.instance;
+			// 	const { renderer } = setup()
+			// 	let instance = renderer.getMountedInstance()
 	
-					(0, _expect2.default)(instance.unformatExpirationDate('abcd')).toBe('');
-				});
+			// 	expect( instance.unformatExpirationDate( '13/' ) ).toBe( '12/' )
+			// 	expect( instance.unformatExpirationDate( '43/' ) ).toBe( '12/' )
+			// 	expect( instance.unformatExpirationDate( '13/16' ) ).toBe('12/16')
+			// 	expect( instance.unformatExpirationDate( '43/16' ) ).toBe('12/16')
+			// })
 	
-				// it('should not allow a month greater than 12', function() {
+			it('should accept a maximum of 4 digits', function () {
+				var _setup7 = setup();
 	
-				// 	const { renderer } = setup()
-				// 	let instance = renderer.getMountedInstance()
+				var instance = _setup7.instance;
 	
-				// 	expect( instance.unformatExpirationDate( '13/' ) ).toBe( '12/' )
-				// 	expect( instance.unformatExpirationDate( '43/' ) ).toBe( '12/' )
-				// 	expect( instance.unformatExpirationDate( '13/16' ) ).toBe('12/16')
-				// 	expect( instance.unformatExpirationDate( '43/16' ) ).toBe('12/16')
-				// })
+				(0, _expect2.default)(instance.unformat('12345').replace(/\D/g, '').length).toBe(4); // Remove the added slash before counting
+			});
 	
-				it('should accept a maximum of 4 digits', function () {
-					var _setup13 = setup();
+			// it('should remove the slash we previously added', function() {
+			// 	const { instance } = setup()
+			// 	expect( instance.unformatExpirationDate( '12/20' ) ).toBe( '1220' )
+			// })
 	
-					var instance = _setup13.instance;
-	
-					(0, _expect2.default)(instance.unformatExpirationDate('12345').replace(/\D/g, '').length).toBe(4); // Remove the added slash before counting
-				});
-	
-				// it('should remove the slash we previously added', function() {
-				// 	const { instance } = setup()
-				// 	expect( instance.unformatExpirationDate( '12/20' ) ).toBe( '1220' )
-				// })
-	
-				it('should remove the digit before the slash when the user deletes the slash character and there is no year', function () {
-					var _setup14 = setup({
-						payment: {
-							expirationMonth: '12',
-							expirationYear: ''
+			it('should remove the digit before the slash when the user deletes the slash character and there is no year', function () {
+				var _setup8 = setup({
+					expirationDate: {
+						values: {
+							month: '12',
+							year: ''
 						}
-					});
-	
-					var instance = _setup14.instance;
-	
-					// The function should know that if
-					// 1) the input value matches the expirationDate prop
-					// 2) they're both 2 digits
-					// 3) the caret position is at the end of the string
-					// the user deleted the slash and we should also delete the digit prior to it
-	
-					(0, _expect2.default)(instance.unformatExpirationDate('12', 2)).toBe('1/');
+					}
 				});
 	
-				it('should remove the digit before the slash when the user deletes the slash character and there is a year', function () {
-					var _setup15 = setup({
-						payment: {
-							expirationMonth: '12',
-							expirationYear: '2020'
+				var instance = _setup8.instance;
+	
+				// The function should know that if
+				// 1) the input value matches the expirationDate prop
+				// 2) they're both 2 digits
+				// 3) the caret position is at the end of the string
+				// the user deleted the slash and we should also delete the digit prior to it
+	
+				(0, _expect2.default)(instance.unformat('12', 2)).toBe('1/');
+			});
+	
+			it('should remove the digit before the slash when the user deletes the slash character and there is a year', function () {
+				var _setup9 = setup({
+					expirationDate: {
+						values: {
+							month: '12',
+							year: '2020'
 						}
-					});
-	
-					var instance = _setup15.instance;
-	
-	
-					(0, _expect2.default)(instance.unformatExpirationDate('1220', 2)).toBe('1/20');
-				});
-			});
-		});
-	
-		describe('Credit Card Security Code Field', function () {
-			describe('Formatting a Security Code', function () {
-				it('should return a blank string when given an undefined input', function () {
-					var _setup16 = setup();
-	
-					var instance = _setup16.instance;
-	
-					(0, _expect2.default)(instance.formatSecurityCode(undefined)).toBe('');
-				});
-			});
-	
-			describe('Unformatting a Security Code', function () {
-				it('should only accept numbers', function () {
-					var _setup17 = setup();
-	
-					var instance = _setup17.instance;
-	
-					(0, _expect2.default)(instance.unformatSecurityCode('abcde')).toBe('');
+					}
 				});
 	
-				it('should accept a maximum of 4 digits', function () {
-					var _setup18 = setup();
+				var instance = _setup9.instance;
 	
-					var instance = _setup18.instance;
 	
-					(0, _expect2.default)(instance.unformatSecurityCode('12345').length).toBe(4);
-				});
-			});
-		});
-	
-		describe('Transitioning Between Fields', function () {
-			describe('Getting Field Styles', function () {
-				it('should return default styles if the field variables have not been initialized', function () {
-					var _setup19 = setup();
-	
-					var instance = _setup19.instance;
-	
-					(0, _expect2.default)(instance.getFieldStyles()).toEqual({
-						cardNumberFieldWidth: 200,
-						cardNumberFieldLeftPosition: 0,
-						otherFieldsWidth: 2
-					});
-				});
-	
-				it('should return default styles if the currentField is CreditCardNumber', function () {
-					var _setup20 = setup();
-	
-					var instance = _setup20.instance;
-	
-					(0, _expect2.default)(instance.getFieldStyles()).toEqual({
-						cardNumberFieldWidth: 200,
-						cardNumberFieldLeftPosition: 0,
-						otherFieldsWidth: 2
-					});
-				});
-	
-				it('should return a cardNumberFieldWidth equal to length of the numbers in the field', function () {
-					var _setup21 = setup({
-						payment: { currentField: 'CreditCardExpirationDate' }
-					});
-	
-					var instance = _setup21.instance;
-	
-					instance.cardNumberGhost = { scrollWidth: 100 };
-					(0, _expect2.default)(instance.getFieldStyles().cardNumberFieldWidth).toBe(100);
-				});
-	
-				it('should return a cardNumberFieldLeftPosition equal to the negative difference between the size of the field and the size of the last 4 digits', function () {
-					var _setup22 = setup({
-						payment: { currentField: 'CreditCardExpirationDate' }
-					});
-	
-					var instance = _setup22.instance;
-	
-					instance.cardNumberGhost = { scrollWidth: 100 };
-					instance.abbreviatedCardNumberGhost = { scrollWidth: 50 };
-					(0, _expect2.default)(instance.getFieldStyles().cardNumberFieldLeftPosition).toBe(-50 + 16);
-				});
-	
-				it('should return a otherFieldsWidth equal to half the remaining space in the field', function () {
-					var _setup23 = setup({
-						payment: { currentField: 'CreditCardExpirationDate' }
-					});
-	
-					var instance = _setup23.instance;
-	
-					instance.fields = { scrollWidth: 200 };
-					instance.abbreviatedCardNumberGhost = { scrollWidth: 50 };
-					(0, _expect2.default)(instance.getFieldStyles().otherFieldsWidth).toBe(75 - 16);
-				});
+				(0, _expect2.default)(instance.unformat('1220', 2)).toBe('1/20');
 			});
 		});
 	});
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	module.exports = __webpack_require__(32);
+	module.exports = __webpack_require__(33);
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -2765,19 +2631,19 @@
 	
 	'use strict';
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
-	var ReactChildren = __webpack_require__(34);
-	var ReactComponent = __webpack_require__(44);
-	var ReactClass = __webpack_require__(50);
-	var ReactDOMFactories = __webpack_require__(55);
-	var ReactElement = __webpack_require__(37);
-	var ReactElementValidator = __webpack_require__(56);
-	var ReactPropTypes = __webpack_require__(58);
-	var ReactVersion = __webpack_require__(59);
+	var ReactChildren = __webpack_require__(35);
+	var ReactComponent = __webpack_require__(45);
+	var ReactClass = __webpack_require__(51);
+	var ReactDOMFactories = __webpack_require__(56);
+	var ReactElement = __webpack_require__(38);
+	var ReactElementValidator = __webpack_require__(57);
+	var ReactPropTypes = __webpack_require__(59);
+	var ReactVersion = __webpack_require__(60);
 	
-	var onlyChild = __webpack_require__(60);
-	var warning = __webpack_require__(39);
+	var onlyChild = __webpack_require__(61);
+	var warning = __webpack_require__(40);
 	
 	var createElement = ReactElement.createElement;
 	var createFactory = ReactElement.createFactory;
@@ -2841,7 +2707,7 @@
 	module.exports = React;
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports) {
 
 	/* eslint-disable no-unused-vars */
@@ -2886,7 +2752,7 @@
 	};
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -2902,11 +2768,11 @@
 	
 	'use strict';
 	
-	var PooledClass = __webpack_require__(35);
-	var ReactElement = __webpack_require__(37);
+	var PooledClass = __webpack_require__(36);
+	var ReactElement = __webpack_require__(38);
 	
-	var emptyFunction = __webpack_require__(40);
-	var traverseAllChildren = __webpack_require__(42);
+	var emptyFunction = __webpack_require__(41);
+	var traverseAllChildren = __webpack_require__(43);
 	
 	var twoArgumentPooler = PooledClass.twoArgumentPooler;
 	var fourArgumentPooler = PooledClass.fourArgumentPooler;
@@ -3073,7 +2939,7 @@
 	module.exports = ReactChildren;
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -3089,7 +2955,7 @@
 	
 	'use strict';
 	
-	var invariant = __webpack_require__(36);
+	var invariant = __webpack_require__(37);
 	
 	/**
 	 * Static poolers. Several custom versions for each potential number of
@@ -3197,7 +3063,7 @@
 	module.exports = PooledClass;
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports) {
 
 	/**
@@ -3251,7 +3117,7 @@
 	module.exports = invariant;
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -3269,12 +3135,12 @@
 	
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
-	var ReactCurrentOwner = __webpack_require__(38);
+	var ReactCurrentOwner = __webpack_require__(39);
 	
-	var warning = __webpack_require__(39);
-	var canDefineProperty = __webpack_require__(41);
+	var warning = __webpack_require__(40);
+	var canDefineProperty = __webpack_require__(42);
 	
 	// The Symbol used to tag the ReactElement type. If there is no native Symbol
 	// nor polyfill, then a plain number is used for performance.
@@ -3545,7 +3411,7 @@
 	module.exports = ReactElement;
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports) {
 
 	/**
@@ -3581,7 +3447,7 @@
 	module.exports = ReactCurrentOwner;
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -3596,7 +3462,7 @@
 	
 	'use strict';
 	
-	var emptyFunction = __webpack_require__(40);
+	var emptyFunction = __webpack_require__(41);
 	
 	/**
 	 * Similar to invariant but only logs a warning if the condition is not met.
@@ -3642,7 +3508,7 @@
 	module.exports = warning;
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -3684,7 +3550,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports) {
 
 	/**
@@ -3713,7 +3579,7 @@
 	module.exports = canDefineProperty;
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -3731,12 +3597,12 @@
 	
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
-	var ReactCurrentOwner = __webpack_require__(38);
-	var ReactElement = __webpack_require__(37);
+	var ReactCurrentOwner = __webpack_require__(39);
+	var ReactElement = __webpack_require__(38);
 	
-	var getIteratorFn = __webpack_require__(43);
-	var invariant = __webpack_require__(36);
-	var warning = __webpack_require__(39);
+	var getIteratorFn = __webpack_require__(44);
+	var invariant = __webpack_require__(37);
+	var warning = __webpack_require__(40);
 	
 	var SEPARATOR = '.';
 	var SUBSEPARATOR = ':';
@@ -3909,7 +3775,7 @@
 	module.exports = traverseAllChildren;
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports) {
 
 	/**
@@ -3954,7 +3820,7 @@
 	module.exports = getIteratorFn;
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -3972,13 +3838,13 @@
 	
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
-	var ReactNoopUpdateQueue = __webpack_require__(45);
-	var ReactInstrumentation = __webpack_require__(46);
+	var ReactNoopUpdateQueue = __webpack_require__(46);
+	var ReactInstrumentation = __webpack_require__(47);
 	
-	var canDefineProperty = __webpack_require__(41);
-	var emptyObject = __webpack_require__(49);
-	var invariant = __webpack_require__(36);
-	var warning = __webpack_require__(39);
+	var canDefineProperty = __webpack_require__(42);
+	var emptyObject = __webpack_require__(50);
+	var invariant = __webpack_require__(37);
+	var warning = __webpack_require__(40);
 	
 	/**
 	 * Base class helpers for the updating state of a component.
@@ -4082,7 +3948,7 @@
 	module.exports = ReactComponent;
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4098,7 +3964,7 @@
 	
 	'use strict';
 	
-	var warning = __webpack_require__(39);
+	var warning = __webpack_require__(40);
 	
 	function warnTDZ(publicInstance, callerName) {
 	  if (process.env.NODE_ENV !== 'production') {
@@ -4182,7 +4048,7 @@
 	module.exports = ReactNoopUpdateQueue;
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4198,12 +4064,12 @@
 	
 	'use strict';
 	
-	var ReactDebugTool = __webpack_require__(47);
+	var ReactDebugTool = __webpack_require__(48);
 	
 	module.exports = { debugTool: ReactDebugTool };
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4219,8 +4085,8 @@
 	
 	'use strict';
 	
-	var ReactInvalidSetStateWarningDevTool = __webpack_require__(48);
-	var warning = __webpack_require__(39);
+	var ReactInvalidSetStateWarningDevTool = __webpack_require__(49);
+	var warning = __webpack_require__(40);
 	
 	var eventHandlers = [];
 	var handlerDoesThrowForEvent = {};
@@ -4280,7 +4146,7 @@
 	module.exports = ReactDebugTool;
 
 /***/ },
-/* 48 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4296,7 +4162,7 @@
 	
 	'use strict';
 	
-	var warning = __webpack_require__(39);
+	var warning = __webpack_require__(40);
 	
 	if (process.env.NODE_ENV !== 'production') {
 	  var processingChildContext = false;
@@ -4321,7 +4187,7 @@
 	module.exports = ReactInvalidSetStateWarningDevTool;
 
 /***/ },
-/* 49 */
+/* 50 */
 /***/ function(module, exports) {
 
 	/**
@@ -4345,7 +4211,7 @@
 	module.exports = emptyObject;
 
 /***/ },
-/* 50 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4363,19 +4229,19 @@
 	
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
-	var ReactComponent = __webpack_require__(44);
-	var ReactElement = __webpack_require__(37);
-	var ReactPropTypeLocations = __webpack_require__(51);
-	var ReactPropTypeLocationNames = __webpack_require__(53);
-	var ReactNoopUpdateQueue = __webpack_require__(45);
+	var ReactComponent = __webpack_require__(45);
+	var ReactElement = __webpack_require__(38);
+	var ReactPropTypeLocations = __webpack_require__(52);
+	var ReactPropTypeLocationNames = __webpack_require__(54);
+	var ReactNoopUpdateQueue = __webpack_require__(46);
 	
-	var emptyObject = __webpack_require__(49);
-	var invariant = __webpack_require__(36);
-	var keyMirror = __webpack_require__(52);
-	var keyOf = __webpack_require__(54);
-	var warning = __webpack_require__(39);
+	var emptyObject = __webpack_require__(50);
+	var invariant = __webpack_require__(37);
+	var keyMirror = __webpack_require__(53);
+	var keyOf = __webpack_require__(55);
+	var warning = __webpack_require__(40);
 	
 	var MIXINS_KEY = keyOf({ mixins: null });
 	
@@ -5075,7 +4941,7 @@
 	module.exports = ReactClass;
 
 /***/ },
-/* 51 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5091,7 +4957,7 @@
 	
 	'use strict';
 	
-	var keyMirror = __webpack_require__(52);
+	var keyMirror = __webpack_require__(53);
 	
 	var ReactPropTypeLocations = keyMirror({
 	  prop: null,
@@ -5102,7 +4968,7 @@
 	module.exports = ReactPropTypeLocations;
 
 /***/ },
-/* 52 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5118,7 +4984,7 @@
 	
 	'use strict';
 	
-	var invariant = __webpack_require__(36);
+	var invariant = __webpack_require__(37);
 	
 	/**
 	 * Constructs an enumeration with keys equal to their value.
@@ -5154,7 +5020,7 @@
 	module.exports = keyMirror;
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports) {
 
 	/**
@@ -5183,7 +5049,7 @@
 	module.exports = ReactPropTypeLocationNames;
 
 /***/ },
-/* 54 */
+/* 55 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -5223,7 +5089,7 @@
 	module.exports = keyOf;
 
 /***/ },
-/* 55 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5239,10 +5105,10 @@
 	
 	'use strict';
 	
-	var ReactElement = __webpack_require__(37);
-	var ReactElementValidator = __webpack_require__(56);
+	var ReactElement = __webpack_require__(38);
+	var ReactElementValidator = __webpack_require__(57);
 	
-	var mapObject = __webpack_require__(57);
+	var mapObject = __webpack_require__(58);
 	
 	/**
 	 * Create a factory that creates HTML tag elements.
@@ -5404,7 +5270,7 @@
 	module.exports = ReactDOMFactories;
 
 /***/ },
-/* 56 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5429,15 +5295,15 @@
 	
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
-	var ReactElement = __webpack_require__(37);
-	var ReactPropTypeLocations = __webpack_require__(51);
-	var ReactPropTypeLocationNames = __webpack_require__(53);
-	var ReactCurrentOwner = __webpack_require__(38);
+	var ReactElement = __webpack_require__(38);
+	var ReactPropTypeLocations = __webpack_require__(52);
+	var ReactPropTypeLocationNames = __webpack_require__(54);
+	var ReactCurrentOwner = __webpack_require__(39);
 	
-	var canDefineProperty = __webpack_require__(41);
-	var getIteratorFn = __webpack_require__(43);
-	var invariant = __webpack_require__(36);
-	var warning = __webpack_require__(39);
+	var canDefineProperty = __webpack_require__(42);
+	var getIteratorFn = __webpack_require__(44);
+	var invariant = __webpack_require__(37);
+	var warning = __webpack_require__(40);
 	
 	function getDeclarationErrorAddendum() {
 	  if (ReactCurrentOwner.current) {
@@ -5692,7 +5558,7 @@
 	module.exports = ReactElementValidator;
 
 /***/ },
-/* 57 */
+/* 58 */
 /***/ function(module, exports) {
 
 	/**
@@ -5747,7 +5613,7 @@
 	module.exports = mapObject;
 
 /***/ },
-/* 58 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5765,11 +5631,11 @@
 	
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
-	var ReactElement = __webpack_require__(37);
-	var ReactPropTypeLocationNames = __webpack_require__(53);
+	var ReactElement = __webpack_require__(38);
+	var ReactPropTypeLocationNames = __webpack_require__(54);
 	
-	var emptyFunction = __webpack_require__(40);
-	var getIteratorFn = __webpack_require__(43);
+	var emptyFunction = __webpack_require__(41);
+	var getIteratorFn = __webpack_require__(44);
 	
 	/**
 	 * Collection of methods that allow declaration and validation of props that are
@@ -6134,7 +6000,7 @@
 	module.exports = ReactPropTypes;
 
 /***/ },
-/* 59 */
+/* 60 */
 /***/ function(module, exports) {
 
 	/**
@@ -6153,7 +6019,7 @@
 	module.exports = '15.0.1';
 
 /***/ },
-/* 60 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -6168,9 +6034,9 @@
 	 */
 	'use strict';
 	
-	var ReactElement = __webpack_require__(37);
+	var ReactElement = __webpack_require__(38);
 	
-	var invariant = __webpack_require__(36);
+	var invariant = __webpack_require__(37);
 	
 	/**
 	 * Returns the first child in a collection of children and verifies that there
@@ -6191,15 +6057,15 @@
 	module.exports = onlyChild;
 
 /***/ },
-/* 61 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	module.exports = __webpack_require__(62);
+	module.exports = __webpack_require__(63);
 
 /***/ },
-/* 62 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -6215,26 +6081,26 @@
 	
 	'use strict';
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
-	var EventConstants = __webpack_require__(63);
-	var EventPluginHub = __webpack_require__(64);
-	var EventPluginRegistry = __webpack_require__(65);
-	var EventPropagators = __webpack_require__(70);
-	var React = __webpack_require__(32);
-	var ReactDefaultInjection = __webpack_require__(71);
-	var ReactDOM = __webpack_require__(192);
-	var ReactDOMComponentTree = __webpack_require__(80);
-	var ReactElement = __webpack_require__(37);
-	var ReactBrowserEventEmitter = __webpack_require__(131);
-	var ReactCompositeComponent = __webpack_require__(144);
-	var ReactInstanceMap = __webpack_require__(145);
-	var ReactUpdates = __webpack_require__(83);
-	var SyntheticEvent = __webpack_require__(77);
+	var EventConstants = __webpack_require__(64);
+	var EventPluginHub = __webpack_require__(65);
+	var EventPluginRegistry = __webpack_require__(66);
+	var EventPropagators = __webpack_require__(71);
+	var React = __webpack_require__(33);
+	var ReactDefaultInjection = __webpack_require__(72);
+	var ReactDOM = __webpack_require__(193);
+	var ReactDOMComponentTree = __webpack_require__(81);
+	var ReactElement = __webpack_require__(38);
+	var ReactBrowserEventEmitter = __webpack_require__(132);
+	var ReactCompositeComponent = __webpack_require__(145);
+	var ReactInstanceMap = __webpack_require__(146);
+	var ReactUpdates = __webpack_require__(84);
+	var SyntheticEvent = __webpack_require__(78);
 	
-	var emptyObject = __webpack_require__(49);
-	var findDOMNode = __webpack_require__(193);
-	var invariant = __webpack_require__(36);
+	var emptyObject = __webpack_require__(50);
+	var findDOMNode = __webpack_require__(194);
+	var invariant = __webpack_require__(37);
 	
 	var topLevelTypes = EventConstants.topLevelTypes;
 	
@@ -6700,7 +6566,7 @@
 	module.exports = ReactTestUtils;
 
 /***/ },
-/* 63 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -6716,7 +6582,7 @@
 	
 	'use strict';
 	
-	var keyMirror = __webpack_require__(52);
+	var keyMirror = __webpack_require__(53);
 	
 	var PropagationPhases = keyMirror({ bubbled: null, captured: null });
 	
@@ -6802,7 +6668,7 @@
 	module.exports = EventConstants;
 
 /***/ },
-/* 64 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -6820,13 +6686,13 @@
 	
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
-	var EventPluginRegistry = __webpack_require__(65);
-	var EventPluginUtils = __webpack_require__(66);
-	var ReactErrorUtils = __webpack_require__(67);
+	var EventPluginRegistry = __webpack_require__(66);
+	var EventPluginUtils = __webpack_require__(67);
+	var ReactErrorUtils = __webpack_require__(68);
 	
-	var accumulateInto = __webpack_require__(68);
-	var forEachAccumulated = __webpack_require__(69);
-	var invariant = __webpack_require__(36);
+	var accumulateInto = __webpack_require__(69);
+	var forEachAccumulated = __webpack_require__(70);
+	var invariant = __webpack_require__(37);
 	
 	/**
 	 * Internal store for event listeners
@@ -7044,7 +6910,7 @@
 	module.exports = EventPluginHub;
 
 /***/ },
-/* 65 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -7060,7 +6926,7 @@
 	
 	'use strict';
 	
-	var invariant = __webpack_require__(36);
+	var invariant = __webpack_require__(37);
 	
 	/**
 	 * Injectable ordering of event plugins.
@@ -7290,7 +7156,7 @@
 	module.exports = EventPluginRegistry;
 
 /***/ },
-/* 66 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -7306,11 +7172,11 @@
 	
 	'use strict';
 	
-	var EventConstants = __webpack_require__(63);
-	var ReactErrorUtils = __webpack_require__(67);
+	var EventConstants = __webpack_require__(64);
+	var ReactErrorUtils = __webpack_require__(68);
 	
-	var invariant = __webpack_require__(36);
-	var warning = __webpack_require__(39);
+	var invariant = __webpack_require__(37);
+	var warning = __webpack_require__(40);
 	
 	/**
 	 * Injected dependencies:
@@ -7522,7 +7388,7 @@
 	module.exports = EventPluginUtils;
 
 /***/ },
-/* 67 */
+/* 68 */
 /***/ function(module, exports) {
 
 	/**
@@ -7603,7 +7469,7 @@
 	module.exports = ReactErrorUtils;
 
 /***/ },
-/* 68 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -7619,7 +7485,7 @@
 	
 	'use strict';
 	
-	var invariant = __webpack_require__(36);
+	var invariant = __webpack_require__(37);
 	
 	/**
 	 *
@@ -7667,7 +7533,7 @@
 	module.exports = accumulateInto;
 
 /***/ },
-/* 69 */
+/* 70 */
 /***/ function(module, exports) {
 
 	/**
@@ -7702,7 +7568,7 @@
 	module.exports = forEachAccumulated;
 
 /***/ },
-/* 70 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -7718,13 +7584,13 @@
 	
 	'use strict';
 	
-	var EventConstants = __webpack_require__(63);
-	var EventPluginHub = __webpack_require__(64);
-	var EventPluginUtils = __webpack_require__(66);
+	var EventConstants = __webpack_require__(64);
+	var EventPluginHub = __webpack_require__(65);
+	var EventPluginUtils = __webpack_require__(67);
 	
-	var accumulateInto = __webpack_require__(68);
-	var forEachAccumulated = __webpack_require__(69);
-	var warning = __webpack_require__(39);
+	var accumulateInto = __webpack_require__(69);
+	var forEachAccumulated = __webpack_require__(70);
+	var warning = __webpack_require__(40);
 	
 	var PropagationPhases = EventConstants.PropagationPhases;
 	var getListener = EventPluginHub.getListener;
@@ -7844,7 +7710,7 @@
 	module.exports = EventPropagators;
 
 /***/ },
-/* 71 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -7860,25 +7726,25 @@
 	
 	'use strict';
 	
-	var BeforeInputEventPlugin = __webpack_require__(72);
-	var ChangeEventPlugin = __webpack_require__(79);
-	var DefaultEventPluginOrder = __webpack_require__(94);
-	var EnterLeaveEventPlugin = __webpack_require__(95);
-	var ExecutionEnvironment = __webpack_require__(73);
-	var HTMLDOMPropertyConfig = __webpack_require__(100);
-	var ReactComponentBrowserEnvironment = __webpack_require__(101);
-	var ReactDOMComponent = __webpack_require__(114);
-	var ReactDOMComponentTree = __webpack_require__(80);
-	var ReactDOMEmptyComponent = __webpack_require__(154);
-	var ReactDOMTreeTraversal = __webpack_require__(155);
-	var ReactDOMTextComponent = __webpack_require__(156);
-	var ReactDefaultBatchingStrategy = __webpack_require__(157);
-	var ReactEventListener = __webpack_require__(158);
-	var ReactInjection = __webpack_require__(161);
-	var ReactReconcileTransaction = __webpack_require__(162);
-	var SVGDOMPropertyConfig = __webpack_require__(170);
-	var SelectEventPlugin = __webpack_require__(171);
-	var SimpleEventPlugin = __webpack_require__(172);
+	var BeforeInputEventPlugin = __webpack_require__(73);
+	var ChangeEventPlugin = __webpack_require__(80);
+	var DefaultEventPluginOrder = __webpack_require__(95);
+	var EnterLeaveEventPlugin = __webpack_require__(96);
+	var ExecutionEnvironment = __webpack_require__(74);
+	var HTMLDOMPropertyConfig = __webpack_require__(101);
+	var ReactComponentBrowserEnvironment = __webpack_require__(102);
+	var ReactDOMComponent = __webpack_require__(115);
+	var ReactDOMComponentTree = __webpack_require__(81);
+	var ReactDOMEmptyComponent = __webpack_require__(155);
+	var ReactDOMTreeTraversal = __webpack_require__(156);
+	var ReactDOMTextComponent = __webpack_require__(157);
+	var ReactDefaultBatchingStrategy = __webpack_require__(158);
+	var ReactEventListener = __webpack_require__(159);
+	var ReactInjection = __webpack_require__(162);
+	var ReactReconcileTransaction = __webpack_require__(163);
+	var SVGDOMPropertyConfig = __webpack_require__(171);
+	var SelectEventPlugin = __webpack_require__(172);
+	var SimpleEventPlugin = __webpack_require__(173);
 	
 	var alreadyInjected = false;
 	
@@ -7931,7 +7797,7 @@
 	  if (process.env.NODE_ENV !== 'production') {
 	    var url = ExecutionEnvironment.canUseDOM && window.location.href || '';
 	    if (/[?&]react_perf\b/.test(url)) {
-	      var ReactDefaultPerf = __webpack_require__(183);
+	      var ReactDefaultPerf = __webpack_require__(184);
 	      ReactDefaultPerf.start();
 	    }
 	  }
@@ -7942,7 +7808,7 @@
 	};
 
 /***/ },
-/* 72 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -7960,14 +7826,14 @@
 	
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
-	var EventConstants = __webpack_require__(63);
-	var EventPropagators = __webpack_require__(70);
-	var ExecutionEnvironment = __webpack_require__(73);
-	var FallbackCompositionState = __webpack_require__(74);
-	var SyntheticCompositionEvent = __webpack_require__(76);
-	var SyntheticInputEvent = __webpack_require__(78);
+	var EventConstants = __webpack_require__(64);
+	var EventPropagators = __webpack_require__(71);
+	var ExecutionEnvironment = __webpack_require__(74);
+	var FallbackCompositionState = __webpack_require__(75);
+	var SyntheticCompositionEvent = __webpack_require__(77);
+	var SyntheticInputEvent = __webpack_require__(79);
 	
-	var keyOf = __webpack_require__(54);
+	var keyOf = __webpack_require__(55);
 	
 	var END_KEYCODES = [9, 13, 27, 32]; // Tab, Return, Esc, Space
 	var START_KEYCODE = 229;
@@ -8337,7 +8203,7 @@
 	module.exports = BeforeInputEventPlugin;
 
 /***/ },
-/* 73 */
+/* 74 */
 /***/ function(module, exports) {
 
 	/**
@@ -8377,7 +8243,7 @@
 	module.exports = ExecutionEnvironment;
 
 /***/ },
-/* 74 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -8393,11 +8259,11 @@
 	
 	'use strict';
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
-	var PooledClass = __webpack_require__(35);
+	var PooledClass = __webpack_require__(36);
 	
-	var getTextContentAccessor = __webpack_require__(75);
+	var getTextContentAccessor = __webpack_require__(76);
 	
 	/**
 	 * This helper class stores information about text content of a target node,
@@ -8477,7 +8343,7 @@
 	module.exports = FallbackCompositionState;
 
 /***/ },
-/* 75 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -8493,7 +8359,7 @@
 	
 	'use strict';
 	
-	var ExecutionEnvironment = __webpack_require__(73);
+	var ExecutionEnvironment = __webpack_require__(74);
 	
 	var contentKey = null;
 	
@@ -8515,7 +8381,7 @@
 	module.exports = getTextContentAccessor;
 
 /***/ },
-/* 76 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -8531,7 +8397,7 @@
 	
 	'use strict';
 	
-	var SyntheticEvent = __webpack_require__(77);
+	var SyntheticEvent = __webpack_require__(78);
 	
 	/**
 	 * @interface Event
@@ -8556,7 +8422,7 @@
 	module.exports = SyntheticCompositionEvent;
 
 /***/ },
-/* 77 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -8572,12 +8438,12 @@
 	
 	'use strict';
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
-	var PooledClass = __webpack_require__(35);
+	var PooledClass = __webpack_require__(36);
 	
-	var emptyFunction = __webpack_require__(40);
-	var warning = __webpack_require__(39);
+	var emptyFunction = __webpack_require__(41);
+	var warning = __webpack_require__(40);
 	
 	var didWarnForAddedNewProperty = false;
 	var isProxySupported = typeof Proxy === 'function';
@@ -8726,7 +8592,7 @@
 	      this[shouldBeReleasedProperties[i]] = null;
 	    }
 	    if (process.env.NODE_ENV !== 'production') {
-	      var noop = __webpack_require__(40);
+	      var noop = __webpack_require__(41);
 	      Object.defineProperty(this, 'nativeEvent', getPooledWarningPropertyDefinition('nativeEvent', null));
 	      Object.defineProperty(this, 'preventDefault', getPooledWarningPropertyDefinition('preventDefault', noop));
 	      Object.defineProperty(this, 'stopPropagation', getPooledWarningPropertyDefinition('stopPropagation', noop));
@@ -8822,7 +8688,7 @@
 	}
 
 /***/ },
-/* 78 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -8838,7 +8704,7 @@
 	
 	'use strict';
 	
-	var SyntheticEvent = __webpack_require__(77);
+	var SyntheticEvent = __webpack_require__(78);
 	
 	/**
 	 * @interface Event
@@ -8864,7 +8730,7 @@
 	module.exports = SyntheticInputEvent;
 
 /***/ },
-/* 79 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -8880,18 +8746,18 @@
 	
 	'use strict';
 	
-	var EventConstants = __webpack_require__(63);
-	var EventPluginHub = __webpack_require__(64);
-	var EventPropagators = __webpack_require__(70);
-	var ExecutionEnvironment = __webpack_require__(73);
-	var ReactDOMComponentTree = __webpack_require__(80);
-	var ReactUpdates = __webpack_require__(83);
-	var SyntheticEvent = __webpack_require__(77);
+	var EventConstants = __webpack_require__(64);
+	var EventPluginHub = __webpack_require__(65);
+	var EventPropagators = __webpack_require__(71);
+	var ExecutionEnvironment = __webpack_require__(74);
+	var ReactDOMComponentTree = __webpack_require__(81);
+	var ReactUpdates = __webpack_require__(84);
+	var SyntheticEvent = __webpack_require__(78);
 	
-	var getEventTarget = __webpack_require__(91);
-	var isEventSupported = __webpack_require__(92);
-	var isTextInputElement = __webpack_require__(93);
-	var keyOf = __webpack_require__(54);
+	var getEventTarget = __webpack_require__(92);
+	var isEventSupported = __webpack_require__(93);
+	var isTextInputElement = __webpack_require__(94);
+	var keyOf = __webpack_require__(55);
 	
 	var topLevelTypes = EventConstants.topLevelTypes;
 	
@@ -9194,7 +9060,7 @@
 	module.exports = ChangeEventPlugin;
 
 /***/ },
-/* 80 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -9210,10 +9076,10 @@
 	
 	'use strict';
 	
-	var DOMProperty = __webpack_require__(81);
-	var ReactDOMComponentFlags = __webpack_require__(82);
+	var DOMProperty = __webpack_require__(82);
+	var ReactDOMComponentFlags = __webpack_require__(83);
 	
-	var invariant = __webpack_require__(36);
+	var invariant = __webpack_require__(37);
 	
 	var ATTR_NAME = DOMProperty.ID_ATTRIBUTE_NAME;
 	var Flags = ReactDOMComponentFlags;
@@ -9385,7 +9251,7 @@
 	module.exports = ReactDOMComponentTree;
 
 /***/ },
-/* 81 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -9401,7 +9267,7 @@
 	
 	'use strict';
 	
-	var invariant = __webpack_require__(36);
+	var invariant = __webpack_require__(37);
 	
 	function checkMask(value, bitmask) {
 	  return (value & bitmask) === bitmask;
@@ -9603,7 +9469,7 @@
 	module.exports = DOMProperty;
 
 /***/ },
-/* 82 */
+/* 83 */
 /***/ function(module, exports) {
 
 	/**
@@ -9626,7 +9492,7 @@
 	module.exports = ReactDOMComponentFlags;
 
 /***/ },
-/* 83 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -9642,16 +9508,16 @@
 	
 	'use strict';
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
-	var CallbackQueue = __webpack_require__(84);
-	var PooledClass = __webpack_require__(35);
-	var ReactFeatureFlags = __webpack_require__(85);
-	var ReactPerf = __webpack_require__(86);
-	var ReactReconciler = __webpack_require__(87);
-	var Transaction = __webpack_require__(90);
+	var CallbackQueue = __webpack_require__(85);
+	var PooledClass = __webpack_require__(36);
+	var ReactFeatureFlags = __webpack_require__(86);
+	var ReactPerf = __webpack_require__(87);
+	var ReactReconciler = __webpack_require__(88);
+	var Transaction = __webpack_require__(91);
 	
-	var invariant = __webpack_require__(36);
+	var invariant = __webpack_require__(37);
 	
 	var dirtyComponents = [];
 	var asapCallbackQueue = CallbackQueue.getPooled();
@@ -9872,7 +9738,7 @@
 	module.exports = ReactUpdates;
 
 /***/ },
-/* 84 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -9888,11 +9754,11 @@
 	
 	'use strict';
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
-	var PooledClass = __webpack_require__(35);
+	var PooledClass = __webpack_require__(36);
 	
-	var invariant = __webpack_require__(36);
+	var invariant = __webpack_require__(37);
 	
 	/**
 	 * A specialized pseudo-event module to help keep track of components waiting to
@@ -9982,7 +9848,7 @@
 	module.exports = CallbackQueue;
 
 /***/ },
-/* 85 */
+/* 86 */
 /***/ function(module, exports) {
 
 	/**
@@ -10008,7 +9874,7 @@
 	module.exports = ReactFeatureFlags;
 
 /***/ },
-/* 86 */
+/* 87 */
 /***/ function(module, exports) {
 
 	/**
@@ -10109,7 +9975,7 @@
 	module.exports = ReactPerf;
 
 /***/ },
-/* 87 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -10125,8 +9991,8 @@
 	
 	'use strict';
 	
-	var ReactRef = __webpack_require__(88);
-	var ReactInstrumentation = __webpack_require__(46);
+	var ReactRef = __webpack_require__(89);
+	var ReactInstrumentation = __webpack_require__(47);
 	
 	/**
 	 * Helper to call ReactRef.attachRefs with this composite component, split out
@@ -10244,7 +10110,7 @@
 	module.exports = ReactReconciler;
 
 /***/ },
-/* 88 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -10260,7 +10126,7 @@
 	
 	'use strict';
 	
-	var ReactOwner = __webpack_require__(89);
+	var ReactOwner = __webpack_require__(90);
 	
 	var ReactRef = {};
 	
@@ -10327,7 +10193,7 @@
 	module.exports = ReactRef;
 
 /***/ },
-/* 89 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -10343,7 +10209,7 @@
 	
 	'use strict';
 	
-	var invariant = __webpack_require__(36);
+	var invariant = __webpack_require__(37);
 	
 	/**
 	 * ReactOwners are capable of storing references to owned components.
@@ -10424,7 +10290,7 @@
 	module.exports = ReactOwner;
 
 /***/ },
-/* 90 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -10440,7 +10306,7 @@
 	
 	'use strict';
 	
-	var invariant = __webpack_require__(36);
+	var invariant = __webpack_require__(37);
 	
 	/**
 	 * `Transaction` creates a black box that is able to wrap any method such that
@@ -10660,7 +10526,7 @@
 	module.exports = Transaction;
 
 /***/ },
-/* 91 */
+/* 92 */
 /***/ function(module, exports) {
 
 	/**
@@ -10700,7 +10566,7 @@
 	module.exports = getEventTarget;
 
 /***/ },
-/* 92 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -10716,7 +10582,7 @@
 	
 	'use strict';
 	
-	var ExecutionEnvironment = __webpack_require__(73);
+	var ExecutionEnvironment = __webpack_require__(74);
 	
 	var useHasFeature;
 	if (ExecutionEnvironment.canUseDOM) {
@@ -10765,7 +10631,7 @@
 	module.exports = isEventSupported;
 
 /***/ },
-/* 93 */
+/* 94 */
 /***/ function(module, exports) {
 
 	/**
@@ -10811,7 +10677,7 @@
 	module.exports = isTextInputElement;
 
 /***/ },
-/* 94 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -10827,7 +10693,7 @@
 	
 	'use strict';
 	
-	var keyOf = __webpack_require__(54);
+	var keyOf = __webpack_require__(55);
 	
 	/**
 	 * Module that is injectable into `EventPluginHub`, that specifies a
@@ -10843,7 +10709,7 @@
 	module.exports = DefaultEventPluginOrder;
 
 /***/ },
-/* 95 */
+/* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -10859,12 +10725,12 @@
 	
 	'use strict';
 	
-	var EventConstants = __webpack_require__(63);
-	var EventPropagators = __webpack_require__(70);
-	var ReactDOMComponentTree = __webpack_require__(80);
-	var SyntheticMouseEvent = __webpack_require__(96);
+	var EventConstants = __webpack_require__(64);
+	var EventPropagators = __webpack_require__(71);
+	var ReactDOMComponentTree = __webpack_require__(81);
+	var SyntheticMouseEvent = __webpack_require__(97);
 	
-	var keyOf = __webpack_require__(54);
+	var keyOf = __webpack_require__(55);
 	
 	var topLevelTypes = EventConstants.topLevelTypes;
 	
@@ -10953,7 +10819,7 @@
 	module.exports = EnterLeaveEventPlugin;
 
 /***/ },
-/* 96 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -10969,10 +10835,10 @@
 	
 	'use strict';
 	
-	var SyntheticUIEvent = __webpack_require__(97);
-	var ViewportMetrics = __webpack_require__(98);
+	var SyntheticUIEvent = __webpack_require__(98);
+	var ViewportMetrics = __webpack_require__(99);
 	
-	var getEventModifierState = __webpack_require__(99);
+	var getEventModifierState = __webpack_require__(100);
 	
 	/**
 	 * @interface MouseEvent
@@ -11030,7 +10896,7 @@
 	module.exports = SyntheticMouseEvent;
 
 /***/ },
-/* 97 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -11046,9 +10912,9 @@
 	
 	'use strict';
 	
-	var SyntheticEvent = __webpack_require__(77);
+	var SyntheticEvent = __webpack_require__(78);
 	
-	var getEventTarget = __webpack_require__(91);
+	var getEventTarget = __webpack_require__(92);
 	
 	/**
 	 * @interface UIEvent
@@ -11094,7 +10960,7 @@
 	module.exports = SyntheticUIEvent;
 
 /***/ },
-/* 98 */
+/* 99 */
 /***/ function(module, exports) {
 
 	/**
@@ -11126,7 +10992,7 @@
 	module.exports = ViewportMetrics;
 
 /***/ },
-/* 99 */
+/* 100 */
 /***/ function(module, exports) {
 
 	/**
@@ -11174,7 +11040,7 @@
 	module.exports = getEventModifierState;
 
 /***/ },
-/* 100 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -11190,7 +11056,7 @@
 	
 	'use strict';
 	
-	var DOMProperty = __webpack_require__(81);
+	var DOMProperty = __webpack_require__(82);
 	
 	var MUST_USE_PROPERTY = DOMProperty.injection.MUST_USE_PROPERTY;
 	var HAS_BOOLEAN_VALUE = DOMProperty.injection.HAS_BOOLEAN_VALUE;
@@ -11388,7 +11254,7 @@
 	module.exports = HTMLDOMPropertyConfig;
 
 /***/ },
-/* 101 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -11404,9 +11270,9 @@
 	
 	'use strict';
 	
-	var DOMChildrenOperations = __webpack_require__(102);
-	var ReactDOMIDOperations = __webpack_require__(113);
-	var ReactPerf = __webpack_require__(86);
+	var DOMChildrenOperations = __webpack_require__(103);
+	var ReactDOMIDOperations = __webpack_require__(114);
+	var ReactPerf = __webpack_require__(87);
 	
 	/**
 	 * Abstracts away all functionality of the reconciler that requires knowledge of
@@ -11437,7 +11303,7 @@
 	module.exports = ReactComponentBrowserEnvironment;
 
 /***/ },
-/* 102 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -11453,14 +11319,14 @@
 	
 	'use strict';
 	
-	var DOMLazyTree = __webpack_require__(103);
-	var Danger = __webpack_require__(108);
-	var ReactMultiChildUpdateTypes = __webpack_require__(112);
-	var ReactPerf = __webpack_require__(86);
+	var DOMLazyTree = __webpack_require__(104);
+	var Danger = __webpack_require__(109);
+	var ReactMultiChildUpdateTypes = __webpack_require__(113);
+	var ReactPerf = __webpack_require__(87);
 	
-	var createMicrosoftUnsafeLocalFunction = __webpack_require__(104);
-	var setInnerHTML = __webpack_require__(107);
-	var setTextContent = __webpack_require__(105);
+	var createMicrosoftUnsafeLocalFunction = __webpack_require__(105);
+	var setInnerHTML = __webpack_require__(108);
+	var setTextContent = __webpack_require__(106);
 	
 	function getNodeAfter(parentNode, node) {
 	  // Special case for text components, which return [open, close] comments
@@ -11601,7 +11467,7 @@
 	module.exports = DOMChildrenOperations;
 
 /***/ },
-/* 103 */
+/* 104 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -11617,8 +11483,8 @@
 	
 	'use strict';
 	
-	var createMicrosoftUnsafeLocalFunction = __webpack_require__(104);
-	var setTextContent = __webpack_require__(105);
+	var createMicrosoftUnsafeLocalFunction = __webpack_require__(105);
+	var setTextContent = __webpack_require__(106);
 	
 	/**
 	 * In IE (8-11) and Edge, appending nodes with no children is dramatically
@@ -11711,7 +11577,7 @@
 	module.exports = DOMLazyTree;
 
 /***/ },
-/* 104 */
+/* 105 */
 /***/ function(module, exports) {
 
 	/**
@@ -11748,7 +11614,7 @@
 	module.exports = createMicrosoftUnsafeLocalFunction;
 
 /***/ },
-/* 105 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -11764,9 +11630,9 @@
 	
 	'use strict';
 	
-	var ExecutionEnvironment = __webpack_require__(73);
-	var escapeTextContentForBrowser = __webpack_require__(106);
-	var setInnerHTML = __webpack_require__(107);
+	var ExecutionEnvironment = __webpack_require__(74);
+	var escapeTextContentForBrowser = __webpack_require__(107);
+	var setInnerHTML = __webpack_require__(108);
 	
 	/**
 	 * Set the textContent property of a node, ensuring that whitespace is preserved
@@ -11793,7 +11659,7 @@
 	module.exports = setTextContent;
 
 /***/ },
-/* 106 */
+/* 107 */
 /***/ function(module, exports) {
 
 	/**
@@ -11836,7 +11702,7 @@
 	module.exports = escapeTextContentForBrowser;
 
 /***/ },
-/* 107 */
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -11852,12 +11718,12 @@
 	
 	'use strict';
 	
-	var ExecutionEnvironment = __webpack_require__(73);
+	var ExecutionEnvironment = __webpack_require__(74);
 	
 	var WHITESPACE_TEST = /^[ \r\n\t\f]/;
 	var NONVISIBLE_TEST = /<(!--|link|noscript|meta|script|style)[ \r\n\t\f\/>]/;
 	
-	var createMicrosoftUnsafeLocalFunction = __webpack_require__(104);
+	var createMicrosoftUnsafeLocalFunction = __webpack_require__(105);
 	
 	/**
 	 * Set the innerHTML property of a node, ensuring that whitespace is preserved
@@ -11923,7 +11789,7 @@
 	module.exports = setInnerHTML;
 
 /***/ },
-/* 108 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -11939,13 +11805,13 @@
 	
 	'use strict';
 	
-	var DOMLazyTree = __webpack_require__(103);
-	var ExecutionEnvironment = __webpack_require__(73);
+	var DOMLazyTree = __webpack_require__(104);
+	var ExecutionEnvironment = __webpack_require__(74);
 	
-	var createNodesFromMarkup = __webpack_require__(109);
-	var emptyFunction = __webpack_require__(40);
-	var getMarkupWrap = __webpack_require__(111);
-	var invariant = __webpack_require__(36);
+	var createNodesFromMarkup = __webpack_require__(110);
+	var emptyFunction = __webpack_require__(41);
+	var getMarkupWrap = __webpack_require__(112);
+	var invariant = __webpack_require__(37);
 	
 	var OPEN_TAG_NAME_EXP = /^(<[^ \/>]+)/;
 	var RESULT_INDEX_ATTR = 'data-danger-index';
@@ -12072,7 +11938,7 @@
 	module.exports = Danger;
 
 /***/ },
-/* 109 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12090,11 +11956,11 @@
 	
 	/*eslint-disable fb-www/unsafe-html*/
 	
-	var ExecutionEnvironment = __webpack_require__(73);
+	var ExecutionEnvironment = __webpack_require__(74);
 	
-	var createArrayFromMixed = __webpack_require__(110);
-	var getMarkupWrap = __webpack_require__(111);
-	var invariant = __webpack_require__(36);
+	var createArrayFromMixed = __webpack_require__(111);
+	var getMarkupWrap = __webpack_require__(112);
+	var invariant = __webpack_require__(37);
 	
 	/**
 	 * Dummy container used to render all markup.
@@ -12160,7 +12026,7 @@
 	module.exports = createNodesFromMarkup;
 
 /***/ },
-/* 110 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12178,7 +12044,7 @@
 	
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
-	var invariant = __webpack_require__(36);
+	var invariant = __webpack_require__(37);
 	
 	/**
 	 * Convert array-like objects to arrays.
@@ -12293,7 +12159,7 @@
 	module.exports = createArrayFromMixed;
 
 /***/ },
-/* 111 */
+/* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12310,9 +12176,9 @@
 	
 	/*eslint-disable fb-www/unsafe-html */
 	
-	var ExecutionEnvironment = __webpack_require__(73);
+	var ExecutionEnvironment = __webpack_require__(74);
 	
-	var invariant = __webpack_require__(36);
+	var invariant = __webpack_require__(37);
 	
 	/**
 	 * Dummy container used to detect which wraps are necessary.
@@ -12392,7 +12258,7 @@
 	module.exports = getMarkupWrap;
 
 /***/ },
-/* 112 */
+/* 113 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -12408,7 +12274,7 @@
 	
 	'use strict';
 	
-	var keyMirror = __webpack_require__(52);
+	var keyMirror = __webpack_require__(53);
 	
 	/**
 	 * When a component's children are updated, a series of update configuration
@@ -12429,7 +12295,7 @@
 	module.exports = ReactMultiChildUpdateTypes;
 
 /***/ },
-/* 113 */
+/* 114 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -12445,9 +12311,9 @@
 	
 	'use strict';
 	
-	var DOMChildrenOperations = __webpack_require__(102);
-	var ReactDOMComponentTree = __webpack_require__(80);
-	var ReactPerf = __webpack_require__(86);
+	var DOMChildrenOperations = __webpack_require__(103);
+	var ReactDOMComponentTree = __webpack_require__(81);
+	var ReactPerf = __webpack_require__(87);
 	
 	/**
 	 * Operations used to process updates to DOM nodes.
@@ -12473,7 +12339,7 @@
 	module.exports = ReactDOMIDOperations;
 
 /***/ },
-/* 114 */
+/* 115 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -12493,36 +12359,36 @@
 	
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
-	var AutoFocusUtils = __webpack_require__(115);
-	var CSSPropertyOperations = __webpack_require__(117);
-	var DOMLazyTree = __webpack_require__(103);
-	var DOMNamespaces = __webpack_require__(125);
-	var DOMProperty = __webpack_require__(81);
-	var DOMPropertyOperations = __webpack_require__(126);
-	var EventConstants = __webpack_require__(63);
-	var EventPluginHub = __webpack_require__(64);
-	var EventPluginRegistry = __webpack_require__(65);
-	var ReactBrowserEventEmitter = __webpack_require__(131);
-	var ReactComponentBrowserEnvironment = __webpack_require__(101);
-	var ReactDOMButton = __webpack_require__(134);
-	var ReactDOMComponentFlags = __webpack_require__(82);
-	var ReactDOMComponentTree = __webpack_require__(80);
-	var ReactDOMInput = __webpack_require__(135);
-	var ReactDOMOption = __webpack_require__(137);
-	var ReactDOMSelect = __webpack_require__(138);
-	var ReactDOMTextarea = __webpack_require__(139);
-	var ReactMultiChild = __webpack_require__(140);
-	var ReactPerf = __webpack_require__(86);
+	var AutoFocusUtils = __webpack_require__(116);
+	var CSSPropertyOperations = __webpack_require__(118);
+	var DOMLazyTree = __webpack_require__(104);
+	var DOMNamespaces = __webpack_require__(126);
+	var DOMProperty = __webpack_require__(82);
+	var DOMPropertyOperations = __webpack_require__(127);
+	var EventConstants = __webpack_require__(64);
+	var EventPluginHub = __webpack_require__(65);
+	var EventPluginRegistry = __webpack_require__(66);
+	var ReactBrowserEventEmitter = __webpack_require__(132);
+	var ReactComponentBrowserEnvironment = __webpack_require__(102);
+	var ReactDOMButton = __webpack_require__(135);
+	var ReactDOMComponentFlags = __webpack_require__(83);
+	var ReactDOMComponentTree = __webpack_require__(81);
+	var ReactDOMInput = __webpack_require__(136);
+	var ReactDOMOption = __webpack_require__(138);
+	var ReactDOMSelect = __webpack_require__(139);
+	var ReactDOMTextarea = __webpack_require__(140);
+	var ReactMultiChild = __webpack_require__(141);
+	var ReactPerf = __webpack_require__(87);
 	
-	var escapeTextContentForBrowser = __webpack_require__(106);
-	var invariant = __webpack_require__(36);
-	var isEventSupported = __webpack_require__(92);
-	var keyOf = __webpack_require__(54);
-	var shallowEqual = __webpack_require__(152);
-	var validateDOMNesting = __webpack_require__(153);
-	var warning = __webpack_require__(39);
+	var escapeTextContentForBrowser = __webpack_require__(107);
+	var invariant = __webpack_require__(37);
+	var isEventSupported = __webpack_require__(93);
+	var keyOf = __webpack_require__(55);
+	var shallowEqual = __webpack_require__(153);
+	var validateDOMNesting = __webpack_require__(154);
+	var warning = __webpack_require__(40);
 	
 	var Flags = ReactDOMComponentFlags;
 	var deleteListener = EventPluginHub.deleteListener;
@@ -13385,7 +13251,7 @@
 	module.exports = ReactDOMComponent;
 
 /***/ },
-/* 115 */
+/* 116 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -13401,9 +13267,9 @@
 	
 	'use strict';
 	
-	var ReactDOMComponentTree = __webpack_require__(80);
+	var ReactDOMComponentTree = __webpack_require__(81);
 	
-	var focusNode = __webpack_require__(116);
+	var focusNode = __webpack_require__(117);
 	
 	var AutoFocusUtils = {
 	  focusDOMComponent: function focusDOMComponent() {
@@ -13414,7 +13280,7 @@
 	module.exports = AutoFocusUtils;
 
 /***/ },
-/* 116 */
+/* 117 */
 /***/ function(module, exports) {
 
 	/**
@@ -13445,7 +13311,7 @@
 	module.exports = focusNode;
 
 /***/ },
-/* 117 */
+/* 118 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -13461,15 +13327,15 @@
 	
 	'use strict';
 	
-	var CSSProperty = __webpack_require__(118);
-	var ExecutionEnvironment = __webpack_require__(73);
-	var ReactPerf = __webpack_require__(86);
+	var CSSProperty = __webpack_require__(119);
+	var ExecutionEnvironment = __webpack_require__(74);
+	var ReactPerf = __webpack_require__(87);
 	
-	var camelizeStyleName = __webpack_require__(119);
-	var dangerousStyleValue = __webpack_require__(121);
-	var hyphenateStyleName = __webpack_require__(122);
-	var memoizeStringOnly = __webpack_require__(124);
-	var warning = __webpack_require__(39);
+	var camelizeStyleName = __webpack_require__(120);
+	var dangerousStyleValue = __webpack_require__(122);
+	var hyphenateStyleName = __webpack_require__(123);
+	var memoizeStringOnly = __webpack_require__(125);
+	var warning = __webpack_require__(40);
 	
 	var processStyleName = memoizeStringOnly(function (styleName) {
 	  return hyphenateStyleName(styleName);
@@ -13655,7 +13521,7 @@
 	module.exports = CSSPropertyOperations;
 
 /***/ },
-/* 118 */
+/* 119 */
 /***/ function(module, exports) {
 
 	/**
@@ -13808,7 +13674,7 @@
 	module.exports = CSSProperty;
 
 /***/ },
-/* 119 */
+/* 120 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -13824,7 +13690,7 @@
 	
 	'use strict';
 	
-	var camelize = __webpack_require__(120);
+	var camelize = __webpack_require__(121);
 	
 	var msPattern = /^-ms-/;
 	
@@ -13852,7 +13718,7 @@
 	module.exports = camelizeStyleName;
 
 /***/ },
-/* 120 */
+/* 121 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -13888,7 +13754,7 @@
 	module.exports = camelize;
 
 /***/ },
-/* 121 */
+/* 122 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -13904,8 +13770,8 @@
 	
 	'use strict';
 	
-	var CSSProperty = __webpack_require__(118);
-	var warning = __webpack_require__(39);
+	var CSSProperty = __webpack_require__(119);
+	var warning = __webpack_require__(40);
 	
 	var isUnitlessNumber = CSSProperty.isUnitlessNumber;
 	var styleWarnings = {};
@@ -13970,7 +13836,7 @@
 	module.exports = dangerousStyleValue;
 
 /***/ },
-/* 122 */
+/* 123 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -13986,7 +13852,7 @@
 	
 	'use strict';
 	
-	var hyphenate = __webpack_require__(123);
+	var hyphenate = __webpack_require__(124);
 	
 	var msPattern = /^ms-/;
 	
@@ -14013,7 +13879,7 @@
 	module.exports = hyphenateStyleName;
 
 /***/ },
-/* 123 */
+/* 124 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -14050,7 +13916,7 @@
 	module.exports = hyphenate;
 
 /***/ },
-/* 124 */
+/* 125 */
 /***/ function(module, exports) {
 
 	/**
@@ -14086,7 +13952,7 @@
 	module.exports = memoizeStringOnly;
 
 /***/ },
-/* 125 */
+/* 126 */
 /***/ function(module, exports) {
 
 	/**
@@ -14111,7 +13977,7 @@
 	module.exports = DOMNamespaces;
 
 /***/ },
-/* 126 */
+/* 127 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14127,12 +13993,12 @@
 	
 	'use strict';
 	
-	var DOMProperty = __webpack_require__(81);
-	var ReactDOMInstrumentation = __webpack_require__(127);
-	var ReactPerf = __webpack_require__(86);
+	var DOMProperty = __webpack_require__(82);
+	var ReactDOMInstrumentation = __webpack_require__(128);
+	var ReactPerf = __webpack_require__(87);
 	
-	var quoteAttributeValueForBrowser = __webpack_require__(130);
-	var warning = __webpack_require__(39);
+	var quoteAttributeValueForBrowser = __webpack_require__(131);
+	var warning = __webpack_require__(40);
 	
 	var VALID_ATTRIBUTE_NAME_REGEX = new RegExp('^[' + DOMProperty.ATTRIBUTE_NAME_START_CHAR + '][' + DOMProperty.ATTRIBUTE_NAME_CHAR + ']*$');
 	var illegalAttributeNameCache = {};
@@ -14329,7 +14195,7 @@
 	module.exports = DOMPropertyOperations;
 
 /***/ },
-/* 127 */
+/* 128 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14345,12 +14211,12 @@
 	
 	'use strict';
 	
-	var ReactDOMDebugTool = __webpack_require__(128);
+	var ReactDOMDebugTool = __webpack_require__(129);
 	
 	module.exports = { debugTool: ReactDOMDebugTool };
 
 /***/ },
-/* 128 */
+/* 129 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14366,9 +14232,9 @@
 	
 	'use strict';
 	
-	var ReactDOMUnknownPropertyDevtool = __webpack_require__(129);
+	var ReactDOMUnknownPropertyDevtool = __webpack_require__(130);
 	
-	var warning = __webpack_require__(39);
+	var warning = __webpack_require__(40);
 	
 	var eventHandlers = [];
 	var handlerDoesThrowForEvent = {};
@@ -14416,7 +14282,7 @@
 	module.exports = ReactDOMDebugTool;
 
 /***/ },
-/* 129 */
+/* 130 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14432,10 +14298,10 @@
 	
 	'use strict';
 	
-	var DOMProperty = __webpack_require__(81);
-	var EventPluginRegistry = __webpack_require__(65);
+	var DOMProperty = __webpack_require__(82);
+	var EventPluginRegistry = __webpack_require__(66);
 	
-	var warning = __webpack_require__(39);
+	var warning = __webpack_require__(40);
 	
 	if (process.env.NODE_ENV !== 'production') {
 	  var reactProps = {
@@ -14485,7 +14351,7 @@
 	module.exports = ReactDOMUnknownPropertyDevtool;
 
 /***/ },
-/* 130 */
+/* 131 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14501,7 +14367,7 @@
 	
 	'use strict';
 	
-	var escapeTextContentForBrowser = __webpack_require__(106);
+	var escapeTextContentForBrowser = __webpack_require__(107);
 	
 	/**
 	 * Escapes attribute value to prevent scripting attacks.
@@ -14516,7 +14382,7 @@
 	module.exports = quoteAttributeValueForBrowser;
 
 /***/ },
-/* 131 */
+/* 132 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14532,15 +14398,15 @@
 	
 	'use strict';
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
-	var EventConstants = __webpack_require__(63);
-	var EventPluginRegistry = __webpack_require__(65);
-	var ReactEventEmitterMixin = __webpack_require__(132);
-	var ViewportMetrics = __webpack_require__(98);
+	var EventConstants = __webpack_require__(64);
+	var EventPluginRegistry = __webpack_require__(66);
+	var ReactEventEmitterMixin = __webpack_require__(133);
+	var ViewportMetrics = __webpack_require__(99);
 	
-	var getVendorPrefixedEventName = __webpack_require__(133);
-	var isEventSupported = __webpack_require__(92);
+	var getVendorPrefixedEventName = __webpack_require__(134);
+	var isEventSupported = __webpack_require__(93);
 	
 	/**
 	 * Summary of `ReactBrowserEventEmitter` event handling:
@@ -14838,7 +14704,7 @@
 	module.exports = ReactBrowserEventEmitter;
 
 /***/ },
-/* 132 */
+/* 133 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14854,7 +14720,7 @@
 	
 	'use strict';
 	
-	var EventPluginHub = __webpack_require__(64);
+	var EventPluginHub = __webpack_require__(65);
 	
 	function runEventQueueInBatch(events) {
 	  EventPluginHub.enqueueEvents(events);
@@ -14876,7 +14742,7 @@
 	module.exports = ReactEventEmitterMixin;
 
 /***/ },
-/* 133 */
+/* 134 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14892,7 +14758,7 @@
 	
 	'use strict';
 	
-	var ExecutionEnvironment = __webpack_require__(73);
+	var ExecutionEnvironment = __webpack_require__(74);
 	
 	/**
 	 * Generate a mapping of standard vendor prefixes using the defined style property and event name.
@@ -14982,7 +14848,7 @@
 	module.exports = getVendorPrefixedEventName;
 
 /***/ },
-/* 134 */
+/* 135 */
 /***/ function(module, exports) {
 
 	/**
@@ -15037,7 +14903,7 @@
 	module.exports = ReactDOMButton;
 
 /***/ },
-/* 135 */
+/* 136 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15053,15 +14919,15 @@
 	
 	'use strict';
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
-	var DOMPropertyOperations = __webpack_require__(126);
-	var LinkedValueUtils = __webpack_require__(136);
-	var ReactDOMComponentTree = __webpack_require__(80);
-	var ReactUpdates = __webpack_require__(83);
+	var DOMPropertyOperations = __webpack_require__(127);
+	var LinkedValueUtils = __webpack_require__(137);
+	var ReactDOMComponentTree = __webpack_require__(81);
+	var ReactUpdates = __webpack_require__(84);
 	
-	var invariant = __webpack_require__(36);
-	var warning = __webpack_require__(39);
+	var invariant = __webpack_require__(37);
+	var warning = __webpack_require__(40);
 	
 	var didWarnValueLink = false;
 	var didWarnCheckedLink = false;
@@ -15245,7 +15111,7 @@
 	module.exports = ReactDOMInput;
 
 /***/ },
-/* 136 */
+/* 137 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15261,11 +15127,11 @@
 	
 	'use strict';
 	
-	var ReactPropTypes = __webpack_require__(58);
-	var ReactPropTypeLocations = __webpack_require__(51);
+	var ReactPropTypes = __webpack_require__(59);
+	var ReactPropTypeLocations = __webpack_require__(52);
 	
-	var invariant = __webpack_require__(36);
-	var warning = __webpack_require__(39);
+	var invariant = __webpack_require__(37);
+	var warning = __webpack_require__(40);
 	
 	var hasReadOnlyValue = {
 	  'button': true,
@@ -15383,7 +15249,7 @@
 	module.exports = LinkedValueUtils;
 
 /***/ },
-/* 137 */
+/* 138 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15399,13 +15265,13 @@
 	
 	'use strict';
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
-	var ReactChildren = __webpack_require__(34);
-	var ReactDOMComponentTree = __webpack_require__(80);
-	var ReactDOMSelect = __webpack_require__(138);
+	var ReactChildren = __webpack_require__(35);
+	var ReactDOMComponentTree = __webpack_require__(81);
+	var ReactDOMSelect = __webpack_require__(139);
 	
-	var warning = __webpack_require__(39);
+	var warning = __webpack_require__(40);
 	
 	/**
 	 * Implements an <option> native component that warns when `selected` is set.
@@ -15489,7 +15355,7 @@
 	module.exports = ReactDOMOption;
 
 /***/ },
-/* 138 */
+/* 139 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15505,13 +15371,13 @@
 	
 	'use strict';
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
-	var LinkedValueUtils = __webpack_require__(136);
-	var ReactDOMComponentTree = __webpack_require__(80);
-	var ReactUpdates = __webpack_require__(83);
+	var LinkedValueUtils = __webpack_require__(137);
+	var ReactDOMComponentTree = __webpack_require__(81);
+	var ReactUpdates = __webpack_require__(84);
 	
-	var warning = __webpack_require__(39);
+	var warning = __webpack_require__(40);
 	
 	var didWarnValueLink = false;
 	var didWarnValueNull = false;
@@ -15706,7 +15572,7 @@
 	module.exports = ReactDOMSelect;
 
 /***/ },
-/* 139 */
+/* 140 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15722,15 +15588,15 @@
 	
 	'use strict';
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
-	var DOMPropertyOperations = __webpack_require__(126);
-	var LinkedValueUtils = __webpack_require__(136);
-	var ReactDOMComponentTree = __webpack_require__(80);
-	var ReactUpdates = __webpack_require__(83);
+	var DOMPropertyOperations = __webpack_require__(127);
+	var LinkedValueUtils = __webpack_require__(137);
+	var ReactDOMComponentTree = __webpack_require__(81);
+	var ReactUpdates = __webpack_require__(84);
 	
-	var invariant = __webpack_require__(36);
-	var warning = __webpack_require__(39);
+	var invariant = __webpack_require__(37);
+	var warning = __webpack_require__(40);
 	
 	var didWarnValueLink = false;
 	var didWarnValueNull = false;
@@ -15852,7 +15718,7 @@
 	module.exports = ReactDOMTextarea;
 
 /***/ },
-/* 140 */
+/* 141 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15868,15 +15734,15 @@
 	
 	'use strict';
 	
-	var ReactComponentEnvironment = __webpack_require__(141);
-	var ReactMultiChildUpdateTypes = __webpack_require__(112);
+	var ReactComponentEnvironment = __webpack_require__(142);
+	var ReactMultiChildUpdateTypes = __webpack_require__(113);
 	
-	var ReactCurrentOwner = __webpack_require__(38);
-	var ReactReconciler = __webpack_require__(87);
-	var ReactChildReconciler = __webpack_require__(142);
+	var ReactCurrentOwner = __webpack_require__(39);
+	var ReactReconciler = __webpack_require__(88);
+	var ReactChildReconciler = __webpack_require__(143);
 	
-	var flattenChildren = __webpack_require__(151);
-	var invariant = __webpack_require__(36);
+	var flattenChildren = __webpack_require__(152);
+	var invariant = __webpack_require__(37);
 	
 	/**
 	 * Make an update for markup to be rendered and inserted at a supplied index.
@@ -16259,7 +16125,7 @@
 	module.exports = ReactMultiChild;
 
 /***/ },
-/* 141 */
+/* 142 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16275,7 +16141,7 @@
 	
 	'use strict';
 	
-	var invariant = __webpack_require__(36);
+	var invariant = __webpack_require__(37);
 	
 	var injected = false;
 	
@@ -16315,7 +16181,7 @@
 	module.exports = ReactComponentEnvironment;
 
 /***/ },
-/* 142 */
+/* 143 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16331,12 +16197,12 @@
 	
 	'use strict';
 	
-	var ReactReconciler = __webpack_require__(87);
+	var ReactReconciler = __webpack_require__(88);
 	
-	var instantiateReactComponent = __webpack_require__(143);
-	var shouldUpdateReactComponent = __webpack_require__(148);
-	var traverseAllChildren = __webpack_require__(42);
-	var warning = __webpack_require__(39);
+	var instantiateReactComponent = __webpack_require__(144);
+	var shouldUpdateReactComponent = __webpack_require__(149);
+	var traverseAllChildren = __webpack_require__(43);
+	var warning = __webpack_require__(40);
 	
 	function instantiateChild(childInstances, child, name) {
 	  // We found a component instance.
@@ -16444,7 +16310,7 @@
 	module.exports = ReactChildReconciler;
 
 /***/ },
-/* 143 */
+/* 144 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16462,14 +16328,14 @@
 	
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
-	var ReactCompositeComponent = __webpack_require__(144);
-	var ReactEmptyComponent = __webpack_require__(149);
-	var ReactNativeComponent = __webpack_require__(150);
+	var ReactCompositeComponent = __webpack_require__(145);
+	var ReactEmptyComponent = __webpack_require__(150);
+	var ReactNativeComponent = __webpack_require__(151);
 	
-	var invariant = __webpack_require__(36);
-	var warning = __webpack_require__(39);
+	var invariant = __webpack_require__(37);
+	var warning = __webpack_require__(40);
 	
 	// To avoid a cyclic dependency, we create the final class in this module
 	var ReactCompositeComponentWrapper = function ReactCompositeComponentWrapper(element) {
@@ -16562,7 +16428,7 @@
 	module.exports = instantiateReactComponent;
 
 /***/ },
-/* 144 */
+/* 145 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16580,25 +16446,25 @@
 	
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
-	var ReactComponentEnvironment = __webpack_require__(141);
-	var ReactCurrentOwner = __webpack_require__(38);
-	var ReactElement = __webpack_require__(37);
-	var ReactErrorUtils = __webpack_require__(67);
-	var ReactInstanceMap = __webpack_require__(145);
-	var ReactInstrumentation = __webpack_require__(46);
-	var ReactNodeTypes = __webpack_require__(146);
-	var ReactPerf = __webpack_require__(86);
-	var ReactPropTypeLocations = __webpack_require__(51);
-	var ReactPropTypeLocationNames = __webpack_require__(53);
-	var ReactReconciler = __webpack_require__(87);
-	var ReactUpdateQueue = __webpack_require__(147);
+	var ReactComponentEnvironment = __webpack_require__(142);
+	var ReactCurrentOwner = __webpack_require__(39);
+	var ReactElement = __webpack_require__(38);
+	var ReactErrorUtils = __webpack_require__(68);
+	var ReactInstanceMap = __webpack_require__(146);
+	var ReactInstrumentation = __webpack_require__(47);
+	var ReactNodeTypes = __webpack_require__(147);
+	var ReactPerf = __webpack_require__(87);
+	var ReactPropTypeLocations = __webpack_require__(52);
+	var ReactPropTypeLocationNames = __webpack_require__(54);
+	var ReactReconciler = __webpack_require__(88);
+	var ReactUpdateQueue = __webpack_require__(148);
 	
-	var emptyObject = __webpack_require__(49);
-	var invariant = __webpack_require__(36);
-	var shouldUpdateReactComponent = __webpack_require__(148);
-	var warning = __webpack_require__(39);
+	var emptyObject = __webpack_require__(50);
+	var invariant = __webpack_require__(37);
+	var shouldUpdateReactComponent = __webpack_require__(149);
+	var warning = __webpack_require__(40);
 	
 	function getDeclarationErrorAddendum(component) {
 	  var owner = component._currentElement._owner || null;
@@ -17355,7 +17221,7 @@
 	module.exports = ReactCompositeComponent;
 
 /***/ },
-/* 145 */
+/* 146 */
 /***/ function(module, exports) {
 
 	/**
@@ -17408,7 +17274,7 @@
 	module.exports = ReactInstanceMap;
 
 /***/ },
-/* 146 */
+/* 147 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17424,9 +17290,9 @@
 	
 	'use strict';
 	
-	var ReactElement = __webpack_require__(37);
+	var ReactElement = __webpack_require__(38);
 	
-	var invariant = __webpack_require__(36);
+	var invariant = __webpack_require__(37);
 	
 	var ReactNodeTypes = {
 	  NATIVE: 0,
@@ -17450,7 +17316,7 @@
 	module.exports = ReactNodeTypes;
 
 /***/ },
-/* 147 */
+/* 148 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17468,12 +17334,12 @@
 	
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
-	var ReactCurrentOwner = __webpack_require__(38);
-	var ReactInstanceMap = __webpack_require__(145);
-	var ReactUpdates = __webpack_require__(83);
+	var ReactCurrentOwner = __webpack_require__(39);
+	var ReactInstanceMap = __webpack_require__(146);
+	var ReactUpdates = __webpack_require__(84);
 	
-	var invariant = __webpack_require__(36);
-	var warning = __webpack_require__(39);
+	var invariant = __webpack_require__(37);
+	var warning = __webpack_require__(40);
 	
 	function enqueueUpdate(internalInstance) {
 	  ReactUpdates.enqueueUpdate(internalInstance);
@@ -17672,7 +17538,7 @@
 	module.exports = ReactUpdateQueue;
 
 /***/ },
-/* 148 */
+/* 149 */
 /***/ function(module, exports) {
 
 	/**
@@ -17721,7 +17587,7 @@
 	module.exports = shouldUpdateReactComponent;
 
 /***/ },
-/* 149 */
+/* 150 */
 /***/ function(module, exports) {
 
 	/**
@@ -17756,7 +17622,7 @@
 	module.exports = ReactEmptyComponent;
 
 /***/ },
-/* 150 */
+/* 151 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17772,9 +17638,9 @@
 	
 	'use strict';
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
-	var invariant = __webpack_require__(36);
+	var invariant = __webpack_require__(37);
 	
 	var autoGenerateWrapperClass = null;
 	var genericComponentClass = null;
@@ -17856,7 +17722,7 @@
 	module.exports = ReactNativeComponent;
 
 /***/ },
-/* 151 */
+/* 152 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17872,8 +17738,8 @@
 	
 	'use strict';
 	
-	var traverseAllChildren = __webpack_require__(42);
-	var warning = __webpack_require__(39);
+	var traverseAllChildren = __webpack_require__(43);
+	var warning = __webpack_require__(40);
 	
 	/**
 	 * @param {function} traverseContext Context passed through traversal.
@@ -17909,7 +17775,7 @@
 	module.exports = flattenChildren;
 
 /***/ },
-/* 152 */
+/* 153 */
 /***/ function(module, exports) {
 
 	/**
@@ -17982,7 +17848,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 153 */
+/* 154 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17998,10 +17864,10 @@
 	
 	'use strict';
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
-	var emptyFunction = __webpack_require__(40);
-	var warning = __webpack_require__(39);
+	var emptyFunction = __webpack_require__(41);
+	var warning = __webpack_require__(40);
 	
 	var validateDOMNesting = emptyFunction;
 	
@@ -18355,7 +18221,7 @@
 	module.exports = validateDOMNesting;
 
 /***/ },
-/* 154 */
+/* 155 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18371,10 +18237,10 @@
 	
 	'use strict';
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
-	var DOMLazyTree = __webpack_require__(103);
-	var ReactDOMComponentTree = __webpack_require__(80);
+	var DOMLazyTree = __webpack_require__(104);
+	var ReactDOMComponentTree = __webpack_require__(81);
 	
 	var ReactDOMEmptyComponent = function ReactDOMEmptyComponent(instantiate) {
 	  // ReactCompositeComponent uses this:
@@ -18420,7 +18286,7 @@
 	module.exports = ReactDOMEmptyComponent;
 
 /***/ },
-/* 155 */
+/* 156 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18436,7 +18302,7 @@
 	
 	'use strict';
 	
-	var invariant = __webpack_require__(36);
+	var invariant = __webpack_require__(37);
 	
 	/**
 	 * Return the lowest common ancestor of A and B, or null if they are in
@@ -18559,7 +18425,7 @@
 	};
 
 /***/ },
-/* 156 */
+/* 157 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18575,16 +18441,16 @@
 	
 	'use strict';
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
-	var DOMChildrenOperations = __webpack_require__(102);
-	var DOMLazyTree = __webpack_require__(103);
-	var ReactDOMComponentTree = __webpack_require__(80);
-	var ReactPerf = __webpack_require__(86);
+	var DOMChildrenOperations = __webpack_require__(103);
+	var DOMLazyTree = __webpack_require__(104);
+	var ReactDOMComponentTree = __webpack_require__(81);
+	var ReactPerf = __webpack_require__(87);
 	
-	var escapeTextContentForBrowser = __webpack_require__(106);
-	var invariant = __webpack_require__(36);
-	var validateDOMNesting = __webpack_require__(153);
+	var escapeTextContentForBrowser = __webpack_require__(107);
+	var invariant = __webpack_require__(37);
+	var validateDOMNesting = __webpack_require__(154);
 	
 	/**
 	 * Text nodes violate a couple assumptions that React makes about components:
@@ -18733,7 +18599,7 @@
 	module.exports = ReactDOMTextComponent;
 
 /***/ },
-/* 157 */
+/* 158 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18749,12 +18615,12 @@
 	
 	'use strict';
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
-	var ReactUpdates = __webpack_require__(83);
-	var Transaction = __webpack_require__(90);
+	var ReactUpdates = __webpack_require__(84);
+	var Transaction = __webpack_require__(91);
 	
-	var emptyFunction = __webpack_require__(40);
+	var emptyFunction = __webpack_require__(41);
 	
 	var RESET_BATCHED_UPDATES = {
 	  initialize: emptyFunction,
@@ -18806,7 +18672,7 @@
 	module.exports = ReactDefaultBatchingStrategy;
 
 /***/ },
-/* 158 */
+/* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18822,16 +18688,16 @@
 	
 	'use strict';
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
-	var EventListener = __webpack_require__(159);
-	var ExecutionEnvironment = __webpack_require__(73);
-	var PooledClass = __webpack_require__(35);
-	var ReactDOMComponentTree = __webpack_require__(80);
-	var ReactUpdates = __webpack_require__(83);
+	var EventListener = __webpack_require__(160);
+	var ExecutionEnvironment = __webpack_require__(74);
+	var PooledClass = __webpack_require__(36);
+	var ReactDOMComponentTree = __webpack_require__(81);
+	var ReactUpdates = __webpack_require__(84);
 	
-	var getEventTarget = __webpack_require__(91);
-	var getUnboundedScrollPosition = __webpack_require__(160);
+	var getEventTarget = __webpack_require__(92);
+	var getUnboundedScrollPosition = __webpack_require__(161);
 	
 	/**
 	 * Find the deepest React component completely containing the root of the
@@ -18968,7 +18834,7 @@
 	module.exports = ReactEventListener;
 
 /***/ },
-/* 159 */
+/* 160 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -18991,7 +18857,7 @@
 	 * @typechecks
 	 */
 	
-	var emptyFunction = __webpack_require__(40);
+	var emptyFunction = __webpack_require__(41);
 	
 	/**
 	 * Upstream version of event listener. Does not take into account specific
@@ -19056,7 +18922,7 @@
 	module.exports = EventListener;
 
 /***/ },
-/* 160 */
+/* 161 */
 /***/ function(module, exports) {
 
 	/**
@@ -19099,7 +18965,7 @@
 	module.exports = getUnboundedScrollPosition;
 
 /***/ },
-/* 161 */
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -19115,16 +18981,16 @@
 	
 	'use strict';
 	
-	var DOMProperty = __webpack_require__(81);
-	var EventPluginHub = __webpack_require__(64);
-	var EventPluginUtils = __webpack_require__(66);
-	var ReactComponentEnvironment = __webpack_require__(141);
-	var ReactClass = __webpack_require__(50);
-	var ReactEmptyComponent = __webpack_require__(149);
-	var ReactBrowserEventEmitter = __webpack_require__(131);
-	var ReactNativeComponent = __webpack_require__(150);
-	var ReactPerf = __webpack_require__(86);
-	var ReactUpdates = __webpack_require__(83);
+	var DOMProperty = __webpack_require__(82);
+	var EventPluginHub = __webpack_require__(65);
+	var EventPluginUtils = __webpack_require__(67);
+	var ReactComponentEnvironment = __webpack_require__(142);
+	var ReactClass = __webpack_require__(51);
+	var ReactEmptyComponent = __webpack_require__(150);
+	var ReactBrowserEventEmitter = __webpack_require__(132);
+	var ReactNativeComponent = __webpack_require__(151);
+	var ReactPerf = __webpack_require__(87);
+	var ReactUpdates = __webpack_require__(84);
 	
 	var ReactInjection = {
 	  Component: ReactComponentEnvironment.injection,
@@ -19142,7 +19008,7 @@
 	module.exports = ReactInjection;
 
 /***/ },
-/* 162 */
+/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -19158,13 +19024,13 @@
 	
 	'use strict';
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
-	var CallbackQueue = __webpack_require__(84);
-	var PooledClass = __webpack_require__(35);
-	var ReactBrowserEventEmitter = __webpack_require__(131);
-	var ReactInputSelection = __webpack_require__(163);
-	var Transaction = __webpack_require__(90);
+	var CallbackQueue = __webpack_require__(85);
+	var PooledClass = __webpack_require__(36);
+	var ReactBrowserEventEmitter = __webpack_require__(132);
+	var ReactInputSelection = __webpack_require__(164);
+	var Transaction = __webpack_require__(91);
 	
 	/**
 	 * Ensures that, when possible, the selection range (currently selected text
@@ -19309,7 +19175,7 @@
 	module.exports = ReactReconcileTransaction;
 
 /***/ },
-/* 163 */
+/* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -19325,11 +19191,11 @@
 	
 	'use strict';
 	
-	var ReactDOMSelection = __webpack_require__(164);
+	var ReactDOMSelection = __webpack_require__(165);
 	
-	var containsNode = __webpack_require__(166);
-	var focusNode = __webpack_require__(116);
-	var getActiveElement = __webpack_require__(169);
+	var containsNode = __webpack_require__(167);
+	var focusNode = __webpack_require__(117);
+	var getActiveElement = __webpack_require__(170);
 	
 	function isInDocument(node) {
 	  return containsNode(document.documentElement, node);
@@ -19438,7 +19304,7 @@
 	module.exports = ReactInputSelection;
 
 /***/ },
-/* 164 */
+/* 165 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -19454,10 +19320,10 @@
 	
 	'use strict';
 	
-	var ExecutionEnvironment = __webpack_require__(73);
+	var ExecutionEnvironment = __webpack_require__(74);
 	
-	var getNodeForCharacterOffset = __webpack_require__(165);
-	var getTextContentAccessor = __webpack_require__(75);
+	var getNodeForCharacterOffset = __webpack_require__(166);
+	var getTextContentAccessor = __webpack_require__(76);
 	
 	/**
 	 * While `isCollapsed` is available on the Selection object and `collapsed`
@@ -19655,7 +19521,7 @@
 	module.exports = ReactDOMSelection;
 
 /***/ },
-/* 165 */
+/* 166 */
 /***/ function(module, exports) {
 
 	/**
@@ -19734,7 +19600,7 @@
 	module.exports = getNodeForCharacterOffset;
 
 /***/ },
-/* 166 */
+/* 167 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19750,7 +19616,7 @@
 	 * @typechecks
 	 */
 	
-	var isTextNode = __webpack_require__(167);
+	var isTextNode = __webpack_require__(168);
 	
 	/*eslint-disable no-bitwise */
 	
@@ -19782,7 +19648,7 @@
 	module.exports = containsNode;
 
 /***/ },
-/* 167 */
+/* 168 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19798,7 +19664,7 @@
 	 * @typechecks
 	 */
 	
-	var isNode = __webpack_require__(168);
+	var isNode = __webpack_require__(169);
 	
 	/**
 	 * @param {*} object The object to check.
@@ -19811,7 +19677,7 @@
 	module.exports = isTextNode;
 
 /***/ },
-/* 168 */
+/* 169 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -19841,7 +19707,7 @@
 	module.exports = isNode;
 
 /***/ },
-/* 169 */
+/* 170 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -19881,7 +19747,7 @@
 	module.exports = getActiveElement;
 
 /***/ },
-/* 170 */
+/* 171 */
 /***/ function(module, exports) {
 
 	/**
@@ -20186,7 +20052,7 @@
 	module.exports = SVGDOMPropertyConfig;
 
 /***/ },
-/* 171 */
+/* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20202,17 +20068,17 @@
 	
 	'use strict';
 	
-	var EventConstants = __webpack_require__(63);
-	var EventPropagators = __webpack_require__(70);
-	var ExecutionEnvironment = __webpack_require__(73);
-	var ReactDOMComponentTree = __webpack_require__(80);
-	var ReactInputSelection = __webpack_require__(163);
-	var SyntheticEvent = __webpack_require__(77);
+	var EventConstants = __webpack_require__(64);
+	var EventPropagators = __webpack_require__(71);
+	var ExecutionEnvironment = __webpack_require__(74);
+	var ReactDOMComponentTree = __webpack_require__(81);
+	var ReactInputSelection = __webpack_require__(164);
+	var SyntheticEvent = __webpack_require__(78);
 	
-	var getActiveElement = __webpack_require__(169);
-	var isTextInputElement = __webpack_require__(93);
-	var keyOf = __webpack_require__(54);
-	var shallowEqual = __webpack_require__(152);
+	var getActiveElement = __webpack_require__(170);
+	var isTextInputElement = __webpack_require__(94);
+	var keyOf = __webpack_require__(55);
+	var shallowEqual = __webpack_require__(153);
 	
 	var topLevelTypes = EventConstants.topLevelTypes;
 	
@@ -20387,7 +20253,7 @@
 	module.exports = SelectEventPlugin;
 
 /***/ },
-/* 172 */
+/* 173 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20403,26 +20269,26 @@
 	
 	'use strict';
 	
-	var EventConstants = __webpack_require__(63);
-	var EventListener = __webpack_require__(159);
-	var EventPropagators = __webpack_require__(70);
-	var ReactDOMComponentTree = __webpack_require__(80);
-	var SyntheticAnimationEvent = __webpack_require__(173);
-	var SyntheticClipboardEvent = __webpack_require__(174);
-	var SyntheticEvent = __webpack_require__(77);
-	var SyntheticFocusEvent = __webpack_require__(175);
-	var SyntheticKeyboardEvent = __webpack_require__(176);
-	var SyntheticMouseEvent = __webpack_require__(96);
-	var SyntheticDragEvent = __webpack_require__(179);
-	var SyntheticTouchEvent = __webpack_require__(180);
-	var SyntheticTransitionEvent = __webpack_require__(181);
-	var SyntheticUIEvent = __webpack_require__(97);
-	var SyntheticWheelEvent = __webpack_require__(182);
+	var EventConstants = __webpack_require__(64);
+	var EventListener = __webpack_require__(160);
+	var EventPropagators = __webpack_require__(71);
+	var ReactDOMComponentTree = __webpack_require__(81);
+	var SyntheticAnimationEvent = __webpack_require__(174);
+	var SyntheticClipboardEvent = __webpack_require__(175);
+	var SyntheticEvent = __webpack_require__(78);
+	var SyntheticFocusEvent = __webpack_require__(176);
+	var SyntheticKeyboardEvent = __webpack_require__(177);
+	var SyntheticMouseEvent = __webpack_require__(97);
+	var SyntheticDragEvent = __webpack_require__(180);
+	var SyntheticTouchEvent = __webpack_require__(181);
+	var SyntheticTransitionEvent = __webpack_require__(182);
+	var SyntheticUIEvent = __webpack_require__(98);
+	var SyntheticWheelEvent = __webpack_require__(183);
 	
-	var emptyFunction = __webpack_require__(40);
-	var getEventCharCode = __webpack_require__(177);
-	var invariant = __webpack_require__(36);
-	var keyOf = __webpack_require__(54);
+	var emptyFunction = __webpack_require__(41);
+	var getEventCharCode = __webpack_require__(178);
+	var invariant = __webpack_require__(37);
+	var keyOf = __webpack_require__(55);
 	
 	var topLevelTypes = EventConstants.topLevelTypes;
 	
@@ -21019,7 +20885,7 @@
 	module.exports = SimpleEventPlugin;
 
 /***/ },
-/* 173 */
+/* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21035,7 +20901,7 @@
 	
 	'use strict';
 	
-	var SyntheticEvent = __webpack_require__(77);
+	var SyntheticEvent = __webpack_require__(78);
 	
 	/**
 	 * @interface Event
@@ -21063,7 +20929,7 @@
 	module.exports = SyntheticAnimationEvent;
 
 /***/ },
-/* 174 */
+/* 175 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21079,7 +20945,7 @@
 	
 	'use strict';
 	
-	var SyntheticEvent = __webpack_require__(77);
+	var SyntheticEvent = __webpack_require__(78);
 	
 	/**
 	 * @interface Event
@@ -21106,7 +20972,7 @@
 	module.exports = SyntheticClipboardEvent;
 
 /***/ },
-/* 175 */
+/* 176 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21122,7 +20988,7 @@
 	
 	'use strict';
 	
-	var SyntheticUIEvent = __webpack_require__(97);
+	var SyntheticUIEvent = __webpack_require__(98);
 	
 	/**
 	 * @interface FocusEvent
@@ -21147,7 +21013,7 @@
 	module.exports = SyntheticFocusEvent;
 
 /***/ },
-/* 176 */
+/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21163,11 +21029,11 @@
 	
 	'use strict';
 	
-	var SyntheticUIEvent = __webpack_require__(97);
+	var SyntheticUIEvent = __webpack_require__(98);
 	
-	var getEventCharCode = __webpack_require__(177);
-	var getEventKey = __webpack_require__(178);
-	var getEventModifierState = __webpack_require__(99);
+	var getEventCharCode = __webpack_require__(178);
+	var getEventKey = __webpack_require__(179);
+	var getEventModifierState = __webpack_require__(100);
 	
 	/**
 	 * @interface KeyboardEvent
@@ -21236,7 +21102,7 @@
 	module.exports = SyntheticKeyboardEvent;
 
 /***/ },
-/* 177 */
+/* 178 */
 /***/ function(module, exports) {
 
 	/**
@@ -21291,7 +21157,7 @@
 	module.exports = getEventCharCode;
 
 /***/ },
-/* 178 */
+/* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21307,7 +21173,7 @@
 	
 	'use strict';
 	
-	var getEventCharCode = __webpack_require__(177);
+	var getEventCharCode = __webpack_require__(178);
 	
 	/**
 	 * Normalization of deprecated HTML5 `key` values
@@ -21398,7 +21264,7 @@
 	module.exports = getEventKey;
 
 /***/ },
-/* 179 */
+/* 180 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21414,7 +21280,7 @@
 	
 	'use strict';
 	
-	var SyntheticMouseEvent = __webpack_require__(96);
+	var SyntheticMouseEvent = __webpack_require__(97);
 	
 	/**
 	 * @interface DragEvent
@@ -21439,7 +21305,7 @@
 	module.exports = SyntheticDragEvent;
 
 /***/ },
-/* 180 */
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21455,9 +21321,9 @@
 	
 	'use strict';
 	
-	var SyntheticUIEvent = __webpack_require__(97);
+	var SyntheticUIEvent = __webpack_require__(98);
 	
-	var getEventModifierState = __webpack_require__(99);
+	var getEventModifierState = __webpack_require__(100);
 	
 	/**
 	 * @interface TouchEvent
@@ -21489,7 +21355,7 @@
 	module.exports = SyntheticTouchEvent;
 
 /***/ },
-/* 181 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21505,7 +21371,7 @@
 	
 	'use strict';
 	
-	var SyntheticEvent = __webpack_require__(77);
+	var SyntheticEvent = __webpack_require__(78);
 	
 	/**
 	 * @interface Event
@@ -21533,7 +21399,7 @@
 	module.exports = SyntheticTransitionEvent;
 
 /***/ },
-/* 182 */
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21549,7 +21415,7 @@
 	
 	'use strict';
 	
-	var SyntheticMouseEvent = __webpack_require__(96);
+	var SyntheticMouseEvent = __webpack_require__(97);
 	
 	/**
 	 * @interface WheelEvent
@@ -21592,7 +21458,7 @@
 	module.exports = SyntheticWheelEvent;
 
 /***/ },
-/* 183 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21610,14 +21476,14 @@
 	
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
-	var DOMProperty = __webpack_require__(81);
-	var ReactDOMComponentTree = __webpack_require__(80);
-	var ReactDefaultPerfAnalysis = __webpack_require__(184);
-	var ReactMount = __webpack_require__(185);
-	var ReactPerf = __webpack_require__(86);
+	var DOMProperty = __webpack_require__(82);
+	var ReactDOMComponentTree = __webpack_require__(81);
+	var ReactDefaultPerfAnalysis = __webpack_require__(185);
+	var ReactMount = __webpack_require__(186);
+	var ReactPerf = __webpack_require__(87);
 	
-	var performanceNow = __webpack_require__(190);
-	var warning = __webpack_require__(39);
+	var performanceNow = __webpack_require__(191);
+	var warning = __webpack_require__(40);
 	
 	function roundFloat(val) {
 	  return Math.floor(val * 100) / 100;
@@ -21915,7 +21781,7 @@
 	module.exports = ReactDefaultPerf;
 
 /***/ },
-/* 184 */
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21933,7 +21799,7 @@
 	
 	// Don't try to save users less than 1.2ms (a number I made up)
 	
-	var _assign = __webpack_require__(33);
+	var _assign = __webpack_require__(34);
 	
 	var DONT_CARE_THRESHOLD = 1.2;
 	var DOM_OPERATION_TYPES = {
@@ -22129,7 +21995,7 @@
 	module.exports = ReactDefaultPerfAnalysis;
 
 /***/ },
-/* 185 */
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -22145,28 +22011,28 @@
 	
 	'use strict';
 	
-	var DOMLazyTree = __webpack_require__(103);
-	var DOMProperty = __webpack_require__(81);
-	var ReactBrowserEventEmitter = __webpack_require__(131);
-	var ReactCurrentOwner = __webpack_require__(38);
-	var ReactDOMComponentTree = __webpack_require__(80);
-	var ReactDOMContainerInfo = __webpack_require__(186);
-	var ReactDOMFeatureFlags = __webpack_require__(187);
-	var ReactElement = __webpack_require__(37);
-	var ReactFeatureFlags = __webpack_require__(85);
-	var ReactInstrumentation = __webpack_require__(46);
-	var ReactMarkupChecksum = __webpack_require__(188);
-	var ReactPerf = __webpack_require__(86);
-	var ReactReconciler = __webpack_require__(87);
-	var ReactUpdateQueue = __webpack_require__(147);
-	var ReactUpdates = __webpack_require__(83);
+	var DOMLazyTree = __webpack_require__(104);
+	var DOMProperty = __webpack_require__(82);
+	var ReactBrowserEventEmitter = __webpack_require__(132);
+	var ReactCurrentOwner = __webpack_require__(39);
+	var ReactDOMComponentTree = __webpack_require__(81);
+	var ReactDOMContainerInfo = __webpack_require__(187);
+	var ReactDOMFeatureFlags = __webpack_require__(188);
+	var ReactElement = __webpack_require__(38);
+	var ReactFeatureFlags = __webpack_require__(86);
+	var ReactInstrumentation = __webpack_require__(47);
+	var ReactMarkupChecksum = __webpack_require__(189);
+	var ReactPerf = __webpack_require__(87);
+	var ReactReconciler = __webpack_require__(88);
+	var ReactUpdateQueue = __webpack_require__(148);
+	var ReactUpdates = __webpack_require__(84);
 	
-	var emptyObject = __webpack_require__(49);
-	var instantiateReactComponent = __webpack_require__(143);
-	var invariant = __webpack_require__(36);
-	var setInnerHTML = __webpack_require__(107);
-	var shouldUpdateReactComponent = __webpack_require__(148);
-	var warning = __webpack_require__(39);
+	var emptyObject = __webpack_require__(50);
+	var instantiateReactComponent = __webpack_require__(144);
+	var invariant = __webpack_require__(37);
+	var setInnerHTML = __webpack_require__(108);
+	var shouldUpdateReactComponent = __webpack_require__(149);
+	var warning = __webpack_require__(40);
 	
 	var ATTR_NAME = DOMProperty.ID_ATTRIBUTE_NAME;
 	var ROOT_ATTR_NAME = DOMProperty.ROOT_ATTRIBUTE_NAME;
@@ -22612,7 +22478,7 @@
 	module.exports = ReactMount;
 
 /***/ },
-/* 186 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -22628,7 +22494,7 @@
 	
 	'use strict';
 	
-	var validateDOMNesting = __webpack_require__(153);
+	var validateDOMNesting = __webpack_require__(154);
 	
 	var DOC_NODE_TYPE = 9;
 	
@@ -22649,7 +22515,7 @@
 	module.exports = ReactDOMContainerInfo;
 
 /***/ },
-/* 187 */
+/* 188 */
 /***/ function(module, exports) {
 
 	/**
@@ -22672,7 +22538,7 @@
 	module.exports = ReactDOMFeatureFlags;
 
 /***/ },
-/* 188 */
+/* 189 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -22688,7 +22554,7 @@
 	
 	'use strict';
 	
-	var adler32 = __webpack_require__(189);
+	var adler32 = __webpack_require__(190);
 	
 	var TAG_END = /\/?>/;
 	var COMMENT_START = /^<\!\-\-/;
@@ -22727,7 +22593,7 @@
 	module.exports = ReactMarkupChecksum;
 
 /***/ },
-/* 189 */
+/* 190 */
 /***/ function(module, exports) {
 
 	/**
@@ -22775,7 +22641,7 @@
 	module.exports = adler32;
 
 /***/ },
-/* 190 */
+/* 191 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22791,7 +22657,7 @@
 	 * @typechecks
 	 */
 	
-	var performance = __webpack_require__(191);
+	var performance = __webpack_require__(192);
 	
 	var performanceNow;
 	
@@ -22813,7 +22679,7 @@
 	module.exports = performanceNow;
 
 /***/ },
-/* 191 */
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -22829,7 +22695,7 @@
 	
 	'use strict';
 	
-	var ExecutionEnvironment = __webpack_require__(73);
+	var ExecutionEnvironment = __webpack_require__(74);
 	
 	var performance;
 	
@@ -22840,7 +22706,7 @@
 	module.exports = performance || {};
 
 /***/ },
-/* 192 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -22858,18 +22724,18 @@
 	
 	'use strict';
 	
-	var ReactDOMComponentTree = __webpack_require__(80);
-	var ReactDefaultInjection = __webpack_require__(71);
-	var ReactMount = __webpack_require__(185);
-	var ReactPerf = __webpack_require__(86);
-	var ReactReconciler = __webpack_require__(87);
-	var ReactUpdates = __webpack_require__(83);
-	var ReactVersion = __webpack_require__(59);
+	var ReactDOMComponentTree = __webpack_require__(81);
+	var ReactDefaultInjection = __webpack_require__(72);
+	var ReactMount = __webpack_require__(186);
+	var ReactPerf = __webpack_require__(87);
+	var ReactReconciler = __webpack_require__(88);
+	var ReactUpdates = __webpack_require__(84);
+	var ReactVersion = __webpack_require__(60);
 	
-	var findDOMNode = __webpack_require__(193);
-	var getNativeComponentFromComposite = __webpack_require__(194);
-	var renderSubtreeIntoContainer = __webpack_require__(195);
-	var warning = __webpack_require__(39);
+	var findDOMNode = __webpack_require__(194);
+	var getNativeComponentFromComposite = __webpack_require__(195);
+	var renderSubtreeIntoContainer = __webpack_require__(196);
+	var warning = __webpack_require__(40);
 	
 	ReactDefaultInjection.inject();
 	
@@ -22911,7 +22777,7 @@
 	}
 	
 	if (process.env.NODE_ENV !== 'production') {
-	  var ExecutionEnvironment = __webpack_require__(73);
+	  var ExecutionEnvironment = __webpack_require__(74);
 	  if (ExecutionEnvironment.canUseDOM && window.top === window.self) {
 	
 	    // First check if devtools is not installed
@@ -22949,7 +22815,7 @@
 	module.exports = React;
 
 /***/ },
-/* 193 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -22965,13 +22831,13 @@
 	
 	'use strict';
 	
-	var ReactCurrentOwner = __webpack_require__(38);
-	var ReactDOMComponentTree = __webpack_require__(80);
-	var ReactInstanceMap = __webpack_require__(145);
+	var ReactCurrentOwner = __webpack_require__(39);
+	var ReactDOMComponentTree = __webpack_require__(81);
+	var ReactInstanceMap = __webpack_require__(146);
 	
-	var getNativeComponentFromComposite = __webpack_require__(194);
-	var invariant = __webpack_require__(36);
-	var warning = __webpack_require__(39);
+	var getNativeComponentFromComposite = __webpack_require__(195);
+	var invariant = __webpack_require__(37);
+	var warning = __webpack_require__(40);
 	
 	/**
 	 * Returns the DOM node rendered by this element.
@@ -23010,7 +22876,7 @@
 	module.exports = findDOMNode;
 
 /***/ },
-/* 194 */
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -23026,7 +22892,7 @@
 	
 	'use strict';
 	
-	var ReactNodeTypes = __webpack_require__(146);
+	var ReactNodeTypes = __webpack_require__(147);
 	
 	function getNativeComponentFromComposite(inst) {
 	  var type;
@@ -23045,7 +22911,7 @@
 	module.exports = getNativeComponentFromComposite;
 
 /***/ },
-/* 195 */
+/* 196 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -23061,20 +22927,20 @@
 	
 	'use strict';
 	
-	var ReactMount = __webpack_require__(185);
+	var ReactMount = __webpack_require__(186);
 	
 	module.exports = ReactMount.renderSubtreeIntoContainer;
 
 /***/ },
-/* 196 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	module.exports = __webpack_require__(192);
+	module.exports = __webpack_require__(193);
 
 /***/ },
-/* 197 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23083,50 +22949,29 @@
 		value: true
 	});
 	
-	var _react = __webpack_require__(31);
+	var _react = __webpack_require__(32);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactDom = __webpack_require__(196);
+	var _fieldKit = __webpack_require__(199);
+	
+	var _fieldKit2 = _interopRequireDefault(_fieldKit);
+	
+	var _reactDom = __webpack_require__(197);
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _svgInlineReact = __webpack_require__(198);
+	__webpack_require__(200);
 	
-	var _svgInlineReact2 = _interopRequireDefault(_svgInlineReact);
-	
-	__webpack_require__(199);
-	
-	__webpack_require__(203);
-	
-	var _reactMotion = __webpack_require__(205);
+	__webpack_require__(204);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var Input = _react2.default.createClass({
-		displayName: 'Input',
+	var CreditCardExpirationDateInput = _react2.default.createClass({
+		displayName: 'CreditCardExpirationDateInput',
 	
 	
-		formatCardNumber: function formatCardNumber() {
-			var cardNumber = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
-	
-	
-			var newString = cardNumber;
-	
-			if (newString.length <= 4) return newString;
-	
-			if (newString.length > 4) {
-				newString = [newString.slice(0, 4), ' ', newString.slice(4)].join('');
-			}
-	
-			if (newString.length > 11) {
-				newString = [newString.slice(0, 11), ' ', newString.slice(11)].join('');
-			}
-	
-			return newString;
-		},
-	
-		formatExpirationDate: function formatExpirationDate() {
+		format: function format() {
 			var month = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
 			var year = arguments.length <= 1 || arguments[1] === undefined ? '' : arguments[1];
 	
@@ -23152,26 +22997,7 @@
 			}
 		},
 	
-		formatSecurityCode: function formatSecurityCode() {
-			var code = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
-	
-	
-			return code;
-		},
-	
-		unformatCardNumber: function unformatCardNumber() {
-			var cardNumber = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
-	
-	
-			var newString = cardNumber;
-	
-			// Remove any non-numerical characters
-			newString = newString.replace(/\D/g, '');
-	
-			return newString;
-		},
-	
-		unformatExpirationDate: function unformatExpirationDate() {
+		unformat: function unformat() {
 			var date = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
 			var cursorPosition = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 	
@@ -23191,8 +23017,10 @@
 			// If the user has just deleted the slash,
 			// remove both the slash and the digit just before it.
 			// We know the slash was deleted if
-			var previousMonthString = this.props.payment.expirationMonth ? this.props.payment.expirationMonth.toString() : '';
-			var previousYearString = this.props.payment.expirationYear ? this.props.payment.expirationYear.toString().slice(2, this.props.payment.expirationYear.toString().length) : '';
+			var month = this.props.expirationDate.values.month;
+			var year = this.props.expirationDate.values.year;
+			var previousMonthString = month ? month.toString() : '';
+			var previousYearString = year ? year.toString().slice(2, year.toString().length) : '';
 			var dateString = previousMonthString + previousYearString;
 			if (newString === dateString && // 1) the input value matches the expirationDate prop
 			newString.length === dateString.length && // 2) they're both 2 digits
@@ -23206,343 +23034,2090 @@
 			return newString;
 		},
 	
-		unformatSecurityCode: function unformatSecurityCode() {
-			var code = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+		isDoneEditing: function isDoneEditing() {
+			var done = false;
 	
+			// if ( this.field) {
+			// 	done =  this.field.cardType() === 'amex' ?
+			// 			this.field.value().length === 15 :
+			// 			this.field.value().length === 16
+			// }
 	
-			var newString = code;
-	
-			// Remove any non-numercal characters
-			newString = newString.replace(/\D/g, '');
-	
-			// Return a maximum of 4 characters
-			if (newString.length > 4) {
-				newString = newString.slice(0, 4);
-			}
-	
-			return newString;
+			return done;
 		},
 	
-		getFieldStyles: function getFieldStyles() {
-			var currentField = this.props.payment.currentField;
-	
-			// Set default styles
-			var styles = {
-				cardNumberFieldWidth: 200,
-				cardNumberFieldLeftPosition: 0,
-				otherFieldsWidth: 2
-			};
-	
-			// Only set styles different from default
-			// if we're not in credit card number mode
-			if (currentField !== 'CreditCardNumber') {
-				if (this.cardNumberGhost) {
-					styles.cardNumberFieldWidth = this.cardNumberGhost.scrollWidth;
-				}
-				if (this.fields && this.abbreviatedCardNumberGhost) {
-					styles.otherFieldsWidth = (this.fields.scrollWidth - this.abbreviatedCardNumberGhost.scrollWidth) / 2 - 16;
-				}
-	
-				if (this.cardNumberGhost && this.abbreviatedCardNumberGhost) {
-					styles.cardNumberFieldLeftPosition = -(this.cardNumberGhost.scrollWidth - this.abbreviatedCardNumberGhost.scrollWidth) + 16; // Always add 8 because this trails the last character added by the user
-				}
-			}
-	
-			return styles;
+		getField: function getField() {
+			return this.field;
 		},
 	
 		render: function render() {
 			var _this = this;
 	
-			// let creditCardNumberInputWidthWhenCurrentField = this.originalCreditCardInputWidth ? this.originalCreditCardInputWidth : 180
+			return _react2.default.createElement('input', {
+				value: this.format(this.props.expirationDate.values.month, this.props.expirationDate.values.year),
+				style: this.props.style,
+				placeholder: 'MM/YY',
+				className: 'ExpirationDate',
+				onChange: function onChange(e) {
+					e.preventDefault();
+					_this.props.onChange(_this.unformat(e.target.value.trim(), e.target.selectionStart), e.target.selectionStart);
 	
-			var _getFieldStyles = this.getFieldStyles();
-	
-			var cardNumberFieldWidth = _getFieldStyles.cardNumberFieldWidth;
-			var cardNumberFieldLeftPosition = _getFieldStyles.cardNumberFieldLeftPosition;
-			var otherFieldsWidth = _getFieldStyles.otherFieldsWidth;
-	
-			var style = {
-				cardNumberFieldWidth: (0, _reactMotion.spring)(cardNumberFieldWidth),
-				otherFieldsWidth: (0, _reactMotion.spring)(otherFieldsWidth),
-				cardNumberFieldLeftPosition: (0, _reactMotion.spring)(cardNumberFieldLeftPosition)
-			};
-	
-			return _react2.default.createElement(
-				'div',
-				{ className: 'Input CreditCardPaymentInput ' + this.props.payment.currentField },
-				_react2.default.createElement(_svgInlineReact2.default, { src: __webpack_require__(219)("./" + this.props.icon + '.svg') }),
-				_react2.default.createElement(
-					'div',
-					{ className: 'fields-container' },
-					_react2.default.createElement(
-						_reactMotion.Motion,
-						{ style: style },
-						function (interpolatedStyle) {
-							return _react2.default.createElement(
-								'div',
-								{ className: 'fields',
-									key: 'fields',
-									ref: function ref(_ref4) {
-										return _this.fields = _ref4;
-									}
-								},
-								_react2.default.createElement(
-									'div',
-									{ className: 'AbbreviatedCardNumberGhost',
-										ref: function ref(_ref) {
-											return _this.abbreviatedCardNumberGhost = _ref;
-										} },
-									_this.formatCardNumber(_this.props.payment.cardNumber).slice(-5)
-								),
-								_react2.default.createElement(
-									'div',
-									{ className: 'CardNumberGhost',
-										ref: function ref(_ref2) {
-											return _this.cardNumberGhost = _ref2;
-										} },
-									_this.formatCardNumber(_this.props.payment.cardNumber)
-								),
-								_react2.default.createElement('input', { placeholder: 'Card Number',
-									className: 'CardNumber',
-									value: _this.formatCardNumber(_this.props.payment.cardNumber),
-									style: {
-										width: interpolatedStyle.cardNumberFieldWidth + 'px',
-										marginLeft: interpolatedStyle.cardNumberFieldLeftPosition + 'px'
-									},
-									ref: function ref(_ref3) {
-										return _this.creditCardInput = _ref3;
-									},
-									onChange: function onChange(e) {
-										e.preventDefault();
-										_this.props.onCardNumberChange(_this.unformatCardNumber(e.target.value.trim()), e.target.selectionStart);
-									},
-									onFocus: function onFocus(e) {
-										_this.props.onCardNumberFocus();
-									}
-								}),
-								_react2.default.createElement('input', { placeholder: 'MM/YY',
-									className: 'ExpirationDate',
-									value: _this.formatExpirationDate(_this.props.payment.expirationMonth, _this.props.payment.expirationYear),
-									style: {
-										width: interpolatedStyle.otherFieldsWidth + 'px'
-									},
-									onChange: function onChange(e) {
-										e.preventDefault();
-										_this.props.onExpirationDateChange(_this.unformatExpirationDate(e.target.value.trim(), e.target.selectionStart), e.target.selectionStart);
-									},
-									onFocus: function onFocus(e) {
-										_this.props.onExpirationDateFocus();
-									}
-								}),
-								_react2.default.createElement('input', { placeholder: 'CVV',
-									className: 'SecurityCode',
-									value: _this.formatSecurityCode(_this.props.payment.securityCode),
-									style: {
-										width: interpolatedStyle.otherFieldsWidth + 'px'
-									},
-									onChange: function onChange(e) {
-										e.preventDefault();
-										_this.props.onSecurityCodeChange(_this.unformatSecurityCode(e.target.value.trim()), e.target.selectionStart);
-									},
-									onFocus: function onFocus(e) {
-										_this.props.onSecurityCodeFocus();
-									}
-								})
-							);
-						}
-					)
-				)
-			);
+					if (_this.isDoneEditing()) {
+						// TODO check whether card is valid
+						// this.props.onDidFinishEditing()
+					}
+				},
+				onFocus: function onFocus(e) {
+					_this.props.onFocus();
+				}
+			});
 		}
+	
 	});
 	
-	exports.default = Input;
-
-/***/ },
-/* 198 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-	
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-	
-	var _extends = Object.assign || function (target) {
-	    for (var i = 1; i < arguments.length; i++) {
-	        var source = arguments[i];for (var key in source) {
-	            if (Object.prototype.hasOwnProperty.call(source, key)) {
-	                target[key] = source[key];
-	            }
-	        }
-	    }return target;
-	};
-	
-	var _createClass = function () {
-	    function defineProperties(target, props) {
-	        for (var i = 0; i < props.length; i++) {
-	            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
-	        }
-	    }return function (Constructor, protoProps, staticProps) {
-	        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
-	    };
-	}();
-	
-	var _get = function get(_x, _x2, _x3) {
-	    var _again = true;_function: while (_again) {
-	        var object = _x,
-	            property = _x2,
-	            receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = Object.getOwnPropertyDescriptor(object, property);if (desc === undefined) {
-	            var parent = Object.getPrototypeOf(object);if (parent === null) {
-	                return undefined;
-	            } else {
-	                _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
-	            }
-	        } else if ('value' in desc) {
-	            return desc.value;
-	        } else {
-	            var getter = desc.get;if (getter === undefined) {
-	                return undefined;
-	            }return getter.call(receiver);
-	        }
-	    }
-	};
-	
-	function _interopRequireDefault(obj) {
-	    return obj && obj.__esModule ? obj : { 'default': obj };
-	}
-	
-	function _classCallCheck(instance, Constructor) {
-	    if (!(instance instanceof Constructor)) {
-	        throw new TypeError('Cannot call a class as a function');
-	    }
-	}
-	
-	function _inherits(subClass, superClass) {
-	    if (typeof superClass !== 'function' && superClass !== null) {
-	        throw new TypeError('Super expression must either be null or a function, not ' + (typeof superClass === 'undefined' ? 'undefined' : _typeof(superClass)));
-	    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
-	}
-	
-	var _react = __webpack_require__(31);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var DOMParser = typeof window !== 'undefined' && window.DOMParser;
-	
-	function isParserAvailable(src) {
-	    // kinda naive but meh, ain't gonna use full-blown parser for this
-	    return typeof DOMParser === 'function' && typeof src === 'string' && src.trim().substr(0, 4) === '<svg';
-	}
-	
-	// parse SVG string using `DOMParser`
-	function parseFromSVGString(src) {
-	    var parser = new DOMParser();
-	    return parser.parseFromString(src, "image/svg+xml");
-	}
-	
-	// Transform DOM prop/attr names applicable to `<svg>` element but react-limited
-	function switchSVGAttrToReactProp(propName) {
-	    switch (propName) {
-	        case 'class':
-	            return 'className';
-	        default:
-	            return propName;
-	    }
-	}
-	
-	var InlineSVG = function (_React$Component) {
-	    _inherits(InlineSVG, _React$Component);
-	
-	    function InlineSVG() {
-	        _classCallCheck(this, InlineSVG);
-	
-	        _get(Object.getPrototypeOf(InlineSVG.prototype), 'constructor', this).call(this);
-	        this._extractSVGProps = this._extractSVGProps.bind(this);
-	    }
-	
-	    // Serialize `Attr` objects in `NamedNodeMap`
-	
-	    _createClass(InlineSVG, [{
-	        key: '_serializeAttrs',
-	        value: function _serializeAttrs(map) {
-	            var ret = {};
-	            var prop;
-	            for (var i = 0; i < map.length; i++) {
-	                prop = switchSVGAttrToReactProp(map[i].name);
-	                ret[prop] = map[i].value;
-	            }
-	            return ret;
-	        }
-	
-	        // get <svg /> element props
-	    }, {
-	        key: '_extractSVGProps',
-	        value: function _extractSVGProps(src) {
-	            var map = parseFromSVGString(src).documentElement.attributes;
-	            return map.length > 0 ? this._serializeAttrs(map) : null;
-	        }
-	
-	        // get content inside <svg> element.
-	    }, {
-	        key: '_stripSVG',
-	        value: function _stripSVG(src) {
-	            return parseFromSVGString(src).documentElement.innerHTML;
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var svgProps = {};
-	            var src = this.props.src;
-	            var __html = src;
-	            var Element = this.props.element;
-	
-	            if (this.props.children != null) {
-	                console.info('<InlineSVG />: `children` will be always ignored.');
-	            }
-	
-	            if (this.props.raw === true) {
-	                if (isParserAvailable(src)) {
-	                    Element = 'svg';
-	                    svgProps = this._extractSVGProps(src);
-	                    __html = this._stripSVG(src);
-	                } else {
-	                    console && console.info('<InlineSVG />: `raw` prop works only when `window.DOMParser` exists.');
-	                }
-	            }
-	
-	            return _react2['default'].createElement(Element, _extends({}, svgProps, this.props, { src: null, children: null,
-	                dangerouslySetInnerHTML: { __html: __html } }));
-	        }
-	    }]);
-	
-	    return InlineSVG;
-	}(_react2['default'].Component);
-	
-	exports['default'] = InlineSVG;
-	
-	InlineSVG.defaultProps = { element: 'i' };
-	InlineSVG.propTypes = {
-	    src: _react2['default'].PropTypes.string.isRequired,
-	    element: _react2['default'].PropTypes.string,
-	    raw: _react2['default'].PropTypes.bool
-	};
-	module.exports = exports['default'];
+	exports.default = CreditCardExpirationDateInput;
 
 /***/ },
 /* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var require;var require;"use strict";var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj;};(function(f){if(( false?"undefined":_typeof(exports))==="object"&&typeof module!=="undefined"){module.exports=f();}else if(true){!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (f), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));}else {var g;if(typeof window!=="undefined"){g=window;}else if(typeof global!=="undefined"){g=global;}else if(typeof self!=="undefined"){g=self;}else {g=this;}g.FieldKit=f();}})(function(){var define,module,exports;return function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return require(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f;}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e);},l,l.exports,e,t,n,r);}return n[o].exports;}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++){s(r[o]);}return s;}({1:[function(_dereq_,module,exports){ // shim for using process in browser
+	var process=module.exports={};var queue=[];var draining=false;var currentQueue;var queueIndex=-1;function cleanUpNextTick(){draining=false;if(currentQueue.length){queue=currentQueue.concat(queue);}else {queueIndex=-1;}if(queue.length){drainQueue();}}function drainQueue(){if(draining){return;}var timeout=setTimeout(cleanUpNextTick);draining=true;var len=queue.length;while(len){currentQueue=queue;queue=[];while(++queueIndex<len){if(currentQueue){currentQueue[queueIndex].run();}}queueIndex=-1;len=queue.length;}currentQueue=null;draining=false;clearTimeout(timeout);}process.nextTick=function(fun){var args=new Array(arguments.length-1);if(arguments.length>1){for(var i=1;i<arguments.length;i++){args[i-1]=arguments[i];}}queue.push(new Item(fun,args));if(queue.length===1&&!draining){setTimeout(drainQueue,0);}}; // v8 likes predictible objects
+	function Item(fun,array){this.fun=fun;this.array=array;}Item.prototype.run=function(){this.fun.apply(null,this.array);};process.title='browser';process.browser=true;process.env={};process.argv=[];process.version=''; // empty string to avoid regexp issues
+	process.versions={};function noop(){}process.on=noop;process.addListener=noop;process.once=noop;process.off=noop;process.removeListener=noop;process.removeAllListeners=noop;process.emit=noop;process.binding=function(name){throw new Error('process.binding is not supported');};process.cwd=function(){return '/';};process.chdir=function(dir){throw new Error('process.chdir is not supported');};process.umask=function(){return 0;};},{}],2:[function(_dereq_,module,exports){(function(process){(function(global,factory){if(typeof define==='function'&&define.amd){define('InputSim',['exports'],factory);}else if(typeof exports!=='undefined'){factory(exports);}else {var mod={exports:{}};factory(mod.exports);global.InputSim=mod.exports;}})(this,function(exports){ /*! jshint esnext:true, undef:true, unused:true */ /** @private */'use strict';Object.defineProperty(exports,'__esModule',{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if('value' in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}var A=65; /** @private */var Y=89; /** @private */var Z=90; /** @private */var ZERO=48; /** @private */var NINE=57; /** @private */var LEFT=37; /** @private */var RIGHT=39; /** @private */var UP=38; /** @private */var DOWN=40; /** @private */var BACKSPACE=8; /** @private */var DELETE=46; /** @private */var TAB=9; /** @private */var ENTER=13; /**
+	   * @namespace KEYS
+	   */var KEYS={A:A,Y:Y,Z:Z,ZERO:ZERO,NINE:NINE,LEFT:LEFT,RIGHT:RIGHT,UP:UP,DOWN:DOWN,BACKSPACE:BACKSPACE,DELETE:DELETE,TAB:TAB,ENTER:ENTER, /**
+	     * @param {number} keyCode
+	     * @returns {boolean}
+	     */isDigit:function isDigit(keyCode){return ZERO<=keyCode&&keyCode<=NINE;}, /**
+	     * Is an arrow keyCode.
+	     *
+	     * @param {number} keyCode
+	     * @returns {boolean}
+	     */isDirectional:function isDirectional(keyCode){return keyCode===LEFT||keyCode===RIGHT||keyCode===UP||keyCode===DOWN;}};var CTRL=1<<0;var META=1<<1;var ALT=1<<2;var SHIFT=1<<3;var cache={}; /**
+	   * Builds a BindingSet based on the current platform.
+	   *
+	   * @param {string} platform A string name of a platform (e.g. "OSX").
+	   * @returns {BindingSet} keybindings appropriate for the given platform.
+	   */function keyBindingsForPlatform(platform){var osx=platform==='OSX';var ctrl=osx?META:CTRL;if(!cache[platform]){cache[platform]=build(function(bind){bind(A,ctrl,'selectAll');bind(LEFT,null,'moveLeft');bind(LEFT,ALT,'moveWordLeft');bind(LEFT,SHIFT,'moveLeftAndModifySelection');bind(LEFT,ALT|SHIFT,'moveWordLeftAndModifySelection');bind(RIGHT,null,'moveRight');bind(RIGHT,ALT,'moveWordRight');bind(RIGHT,SHIFT,'moveRightAndModifySelection');bind(RIGHT,ALT|SHIFT,'moveWordRightAndModifySelection');bind(UP,null,'moveUp');bind(UP,ALT,'moveToBeginningOfParagraph');bind(UP,SHIFT,'moveUpAndModifySelection');bind(UP,ALT|SHIFT,'moveParagraphBackwardAndModifySelection');bind(DOWN,null,'moveDown');bind(DOWN,ALT,'moveToEndOfParagraph');bind(DOWN,SHIFT,'moveDownAndModifySelection');bind(DOWN,ALT|SHIFT,'moveParagraphForwardAndModifySelection');bind(BACKSPACE,null,'deleteBackward');bind(BACKSPACE,SHIFT,'deleteBackward');bind(BACKSPACE,ALT,'deleteWordBackward');bind(BACKSPACE,ALT|SHIFT,'deleteWordBackward');bind(BACKSPACE,ctrl,'deleteBackwardToBeginningOfLine');bind(BACKSPACE,ctrl|SHIFT,'deleteBackwardToBeginningOfLine');bind(DELETE,null,'deleteForward');bind(DELETE,ALT,'deleteWordForward');bind(TAB,null,'insertTab');bind(TAB,SHIFT,'insertBackTab');bind(ENTER,null,'insertNewline');bind(Z,ctrl,'undo');if(osx){bind(LEFT,META,'moveToBeginningOfLine');bind(LEFT,META|SHIFT,'moveToBeginningOfLineAndModifySelection');bind(RIGHT,META,'moveToEndOfLine');bind(RIGHT,META|SHIFT,'moveToEndOfLineAndModifySelection');bind(UP,META,'moveToBeginningOfDocument');bind(UP,META|SHIFT,'moveToBeginningOfDocumentAndModifySelection');bind(DOWN,META,'moveToEndOfDocument');bind(DOWN,META|SHIFT,'moveToEndOfDocumentAndModifySelection');bind(BACKSPACE,CTRL,'deleteBackwardByDecomposingPreviousCharacter');bind(BACKSPACE,CTRL|SHIFT,'deleteBackwardByDecomposingPreviousCharacter');bind(Z,META|SHIFT,'redo');}else {bind(Y,CTRL,'redo');}});}return cache[platform];}function build(callback){var result=new BindingSet();callback(function(){return result.bind.apply(result,arguments);});return result;} /**
+	   * @private
+	   */var BindingSet=function(){function BindingSet(){_classCallCheck(this,BindingSet);this.bindings={};} /**
+	     * Enum for text direction affinity.
+	     *
+	     * @const
+	     * @enum {number}
+	     * @private
+	     */ /**
+	     * @param {number} keyCode
+	     * @param {number} modifiers
+	     * @param {string} action
+	     */_createClass(BindingSet,[{key:'bind',value:function bind(keyCode,modifiers,action){if(!this.bindings[keyCode]){this.bindings[keyCode]={};}this.bindings[keyCode][modifiers||0]=action;} /**
+	       * @param {Event} event
+	       * @returns {?string}
+	       */},{key:'actionForEvent',value:function actionForEvent(event){var bindingsForKeyCode=this.bindings[event.keyCode];if(bindingsForKeyCode){var modifiers=0;if(event.altKey){modifiers|=ALT;}if(event.ctrlKey){modifiers|=CTRL;}if(event.metaKey){modifiers|=META;}if(event.shiftKey){modifiers|=SHIFT;}return bindingsForKeyCode[modifiers];}}}]);return BindingSet;}();var Affinity={UPSTREAM:0,DOWNSTREAM:1,NONE:null}; /**
+	   * Tests is string passed in is a single word.
+	   *
+	   * @param {string} chr
+	   * @returns {boolean}
+	   * @private
+	   */function isWordChar(chr){return chr&&/^\w$/.test(chr);} /**
+	   * Checks if char to the left of {index} in {string}
+	   * is a break (non-char).
+	   *
+	   * @param {string} text
+	   * @param {number} index
+	   * @returns {boolean}
+	   * @private
+	   */function hasLeftWordBreakAtIndex(text,index){if(index===0){return true;}else {return !isWordChar(text[index-1])&&isWordChar(text[index]);}} /**
+	   * Checks if char to the right of {index} in {string}
+	   * is a break (non-char).
+	   *
+	   * @param {string} text
+	   * @param {number} index
+	   * @returns {boolean}
+	   * @private
+	   */function hasRightWordBreakAtIndex(text,index){if(index===text.length-1){return true;}else {return isWordChar(text[index])&&!isWordChar(text[index+1]);}}var Input=function(){ /**
+	      * Sets up the initial properties of the TextField and
+	      * sets  up the event listeners
+	      *
+	      * @param {string} value
+	      * @param {Object} range ({start: 0, length: 0})
+	      */function Input(value,range){_classCallCheck(this,Input);this._value='';this._selectedRange={start:0,length:0};this.shouldCancelEvents=true;this.selectionAffinity=Affinity.NONE;if(value){this.setText(value);}if(range){this.setSelectedRange(range);}this._buildKeybindings();} /**
+	     * Clears all characters in the existing selection.
+	     *
+	     * @example
+	     *     // 12|34567|8
+	     *     clearSelection();
+	     *     // 12|8
+	     *
+	     */_createClass(Input,[{key:'clearSelection',value:function clearSelection(){this.replaceSelection('');} /**
+	       * Deletes backward one character or clears a non-empty selection.
+	       *
+	       * @example
+	       *
+	       *     // |What's up, doc?
+	       *     deleteBackward(event);
+	       *     // |What's up, doc?
+	       *
+	       *     // What'|s up, doc?
+	       *     deleteBackward(event);
+	       *     // What|s up, doc?
+	       *
+	       *     // |What's| up, doc?
+	       *     deleteBackward(event);
+	       *     // | up, doc?
+	       */},{key:'deleteBackward',value:function deleteBackward(event){this._handleEvent(event);var range=this.selectedRange();if(range.length===0){range.start--;range.length++;this.setSelectedRange(range);}this.clearSelection();} /**
+	       * Deletes backward one word or clears a non-empty selection.
+	       *
+	       * @example
+	       *     // |What's up, doc?
+	       *     deleteWordBackward(event);
+	       *     // |What's up, doc?
+	       *
+	       *     // What'|s up, doc?
+	       *     deleteWordBackward(event);
+	       *     // |s up, doc?
+	       *
+	       *     // |What's| up, doc?
+	       *     deleteWordBackward(event);
+	       *     // | up, doc?
+	       */},{key:'deleteWordBackward',value:function deleteWordBackward(event){if(this.hasSelection()){this.deleteBackward(event);}else {this._handleEvent(event);var range=this.selectedRange();var start=this._lastWordBreakBeforeIndex(range.start);range.length+=range.start-start;range.start=start;this.setSelectedRange(range);this.clearSelection();}} /**
+	       * Deletes backward one character, clears a non-empty selection, or decomposes
+	       * an accented character to its simple form.
+	       *
+	       * @TODO Make this work as described.
+	       *
+	       * @example
+	       *     // |fiancée
+	       *     deleteBackwardByDecomposingPreviousCharacter(event);
+	       *     // |What's up, doc?
+	       *
+	       *     // fianc|é|e
+	       *     deleteBackwardByDecomposingPreviousCharacter(event);
+	       *     // fianc|e
+	       *
+	       *     // fiancé|e
+	       *     deleteBackwardByDecomposingPreviousCharacter(event);
+	       *     // fiance|e
+	       *
+	       */},{key:'deleteBackwardByDecomposingPreviousCharacter',value:function deleteBackwardByDecomposingPreviousCharacter(event){this.deleteBackward(event);} /**
+	       * Deletes all characters before the cursor or clears a non-empty selection.
+	       *
+	       * @example
+	       *     // The quick |brown fox.
+	       *     deleteBackwardToBeginningOfLine(event);
+	       *     // |brown fox.
+	       *
+	       *     // The |quick |brown fox.
+	       *     deleteBackwardToBeginningOfLine(event);
+	       *     // The brown fox.
+	       *
+	       */},{key:'deleteBackwardToBeginningOfLine',value:function deleteBackwardToBeginningOfLine(event){if(this.hasSelection()){this.deleteBackward(event);}else {this._handleEvent(event);var range=this.selectedRange();range.length=range.start;range.start=0;this.setSelectedRange(range);this.clearSelection();}} /**
+	       * Deletes forward one character or clears a non-empty selection.
+	       *
+	       * @example
+	       *     // What's up, doc?|
+	       *     deleteForward(event);
+	       *     // What's up, doc?|
+	       *
+	       *     // What'|s up, doc?
+	       *     deleteForward(event);
+	       *     // What'| up, doc?
+	       *
+	       *     // |What's| up, doc?
+	       *     deleteForward(event);
+	       *     // | up, doc?
+	       *
+	       */},{key:'deleteForward',value:function deleteForward(event){this._handleEvent(event);var range=this.selectedRange();if(range.length===0){range.length++;this.setSelectedRange(range);}this.clearSelection();} /**
+	       * Deletes forward one word or clears a non-empty selection.
+	       *
+	       * @example
+	       *     // What's up, doc?|
+	       *     deleteWordForward(event);
+	       *     // What's up, doc?|
+	       *
+	       *     // What's |up, doc?
+	       *     deleteWordForward(event);
+	       *     // What's |, doc?
+	       *
+	       *     // |What's| up, doc?
+	       *     deleteWordForward(event);
+	       *     // | up, doc?
+	       */},{key:'deleteWordForward',value:function deleteWordForward(event){if(this.hasSelection()){return this.deleteForward(event);}else {this._handleEvent(event);var range=this.selectedRange();var end=this._nextWordBreakAfterIndex(range.start+range.length);this.setSelectedRange({start:range.start,length:end-range.start});this.clearSelection();}}},{key:'handleEvent',value:function handleEvent(event){if(typeof event==='undefined'){throw new Error('cannot handle and event that isn\'t passed');}var action=this._bindings.actionForEvent(event);if(action)this[action](event);return action;} /**
+	       * Determines whether this field has any selection.
+	       *
+	       * @returns {boolean} true if there is at least one character selected
+	       */},{key:'hasSelection',value:function hasSelection(){return this.selectedRange().length!==0;} /**
+	       * Handles the back tab key.
+	       *
+	       */},{key:'insertBackTab',value:function insertBackTab(){} /**
+	       * Handles a key event could be trying to end editing.
+	       *
+	       */},{key:'insertNewline',value:function insertNewline(){} /**
+	       * Handles the tab key.
+	       *
+	       */},{key:'insertTab',value:function insertTab(){} /**
+	       * Handles a event that is trying to insert a character.
+	       *
+	       * @param {string} text
+	       */},{key:'insertText',value:function insertText(text){var range;if(this.hasSelection()){this.clearSelection();}this.replaceSelection(text);range=this.selectedRange();range.start+=range.length;range.length=0;this.setSelectedRange(range);} /**
+	       * Moves the cursor up, which because this is a single-line text field, means
+	       * moving to the beginning of the value.
+	       *
+	       * @example
+	       *     // Hey guys|
+	       *     moveUp(event);
+	       *     // |Hey guys
+	       *
+	       *     // Hey |guys|
+	       *     moveUp(event);
+	       *     // |Hey guys
+	       *
+	       * @param {Event} event
+	       */},{key:'moveUp',value:function moveUp(event){this._handleEvent(event);this.setSelectedRange({start:0,length:0});} /**
+	       * Moves the cursor up to the beginning of the current paragraph, which because
+	       * this is a single-line text field, means moving to the beginning of the
+	       * value.
+	       *
+	       * @example
+	       *     // Hey guys|
+	       *     moveToBeginningOfParagraph(event)
+	       *     // |Hey guys
+	       *
+	       *     // Hey |guys|
+	       *     moveToBeginningOfParagraph(event)
+	       *     // |Hey guys
+	       *
+	       * @param {Event} event
+	       */},{key:'moveToBeginningOfParagraph',value:function moveToBeginningOfParagraph(event){this.moveUp(event);} /**
+	       * Moves the cursor up, keeping the current anchor point and extending the
+	       * selection to the beginning as moveUp would.
+	       *
+	       * @example
+	       *     // rightward selections are shrunk
+	       *     // Hey guys, |where> are you?
+	       *     moveUpAndModifySelection(event);
+	       *     // <Hey guys, |where are you?
+	       *
+	       *     // leftward selections are extended
+	       *     // Hey guys, <where| are you?
+	       *     moveUpAndModifySelection(event);
+	       *     // <Hey guys, where| are you?
+	       *
+	       *     // neutral selections are extended
+	       *     // Hey guys, |where| are you?
+	       *     moveUpAndModifySelection(event);
+	       *     // <Hey guys, where| are you?
+	       *
+	       * @param {Event} event
+	       */},{key:'moveUpAndModifySelection',value:function moveUpAndModifySelection(event){this._handleEvent(event);var range=this.selectedRange();switch(this.selectionAffinity){case Affinity.UPSTREAM:case Affinity.NONE: // 12<34 56|78  =>  <1234 56|78
+	range.length+=range.start;range.start=0;break;case Affinity.DOWNSTREAM: // 12|34 56>78   =>   <12|34 5678
+	range.length=range.start;range.start=0;break;}this.setSelectedRangeWithAffinity(range,Affinity.UPSTREAM);} /**
+	       * Moves the free end of the selection to the beginning of the paragraph, or
+	       * since this is a single-line text field to the beginning of the line.
+	       *
+	       * @param {Event} event
+	       */},{key:'moveParagraphBackwardAndModifySelection',value:function moveParagraphBackwardAndModifySelection(event){this._handleEvent(event);var range=this.selectedRange();switch(this.selectionAffinity){case Affinity.UPSTREAM:case Affinity.NONE: // 12<34 56|78  =>  <1234 56|78
+	range.length+=range.start;range.start=0;break;case Affinity.DOWNSTREAM: // 12|34 56>78  =>  12|34 5678
+	range.length=0;break;}this.setSelectedRangeWithAffinity(range,Affinity.UPSTREAM);} /**
+	       * Moves the cursor to the beginning of the document.
+	       *
+	       * @param {Event} event
+	       */},{key:'moveToBeginningOfDocument',value:function moveToBeginningOfDocument(event){ // Since we only support a single line this is just an alias.
+	this.moveToBeginningOfLine(event);} /**
+	       * Moves the selection start to the beginning of the document.
+	       * @param {Event} event
+	       */},{key:'moveToBeginningOfDocumentAndModifySelection',value:function moveToBeginningOfDocumentAndModifySelection(event){this._handleEvent(event);var range=this.selectedRange();range.length+=range.start;range.start=0;this.setSelectedRangeWithAffinity(range,Affinity.UPSTREAM);} /**
+	       * Moves the cursor down, which because this is a single-line text field, means
+	       * moving to the end of the value.
+	       *
+	       * @example
+	       *     // Hey |guys
+	       *     moveDown(event)
+	       *     // Hey guys|
+	       *
+	       *     // |Hey| guys
+	       *     moveDown(event)
+	       *     // Hey guys|
+	       *
+	       * @param {Event} event
+	       */},{key:'moveDown',value:function moveDown(event){this._handleEvent(event); // 12|34 56|78  =>  1234 5678|
+	var range={start:this.text().length,length:0};this.setSelectedRangeWithAffinity(range,Affinity.NONE);} /**
+	       * Moves the cursor up to the end of the current paragraph, which because this
+	       * is a single-line text field, means moving to the end of the value.
+	       *
+	       * @example
+	       *     // |Hey guys
+	       *     moveToEndOfParagraph(event)
+	       *     // Hey guys|
+	       *
+	       *     // Hey |guys|
+	       *     moveToEndOfParagraph(event)
+	       *     // Hey guys|
+	       *
+	       * @param {Event} event
+	       */},{key:'moveToEndOfParagraph',value:function moveToEndOfParagraph(event){this.moveDown(event);} /**
+	       * Moves the cursor down, keeping the current anchor point and extending the
+	       * selection to the end as moveDown would.
+	       *
+	       * @example
+	       *     // leftward selections are shrunk
+	       *     // Hey guys, <where| are you?
+	       *     moveDownAndModifySelection(event)
+	       *     // Hey guys, where| are you?>
+	       *
+	       *     // rightward selections are extended
+	       *     // Hey guys, |where> are you?
+	       *     moveDownAndModifySelection(event)
+	       *     // Hey guys, |where are you?>
+	       *
+	       *     // neutral selections are extended
+	       *     // Hey guys, |where| are you?
+	       *     moveDownAndModifySelection(event)
+	       *     // Hey guys, |where are you?>
+	       *
+	       * @param {Event} event
+	       */},{key:'moveDownAndModifySelection',value:function moveDownAndModifySelection(event){this._handleEvent(event);var range=this.selectedRange();var end=this.text().length;if(this.selectionAffinity===Affinity.UPSTREAM){range.start+=range.length;}range.length=end-range.start;this.setSelectedRangeWithAffinity(range,Affinity.DOWNSTREAM);} /**
+	       * Moves the free end of the selection to the end of the paragraph, or since
+	       * this is a single-line text field to the end of the line.
+	       *
+	       * @param {Event} event
+	       */},{key:'moveParagraphForwardAndModifySelection',value:function moveParagraphForwardAndModifySelection(event){this._handleEvent(event);var range=this.selectedRange();switch(this.selectionAffinity){case Affinity.DOWNSTREAM:case Affinity.NONE: // 12|34 56>78  =>  12|34 5678>
+	range.length=this.text().length-range.start;break;case Affinity.UPSTREAM: // 12<34 56|78  =>  12|34 5678
+	range.start+=range.length;range.length=0;break;}this.setSelectedRangeWithAffinity(range,Affinity.DOWNSTREAM);} /**
+	       * Moves the cursor to the end of the document.
+	       *
+	       * @param {Event} event
+	       */},{key:'moveToEndOfDocument',value:function moveToEndOfDocument(event){ // Since we only support a single line this is just an alias.
+	this.moveToEndOfLine(event);} /**
+	       * Moves the selection end to the end of the document.
+	       * @param {Event} event
+	       */},{key:'moveToEndOfDocumentAndModifySelection',value:function moveToEndOfDocumentAndModifySelection(event){this._handleEvent(event);var range=this.selectedRange();range.length=this.text().length-range.start;this.setSelectedRangeWithAffinity(range,Affinity.DOWNSTREAM);} /**
+	       * Moves the cursor to the left, counting selections as a thing to move past.
+	       *
+	       * @example
+	       *     // no selection just moves the cursor left
+	       *     // Hey guys|
+	       *     moveLeft(event)
+	       *     // Hey guy|s
+	       *
+	       *     // selections are removed
+	       *     // Hey |guys|
+	       *     moveLeft(event)
+	       *     // Hey |guys
+	       *
+	       * @param {Event} event
+	       */},{key:'moveLeft',value:function moveLeft(event){this._handleEvent(event);var range=this.selectedRange();if(range.length!==0){range.length=0;}else {range.start--;}this.setSelectedRangeWithAffinity(range,Affinity.NONE);} /**
+	       * Moves the free end of the selection one to the left.
+	       *
+	       * @example
+	       *     // no selection just selects to the left
+	       *     // Hey guys|
+	       *     moveLeftAndModifySelection(event)
+	       *     // Hey guy<s|
+	       *
+	       *     // left selections are extended
+	       *     // Hey <guys|
+	       *     moveLeftAndModifySelection(event)
+	       *     // Hey< guys|
+	       *
+	       *     // right selections are shrunk
+	       *     // Hey |guys>
+	       *     moveLeftAndModifySelection(event)
+	       *     // Hey |guy>s
+	       *
+	       *     // neutral selections are extended
+	       *     // Hey |guys|
+	       *     moveLeftAndModifySelection(event)
+	       *     //Hey< guys|
+	       *
+	       * @param {Event} event
+	       */},{key:'moveLeftAndModifySelection',value:function moveLeftAndModifySelection(event){this._handleEvent(event);var range=this.selectedRange();switch(this.selectionAffinity){case Affinity.UPSTREAM:case Affinity.NONE:this.selectionAffinity=Affinity.UPSTREAM;range.start--;range.length++;break;case Affinity.DOWNSTREAM:range.length--;break;}this.setSelectedRange(range);} /**
+	       * Moves the cursor left until the start of a word is found.
+	       *
+	       * @example
+	       *     // no selection just moves the cursor left
+	       *     // Hey guys|
+	       *     moveWordLeft(event)
+	       *     // Hey |guys
+	       *
+	       *     // selections are removed
+	       *     // Hey |guys|
+	       *     moveWordLeft(event)
+	       *     // |Hey guys
+	       *
+	       * @param {Event} event
+	       */},{key:'moveWordLeft',value:function moveWordLeft(event){this._handleEvent(event);var index=this._lastWordBreakBeforeIndex(this.selectedRange().start-1);this.setSelectedRange({start:index,length:0});} /**
+	       * Moves the free end of the current selection to the beginning of the previous
+	       * word.
+	       *
+	       * @example
+	       *     // no selection just selects to the left
+	       *     // Hey guys|
+	       *     moveWordLeftAndModifySelection(event)
+	       *     // Hey <guys|
+	       *
+	       *     // left selections are extended
+	       *     // Hey <guys|
+	       *     moveWordLeftAndModifySelection(event)
+	       *     // <Hey guys|
+	       *
+	       *     // right selections are shrunk
+	       *     // |Hey guys>
+	       *     moveWordLeftAndModifySelection(event)
+	       *     // |Hey >guys
+	       *
+	       *     // neutral selections are extended
+	       *     // Hey |guys|
+	       *     moveWordLeftAndModifySelection(event)
+	       *     // <Hey guys|
+	       *
+	       * @param {Event} event
+	       */},{key:'moveWordLeftAndModifySelection',value:function moveWordLeftAndModifySelection(event){this._handleEvent(event);var range=this.selectedRange();switch(this.selectionAffinity){case Affinity.UPSTREAM:case Affinity.NONE:this.selectionAffinity=Affinity.UPSTREAM;var start=this._lastWordBreakBeforeIndex(range.start-1);range.length+=range.start-start;range.start=start;break;case Affinity.DOWNSTREAM:var end=this._lastWordBreakBeforeIndex(range.start+range.length);if(end<range.start){end=range.start;}range.length-=range.start+range.length-end;break;}this.setSelectedRange(range);} /**
+	       * Moves the cursor to the beginning of the current line.
+	       *
+	       * @example
+	       *     // Hey guys, where| are ya?
+	       *     moveToBeginningOfLine(event)
+	       *     // |Hey guys, where are ya?
+	       *
+	       * @param {Event} event
+	       */},{key:'moveToBeginningOfLine',value:function moveToBeginningOfLine(event){this._handleEvent(event);this.setSelectedRange({start:0,length:0});} /**
+	       * Select from the free end of the selection to the beginning of line.
+	       *
+	       * @example
+	       *     // Hey guys, where| are ya?
+	       *     moveToBeginningOfLineAndModifySelection(event)
+	       *     // <Hey guys, where| are ya?
+	       *
+	       *     // Hey guys, where| are> ya?
+	       *     moveToBeginningOfLineAndModifySelection(event)
+	       *     // <Hey guys, where are| ya?
+	       *
+	       * @param {Event} event
+	       */},{key:'moveToBeginningOfLineAndModifySelection',value:function moveToBeginningOfLineAndModifySelection(event){this._handleEvent(event);var range=this.selectedRange();range.length+=range.start;range.start=0;this.setSelectedRangeWithAffinity(range,Affinity.UPSTREAM);} /**
+	       * Moves the cursor to the right, counting selections as a thing to move past.
+	       *
+	       * @example
+	       *     // no selection just moves the cursor right
+	       *     // Hey guy|s
+	       *     moveRight(event)
+	       *     // Hey guys|
+	       *
+	       *     // selections are removed
+	       *     // Hey |guys|
+	       *     moveRight(event)
+	       *     // Hey guys|
+	       *
+	       * @param {Event} event
+	       */},{key:'moveRight',value:function moveRight(event){this._handleEvent(event);var range=this.selectedRange();if(range.length!==0){range.start+=range.length;range.length=0;}else {range.start++;}this.setSelectedRangeWithAffinity(range,Affinity.NONE);} /**
+	       * Moves the free end of the selection one to the right.
+	       *
+	       * @example
+	       *     // no selection just selects to the right
+	       *     // Hey |guys
+	       *     moveRightAndModifySelection(event)
+	       *     // Hey |g>uys
+	       *
+	       *     // right selections are extended
+	       *     // Hey |gu>ys
+	       *     moveRightAndModifySelection(event)
+	       *     // Hey |guy>s
+	       *
+	       *     // left selections are shrunk
+	       *     // <Hey |guys
+	       *     moveRightAndModifySelection(event)
+	       *     // H<ey |guys
+	       *
+	       *     // neutral selections are extended
+	       *     // |Hey| guys
+	       *     moveRightAndModifySelection(event)
+	       *     // |Hey >guys
+	       *
+	       * @param {Event} event
+	       */},{key:'moveRightAndModifySelection',value:function moveRightAndModifySelection(event){this._handleEvent(event);var range=this.selectedRange();switch(this.selectionAffinity){case Affinity.UPSTREAM:range.start++;range.length--;break;case Affinity.DOWNSTREAM:case Affinity.NONE:this.selectionAffinity=Affinity.DOWNSTREAM;range.length++;break;}this.setSelectedRange(range);} /**
+	       * Moves the cursor right until the end of a word is found.
+	       *
+	       * @example
+	       *     // no selection just moves the cursor right
+	       *     // Hey| guys
+	       *     moveWordRight(event)
+	       *     // Hey guys|
+	       *
+	       *     // selections are removed
+	       *     // |Hey| guys
+	       *     moveWordRight(event)
+	       *     // Hey guys|
+	       *
+	       * @param {Event} event
+	       */},{key:'moveWordRight',value:function moveWordRight(event){this._handleEvent(event);var range=this.selectedRange();var index=this._nextWordBreakAfterIndex(range.start+range.length);this.setSelectedRange({start:index,length:0});} /**
+	       * Moves the free end of the current selection to the next end of word.
+	       *
+	       * @example
+	       *     // no selection just selects to the right
+	       *     // Hey |guys
+	       *     moveWordRightAndModifySelection(event)
+	       *     // Hey |guys|
+	       *
+	       *     // right selections are extended
+	       *     // Hey |g>uys
+	       *     moveWordRightAndModifySelection(event)
+	       *     // Hey |guys>
+	       *
+	       *     // left selections are shrunk
+	       *     // He<y |guys
+	       *     moveWordRightAndModifySelection(event)
+	       *     // Hey< |guys
+	       *
+	       *     // neutral selections are extended
+	       *     // He|y |guys
+	       *     moveWordRightAndModifySelection(event)
+	       *     // He|y guys>
+	       *
+	       * @param {Event} event
+	       */},{key:'moveWordRightAndModifySelection',value:function moveWordRightAndModifySelection(event){this._handleEvent(event);var range=this.selectedRange();var start=range.start;var end=range.start+range.length;switch(this.selectionAffinity){case Affinity.UPSTREAM:start=Math.min(this._nextWordBreakAfterIndex(start),end);break;case Affinity.DOWNSTREAM:case Affinity.NONE:this.selectionAffinity=Affinity.DOWNSTREAM;end=this._nextWordBreakAfterIndex(range.start+range.length);break;}this.setSelectedRange({start:start,length:end-start});} /**
+	       * Moves the cursor to the end of the current line.
+	       *
+	       * @example
+	       *     // Hey guys, where| are ya?
+	       *     moveToEndOfLine(event)
+	       *     // |Hey guys, where are ya?
+	       *
+	       * @param {Event} event
+	       */},{key:'moveToEndOfLine',value:function moveToEndOfLine(event){this._handleEvent(event);this.setSelectedRange({start:this.text().length,length:0});} /**
+	       * Moves the free end of the selection to the end of the current line.
+	       *
+	       * @example
+	       *     // Hey guys, where| are ya?
+	       *     moveToEndOfLineAndModifySelection(event)
+	       *     // Hey guys, where| are ya?>
+	       *
+	       *     // Hey guys, <where| are ya?
+	       *     moveToEndOfLineAndModifySelection(event)
+	       *     // Hey guys, |where are ya?>
+	       *
+	       * @param {Event} event
+	       */},{key:'moveToEndOfLineAndModifySelection',value:function moveToEndOfLineAndModifySelection(event){this._handleEvent(event);var range=this.selectedRange();range.length=this.text().length-range.start;this.setSelectedRangeWithAffinity(range,Affinity.DOWNSTREAM);} /**
+	       * Replaces the characters within the selection with given text.
+	       *
+	       * @example
+	       *     // 12|34567|8
+	       *     replaceSelection('00')
+	       *     // 12|00|8
+	       *
+	       * @param {string} replacement
+	       */},{key:'replaceSelection',value:function replaceSelection(replacement){var range=this.selectedRange();var end=range.start+range.length;var text=this.text();text=text.substring(0,range.start)+replacement+text.substring(end);range.length=replacement.length;this.setText(text);this.setSelectedRangeWithAffinity(range,Affinity.NONE);} /**
+	       * Find ends of 'words' for navigational purposes.
+	       *
+	       * @example
+	       *     // given value of '123456789' and text of '123-45-6789'
+	       *     rightWordBreakIndexes()
+	       *     //=> [3, 5, 9]
+	       *
+	       * @returns {number[]}
+	       */},{key:'rightWordBreakIndexes',value:function rightWordBreakIndexes(){var result=[];var text=this.text();for(var i=0,l=text.length;i<l;i++){if(hasRightWordBreakAtIndex(text,i)){result.push(i+1);}}return result;} /**
+	       * Expands the selection to contain all the characters in the content.
+	       *
+	       * @example
+	       *     // 123|45678
+	       *     selectAll(event)
+	       *     // |12345678|
+	       *
+	       * @param {Event} event
+	       */},{key:'selectAll',value:function selectAll(event){this._handleEvent(event);this.setSelectedRangeWithAffinity({start:0,length:this.text().length},Affinity.NONE);} /**
+	       * Gets the object value. This is the value that should be considered the
+	       * 'real' value of the field.
+	       *
+	       * @returns {String}
+	       */},{key:'text',value:function text(){return this._value;} /**
+	       * Sets the object value of the field.
+	       *
+	       * @param {string} value
+	       */},{key:'setText',value:function setText(value){this._value=''+value;this.setSelectedRange({start:this._value.length,length:0});} /**
+	       * Gets the range of the current selection.
+	       *
+	       * @returns {Object} {start: number, length: number}
+	       */},{key:'selectedRange',value:function selectedRange(){return this._selectedRange;} /**
+	       * Sets the range of the current selection without changing the affinity.
+	       * @param {Object} range ({start: 0, length: 0})
+	       */},{key:'setSelectedRange',value:function setSelectedRange(range){this.setSelectedRangeWithAffinity(range,this.selectionAffinity);} /**
+	       * Sets the range of the current selection and the selection affinity.
+	       *
+	       * @param {Object} range {start: number, length: number}
+	       * @param {Affinity} affinity
+	       * @returns {Object} {start: 0, length: 0}
+	       */},{key:'setSelectedRangeWithAffinity',value:function setSelectedRangeWithAffinity(range,affinity){var min=0;var max=this.text().length;var caret={start:Math.max(min,Math.min(max,range.start)),end:Math.max(min,Math.min(max,range.start+range.length))};this._selectedRange={start:caret.start,length:caret.end-caret.start};this.selectionAffinity=range.length===0?Affinity.NONE:affinity;return this._selectedRange;} /**
+	       * Gets the position of the current selection's anchor point, i.e. the point
+	       * that the selection extends from, if any.
+	       *
+	       * @returns {number}
+	       */},{key:'selectionAnchor',value:function selectionAnchor(){var range=this.selectedRange();switch(this.selectionAffinity){case Affinity.UPSTREAM:return range.start+range.length;case Affinity.DOWNSTREAM:return range.start;default:return Affinity.NONE;}} /**
+	       * Builds the key bindings for platform
+	       *
+	       * @TODO: Make this better
+	       * @private
+	       */},{key:'_buildKeybindings',value:function _buildKeybindings(){var osx;if(typeof navigator!=='undefined'){osx=/^Mozilla\/[\d\.]+ \(Macintosh/.test(navigator.userAgent);}else if(typeof process!=='undefined'){osx=/darwin/.test(process.platform);}this._bindings=keyBindingsForPlatform(osx?'OSX':'Default');} /**
+	       * Handles the event based on the `shouldCancelEvents` prop.
+	       *
+	       * @param {Event} event
+	       * @private
+	       */},{key:'_handleEvent',value:function _handleEvent(event){if(event&&this.shouldCancelEvents){event.preventDefault();}} /**
+	       * Finds the start of the 'word' before index.
+	       *
+	       * @param {number} index position at which to start looking
+	       * @returns {number} index in value less than or equal to the given index
+	       * @private
+	       */},{key:'_lastWordBreakBeforeIndex',value:function _lastWordBreakBeforeIndex(index){var indexes=this._leftWordBreakIndexes();var result=indexes[0];for(var i=0,l=indexes.length;i<l;i++){var wordBreakIndex=indexes[i];if(index>wordBreakIndex){result=wordBreakIndex;}else {break;}}return result;} /**
+	       * Find starts of 'words' for navigational purposes.
+	       *
+	       * @example
+	       *     // given value of '123456789' and text of '123-45-6789'
+	       *     leftWordBreakIndexes()
+	       *     // => [0, 3, 5]
+	       *
+	       * @returns {number[]} indexes in value of word starts.
+	       * @private
+	       */},{key:'_leftWordBreakIndexes',value:function _leftWordBreakIndexes(){var result=[];var text=this.text();for(var i=0,l=text.length;i<l;i++){if(hasLeftWordBreakAtIndex(text,i)){result.push(i);}}return result;} /**
+	       * Finds the end of the 'word' after index.
+	       *
+	       * @param {number} index position in value at which to start looking.
+	       * @returns {number}
+	       * @private
+	       */},{key:'_nextWordBreakAfterIndex',value:function _nextWordBreakAfterIndex(index){var indexes=this.rightWordBreakIndexes().reverse();var result=indexes[0];for(var i=0,l=indexes.length;i<l;i++){var wordBreakIndex=indexes[i];if(index<wordBreakIndex){result=wordBreakIndex;}else {break;}}return result;}}]);return Input;}();exports.Input=Input;exports.KEYS=KEYS;exports.keyBindingsForPlatform=keyBindingsForPlatform;});}).call(this,_dereq_('_process'));},{"_process":1}],3:[function(_dereq_,module,exports){(function(global,factory){if(typeof define==='function'&&define.amd){define('stround',['exports'],factory);}else if(typeof exports!=='undefined'){factory(exports);}else {var mod={exports:{}};factory(mod.exports);global.stround=mod.exports;}})(this,function(exports){ /* jshint sub:true, esnext:true, undef:true, unused:true */ /**
+	   * Enum for the available rounding modes.
+	   *
+	   * @enum {number}
+	   */'use strict';Object.defineProperty(exports,'__esModule',{value:true});var _slicedToArray=function(){function sliceIterator(arr,i){var _arr=[];var _n=true;var _d=false;var _e=undefined;try{for(var _i=arr[Symbol.iterator](),_s;!(_n=(_s=_i.next()).done);_n=true){_arr.push(_s.value);if(i&&_arr.length===i)break;}}catch(err){_d=true;_e=err;}finally {try{if(!_n&&_i['return'])_i['return']();}finally {if(_d)throw _e;}}return _arr;}return function(arr,i){if(Array.isArray(arr)){return arr;}else if(Symbol.iterator in Object(arr)){return sliceIterator(arr,i);}else {throw new TypeError('Invalid attempt to destructure non-iterable instance');}};}();exports.parse=parse;exports.format=format;exports.shiftParts=shiftParts;exports.shift=shift;exports.round=round;var modes={CEILING:0,FLOOR:1,DOWN:2,UP:3,HALF_EVEN:4,HALF_DOWN:5,HALF_UP:6};exports.modes=modes; /**
+	   * @const
+	   * @private
+	   */var NEG='-'; /**
+	   * @const
+	   * @private
+	   */var SEP='.'; /**
+	   * @const
+	   * @private
+	   */var NEG_PATTERN='-'; /**
+	   * @const
+	   * @private
+	   */var SEP_PATTERN='\\.'; /**
+	   * @const
+	   * @private
+	   */var NUMBER_PATTERN=new RegExp('^('+NEG_PATTERN+')?(\\d*)(?:'+SEP_PATTERN+'(\\d*))?$'); /**
+	   * Increments the given integer represented by a string by one.
+	   *
+	   * @example
+	   *
+	   *   increment('1');  // '2'
+	   *   increment('99'); // '100'
+	   *   increment('');   // '1'
+	   *
+	   * @param {string} strint
+	   * @return {string}
+	   * @private
+	   */function increment(strint){var length=strint.length;if(length===0){return '1';}var last=parseInt(strint[length-1],10);if(last===9){return increment(strint.slice(0,length-1))+'0';}else {return strint.slice(0,length-1)+(last+1);}} /**
+	   * Parses the given decimal string into its component parts.
+	   *
+	   * @example
+	   *
+	   *   stround.parse('3.14');  // [false, '3', '14']
+	   *   stround.parse('-3.45'); // [true, '3', '45']
+	   *
+	   * @param {string} strnum
+	   * @return {?Array}
+	   */function parse(strnum){switch(strnum){case 'NaN':case 'Infinity':case '-Infinity':return null;}var match=strnum.match(NUMBER_PATTERN);if(!match){throw new Error('cannot round malformed number: '+strnum);}return [match[1]!==undefined,match[2],match[3]||''];} /**
+	   * Format the given number configuration as a number string.
+	   *
+	   * @example
+	   *
+	   *   stround.format([false, '12', '34']); // '12.34'
+	   *   stround.format([true, '8', '']);     // '-8'
+	   *   stround.format([true, '', '7']);     // '-0.7'
+	   *
+	   * @param {Array} parts
+	   * @return {string}
+	   */function format(_ref){var _ref2=_slicedToArray(_ref,3);var negative=_ref2[0];var intPart=_ref2[1];var fracPart=_ref2[2];if(intPart.length===0){intPart='0';}else {var firstNonZeroIndex=undefined;for(firstNonZeroIndex=0;firstNonZeroIndex<intPart.length;firstNonZeroIndex++){if(intPart[firstNonZeroIndex]!=='0'){break;}}if(firstNonZeroIndex!==intPart.length){intPart=intPart.slice(firstNonZeroIndex);}}return (negative?NEG+intPart:intPart)+(fracPart.length?SEP+fracPart:'');} /**
+	   * Shift the exponent of the given number (in parts) by the given amount.
+	   *
+	   * @example
+	   *
+	   *   stround.shiftParts([false, '12', ''], 2);  // [false, '1200', '']
+	   *   stround.shiftParts([false, '12', ''], -2); // [false, '', '12']
+	   *
+	   * @param {Array} parts
+	   * @param {number} exponent
+	   * @return {Array}
+	   */function shiftParts(_ref3,exponent){var _ref32=_slicedToArray(_ref3,3);var negative=_ref32[0];var intPart=_ref32[1];var fracPart=_ref32[2];var partToMove=undefined;if(exponent>0){partToMove=fracPart.slice(0,exponent);while(partToMove.length<exponent){partToMove+='0';}intPart+=partToMove;fracPart=fracPart.slice(exponent);}else if(exponent<0){while(intPart.length<-exponent){intPart='0'+intPart;}partToMove=intPart.slice(intPart.length+exponent);fracPart=partToMove+fracPart;intPart=intPart.slice(0,intPart.length-partToMove.length);}return [negative,intPart,fracPart];} /**
+	   * Shift the exponent of the given number (as a string) by the given amount.
+	   *
+	   *   shift('12', 2);  // '1200'
+	   *   shift('12', -2); // '0.12'
+	   *
+	   * @param {string|number} strnum
+	   * @param {number} exponent
+	   * @return {string}
+	   */function shift(strnum,exponent){if(typeof strnum==='number'){strnum=''+strnum;}var parsed=parse(strnum);if(parsed===null){return strnum;}else {return format(shiftParts(parsed,exponent));}} /**
+	   * Round the given number represented by a string according to the given
+	   * precision and mode.
+	   *
+	   * @param {string|number} strnum
+	   * @param {number|null|undefined=} precision
+	   * @param {modes=} mode
+	   * @return {string}
+	   */function round(strnum,precision,mode){if(typeof strnum==='number'){strnum=''+strnum;}if(typeof strnum!=='string'){throw new Error('expected a string or number, got: '+strnum);}if(strnum.length===0){return strnum;}if(precision===null||precision===undefined){precision=0;}if(mode===undefined){mode=modes.HALF_EVEN;}var parsed=parse(strnum);if(parsed===null){return strnum;}if(precision>0){parsed=shiftParts(parsed,precision);}var _parsed=parsed;var _parsed2=_slicedToArray(_parsed,3);var negative=_parsed2[0];var intPart=_parsed2[1];var fracPart=_parsed2[2];switch(mode){case modes.CEILING:case modes.FLOOR:case modes.UP:var foundNonZeroDigit=false;for(var i=0,_length=fracPart.length;i<_length;i++){if(fracPart[i]!=='0'){foundNonZeroDigit=true;break;}}if(foundNonZeroDigit){if(mode===modes.UP||negative!==(mode===modes.CEILING)){intPart=increment(intPart);}}break;case modes.HALF_EVEN:case modes.HALF_DOWN:case modes.HALF_UP:var shouldRoundUp=false;var firstFracPartDigit=parseInt(fracPart[0],10);if(firstFracPartDigit>5){shouldRoundUp=true;}else if(firstFracPartDigit===5){if(mode===modes.HALF_UP){shouldRoundUp=true;}if(!shouldRoundUp){for(var i=1,_length2=fracPart.length;i<_length2;i++){if(fracPart[i]!=='0'){shouldRoundUp=true;break;}}}if(!shouldRoundUp&&mode===modes.HALF_EVEN){var lastIntPartDigit=parseInt(intPart[intPart.length-1],10);shouldRoundUp=lastIntPartDigit%2!==0;}}if(shouldRoundUp){intPart=increment(intPart);}break;}return format(shiftParts([negative,intPart,''],-precision));}});},{}],4:[function(_dereq_,module,exports){'use strict';Object.defineProperty(exports,'__esModule',{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if('value' in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}var _amex_card_formatter=_dereq_('./amex_card_formatter');var _amex_card_formatter2=_interopRequireDefault(_amex_card_formatter);var _default_card_formatter=_dereq_('./default_card_formatter');var _default_card_formatter2=_interopRequireDefault(_default_card_formatter);var _card_utils=_dereq_('./card_utils'); /**
+	 * AdaptiveCardFormatter will decide if it needs to use
+	 * {@link AmexCardFormatter} or {@link DefaultCardFormatter}.
+	 */var AdaptiveCardFormatter=function(){function AdaptiveCardFormatter(){_classCallCheck(this,AdaptiveCardFormatter); /** @private */this.amexCardFormatter=new _amex_card_formatter2['default'](); /** @private */this.defaultCardFormatter=new _default_card_formatter2['default'](); /** @private */this.formatter=this.defaultCardFormatter;} /**
+	   * Will pick the right formatter based on the `pan` and will return the
+	   * formatted string.
+	   *
+	   * @param {string} pan
+	   * @returns {string} formatted string
+	   */_createClass(AdaptiveCardFormatter,[{key:'format',value:function format(pan){return this._formatterForPan(pan).format(pan);} /**
+	     * Will call parse on the formatter.
+	     *
+	     * @param {string} text
+	     * @param {function(string)} error
+	     * @returns {string} returns value with delimiters removed
+	     */},{key:'parse',value:function parse(text,error){return this.formatter.parse(text,error);} /**
+	     * Determines whether the given change should be allowed and, if so, whether
+	     * it should be altered.
+	     *
+	     * @param {TextFieldStateChange} change
+	     * @param {function(!string)} error
+	     * @returns {boolean}
+	     */},{key:'isChangeValid',value:function isChangeValid(change,error){this.formatter=this._formatterForPan(change.proposed.text);return this.formatter.isChangeValid(change,error);} /**
+	     * Decides which formatter to use.
+	     *
+	     * @param {string} pan
+	     * @returns {Formatter}
+	     * @private
+	     */},{key:'_formatterForPan',value:function _formatterForPan(pan){if((0,_card_utils.determineCardType)(pan.replace(/[^\d]+/g,''))===_card_utils.AMEX){return this.amexCardFormatter;}else {return this.defaultCardFormatter;}}}]);return AdaptiveCardFormatter;}();exports['default']=AdaptiveCardFormatter;module.exports=exports['default'];},{"./amex_card_formatter":5,"./card_utils":7,"./default_card_formatter":9}],5:[function(_dereq_,module,exports){'use strict';Object.defineProperty(exports,'__esModule',{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if('value' in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _get=function get(_x,_x2,_x3){var _again=true;_function: while(_again){var object=_x,property=_x2,receiver=_x3;_again=false;if(object===null)object=Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property);if(desc===undefined){var parent=Object.getPrototypeOf(object);if(parent===null){return undefined;}else {_x=parent;_x2=property;_x3=receiver;_again=true;desc=parent=undefined;continue _function;}}else if('value' in desc){return desc.value;}else {var getter=desc.get;if(getter===undefined){return undefined;}return getter.call(receiver);}}};function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}function _inherits(subClass,superClass){if(typeof superClass!=='function'&&superClass!==null){throw new TypeError('Super expression must either be null or a function, not '+(typeof superClass==="undefined"?"undefined":_typeof(superClass)));}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var _default_card_formatter=_dereq_('./default_card_formatter');var _default_card_formatter2=_interopRequireDefault(_default_card_formatter); /**
+	 * Amex credit card formatter.
+	 *
+	 * @extends DefaultCardFormatter
+	 */var AmexCardFormatter=function(_DefaultCardFormatter){_inherits(AmexCardFormatter,_DefaultCardFormatter);function AmexCardFormatter(){_classCallCheck(this,AmexCardFormatter);_get(Object.getPrototypeOf(AmexCardFormatter.prototype),'constructor',this).apply(this,arguments);}_createClass(AmexCardFormatter,[{key:'hasDelimiterAtIndex', /**
+	     * @override
+	     */value:function hasDelimiterAtIndex(index){return index===4||index===11;} /**
+	     * @override
+	     */},{key:'maximumLength',get:function get(){return 15+2;}}]);return AmexCardFormatter;}(_default_card_formatter2['default']);exports['default']=AmexCardFormatter;module.exports=exports['default'];},{"./default_card_formatter":9}],6:[function(_dereq_,module,exports){'use strict';Object.defineProperty(exports,'__esModule',{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if('value' in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _get=function get(_x,_x2,_x3){var _again=true;_function: while(_again){var object=_x,property=_x2,receiver=_x3;_again=false;if(object===null)object=Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property);if(desc===undefined){var parent=Object.getPrototypeOf(object);if(parent===null){return undefined;}else {_x=parent;_x2=property;_x3=receiver;_again=true;desc=parent=undefined;continue _function;}}else if('value' in desc){return desc.value;}else {var getter=desc.get;if(getter===undefined){return undefined;}return getter.call(receiver);}}};function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}function _inherits(subClass,superClass){if(typeof superClass!=='function'&&superClass!==null){throw new TypeError('Super expression must either be null or a function, not '+(typeof superClass==="undefined"?"undefined":_typeof(superClass)));}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var _text_field=_dereq_('./text_field');var _text_field2=_interopRequireDefault(_text_field);var _adaptive_card_formatter=_dereq_('./adaptive_card_formatter');var _adaptive_card_formatter2=_interopRequireDefault(_adaptive_card_formatter);var _card_utils=_dereq_('./card_utils'); /**
+	 * Enum for card mask strategies.
+	 *
+	 * @readonly
+	 * @enum {number}
+	 * @private
+	 */var CardMaskStrategy={None:'None',DoneEditing:'DoneEditing'}; /**
+	 * CardTextField add some functionality for credit card inputs
+	 *
+	 * @extends TextField
+	 */var CardTextField=function(_TextField){_inherits(CardTextField,_TextField); /**
+	   * @param {HTMLElement} element
+	   */function CardTextField(element){_classCallCheck(this,CardTextField);_get(Object.getPrototypeOf(CardTextField.prototype),'constructor',this).call(this,element,new _adaptive_card_formatter2['default']());this.setCardMaskStrategy(CardMaskStrategy.None); /**
+	     * Whether we are currently masking the displayed text.
+	     *
+	     * @private
+	     */this._masked=false; /**
+	     * Whether we are currently editing.
+	     *
+	     * @private
+	     */this._editing=false;} /**
+	   * Gets the card type for the current value.
+	   *
+	   * @returns {string} Returns one of 'visa', 'mastercard', 'amex' and 'discover'.
+	   */_createClass(CardTextField,[{key:'cardType',value:function cardType(){return (0,_card_utils.determineCardType)(this.value());} /**
+	     * Gets the type of masking this field uses.
+	     *
+	     * @returns {CardMaskStrategy}
+	     */},{key:'cardMaskStrategy',value:function cardMaskStrategy(){return this._cardMaskStrategy;} /**
+	     * Sets the type of masking this field uses.
+	     *
+	     * @param {CardMaskStrategy} cardMaskStrategy One of CardMaskStrategy.
+	     */},{key:'setCardMaskStrategy',value:function setCardMaskStrategy(cardMaskStrategy){if(cardMaskStrategy!==this._cardMaskStrategy){this._cardMaskStrategy=cardMaskStrategy;this._syncMask();}} /**
+	     * Returns a masked version of the current formatted PAN. Example:
+	     *
+	     * @example
+	     *     field.setText('4111 1111 1111 1111');
+	     *     field.cardMask(); // "•••• •••• •••• 1111"
+	     *
+	     * @returns {string} Returns a masked card string.
+	     */},{key:'cardMask',value:function cardMask(){var text=this.text();var last4=text.slice(-4);var toMask=text.slice(0,-4);return toMask.replace(/\d/g,'•')+last4;} /**
+	     * Gets the formatted PAN for this field.
+	     *
+	     * @returns {string}
+	     */},{key:'text',value:function text(){if(this._masked){return this._unmaskedText;}else {return _get(Object.getPrototypeOf(CardTextField.prototype),'text',this).call(this);}} /**
+	     * Sets the formatted PAN for this field.
+	     *
+	     * @param {string} text A formatted PAN.
+	     */},{key:'setText',value:function setText(text){if(this._masked){this._unmaskedText=text;text=this.cardMask();}_get(Object.getPrototypeOf(CardTextField.prototype),'setText',this).call(this,text);} /**
+	     * Called by our superclass, used to implement card masking.
+	     *
+	     * @private
+	     */},{key:'textFieldDidEndEditing',value:function textFieldDidEndEditing(){this._editing=false;this._syncMask();} /**
+	     * Called by our superclass, used to implement card masking.
+	     *
+	     * @private
+	     */},{key:'textFieldDidBeginEditing',value:function textFieldDidBeginEditing(){this._editing=true;this._syncMask();} /**
+	     * Enables masking if it is not already enabled.
+	     *
+	     * @private
+	     */},{key:'_enableMasking',value:function _enableMasking(){if(!this._masked){this._unmaskedText=this.text();this._masked=true;this.setText(this._unmaskedText);}} /**
+	     * Disables masking if it is currently enabled.
+	     *
+	     * @private
+	     */},{key:'_disableMasking',value:function _disableMasking(){if(this._masked){this._masked=false;this.setText(this._unmaskedText);this._unmaskedText=null;}} /**
+	     * Enables or disables masking based on the mask settings.
+	     *
+	     * @private
+	     */},{key:'_syncMask',value:function _syncMask(){if(this.cardMaskStrategy()===CardMaskStrategy.DoneEditing){if(this._editing){this._disableMasking();}else {this._enableMasking();}}} /**
+	     * Enum for card mask strategies.
+	     *
+	     * @readonly
+	     * @enum {number}
+	     */}],[{key:'CardMaskStrategy',get:function get(){return CardMaskStrategy;}}]);return CardTextField;}(_text_field2['default']);exports['default']=CardTextField;module.exports=exports['default'];},{"./adaptive_card_formatter":4,"./card_utils":7,"./text_field":20}],7:[function(_dereq_,module,exports){ /**
+	 * @TODO Make this an enum
+	 */'use strict';Object.defineProperty(exports,'__esModule',{value:true});exports.determineCardType=determineCardType;exports.luhnCheck=luhnCheck;exports.validCardLength=validCardLength;var AMEX='amex';exports.AMEX=AMEX;var DISCOVER='discover';exports.DISCOVER=DISCOVER;var JCB='jcb';exports.JCB=JCB;var MASTERCARD='mastercard';exports.MASTERCARD=MASTERCARD;var VISA='visa';exports.VISA=VISA; /**
+	 * Pass in a credit card number and it'll return the
+	 * type of card it is.
+	 *
+	 * @param {string} pan
+	 * @returns {?string} returns the type of card based in the digits
+	 */function determineCardType(pan){if(pan===null||pan===undefined){return null;}pan=pan.toString();var firsttwo=parseInt(pan.slice(0,2),10);var iin=parseInt(pan.slice(0,6),10);var halfiin=parseInt(pan.slice(0,3),10);if(pan[0]==='4'){return VISA;}else if(pan.slice(0,4)==='6011'||firsttwo===65||halfiin>=664&&halfiin<=649||iin>=622126&&iin<=622925){return DISCOVER;}else if(pan.slice(0,4)==='2131'||pan.slice(0,4)==='1800'||firsttwo===35){return JCB;}else if(firsttwo>=51&&firsttwo<=55){return MASTERCARD;}else if(firsttwo===34||firsttwo===37){return AMEX;}} /**
+	 * Pass in a credit card number and it'll return if it
+	 * passes the [luhn algorithm](http://en.wikipedia.org/wiki/Luhn_algorithm)
+	 *
+	 * @param {string} pan
+	 * @returns {boolean}
+	 */function luhnCheck(pan){var sum=0;var flip=true;for(var i=pan.length-1;i>=0;i--){var digit=parseInt(pan.charAt(i),10);sum+=(flip=!flip)?Math.floor(digit*2/10)+Math.floor(digit*2%10):digit;}return sum%10===0;} /**
+	 * Pass in a credit card number and it'll return if it
+	 * is a valid length for that type. If it doesn't know the
+	 * type it'll return false
+	 *
+	 * @param {string} pan
+	 * @returns {boolean}
+	 */function validCardLength(pan){switch(determineCardType(pan)){case VISA:return pan.length===13||pan.length===16;case DISCOVER:case MASTERCARD:return pan.length===16;case JCB:return pan.length===15||pan.length===16;case AMEX:return pan.length===15;default:return false;}}},{}],8:[function(_dereq_,module,exports){'use strict';Object.defineProperty(exports,'__esModule',{value:true});exports['default']=installCaret;function installCaret(){var _document=arguments.length<=0||arguments[0]===undefined?document:arguments[0];var getCaret=undefined;var setCaret=undefined;if(!_document){throw new Error('Caret does not have access to document');}else if('selectionStart' in _document.createElement('input')){getCaret=function getCaret(element){return {start:element.selectionStart,end:element.selectionEnd};};setCaret=function setCaret(element,start,end){element.selectionStart=start;element.selectionEnd=end;};}else if(_document.selection){getCaret=function getCaret(element){var selection=_document.selection;var value=element.value;var range=selection.createRange().duplicate();range.moveEnd('character',value.length);var start=range.text===''?value.length:value.lastIndexOf(range.text);range=selection.createRange().duplicate();range.moveStart('character',-value.length);var end=range.text.length;return {start:start,end:end};};setCaret=function setCaret(element,start,end){var range=element.createTextRange();range.collapse(true);range.moveStart('character',start);range.moveEnd('character',end-start);range.select();};}else {throw new Error('Caret unknown input selection capabilities');}return {getCaret:getCaret,setCaret:setCaret};};module.exports=exports['default'];},{}],9:[function(_dereq_,module,exports){'use strict';Object.defineProperty(exports,'__esModule',{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if('value' in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _get=function get(_x,_x2,_x3){var _again=true;_function: while(_again){var object=_x,property=_x2,receiver=_x3;_again=false;if(object===null)object=Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property);if(desc===undefined){var parent=Object.getPrototypeOf(object);if(parent===null){return undefined;}else {_x=parent;_x2=property;_x3=receiver;_again=true;desc=parent=undefined;continue _function;}}else if('value' in desc){return desc.value;}else {var getter=desc.get;if(getter===undefined){return undefined;}return getter.call(receiver);}}};function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}function _inherits(subClass,superClass){if(typeof superClass!=='function'&&superClass!==null){throw new TypeError('Super expression must either be null or a function, not '+(typeof superClass==="undefined"?"undefined":_typeof(superClass)));}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var _delimited_text_formatter=_dereq_('./delimited_text_formatter');var _delimited_text_formatter2=_interopRequireDefault(_delimited_text_formatter);var _card_utils=_dereq_('./card_utils'); /**
+	 * A generic credit card formatter.
+	 *
+	 * @extends DelimitedTextFormatter
+	 */var DefaultCardFormatter=function(_DelimitedTextFormatter){_inherits(DefaultCardFormatter,_DelimitedTextFormatter);function DefaultCardFormatter(){_classCallCheck(this,DefaultCardFormatter);_get(Object.getPrototypeOf(DefaultCardFormatter.prototype),'constructor',this).call(this,' ');} /**
+	   * @param {number} index
+	   * @returns {boolean}
+	   */_createClass(DefaultCardFormatter,[{key:'hasDelimiterAtIndex',value:function hasDelimiterAtIndex(index){return index===4||index===9||index===14;} /**
+	     * Will call parse on the formatter.
+	     *
+	     * @param {string} text
+	     * @param {function(string)} error
+	     * @returns {string} returns value with delimiters removed
+	     */},{key:'parse',value:function parse(text,error){var value=this._valueFromText(text);if(typeof error==='function'){if(!(0,_card_utils.validCardLength)(value)){error('card-formatter.number-too-short');}if(!(0,_card_utils.luhnCheck)(value)){error('card-formatter.invalid-number');}}return _get(Object.getPrototypeOf(DefaultCardFormatter.prototype),'parse',this).call(this,text,error);} /**
+	     * Parses the given text by removing delimiters.
+	     *
+	     * @param {?string} text
+	     * @returns {string}
+	     * @private
+	     */},{key:'_valueFromText',value:function _valueFromText(text){return _get(Object.getPrototypeOf(DefaultCardFormatter.prototype),'_valueFromText',this).call(this,(text||'').replace(/[^\d]/g,''));} /**
+	     * Gets the maximum length of a formatted default card number.
+	     *
+	     * @returns {number}
+	     */},{key:'maximumLength',get:function get(){return 16+3;}}]);return DefaultCardFormatter;}(_delimited_text_formatter2['default']);exports['default']=DefaultCardFormatter;module.exports=exports['default'];},{"./card_utils":7,"./delimited_text_formatter":10}],10:[function(_dereq_,module,exports){'use strict';Object.defineProperty(exports,'__esModule',{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if('value' in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _get=function get(_x2,_x3,_x4){var _again=true;_function: while(_again){var object=_x2,property=_x3,receiver=_x4;_again=false;if(object===null)object=Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property);if(desc===undefined){var parent=Object.getPrototypeOf(object);if(parent===null){return undefined;}else {_x2=parent;_x3=property;_x4=receiver;_again=true;desc=parent=undefined;continue _function;}}else if('value' in desc){return desc.value;}else {var getter=desc.get;if(getter===undefined){return undefined;}return getter.call(receiver);}}};function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}function _inherits(subClass,superClass){if(typeof superClass!=='function'&&superClass!==null){throw new TypeError('Super expression must either be null or a function, not '+(typeof superClass==="undefined"?"undefined":_typeof(superClass)));}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var _formatter=_dereq_('./formatter');var _formatter2=_interopRequireDefault(_formatter); /**
+	 * A generic delimited formatter.
+	 *
+	 * @extends Formatter
+	 */var DelimitedTextFormatter=function(_Formatter){_inherits(DelimitedTextFormatter,_Formatter); /**
+	   * @param {string=} delimiter
+	   * @param {boolean=} isLazy
+	   * @throws {Error} delimiter must have just one character
+	   */function DelimitedTextFormatter(delimiter){var isLazy=arguments.length<=1||arguments[1]===undefined?false:arguments[1];_classCallCheck(this,DelimitedTextFormatter);_get(Object.getPrototypeOf(DelimitedTextFormatter.prototype),'constructor',this).call(this);if(arguments.length===0){return;}if(delimiter===null||delimiter===undefined||delimiter.length!==1){throw new Error('delimiter must have just one character');}this.delimiter=delimiter; // If the formatter is lazy, delimiter will not be added until input has gone
+	// past the delimiter index. Useful for 'optional' extension, like zip codes.
+	// 94103  ->  type '1'  ->  94103-1
+	this.isLazy=isLazy;} /**
+	   * Determines the delimiter character at the given index.
+	   *
+	   * @param {number} index
+	   * @returns {?string}
+	   */_createClass(DelimitedTextFormatter,[{key:'delimiterAt',value:function delimiterAt(index){if(!this.hasDelimiterAtIndex(index)){return null;}return this.delimiter;} /**
+	     * Determines whether the given character is a delimiter.
+	     *
+	     * @param {string} chr
+	     * @returns {boolean}
+	     */},{key:'isDelimiter',value:function isDelimiter(chr){return chr===this.delimiter;} /**
+	     * Formats the given value by adding delimiters where needed.
+	     *
+	     * @param {?string} value
+	     * @returns {string}
+	     */},{key:'format',value:function format(value){return this._textFromValue(value);} /**
+	     * Formats the given value by adding delimiters where needed.
+	     *
+	     * @param {?string} value
+	     * @returns {string}
+	     * @private
+	     */},{key:'_textFromValue',value:function _textFromValue(value){if(!value){return '';}var result='';var delimiter=undefined;var maximumLength=this.maximumLength;for(var i=0,l=value.length;i<l;i++){while(delimiter=this.delimiterAt(result.length)){result+=delimiter;}result+=value[i];if(!this.isLazy){while(delimiter=this.delimiterAt(result.length)){result+=delimiter;}}}if(maximumLength!==undefined&&maximumLength!==null){return result.slice(0,maximumLength);}else {return result;}} /**
+	     * Parses the given text by removing delimiters.
+	     *
+	     * @param {?string} text
+	     * @returns {string}
+	     */},{key:'parse',value:function parse(text){return this._valueFromText(text);} /**
+	     * Parses the given text by removing delimiters.
+	     *
+	     * @param {?string} text
+	     * @returns {string}
+	     * @private
+	     */},{key:'_valueFromText',value:function _valueFromText(text){if(!text){return '';}var result='';for(var i=0,l=text.length;i<l;i++){if(!this.isDelimiter(text[i])){result+=text[i];}}return result;} /**
+	     * Determines whether the given change should be allowed and, if so, whether
+	     * it should be altered.
+	     *
+	     * @param {TextFieldStateChange} change
+	     * @param {function(string)} error
+	     * @returns {boolean}
+	     */},{key:'isChangeValid',value:function isChangeValid(change,error){if(!_get(Object.getPrototypeOf(DelimitedTextFormatter.prototype),'isChangeValid',this).call(this,change,error)){return false;}var newText=change.proposed.text;var range=change.proposed.selectedRange;var hasSelection=range.length!==0;var startMovedLeft=range.start<change.current.selectedRange.start;var startMovedRight=range.start>change.current.selectedRange.start;var endMovedLeft=range.start+range.length<change.current.selectedRange.start+change.current.selectedRange.length;var endMovedRight=range.start+range.length>change.current.selectedRange.start+change.current.selectedRange.length;var startMovedOverADelimiter=startMovedLeft&&this.hasDelimiterAtIndex(range.start)||startMovedRight&&this.hasDelimiterAtIndex(range.start-1);var endMovedOverADelimiter=endMovedLeft&&this.hasDelimiterAtIndex(range.start+range.length)||endMovedRight&&this.hasDelimiterAtIndex(range.start+range.length-1);if(this.isDelimiter(change.deleted.text)){var newCursorPosition=change.deleted.start-1; // delete any immediately preceding delimiters
+	while(this.isDelimiter(newText.charAt(newCursorPosition))){newText=newText.substring(0,newCursorPosition)+newText.substring(newCursorPosition+1);newCursorPosition--;} // finally delete the real character that was intended
+	newText=newText.substring(0,newCursorPosition)+newText.substring(newCursorPosition+1);} // adjust the cursor / selection
+	if(startMovedLeft&&startMovedOverADelimiter){ // move left over any immediately preceding delimiters
+	while(this.delimiterAt(range.start-1)){range.start--;range.length++;} // finally move left over the real intended character
+	range.start--;range.length++;}if(startMovedRight){ // move right over any delimiters found on the way, including any leading delimiters
+	for(var i=change.current.selectedRange.start;i<range.start+range.length;i++){if(this.delimiterAt(i)){range.start++;if(range.length>0){range.length--;}}}while(this.delimiterAt(range.start)){range.start++;range.length--;}}if(hasSelection){ // Otherwise, the logic for the range start takes care of everything.
+	if(endMovedOverADelimiter){if(endMovedLeft){ // move left over any immediately preceding delimiters
+	while(this.delimiterAt(range.start+range.length-1)){range.length--;} // finally move left over the real intended character
+	range.length--;}if(endMovedRight){ // move right over any immediately following delimiters
+	while(this.delimiterAt(range.start+range.length)){range.length++;} // finally move right over the real intended character
+	range.length++;}} // trailing delimiters in the selection
+	while(this.hasDelimiterAtIndex(range.start+range.length-1)){if(startMovedLeft||endMovedLeft){range.length--;}else {range.length++;}}while(this.hasDelimiterAtIndex(range.start)){if(startMovedRight||endMovedRight){range.start++;range.length--;}else {range.start--;range.length++;}}}else {range.length=0;}var result=true;var value=this._valueFromText(newText,function(){result=false;error.apply(undefined,arguments);});if(result){change.proposed.text=this._textFromValue(value);}return result;}}]);return DelimitedTextFormatter;}(_formatter2['default']);exports['default']=DelimitedTextFormatter;module.exports=exports['default'];},{"./formatter":14}],11:[function(_dereq_,module,exports){'use strict';Object.defineProperty(exports,'__esModule',{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if('value' in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _get=function get(_x,_x2,_x3){var _again=true;_function: while(_again){var object=_x,property=_x2,receiver=_x3;_again=false;if(object===null)object=Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property);if(desc===undefined){var parent=Object.getPrototypeOf(object);if(parent===null){return undefined;}else {_x=parent;_x2=property;_x3=receiver;_again=true;desc=parent=undefined;continue _function;}}else if('value' in desc){return desc.value;}else {var getter=desc.get;if(getter===undefined){return undefined;}return getter.call(receiver);}}};function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}function _inherits(subClass,superClass){if(typeof superClass!=='function'&&superClass!==null){throw new TypeError('Super expression must either be null or a function, not '+(typeof superClass==="undefined"?"undefined":_typeof(superClass)));}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var _delimited_text_formatter=_dereq_('./delimited_text_formatter');var _delimited_text_formatter2=_interopRequireDefault(_delimited_text_formatter); /**
+	 * @const
+	 * @private
+	 */var DIGITS_PATTERN=/^\d*$/; /**
+	 * @extends DelimitedTextFormatter
+	 */var EmployerIdentificationNumberFormatter=function(_DelimitedTextFormatter){_inherits(EmployerIdentificationNumberFormatter,_DelimitedTextFormatter);function EmployerIdentificationNumberFormatter(){_classCallCheck(this,EmployerIdentificationNumberFormatter);_get(Object.getPrototypeOf(EmployerIdentificationNumberFormatter.prototype),'constructor',this).call(this,'-');this.maximumLength=9+1;} /**
+	   * @param {number} index
+	   * @returns {boolean}
+	   */_createClass(EmployerIdentificationNumberFormatter,[{key:'hasDelimiterAtIndex',value:function hasDelimiterAtIndex(index){return index===2;} /**
+	     * Determines whether the given change should be allowed and, if so, whether
+	     * it should be altered.
+	     *
+	     * @param {TextFieldStateChange} change
+	     * @param {function(string)} error
+	     * @returns {boolean}
+	     */},{key:'isChangeValid',value:function isChangeValid(change,error){if(DIGITS_PATTERN.test(change.inserted.text)){return _get(Object.getPrototypeOf(EmployerIdentificationNumberFormatter.prototype),'isChangeValid',this).call(this,change,error);}else {return false;}}}]);return EmployerIdentificationNumberFormatter;}(_delimited_text_formatter2['default']);exports['default']=EmployerIdentificationNumberFormatter;module.exports=exports['default'];},{"./delimited_text_formatter":10}],12:[function(_dereq_,module,exports){'use strict';Object.defineProperty(exports,'__esModule',{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if('value' in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _get=function get(_x,_x2,_x3){var _again=true;_function: while(_again){var object=_x,property=_x2,receiver=_x3;_again=false;if(object===null)object=Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property);if(desc===undefined){var parent=Object.getPrototypeOf(object);if(parent===null){return undefined;}else {_x=parent;_x2=property;_x3=receiver;_again=true;desc=parent=undefined;continue _function;}}else if('value' in desc){return desc.value;}else {var getter=desc.get;if(getter===undefined){return undefined;}return getter.call(receiver);}}};function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}function _inherits(subClass,superClass){if(typeof superClass!=='function'&&superClass!==null){throw new TypeError('Super expression must either be null or a function, not '+(typeof superClass==="undefined"?"undefined":_typeof(superClass)));}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var _text_field=_dereq_('./text_field');var _text_field2=_interopRequireDefault(_text_field);var _expiry_date_formatter=_dereq_('./expiry_date_formatter');var _expiry_date_formatter2=_interopRequireDefault(_expiry_date_formatter); /**
+	 * Adds a default formatter for expiration dates.
+	 *
+	 * @extends TextField
+	 */var ExpiryDateField=function(_TextField){_inherits(ExpiryDateField,_TextField); /**
+	   * @param {HTMLElement} element
+	   */function ExpiryDateField(element){_classCallCheck(this,ExpiryDateField);_get(Object.getPrototypeOf(ExpiryDateField.prototype),'constructor',this).call(this,element,new _expiry_date_formatter2['default']());} /**
+	   * Called by our superclass, used to post-process the text.
+	   *
+	   * @private
+	   */_createClass(ExpiryDateField,[{key:'textFieldDidEndEditing',value:function textFieldDidEndEditing(){var value=this.value();if(value){this.setText(this.formatter().format(value));}}}]);return ExpiryDateField;}(_text_field2['default']);exports['default']=ExpiryDateField;module.exports=exports['default'];},{"./expiry_date_formatter":13,"./text_field":20}],13:[function(_dereq_,module,exports){'use strict';Object.defineProperty(exports,'__esModule',{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if('value' in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _get=function get(_x,_x2,_x3){var _again=true;_function: while(_again){var object=_x,property=_x2,receiver=_x3;_again=false;if(object===null)object=Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property);if(desc===undefined){var parent=Object.getPrototypeOf(object);if(parent===null){return undefined;}else {_x=parent;_x2=property;_x3=receiver;_again=true;desc=parent=undefined;continue _function;}}else if('value' in desc){return desc.value;}else {var getter=desc.get;if(getter===undefined){return undefined;}return getter.call(receiver);}}};function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}function _inherits(subClass,superClass){if(typeof superClass!=='function'&&superClass!==null){throw new TypeError('Super expression must either be null or a function, not '+(typeof superClass==="undefined"?"undefined":_typeof(superClass)));}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var _delimited_text_formatter=_dereq_('./delimited_text_formatter');var _delimited_text_formatter2=_interopRequireDefault(_delimited_text_formatter);var _utils=_dereq_('./utils'); /**
+	 * Give this function a 2 digit year it'll return with 4.
+	 *
+	 * @example
+	 *     interpretTwoDigitYear(15);
+	 *     // => 2015
+	 *     interpretTwoDigitYear(97);
+	 *     // => 1997
+	 * @param {number} year
+	 * @returns {number}
+	 * @private
+	 */function interpretTwoDigitYear(year){var thisYear=new Date().getFullYear();var thisCentury=thisYear-thisYear%100;var centuries=[thisCentury,thisCentury-100,thisCentury+100].sort(function(a,b){return Math.abs(thisYear-(year+a))-Math.abs(thisYear-(year+b));});return year+centuries[0];} /**
+	 * @extends DelimitedTextFormatter
+	 */var ExpiryDateFormatter=function(_DelimitedTextFormatter){_inherits(ExpiryDateFormatter,_DelimitedTextFormatter);function ExpiryDateFormatter(){_classCallCheck(this,ExpiryDateFormatter);_get(Object.getPrototypeOf(ExpiryDateFormatter.prototype),'constructor',this).call(this,'/');this.maximumLength=5;} /**
+	   * @param {number} index
+	   * @returns {boolean}
+	   */_createClass(ExpiryDateFormatter,[{key:'hasDelimiterAtIndex',value:function hasDelimiterAtIndex(index){return index===2;} /**
+	     * Formats the given value by adding delimiters where needed.
+	     *
+	     * @param {?string} value
+	     * @returns {string}
+	     */},{key:'format',value:function format(value){if(!value){return '';}var month=value.month;var year=value.year;year=year%100;return _get(Object.getPrototypeOf(ExpiryDateFormatter.prototype),'format',this).call(this,(0,_utils.zpad2)(month)+(0,_utils.zpad2)(year));} /**
+	     * Parses the given text
+	     *
+	     * @param {string} text
+	     * @param {Function(string)} error
+	     * @returns {?Object} { month: month, year: year }
+	     */},{key:'parse',value:function parse(text,error){var monthAndYear=text.split(this.delimiter);var month=monthAndYear[0];var year=monthAndYear[1];if(month&&month.match(/^(0?[1-9]|1\d)$/)&&year&&year.match(/^\d\d?$/)){month=Number(month);year=interpretTwoDigitYear(Number(year));return {month:month,year:year};}else {if(typeof error==='function'){error('expiry-date-formatter.invalid-date');}return null;}} /**
+	     * Determines whether the given change should be allowed and, if so, whether
+	     * it should be altered.
+	     *
+	     * @param {TextFieldStateChange} change
+	     * @param {function(string)} error
+	     * @returns {boolean}
+	     */},{key:'isChangeValid',value:function isChangeValid(change,error){if(!error){error=function error(){};}var isBackspace=change.proposed.text.length<change.current.text.length;var newText=change.proposed.text;if(change.inserted.text===this.delimiter&&change.current.text==='1'){newText='01'+this.delimiter;}else if(change.inserted.text.length>0&&!/^\d$/.test(change.inserted.text)){error('expiry-date-formatter.only-digits-allowed');return false;}else {if(isBackspace){if(change.deleted.text===this.delimiter){newText=newText[0];}if(newText==='0'){newText='';}if(change.inserted.text.length>0&&!/^\d$/.test(change.inserted.text)){error('expiry-date-formatter.only-digits-allowed');return false;}} // 4| -> 04|
+	if(/^[2-9]$/.test(newText)){newText='0'+newText;} // 1|1|/5 -> 11|/5
+	if(/^1[3-9].+$/.test(newText)){error('expiry-date-formatter.invalid-month');return false;} // 15| -> 01/5|
+	if(/^1[3-9]$/.test(newText)){newText='01'+this.delimiter+newText.slice(-1);} // Don't allow 00
+	if(newText==='00'){error('expiry-date-formatter.invalid-month');return false;} // 11| -> 11/
+	if(/^(0[1-9]|1[0-2])$/.test(newText)){newText+=this.delimiter;}var match=newText.match(/^(\d\d)(.)(\d\d?).*$/);if(match&&match[2]===this.delimiter){newText=match[1]+this.delimiter+match[3];}}change.proposed.text=newText;change.proposed.selectedRange={start:newText.length,length:0};return true;}}]);return ExpiryDateFormatter;}(_delimited_text_formatter2['default']);exports['default']=ExpiryDateFormatter;module.exports=exports['default'];},{"./delimited_text_formatter":10,"./utils":22}],14:[function(_dereq_,module,exports){ /**
+	 * Base class providing basic formatting, parsing, and change validation to be
+	 * customized in subclasses.
+	 */'use strict';Object.defineProperty(exports,'__esModule',{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if('value' in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}var Formatter=function(){function Formatter(){_classCallCheck(this,Formatter);}_createClass(Formatter,[{key:'format', /**
+	     * @param {string} text
+	     * @returns {string}
+	     */value:function format(text){if(text===undefined||text===null){text='';}if(this.maximumLength!==undefined&&this.maximumLength!==null){text=text.substring(0,this.maximumLength);}return text;} /**
+	     * @param {string} text
+	     * @returns {string}
+	     */},{key:'parse',value:function parse(text){if(text===undefined||text===null){text='';}if(this.maximumLength!==undefined&&this.maximumLength!==null){text=text.substring(0,this.maximumLength);}return text;} /**
+	     * Determines whether the given change should be allowed and, if so, whether
+	     * it should be altered.
+	     *
+	     * @param {TextFieldStateChange} change
+	     * @returns {boolean}
+	     */},{key:'isChangeValid',value:function isChangeValid(change){var selectedRange=change.proposed.selectedRange;var text=change.proposed.text;if(this.maximumLength!==undefined&&this.maximumLength!==null&&text.length>this.maximumLength){var available=this.maximumLength-(text.length-change.inserted.text.length);var newText=change.current.text.substring(0,change.current.selectedRange.start);if(available>0){newText+=change.inserted.text.substring(0,available);}newText+=change.current.text.substring(change.current.selectedRange.start+change.current.selectedRange.length);var truncatedLength=text.length-newText.length;change.proposed.text=newText;selectedRange.start-=truncatedLength;}return true;}}]);return Formatter;}();exports['default']=Formatter;module.exports=exports['default'];},{}],15:[function(_dereq_,module,exports){'use strict';function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}var _adaptive_card_formatter=_dereq_('./adaptive_card_formatter');var _adaptive_card_formatter2=_interopRequireDefault(_adaptive_card_formatter);var _amex_card_formatter=_dereq_('./amex_card_formatter');var _amex_card_formatter2=_interopRequireDefault(_amex_card_formatter);var _card_text_field=_dereq_('./card_text_field');var _card_text_field2=_interopRequireDefault(_card_text_field);var _card_utils=_dereq_('./card_utils');var _default_card_formatter=_dereq_('./default_card_formatter');var _default_card_formatter2=_interopRequireDefault(_default_card_formatter);var _delimited_text_formatter=_dereq_('./delimited_text_formatter');var _delimited_text_formatter2=_interopRequireDefault(_delimited_text_formatter);var _employer_identification_number_formatter=_dereq_('./employer_identification_number_formatter');var _employer_identification_number_formatter2=_interopRequireDefault(_employer_identification_number_formatter);var _expiry_date_field=_dereq_('./expiry_date_field');var _expiry_date_field2=_interopRequireDefault(_expiry_date_field);var _expiry_date_formatter=_dereq_('./expiry_date_formatter');var _expiry_date_formatter2=_interopRequireDefault(_expiry_date_formatter);var _formatter=_dereq_('./formatter');var _formatter2=_interopRequireDefault(_formatter);var _number_formatter=_dereq_('./number_formatter');var _number_formatter2=_interopRequireDefault(_number_formatter);var _number_formatter_settings_formatter=_dereq_('./number_formatter_settings_formatter');var _number_formatter_settings_formatter2=_interopRequireDefault(_number_formatter_settings_formatter);var _phone_formatter=_dereq_('./phone_formatter');var _phone_formatter2=_interopRequireDefault(_phone_formatter);var _social_security_number_formatter=_dereq_('./social_security_number_formatter');var _social_security_number_formatter2=_interopRequireDefault(_social_security_number_formatter);var _text_field=_dereq_('./text_field');var _text_field2=_interopRequireDefault(_text_field);var _undo_manager=_dereq_('./undo_manager');var _undo_manager2=_interopRequireDefault(_undo_manager); /**
+	 * @namespace FieldKit
+	 * @readonly
+	 */module.exports={AdaptiveCardFormatter:_adaptive_card_formatter2['default'],AmexCardFormatter:_amex_card_formatter2['default'],CardTextField:_card_text_field2['default'],CardUtils:{AMEX:_card_utils.AMEX,DISCOVER:_card_utils.DISCOVER,VISA:_card_utils.VISA,MASTERCARD:_card_utils.MASTERCARD,determineCardType:_card_utils.determineCardType,luhnCheck:_card_utils.luhnCheck,validCardLength:_card_utils.validCardLength},DefaultCardFormatter:_default_card_formatter2['default'],DelimitedTextFormatter:_delimited_text_formatter2['default'],EmployerIdentificationNumberFormatter:_employer_identification_number_formatter2['default'],ExpiryDateField:_expiry_date_field2['default'],ExpiryDateFormatter:_expiry_date_formatter2['default'],Formatter:_formatter2['default'],NumberFormatter:_number_formatter2['default'],NumberFormatterSettingsFormatter:_number_formatter_settings_formatter2['default'],PhoneFormatter:_phone_formatter2['default'],SocialSecurityNumberFormatter:_social_security_number_formatter2['default'],TextField:_text_field2['default'],UndoManager:_undo_manager2['default']};},{"./adaptive_card_formatter":4,"./amex_card_formatter":5,"./card_text_field":6,"./card_utils":7,"./default_card_formatter":9,"./delimited_text_formatter":10,"./employer_identification_number_formatter":11,"./expiry_date_field":12,"./expiry_date_formatter":13,"./formatter":14,"./number_formatter":16,"./number_formatter_settings_formatter":17,"./phone_formatter":18,"./social_security_number_formatter":19,"./text_field":20,"./undo_manager":21}],16:[function(_dereq_,module,exports){'use strict';Object.defineProperty(exports,'__esModule',{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if('value' in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _get=function get(_x,_x2,_x3){var _again=true;_function: while(_again){var object=_x,property=_x2,receiver=_x3;_again=false;if(object===null)object=Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property);if(desc===undefined){var parent=Object.getPrototypeOf(object);if(parent===null){return undefined;}else {_x=parent;_x2=property;_x3=receiver;_again=true;desc=parent=undefined;continue _function;}}else if('value' in desc){return desc.value;}else {var getter=desc.get;if(getter===undefined){return undefined;}return getter.call(receiver);}}};function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}function _inherits(subClass,superClass){if(typeof superClass!=='function'&&superClass!==null){throw new TypeError('Super expression must either be null or a function, not '+(typeof superClass==="undefined"?"undefined":_typeof(superClass)));}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var _formatter=_dereq_('./formatter');var _formatter2=_interopRequireDefault(_formatter);var _number_formatter_settings_formatter=_dereq_('./number_formatter_settings_formatter');var _number_formatter_settings_formatter2=_interopRequireDefault(_number_formatter_settings_formatter);var _utils=_dereq_('./utils');var _stround=_dereq_('stround'); // Style
+	var NONE=0;var CURRENCY=1;var PERCENT=2;var DEFAULT_LOCALE='en-US';var DEFAULT_COUNTRY='US'; /**
+	 * @param {string} locale
+	 * @returns {Object} {lang: lang, country: country}
+	 * @private
+	 */function splitLocaleComponents(locale){var match=locale.match(/^([a-z][a-z])(?:[-_]([a-z][a-z]))?$/i);if(match){var lang=match[1]&&match[1].toLowerCase();var country=match[2]&&match[2].toLowerCase();return {lang:lang,country:country};}} /**
+	 * This simple property getter assumes that properties will never be functions
+	 * and so attempts to run those functions using the given args.
+	 *
+	 * @private
+	 */function get(object,key){if(object){var value=object[key];if(typeof value==='function'){for(var _len=arguments.length,args=Array(_len>2?_len-2:0),_key=2;_key<_len;_key++){args[_key-2]=arguments[_key];}return value.apply(undefined,args);}else {return value;}}} /**
+	 * @param {string} string
+	 * @param {string} currencySymbol
+	 * @return {string}
+	 * @private
+	 */function replaceCurrencySymbol(string,currencySymbol){return string.replace(/¤/g,currencySymbol);} /**
+	 * @param {string} string
+	 * @param {string} plusSign
+	 * @returns {string}
+	 * @private
+	 */function replacePlusSign(string,plusSign){return string.replace(/\+/g,plusSign);} /**
+	 * @param {string} string
+	 * @param {string} minusSign
+	 * @returns {string}
+	 * @private
+	 */function replaceMinusSign(string,minusSign){return string.replace(/-/g,minusSign);} /**
+	 * Formats and parses numbers. There are many configuration options for how to
+	 * format numbers as strings, but for many users simply adjusting the
+	 * {@link NumberFormatter#numberStyle}, {@link NumberFormatter#locale},
+	 * {@link NumberFormatter#currencyCode}, and {@link NumberFormatter#countryCode}
+	 * values will be sufficient. NumberFormatter natively understands how to
+	 * format numbers, currencies, and percentages for a variety of locales.
+	 *
+	 * @example
+	 *
+	 *   // Configure a NumberFormatter to display currencies.
+	 *   var f = new FieldKit.NumberFormatter();
+	 *   f.setNumberStyle(FieldKit.NumberFormatter.Style.CURRENCY);
+	 *
+	 *   // Configure the current locale info.
+	 *   f.setLocale('en-US');
+	 *   f.setCountryCode('US');
+	 *   f.setCurrencyCode('USD');
+	 *
+	 *   // Showing USD in US uses abbreviated currency.
+	 *   f.format(6.17);  // '$6.17'
+	 *
+	 *   // Showing CAD in US uses fully-qualified currency.
+	 *   f.setCurrencyCode('CAD');
+	 *   f.format(6.17);  // 'CA$6.17'
+	 *
+	 *   // Showing CAD in CA again uses abbreviated currency.
+	 *   f.setLocale('en-CA');
+	 *   f.setCountryCode('CA');
+	 *   f.format(6.17);  // '$6.17'
+	 *
+	 *   // Showing CAD in CA to a French speaker uses correct formatting.
+	 *   f.setLocale('fr-CA');
+	 *   f.format(6.17);  // '6,17 $'
+	 *
+	 *   // You may customize the behavior of NumberFormatter to achieve whatever
+	 *   // number formatting you need using the setter methods for the various
+	 *   // settings, or you can use the {@link NumberFormatter#positiveFormat} and
+	 *   // {@link NumberFormatter#negativeFormat} shorthand templates.
+	 *
+	 *   var f = new FieldKit.NumberFormatter();
+	 *
+	 *   // Using this template string…
+	 *   f.setPositiveFormat('¤#0.00');
+	 *
+	 *   // …is equivalent to this:
+	 *   f.setPositivePrefix('¤');
+	 *   f.setPositiveSuffix('');
+	 *   f.setMinimumIntegerDigits(1);
+	 *   f.setMinimumFractionDigits(2);
+	 *   f.setMaximumFractionDigits(2);
+	 *
+	 *   // And you can determine what the template string is for however you've
+	 *   // configured the NumberFormatter:
+	 *   f.setUsesGroupingSeparator(true);
+	 *   f.setGroupingSize(2);
+	 *   f.positiveFormat(); // '¤#,#0.00'
+	 *
+	 * @extends Formatter
+	 */var NumberFormatter=function(_Formatter){_inherits(NumberFormatter,_Formatter);function NumberFormatter(){_classCallCheck(this,NumberFormatter);_get(Object.getPrototypeOf(NumberFormatter.prototype),'constructor',this).call(this);this.setNumberStyle(NONE);} /**
+	   * Defaults
+	   */ /** @private */ /**
+	   * Gets whether this formatter will parse float number values. This value does
+	   * not apply to formatting. To prevent formatting floats, set
+	   * maximumFractionDigits to 0.
+	   *
+	   * @returns {boolean}
+	   */_createClass(NumberFormatter,[{key:'allowsFloats',value:function allowsFloats(){return this._get('allowsFloats');} /**
+	     * Sets whether this formatter will parse float number values.
+	     *
+	     * @param {boolean} allowsFloats
+	     * @returns {NumberFormatter}
+	     */},{key:'setAllowsFloats',value:function setAllowsFloats(allowsFloats){this._allowsFloats=allowsFloats;return this;} /**
+	     * Gets whether this formatter should show the decimal separator.
+	     *
+	     * @returns {boolean}
+	     */},{key:'alwaysShowsDecimalSeparator',value:function alwaysShowsDecimalSeparator(){return this._get('alwaysShowsDecimalSeparator');} /**
+	     * Sets whether this formatter will show the decimal separator.
+	     *
+	     * @param {boolean} alwaysShowsDecimalSeparator
+	     * @returns {NumberFormatter}
+	     */},{key:'setAlwaysShowsDecimalSeparator',value:function setAlwaysShowsDecimalSeparator(alwaysShowsDecimalSeparator){this._alwaysShowsDecimalSeparator=alwaysShowsDecimalSeparator;return this;} /**
+	     * Gets the country code for formatter.
+	     *
+	     * @returns {string}
+	     */},{key:'countryCode',value:function countryCode(){return this._countryCode||DEFAULT_COUNTRY;} /**
+	     * Sets the country code for formatter.
+	     *
+	     * @param {string} countryCode
+	     * @returns {NumberFormatter}
+	     */},{key:'setCountryCode',value:function setCountryCode(countryCode){this._countryCode=countryCode;return this;} /**
+	     * Gets the currency code for formatter.
+	     *
+	     * @returns {string}
+	     */},{key:'currencyCode',value:function currencyCode(){return this._get('currencyCode');} /**
+	     * Sets the currency code for formatter.
+	     *
+	     * @param {string} currencyCode
+	     * @returns {NumberFormatter}
+	     */},{key:'setCurrencyCode',value:function setCurrencyCode(currencyCode){this._currencyCode=currencyCode;return this;} /**
+	     * Gets the currency symbol for formatter.
+	     *
+	     * @returns {string}
+	     */},{key:'currencySymbol',value:function currencySymbol(){if(this._shouldShowNativeCurrencySymbol()){return this._get('currencySymbol');}else {return this._get('internationalCurrencySymbol');}} /**
+	     * Sets the currency symbol for formatter.
+	     *
+	     * @param {string} currencySymbol
+	     * @returns {NumberFormatter}
+	     */},{key:'setCurrencySymbol',value:function setCurrencySymbol(currencySymbol){this._currencySymbol=currencySymbol;return this;} /**
+	     * @returns {boolean}
+	     * @private
+	     */},{key:'_shouldShowNativeCurrencySymbol',value:function _shouldShowNativeCurrencySymbol(){var regionDefaultCurrencyCode=this._regionDefaults().currencyCode;if(typeof regionDefaultCurrencyCode==='function'){regionDefaultCurrencyCode=regionDefaultCurrencyCode();}return this.currencyCode()===regionDefaultCurrencyCode;} /**
+	     * Gets the decimal separator for formatter.
+	     *
+	     * @returns {string}
+	     */},{key:'decimalSeparator',value:function decimalSeparator(){return this._get('decimalSeparator');} /**
+	     * Sets the decimal separator for formatter.
+	     *
+	     * @param {string} decimalSeparator
+	     * @returns {NumberFormatter}
+	     */},{key:'setDecimalSeparator',value:function setDecimalSeparator(decimalSeparator){this._decimalSeparator=decimalSeparator;return this;} /**
+	     * Gets the number of decimal places to shift numbers before formatting.
+	     *
+	     * @returns {string}
+	     */},{key:'exponent',value:function exponent(){return this._get('exponent');} /**
+	     * Sets the number of decimal places to shift numbers before formatting.
+	     *
+	     * @param exponent
+	     * @returns {NumberFormatter}
+	     */},{key:'setExponent',value:function setExponent(exponent){this._exponent=exponent;return this;}},{key:'groupingSeparator',value:function groupingSeparator(){return this._get('groupingSeparator');} /**
+	     * @param {string} groupingSeparator
+	     * @returns {NumberFormatter}
+	     */},{key:'setGroupingSeparator',value:function setGroupingSeparator(groupingSeparator){this._groupingSeparator=groupingSeparator;return this;} /**
+	     * Gets the grouping size for formatter.
+	     *
+	     * @returns {number}
+	     */},{key:'groupingSize',value:function groupingSize(){return this._get('groupingSize');} /**
+	     * @param {number} groupingSize
+	     * @returns {NumberFormatter}
+	     */},{key:'setGroupingSize',value:function setGroupingSize(groupingSize){this._groupingSize=groupingSize;return this;} /**
+	     * @returns {string}
+	     */},{key:'internationalCurrencySymbol',value:function internationalCurrencySymbol(){return this._get('internationalCurrencySymbol');} /**
+	     * @param {string} internationalCurrencySymbol
+	     * @returns {NumberFormatter}
+	     */},{key:'setInternationalCurrencySymbol',value:function setInternationalCurrencySymbol(internationalCurrencySymbol){this._internationalCurrencySymbol=internationalCurrencySymbol;return this;} /**
+	     * @returns {boolean}
+	     */},{key:'isLenient',value:function isLenient(){return this._lenient;} /**
+	     * @param {boolean} lenient
+	     * @returns {NumberFormatter}
+	     */},{key:'setLenient',value:function setLenient(lenient){this._lenient=lenient;return this;} /**
+	     * Gets the locale identifier for which this formatter is currently
+	     * configured to format strings. This setting controls default settings such
+	     * as the grouping separator character, decimal separator character, placement
+	     * of currency and percent symbols, etc.
+	     *
+	     * @returns {string}
+	     */},{key:'locale',value:function locale(){return this._locale||DEFAULT_LOCALE;} /**
+	     * Sets the locale identifier used for default settings values.
+	     *
+	     * @see {@link NumberFormatter#locale}
+	     * @param {string} locale
+	     * @returns {NumberFormatter}
+	     */},{key:'setLocale',value:function setLocale(locale){this._locale=locale;return this;} /**
+	     * @returns {number}
+	     */},{key:'maximum',value:function maximum(){return this._maximum;} /**
+	     * @param {number} max
+	     * @returns {NumberFormatter}
+	     */},{key:'setMaximum',value:function setMaximum(max){this._maximum=max;return this;} /**
+	     * @returns {number}
+	     */},{key:'minimum',value:function minimum(){return this._minimum;} /**
+	     * @param {number} min
+	     * @returns {NumberFormatter}
+	     */},{key:'setMinimum',value:function setMinimum(min){this._minimum=min;return this;} /**
+	     * @returns {number}
+	     */},{key:'maximumFractionDigits',value:function maximumFractionDigits(){var result=this._get('maximumFractionDigits');var minimumFractionDigits=this._minimumFractionDigits;if(result!==null&&result!==undefined&&minimumFractionDigits!==null&&minimumFractionDigits!==undefined&&minimumFractionDigits>result){result=minimumFractionDigits;}return result;} /**
+	     * @param {number} maximumFractionDigits
+	     * @returns {NumberFormatter}
+	     */},{key:'setMaximumFractionDigits',value:function setMaximumFractionDigits(maximumFractionDigits){this._maximumFractionDigits=maximumFractionDigits;return this;} /**
+	     * @returns {number}
+	     */},{key:'minimumFractionDigits',value:function minimumFractionDigits(){var result=this._get('minimumFractionDigits');var maximumFractionDigits=this._maximumFractionDigits;if(result!==null&&result!==undefined&&maximumFractionDigits!==null&&maximumFractionDigits!==undefined&&maximumFractionDigits<result){result=maximumFractionDigits;}return result;} /**
+	     * @param {number} minimumFractionDigits
+	     * @returns {NumberFormatter}
+	     */},{key:'setMinimumFractionDigits',value:function setMinimumFractionDigits(minimumFractionDigits){this._minimumFractionDigits=minimumFractionDigits;return this;} /**
+	     * @returns {number}
+	     */},{key:'maximumIntegerDigits',value:function maximumIntegerDigits(){var result=this._get('maximumIntegerDigits');var minimumIntegerDigits=this._minimumIntegerDigits;if(result!==null&&result!==undefined&&minimumIntegerDigits!==null&&minimumIntegerDigits!==undefined&&minimumIntegerDigits>result){result=minimumIntegerDigits;}return result;} /**
+	     * @param {number} maximumIntegerDigits
+	     * @returns {NumberFormatter}
+	     */},{key:'setMaximumIntegerDigits',value:function setMaximumIntegerDigits(maximumIntegerDigits){this._maximumIntegerDigits=maximumIntegerDigits;return this;} /**
+	     * @returns {number}
+	     */},{key:'minimumIntegerDigits',value:function minimumIntegerDigits(){var result=this._get('minimumIntegerDigits');var maximumIntegerDigits=this._maximumIntegerDigits;if(result!==null&&result!==undefined&&maximumIntegerDigits!==null&&maximumIntegerDigits!==undefined&&maximumIntegerDigits<result){result=maximumIntegerDigits;}return result;} /**
+	     * @param {number} minimumIntegerDigits
+	     * @returns {NumberFormatter}
+	     */},{key:'setMinimumIntegerDigits',value:function setMinimumIntegerDigits(minimumIntegerDigits){this._minimumIntegerDigits=minimumIntegerDigits;return this;} /**
+	     * Gets the minus sign used for negative numbers in some locales.
+	     *
+	     * @returns {?string}
+	     */},{key:'minusSign',value:function minusSign(){return this._get('minusSign');} /**
+	     * Sets the minus sign used for negative numbers in some locales.
+	     *
+	     * @param {?string} minusSign
+	     * @returns {NumberFormatter}
+	     */},{key:'setMinusSign',value:function setMinusSign(minusSign){this._minusSign=minusSign;return this;} /**
+	     * Gets the negative number format string for the current settings. For
+	     * example, changing `minimumFractionDigits` from 0 to 3 would change this
+	     * value from "-#" to "-#.000".
+	     *
+	     * @return {string}
+	     */},{key:'negativeFormat',value:function negativeFormat(){return this.numberFormatFormatter().format({alwaysShowsDecimalSeparator:this.alwaysShowsDecimalSeparator(),groupingSize:this.groupingSize(),maximumFractionDigits:this.maximumFractionDigits(),minimumFractionDigits:this.minimumFractionDigits(),minimumIntegerDigits:this.minimumIntegerDigits(),prefix:this._get('negativePrefix'),suffix:this._get('negativeSuffix'),usesGroupingSeparator:this.usesGroupingSeparator()});} /**
+	     * Configures this number formatter according to the given format string.
+	     * For most usages you should simply use
+	     * {@link NumberFormatter#setPositiveFormat} and configure the negative
+	     * prefix and suffix separately.
+	     *
+	     * @param negativeFormat
+	     */},{key:'setNegativeFormat',value:function setNegativeFormat(negativeFormat){var settings=this.numberFormatFormatter().parse(negativeFormat);this.setNegativePrefix(settings.prefix);this.setNegativeSuffix(settings.suffix);this.setGroupingSize(settings.groupingSize);this.setMaximumFractionDigits(settings.maximumFractionDigits);this.setMinimumFractionDigits(settings.minimumFractionDigits);this.setMinimumIntegerDigits(settings.minimumIntegerDigits);this.setUsesGroupingSeparator(settings.usesGroupingSeparator);} /**
+	     * @returns {string}
+	     */},{key:'negativeInfinitySymbol',value:function negativeInfinitySymbol(){return this._get('negativeInfinitySymbol');} /**
+	     * @param {string} negativeInfinitySymbol
+	     * @returns {NumberFormatter}
+	     */},{key:'setNegativeInfinitySymbol',value:function setNegativeInfinitySymbol(negativeInfinitySymbol){this._negativeInfinitySymbol=negativeInfinitySymbol;return this;} /**
+	     * @returns {string}
+	     */},{key:'negativePrefix',value:function negativePrefix(){return replaceCurrencySymbol(replaceMinusSign(this._get('negativePrefix'),this._get('minusSign')),this.currencySymbol());} /**
+	     * @param {string} prefix
+	     * @returns {NumberFormatter}
+	     */},{key:'setNegativePrefix',value:function setNegativePrefix(prefix){this._negativePrefix=prefix;return this;} /**
+	     * @returns {string}
+	     */},{key:'negativeSuffix',value:function negativeSuffix(){return replaceCurrencySymbol(replaceMinusSign(this._get('negativeSuffix'),this._get('minusSign')),this.currencySymbol());} /**
+	     * @param {string} prefix
+	     * @returns {NumberFormatter}
+	     */},{key:'setNegativeSuffix',value:function setNegativeSuffix(prefix){this._negativeSuffix=prefix;return this;} /**
+	     * @returns {string}
+	     */},{key:'notANumberSymbol',value:function notANumberSymbol(){return this._get('notANumberSymbol');} /**
+	     * @param {string} notANumberSymbol
+	     * @returns {NumberFormatter}
+	     */},{key:'setNotANumberSymbol',value:function setNotANumberSymbol(notANumberSymbol){this._notANumberSymbol=notANumberSymbol;return this;} /**
+	     * @returns {string}
+	     */},{key:'nullSymbol',value:function nullSymbol(){return this._get('nullSymbol');} /**
+	     * @param {string} nullSymbol
+	     * @returns {NumberFormatter}
+	     */},{key:'setNullSymbol',value:function setNullSymbol(nullSymbol){this._nullSymbol=nullSymbol;return this;} /**
+	     * @return {NumberFormatterSettingsFormatter}
+	     * @private
+	     */},{key:'numberFormatFormatter',value:function numberFormatFormatter(){if(!this._numberFormatFormatter){this._numberFormatFormatter=new _number_formatter_settings_formatter2['default']();}return this._numberFormatFormatter;} /**
+	     * Gets the number style used to configure various default setting values.
+	     *
+	     * @returns {NumberFormatter.Style}
+	     */},{key:'numberStyle',value:function numberStyle(){return this._numberStyle;} /**
+	     * Sets the number style used to configure various default setting values.
+	     *
+	     * @param {string} numberStyle
+	     * @returns {NumberFormatter}
+	     */},{key:'setNumberStyle',value:function setNumberStyle(numberStyle){this._numberStyle=numberStyle;switch(this._numberStyle){case NONE:this._styleDefaults=StyleDefaults.NONE;break;case PERCENT:this._styleDefaults=StyleDefaults.PERCENT;break;case CURRENCY:this._styleDefaults=StyleDefaults.CURRENCY;break;default:this._styleDefaults=null;}return this;} /**
+	     * @returns {string}
+	     */},{key:'percentSymbol',value:function percentSymbol(){return this._get('percentSymbol');} /**
+	     * @param {string} percentSymbol
+	     * @returns {NumberFormatter}
+	     */},{key:'setPercentSymbol',value:function setPercentSymbol(percentSymbol){this._percentSymbol=percentSymbol;return this;} /**
+	     * Gets the plus sign used in positive numbers in some locales.
+	     *
+	     * @returns {string}
+	     */},{key:'plusSign',value:function plusSign(){return this._get('plusSign');} /**
+	     * Sets the plus sign used in positive numbers in some locales.
+	     *
+	     * @param {?string} plusSign
+	     * @returns {NumberFormatter}
+	     */},{key:'setPlusSign',value:function setPlusSign(plusSign){this._plusSign=plusSign;return this;} /**
+	     * Gets the positive number format string for the current settings. For
+	     * example, changing `minimumFractionDigits` from 0 to 3 would change this
+	     * value from "#" to "#.000".
+	     *
+	     * @return {string}
+	     */},{key:'positiveFormat',value:function positiveFormat(){return this.numberFormatFormatter().format({alwaysShowsDecimalSeparator:this.alwaysShowsDecimalSeparator(),groupingSize:this.groupingSize(),maximumFractionDigits:this.maximumFractionDigits(),minimumFractionDigits:this.minimumFractionDigits(),minimumIntegerDigits:this.minimumIntegerDigits(),prefix:this._get('positivePrefix'),suffix:this._get('positiveSuffix'),usesGroupingSeparator:this.usesGroupingSeparator()});} /**
+	     * Configures this number formatter according to the given format string.
+	     *
+	     * @example
+	     *
+	     *   // Use '0' for padding, '.' for decimal separator.
+	     *   formatter.setPositiveFormat('00.000');
+	     *   formatter.format(2);     // '02.000'
+	     *   formatter.format(-5.03); // '-05.030'
+	     *   formatter.setLocale('fr-FR');
+	     *   formatter.format(2);     // '02,000'
+	     *
+	     *   // Use '#' for maximum fraction digits.
+	     *   formatter.setPositiveFormat('#.##');
+	     *   formatter.format(3.456); // '3.46'
+	     *
+	     *   // Use '¤' as the currency placeholder.
+	     *   formatter.setPositiveFormat('¤#0.00');
+	     *   formatter.format(1.23); // '$1.23'
+	     *   formatter.setCurrencyCode('JPY');
+	     *   formatter.format(81);   // 'JP¥81.00'
+	     *   formatter.setLocale('jp-JP');
+	     *   formatter.format(7);   // '¥7.00'
+	     *
+	     *   // Use ',' for grouping separator placement.
+	     *   formatter.setPositiveFormat('#,##');
+	     *   formatter.format(123); // '1,23'
+	     *
+	     * @param positiveFormat
+	     */},{key:'setPositiveFormat',value:function setPositiveFormat(positiveFormat){var settings=this.numberFormatFormatter().parse(positiveFormat);this.setPositivePrefix(settings.prefix);this.setPositiveSuffix(settings.suffix);this.setGroupingSize(settings.groupingSize);this.setMaximumFractionDigits(settings.maximumFractionDigits);this.setMinimumFractionDigits(settings.minimumFractionDigits);this.setMinimumIntegerDigits(settings.minimumIntegerDigits);this.setUsesGroupingSeparator(settings.usesGroupingSeparator);} /**
+	     * @returns {string}
+	     */},{key:'positiveInfinitySymbol',value:function positiveInfinitySymbol(){return this._get('positiveInfinitySymbol');} /**
+	     * @param {string} positiveInfinitySymbol
+	     * @returns {NumberFormatter}
+	     */},{key:'setPositiveInfinitySymbol',value:function setPositiveInfinitySymbol(positiveInfinitySymbol){this._positiveInfinitySymbol=positiveInfinitySymbol;return this;} /**
+	     * @returns {string}
+	     */},{key:'positivePrefix',value:function positivePrefix(){return replaceCurrencySymbol(replacePlusSign(this._get('positivePrefix'),this._get('plusSign')),this.currencySymbol());} /**
+	     * @param {string} prefix
+	     * @returns {NumberFormatter}
+	     */},{key:'setPositivePrefix',value:function setPositivePrefix(prefix){this._positivePrefix=prefix;return this;} /**
+	     * @returns {string}
+	     */},{key:'positiveSuffix',value:function positiveSuffix(){return replaceCurrencySymbol(replacePlusSign(this._get('positiveSuffix'),this._get('plusSign')),this.currencySymbol());} /**
+	     * @param {string} prefix
+	     * @returns {NumberFormatter}
+	     */},{key:'setPositiveSuffix',value:function setPositiveSuffix(prefix){this._positiveSuffix=prefix;return this;} /**
+	     * @returns {Function}
+	     */},{key:'roundingMode',value:function roundingMode(){return this._get('roundingMode');} /**
+	     * @param {Function} roundingMode
+	     * @returns {NumberFormatter}
+	     */},{key:'setRoundingMode',value:function setRoundingMode(roundingMode){this._roundingMode=roundingMode;return this;} /**
+	     * @returns {boolean}
+	     */},{key:'usesGroupingSeparator',value:function usesGroupingSeparator(){return this._get('usesGroupingSeparator');} /**
+	     * @param {boolean} usesGroupingSeparator
+	     * @returns {NumberFormatter}
+	     */},{key:'setUsesGroupingSeparator',value:function setUsesGroupingSeparator(usesGroupingSeparator){this._usesGroupingSeparator=usesGroupingSeparator;return this;} /**
+	     * @returns {string}
+	     */},{key:'zeroSymbol',value:function zeroSymbol(){return this._get('zeroSymbol');} /**
+	     * @param {string} zeroSymbol
+	     * @returns {NumberFormatter}
+	     */},{key:'setZeroSymbol',value:function setZeroSymbol(zeroSymbol){this._zeroSymbol=zeroSymbol;return this;} /**
+	     * @param {string} attr
+	     * @returns {*}
+	     * @private
+	     */},{key:'_get',value:function _get(attr){var value=this['_'+attr];if(value!==null&&value!==undefined){return value;}var styleDefaults=this._styleDefaults;var localeDefaults=this._localeDefaults();var regionDefaults=this._regionDefaults();value=get(styleDefaults,attr,this,localeDefaults);if(value!==null&&value!==undefined){return value;}value=get(localeDefaults,attr,this,styleDefaults);if(value!==null&&value!==undefined){return value;}value=get(regionDefaults,attr,this,styleDefaults);if(value!==null&&value!==undefined){return value;}value=get(this._currencyDefaults(),attr,this,localeDefaults);if(value!==null&&value!==undefined){return value;}return null;} /**
+	     * Formats the given number as a string according to the settings applied to
+	     * this formatter. This may cause the number to be truncated, rounded, or
+	     * otherwise differ from what you might expect.
+	     *
+	     * @example
+	     *
+	     *   // By default no fraction digits are shown.
+	     *   var f = new FieldKit.NumberFormatter();
+	     *   f.format(Math.PI);  // '3'
+	     *
+	     *   // Let's format as a currency.
+	     *   f.setNumberStyle(FieldKit.NumberFormatter.Style.CURRENCY);
+	     *   f.format(Math.PI);  // '$3.14'
+	     *
+	     *   // Or as a percentage, which illustrates usage of {@link NumberFormatter#exponent}.
+	     *   f.setNumberStyle(FieldKit.NumberFormatter.Style.PERCENT);
+	     *   f.format(Math.PI);  // '314%'
+	     *
+	     *   // For the rest of the examples we'll go back to normal.
+	     *   f.setNumberStyle(FieldKit.NumberFormatter.Style.NONE);
+	     *
+	     *   // The default rounding mode is {@link NumberFormatter.Rounding.HALF_EVEN}.
+	     *   f.setMaximumFractionDigits(4);
+	     *   f.format(Math.PI);  // '3.1416'
+	     *
+	     *   // And we can change the rounding mode if we like.
+	     *   f.setRoundingMode(FieldKit.NumberFormatter.Rounding.FLOOR);
+	     *   f.format(Math.PI);  // '3.1415'
+	     *
+	     * @param {number} number
+	     * @returns {string}
+	     */},{key:'format',value:function format(number){if(number===''){return '';}var zeroSymbol=this.zeroSymbol();if(zeroSymbol!==undefined&&zeroSymbol!==null&&number===0){return zeroSymbol;}var nullSymbol=this.nullSymbol();if(nullSymbol!==undefined&&nullSymbol!==null&&number===null){return nullSymbol;}var notANumberSymbol=this.notANumberSymbol();if(notANumberSymbol!==undefined&&notANumberSymbol!==null&&isNaN(number)){return notANumberSymbol;}var positiveInfinitySymbol=this.positiveInfinitySymbol();if(positiveInfinitySymbol!==undefined&&positiveInfinitySymbol!==null&&number===Infinity){return positiveInfinitySymbol;}var negativeInfinitySymbol=this.negativeInfinitySymbol();if(negativeInfinitySymbol!==undefined&&negativeInfinitySymbol!==null&&number===-Infinity){return negativeInfinitySymbol;}var negative=number<0;var parts=(''+Math.abs(number)).split('.');var integerPart=parts[0];var fractionPart=parts[1]||'';var exponent=this.exponent();if(exponent!==undefined&&exponent!==null){var shifted=(0,_stround.shiftParts)([negative,integerPart,fractionPart],exponent);negative=shifted[0];integerPart=shifted[1];fractionPart=shifted[2];while(integerPart[0]==='0'){integerPart=integerPart.slice(1);}} // round fraction part to the maximum length
+	var maximumFractionDigits=this.maximumFractionDigits();if(fractionPart.length>maximumFractionDigits){var unrounded=integerPart+'.'+fractionPart;var rounded=this._round(negative?'-'+unrounded:unrounded);if(rounded[0]==='-'){rounded=rounded.slice(1);}parts=rounded.split('.');integerPart=parts[0];fractionPart=parts[1]||'';} // right-pad fraction zeros up to the minimum length
+	var minimumFractionDigits=this.minimumFractionDigits();while(fractionPart.length<minimumFractionDigits){fractionPart+='0';} // left-pad integer zeros up to the minimum length
+	var minimumIntegerDigits=this.minimumIntegerDigits();while(integerPart.length<minimumIntegerDigits){integerPart='0'+integerPart;} // eat any unneeded trailing zeros
+	while(fractionPart.length>minimumFractionDigits&&fractionPart.slice(-1)==='0'){fractionPart=fractionPart.slice(0,-1);} // left-truncate any integer digits over the maximum length
+	var maximumIntegerDigits=this.maximumIntegerDigits();if(maximumIntegerDigits!==undefined&&maximumIntegerDigits!==null&&integerPart.length>maximumIntegerDigits){integerPart=integerPart.slice(-maximumIntegerDigits);} // add the decimal separator
+	if(fractionPart.length>0||this.alwaysShowsDecimalSeparator()){fractionPart=this.decimalSeparator()+fractionPart;}if(this.usesGroupingSeparator()){var integerPartWithGroupingSeparators='';var copiedCharacterCount=0;for(var i=integerPart.length-1;i>=0;i--){if(copiedCharacterCount>0&&copiedCharacterCount%this.groupingSize()===0){integerPartWithGroupingSeparators=this.groupingSeparator()+integerPartWithGroupingSeparators;}integerPartWithGroupingSeparators=integerPart[i]+integerPartWithGroupingSeparators;copiedCharacterCount++;}integerPart=integerPartWithGroupingSeparators;}var result=integerPart+fractionPart; // surround with the appropriate prefix and suffix
+	if(negative){result=this.negativePrefix()+result+this.negativeSuffix();}else {result=this.positivePrefix()+result+this.positiveSuffix();}return result;} /**
+	     * @param {number} number
+	     * @returns {number}
+	     * @private
+	     */},{key:'_round',value:function _round(number){return (0,_stround.round)(number,this.maximumFractionDigits(),this.roundingMode());} /**
+	     * Parses the given string according to the current formatting settings.
+	     * When parsing values with a guaranteed regular format you can simply
+	     * configure the formatter correctly and call this method. However, when
+	     * dealing with human input it is often useful to configure
+	     * {@link NumberFormatter#isLenient} to be true, allowing more leeway in what
+	     * may be parsed as a valid number.
+	     *
+	     * @example
+	     *
+	     *   var f = new FieldKit.NumberFormatter();
+	     *   f.parse('89'); // 89
+	     *
+	     * @param {string} string
+	     * @param {function(string)} error
+	     * @returns {?number}
+	     */},{key:'parse',value:function parse(string,error){var result=undefined;var positivePrefix=this.positivePrefix();var negativePrefix=this.negativePrefix();var positiveSuffix=this.positiveSuffix();var negativeSuffix=this.negativeSuffix();if(this.isLenient()){string=string.replace(/\s/g,'');positivePrefix=(0,_utils.trim)(positivePrefix);negativePrefix=(0,_utils.trim)(negativePrefix);positiveSuffix=(0,_utils.trim)(positiveSuffix);negativeSuffix=(0,_utils.trim)(negativeSuffix);}var zeroSymbol=undefined;var nullSymbol=undefined;var notANumberSymbol=undefined;var positiveInfinitySymbol=undefined;var negativeInfinitySymbol=undefined;var innerString=undefined;if((zeroSymbol=this.zeroSymbol())!==undefined&&zeroSymbol!==null&&string===zeroSymbol){result=0;}else if((nullSymbol=this.nullSymbol())!==undefined&&nullSymbol!==null&&string===nullSymbol){result=null;}else if((notANumberSymbol=this.notANumberSymbol())!==undefined&&notANumberSymbol!==null&&string===notANumberSymbol){result=NaN;}else if((positiveInfinitySymbol=this.positiveInfinitySymbol())!==undefined&&positiveInfinitySymbol!==null&&string===positiveInfinitySymbol){result=Infinity;}else if((negativeInfinitySymbol=this.negativeInfinitySymbol())!==undefined&&negativeInfinitySymbol!==null&&string===negativeInfinitySymbol){result=-Infinity;}else {var hasNegativePrefix=(0,_utils.startsWith)(negativePrefix,string);var hasNegativeSuffix=(0,_utils.endsWith)(negativeSuffix,string);if(hasNegativePrefix&&(this.isLenient()||hasNegativeSuffix)){innerString=string.slice(negativePrefix.length);if(hasNegativeSuffix){innerString=innerString.slice(0,innerString.length-negativeSuffix.length);}result=this._parseAbsoluteValue(innerString,error);if(result!==undefined&&result!==null){result*=-1;}}else {var hasPositivePrefix=(0,_utils.startsWith)(positivePrefix,string);var hasPositiveSuffix=(0,_utils.endsWith)(positiveSuffix,string);if(this.isLenient()||hasPositivePrefix&&hasPositiveSuffix){innerString=string;if(hasPositivePrefix){innerString=innerString.slice(positivePrefix.length);}if(hasPositiveSuffix){innerString=innerString.slice(0,innerString.length-positiveSuffix.length);}result=this._parseAbsoluteValue(innerString,error);}else {if(typeof error==='function'){error('number-formatter.invalid-format');}return null;}}}if(result!==undefined&&result!==null){var minimum=this.minimum();if(minimum!==undefined&&minimum!==null&&result<minimum){if(typeof error==='function'){error('number-formatter.out-of-bounds.below-minimum');}return null;}var maximum=this.maximum();if(maximum!==undefined&&maximum!==null&&result>maximum){if(typeof error==='function'){error('number-formatter.out-of-bounds.above-maximum');}return null;}}return result;} /**
+	     * @param {string} string
+	     * @param {function(string)} error
+	     * @returns {?number} returns value with delimiters removed
+	     * @private
+	     */},{key:'_parseAbsoluteValue',value:function _parseAbsoluteValue(string,error){var number=undefined;if(string.length===0){if(typeof error==='function'){error('number-formatter.invalid-format');}return null;}var parts=string.split(this.decimalSeparator());if(parts.length>2){if(typeof error==='function'){error('number-formatter.invalid-format');}return null;}var integerPart=parts[0];var fractionPart=parts[1]||'';if(this.usesGroupingSeparator()){var groupingSize=this.groupingSize();var groupParts=integerPart.split(this.groupingSeparator());if(!this.isLenient()){if(groupParts.length>1){ // disallow 1000,000
+	if(groupParts[0].length>groupingSize){if(typeof error==='function'){error('number-formatter.invalid-format.grouping-size');}return null;} // disallow 1,00
+	var groupPartsTail=groupParts.slice(1);for(var i=0,l=groupPartsTail.length;i<l;i++){if(groupPartsTail[i].length!==groupingSize){if(typeof error==='function'){error('number-formatter.invalid-format.grouping-size');}return null;}}}} // remove grouping separators
+	integerPart=groupParts.join('');}if(!(0,_utils.isDigits)(integerPart)||!(0,_utils.isDigits)(fractionPart)){if(typeof error==='function'){error('number-formatter.invalid-format');}return null;}var exponent=this.exponent();if(exponent!==undefined&&exponent!==null){var shifted=(0,_stround.shiftParts)([false,integerPart,fractionPart],-exponent);integerPart=shifted[1];fractionPart=shifted[2];}number=Number(integerPart)+Number('.'+(fractionPart||'0'));if(!this.allowsFloats()&&number!==~ ~number){if(typeof error==='function'){error('number-formatter.floats-not-allowed');}return null;}return number;} /**
+	     * Gets defaults.
+	     *
+	     * @returns {Array}
+	     * @private
+	     */},{key:'_currencyDefaults',value:function _currencyDefaults(){var result={};(0,_utils.forEach)(CurrencyDefaults['default'],function(value,key){result[key]=value;});(0,_utils.forEach)(CurrencyDefaults[this.currencyCode()],function(value,key){result[key]=value;});return result;} /**
+	     * Gets defaults.
+	     *
+	     * @returns {Array}
+	     * @private
+	     */},{key:'_regionDefaults',value:function _regionDefaults(){var result={};(0,_utils.forEach)(RegionDefaults['default'],function(value,key){result[key]=value;});(0,_utils.forEach)(RegionDefaults[this.countryCode()],function(value,key){result[key]=value;});return result;} /**
+	     * Gets defaults.
+	     *
+	     * @returns {Array}
+	     * @private
+	     */},{key:'_localeDefaults',value:function _localeDefaults(){var locale=this.locale();var countryCode=this.countryCode();var lang=splitLocaleComponents(locale).lang;var result={};var defaultFallbacks=[RegionDefaults['default'],LocaleDefaults['default'],RegionDefaults[countryCode], // CA
+	LocaleDefaults[lang], // fr
+	LocaleDefaults[locale] // fr-CA
+	];(0,_utils.forEach)(defaultFallbacks,function(defaults){(0,_utils.forEach)(defaults,function(value,key){result[key]=value;});});return result;}}]);return NumberFormatter;}(_formatter2['default']);NumberFormatter.prototype._allowsFloats=null; /** @private */NumberFormatter.prototype._alwaysShowsDecimalSeparator=null; /** @private */NumberFormatter.prototype._countryCode=null; /** @private */NumberFormatter.prototype._currencyCode=null; /** @private */NumberFormatter.prototype._exponent=null; /** @private */NumberFormatter.prototype._groupingSeparator=null; /** @private */NumberFormatter.prototype._groupingSize=null; /** @private */NumberFormatter.prototype._lenient=false; /** @private */NumberFormatter.prototype._locale=null; /** @private */NumberFormatter.prototype._internationalCurrencySymbol=null; /** @private */NumberFormatter.prototype._maximumFractionDigits=null; /** @private */NumberFormatter.prototype._minimumFractionDigits=null; /** @private */NumberFormatter.prototype._maximumIntegerDigits=null; /** @private */NumberFormatter.prototype._minimumIntegerDigits=null; /** @private */NumberFormatter.prototype._maximum=null; /** @private */NumberFormatter.prototype._minimum=null; /** @private */NumberFormatter.prototype._notANumberSymbol=null; /** @private */NumberFormatter.prototype._nullSymbol=null; /** @private */NumberFormatter.prototype._numberStyle=null; /** @private */NumberFormatter.prototype._roundingMode=null; /** @private */NumberFormatter.prototype._usesGroupingSeparator=null; /** @private */NumberFormatter.prototype._zeroSymbol=null; /**
+	 * Aliases
+	 */NumberFormatter.prototype.stringFromNumber=NumberFormatter.prototype.format;NumberFormatter.prototype.numberFromString=NumberFormatter.prototype.parse;NumberFormatter.Rounding=_stround.modes; /**
+	 * @enum {number}
+	 * @readonly
+	 */NumberFormatter.Style={NONE:NONE,CURRENCY:CURRENCY,PERCENT:PERCENT}; /**
+	 * @namespace StyleDefaults
+	 */var StyleDefaults={NONE:{usesGroupingSeparator:false,minimumFractionDigits:0,maximumFractionDigits:0,minimumIntegerDigits:0},PERCENT:{usesGroupingSeparator:false,exponent:2,minimumFractionDigits:0,maximumFractionDigits:0,minimumIntegerDigits:1,positiveSuffix:function positiveSuffix(formatter){return formatter.percentSymbol();},negativeSuffix:function negativeSuffix(formatter){return formatter.percentSymbol();}},CURRENCY:{positivePrefix:function positivePrefix(formatter,locale){return get(locale,'positiveCurrencyPrefix',formatter,this);},positiveSuffix:function positiveSuffix(formatter,locale){return get(locale,'positiveCurrencySuffix',formatter,this);},negativePrefix:function negativePrefix(formatter,locale){return get(locale,'negativeCurrencyPrefix',formatter,this);},negativeSuffix:function negativeSuffix(formatter,locale){return get(locale,'negativeCurrencySuffix',formatter,this);}}}; /**
+	 * Contains the default values for various number formatter settings, including
+	 * per-locale overrides. Some of these characters will not be used as-is and
+	 * instead serve as placeholders:
+	 *
+	 *   "¤"  placeholder for `currencySymbol()`.
+	 *   "-"  placeholder for `minusSign()`.
+	 *   "+"  placeholder for `plusSign()`.
+	 *
+	 * @namespace LocaleDefaults
+	 */var LocaleDefaults={'default':{allowsFloats:true,alwaysShowsDecimalSeparator:false,decimalSeparator:'.',groupingSeparator:',',groupingSize:3,minusSign:'-',negativeInfinitySymbol:'-∞',negativePrefix:'-',negativeSuffix:'',notANumberSymbol:'NaN',nullSymbol:'',percentSymbol:'%',positiveInfinitySymbol:'+∞',positivePrefix:'',positiveSuffix:'',plusSign:'+',roundingMode:NumberFormatter.Rounding.HALF_EVEN,positiveCurrencyPrefix:'¤',positiveCurrencySuffix:'',negativeCurrencyPrefix:'(¤',negativeCurrencySuffix:')'},fr:{decimalSeparator:',',groupingSeparator:' ',percentSymbol:' %',positiveCurrencyPrefix:'',positiveCurrencySuffix:' ¤',negativeCurrencyPrefix:'(',negativeCurrencySuffix:' ¤)'},ja:{negativeCurrencyPrefix:'-¤',negativeCurrencySuffix:''},'en-GB':{negativeCurrencyPrefix:'-¤',negativeCurrencySuffix:''}}; /**
+	 * @namespace RegionDefaults
+	 */var RegionDefaults={AE:{currencyCode:'AED'},AG:{currencyCode:'XCD'},AI:{currencyCode:'XCD'},AL:{currencyCode:'ALL'},AM:{currencyCode:'AMD'},AO:{currencyCode:'AOA'},AR:{currencyCode:'ARS'},AT:{currencyCode:'EUR'},AU:{currencyCode:'AUD'},AW:{currencyCode:'AWG'},AZ:{currencyCode:'AZN'},BA:{currencyCode:'BAM'},BB:{currencyCode:'BBD'},BD:{currencyCode:'BDT'},BE:{currencyCode:'EUR'},BF:{currencyCode:'XOF'},BG:{currencyCode:'BGN'},BH:{currencyCode:'BHD'},BJ:{currencyCode:'XOF'},BM:{currencyCode:'BMD'},BN:{currencyCode:'BND'},BO:{currencyCode:'BOB'},BR:{currencyCode:'BRL'},BS:{currencyCode:'BSD'},BT:{currencyCode:'BTN'},BW:{currencyCode:'BWP'},BY:{currencyCode:'BYR'},BZ:{currencyCode:'BZD'},CA:{currencyCode:'CAD'},CG:{currencyCode:'CDF'},CH:{currencyCode:'CHF'},CI:{currencyCode:'XOF'},CL:{currencyCode:'CLP'},CM:{currencyCode:'XAF'},CN:{currencyCode:'CNY'},CO:{currencyCode:'COP'},CR:{currencyCode:'CRC'},CV:{currencyCode:'CVE'},CY:{currencyCode:'EUR'},CZ:{currencyCode:'CZK'},DE:{currencyCode:'EUR'},DK:{currencyCode:'DKK'},DM:{currencyCode:'XCD'},DO:{currencyCode:'DOP'},DZ:{currencyCode:'DZD'},EC:{currencyCode:'USD'},EE:{currencyCode:'EUR'},EG:{currencyCode:'EGP'},ES:{currencyCode:'EUR'},ET:{currencyCode:'ETB'},FI:{currencyCode:'EUR'},FJ:{currencyCode:'FJD'},FM:{currencyCode:'USD'},FR:{currencyCode:'EUR'},GA:{currencyCode:'XAF'},GB:{currencyCode:'GBP'},GD:{currencyCode:'XCD'},GE:{currencyCode:'GEL'},GH:{currencyCode:'GHS'},GI:{currencyCode:'GIP'},GM:{currencyCode:'GMD'},GR:{currencyCode:'EUR'},GT:{currencyCode:'GTQ'},GU:{currencyCode:'USD'},GW:{currencyCode:'XOF'},GY:{currencyCode:'GYD'},HK:{currencyCode:'HKD'},HN:{currencyCode:'HNL'},HR:{currencyCode:'HRK'},HT:{currencyCode:'HTG'},HU:{currencyCode:'HUF'},ID:{currencyCode:'IDR'},IE:{currencyCode:'EUR'},IL:{currencyCode:'ILS'},IN:{currencyCode:'INR'},IS:{currencyCode:'ISK'},IT:{currencyCode:'EUR'},JM:{currencyCode:'JMD'},JO:{currencyCode:'JOD'},JP:{currencyCode:'JPY'},KE:{currencyCode:'KES'},KG:{currencyCode:'KGS'},KH:{currencyCode:'KHR'},KN:{currencyCode:'XCD'},KR:{currencyCode:'KRW'},KW:{currencyCode:'KWD'},KY:{currencyCode:'KYD'},KZ:{currencyCode:'KZT'},LA:{currencyCode:'LAK'},LB:{currencyCode:'LBP'},LC:{currencyCode:'XCD'},LI:{currencyCode:'CHF'},LK:{currencyCode:'LKR'},LR:{currencyCode:'LRD'},LT:{currencyCode:'LTL'},LU:{currencyCode:'EUR'},LV:{currencyCode:'EUR'},MA:{currencyCode:'MAD'},MD:{currencyCode:'MDL'},MG:{currencyCode:'MGA'},MK:{currencyCode:'MKD'},ML:{currencyCode:'XOF'},MM:{currencyCode:'MMK'},MN:{currencyCode:'MNT'},MO:{currencyCode:'MOP'},MP:{currencyCode:'USD'},MR:{currencyCode:'MRO'},MS:{currencyCode:'XCD'},MT:{currencyCode:'EUR'},MU:{currencyCode:'MUR'},MW:{currencyCode:'MWK'},MX:{currencyCode:'MXN'},MY:{currencyCode:'MYR'},MZ:{currencyCode:'MZN'},NA:{currencyCode:'NAD'},NE:{currencyCode:'XOF'},NG:{currencyCode:'NGN'},NI:{currencyCode:'NIO'},NL:{currencyCode:'EUR'},NO:{currencyCode:'NOK'},NP:{currencyCode:'NPR'},NZ:{currencyCode:'NZD'},OM:{currencyCode:'OMR'},PA:{currencyCode:'PAB'},PE:{currencyCode:'PEN'},PG:{currencyCode:'PGK'},PH:{currencyCode:'PHP'},PK:{currencyCode:'PKR'},PL:{currencyCode:'PLN'},PR:{currencyCode:'USD'},PT:{currencyCode:'EUR'},PW:{currencyCode:'USD'},PY:{currencyCode:'PYG'},QA:{currencyCode:'QAR'},RO:{currencyCode:'RON'},RS:{currencyCode:'RSD'},RU:{currencyCode:'RUB'},RW:{currencyCode:'RWF'},SA:{currencyCode:'SAR'},SB:{currencyCode:'SBD'},SC:{currencyCode:'SCR'},SE:{currencyCode:'SEK'},SG:{currencyCode:'SGD'},SI:{currencyCode:'EUR'},SK:{currencyCode:'EUR'},SL:{currencyCode:'SLL'},SN:{currencyCode:'XOF'},SR:{currencyCode:'SRD'},ST:{currencyCode:'STD'},SV:{currencyCode:'SVC'},SZ:{currencyCode:'SZL'},TC:{currencyCode:'USD'},TD:{currencyCode:'XAF'},TG:{currencyCode:'XOF'},TH:{currencyCode:'THB'},TJ:{currencyCode:'TJS'},TM:{currencyCode:'TMT'},TN:{currencyCode:'TND'},TR:{currencyCode:'TRY'},TT:{currencyCode:'TTD'},TW:{currencyCode:'TWD'},TZ:{currencyCode:'TZS'},UA:{currencyCode:'UAH'},UG:{currencyCode:'UGX'},US:{currencyCode:'USD'},UY:{currencyCode:'UYU'},UZ:{currencyCode:'UZS'},VC:{currencyCode:'XCD'},VE:{currencyCode:'VEF'},VG:{currencyCode:'USD'},VI:{currencyCode:'USD'},VN:{currencyCode:'VND'},YE:{currencyCode:'YER'},ZA:{currencyCode:'ZAR'},ZM:{currencyCode:'ZMW'},ZW:{currencyCode:'USD'}}; /**
+	 * @namespace CurrencyDefaults
+	 */var CurrencyDefaults={'default':{currencySymbol:function currencySymbol(formatter){return formatter.currencyCode();},internationalCurrencySymbol:function internationalCurrencySymbol(formatter){return formatter.currencyCode();},minimumFractionDigits:2,maximumFractionDigits:2,minimumIntegerDigits:1,usesGroupingSeparator:true},AED:{currencySymbol:'د.إ',internationalCurrencySymbol:'د.إ'},ALL:{currencySymbol:'L',internationalCurrencySymbol:'L'},AMD:{currencySymbol:'դր.',internationalCurrencySymbol:'դր.'},AOA:{currencySymbol:'Kz',internationalCurrencySymbol:'Kz'},ARS:{currencySymbol:'$',internationalCurrencySymbol:'$'},AUD:{currencySymbol:'$',internationalCurrencySymbol:'$'},AWG:{currencySymbol:'ƒ',internationalCurrencySymbol:'ƒ'},AZN:{currencySymbol:'₼',internationalCurrencySymbol:'₼'},BAM:{currencySymbol:'КМ',internationalCurrencySymbol:'КМ'},BBD:{currencySymbol:'$',internationalCurrencySymbol:'$'},BDT:{currencySymbol:'৳',internationalCurrencySymbol:'৳'},BGN:{currencySymbol:'лв',internationalCurrencySymbol:'лв'},BHD:{currencySymbol:'ب.د',internationalCurrencySymbol:'ب.د',minimumFractionDigits:3,maximumFractionDigits:3},BMD:{currencySymbol:'$',internationalCurrencySymbol:'$'},BND:{currencySymbol:'$',internationalCurrencySymbol:'$'},BOB:{currencySymbol:'Bs.',internationalCurrencySymbol:'Bs.'},BRL:{currencySymbol:'R$',internationalCurrencySymbol:'R$'},BSD:{currencySymbol:'$',internationalCurrencySymbol:'$'},BTN:{currencySymbol:'Nu.',internationalCurrencySymbol:'Nu.'},BWP:{currencySymbol:'P',internationalCurrencySymbol:'P'},BYR:{currencySymbol:'Br',internationalCurrencySymbol:'Br'},BZD:{currencySymbol:'$',internationalCurrencySymbol:'$'},CAD:{currencySymbol:'$',internationalCurrencySymbol:'$'},CDF:{currencySymbol:'Fr',internationalCurrencySymbol:'Fr'},CHF:{currencySymbol:'Fr',internationalCurrencySymbol:'Fr'},CLP:{currencySymbol:'$',internationalCurrencySymbol:'$',minimumFractionDigits:0,maximumFractionDigits:0},CNY:{currencySymbol:'¥',internationalCurrencySymbol:'¥'},COP:{currencySymbol:'$',internationalCurrencySymbol:'$'},CRC:{currencySymbol:'₡',internationalCurrencySymbol:'₡'},CVE:{currencySymbol:'$',internationalCurrencySymbol:'$'},CZK:{currencySymbol:'Kč',internationalCurrencySymbol:'Kč'},DKK:{currencySymbol:'kr',internationalCurrencySymbol:'kr'},DOP:{currencySymbol:'$',internationalCurrencySymbol:'$'},DZD:{currencySymbol:'د.ج',internationalCurrencySymbol:'د.ج'},EGP:{currencySymbol:'E£',internationalCurrencySymbol:'E£'},ETB:{currencySymbol:'ብር',internationalCurrencySymbol:'ብር'},EUR:{currencySymbol:'€',internationalCurrencySymbol:'€'},FJD:{currencySymbol:'$',internationalCurrencySymbol:'$'},GBP:{currencySymbol:'£',internationalCurrencySymbol:'£'},GEL:{currencySymbol:'ლ,',internationalCurrencySymbol:'ლ,'},GHS:{currencySymbol:'₵',internationalCurrencySymbol:'₵'},GIP:{currencySymbol:'£',internationalCurrencySymbol:'£'},GMD:{currencySymbol:'D',internationalCurrencySymbol:'D'},GTQ:{currencySymbol:'Q',internationalCurrencySymbol:'Q'},GYD:{currencySymbol:'$',internationalCurrencySymbol:'$'},HKD:{currencySymbol:'$',internationalCurrencySymbol:'$'},HNL:{currencySymbol:'L',internationalCurrencySymbol:'L'},HRK:{currencySymbol:'kn',internationalCurrencySymbol:'kn'},HTG:{currencySymbol:'G',internationalCurrencySymbol:'G'},HUF:{currencySymbol:'Ft',internationalCurrencySymbol:'Ft'},IDR:{currencySymbol:'Rp',internationalCurrencySymbol:'Rp'},ILS:{currencySymbol:'₪',internationalCurrencySymbol:'₪'},INR:{currencySymbol:'₹',internationalCurrencySymbol:'₹'},ISK:{currencySymbol:'kr',internationalCurrencySymbol:'kr'},JMD:{currencySymbol:'$',internationalCurrencySymbol:'$'},JOD:{currencySymbol:'د.ا',internationalCurrencySymbol:'د.ا',minimumFractionDigits:3,maximumFractionDigits:3},JPY:{currencySymbol:'¥',internationalCurrencySymbol:'¥',minimumFractionDigits:0,maximumFractionDigits:0},KES:{currencySymbol:'KSh',internationalCurrencySymbol:'KSh'},KGS:{currencySymbol:'som',internationalCurrencySymbol:'som'},KHR:{currencySymbol:'៛',internationalCurrencySymbol:'៛'},KRW:{currencySymbol:'₩',internationalCurrencySymbol:'₩',minimumFractionDigits:0,maximumFractionDigits:0},KWD:{currencySymbol:'د.ك',internationalCurrencySymbol:'د.ك',minimumFractionDigits:3,maximumFractionDigits:3},KYD:{currencySymbol:'$',internationalCurrencySymbol:'$'},KZT:{currencySymbol:'〒',internationalCurrencySymbol:'〒'},LAK:{currencySymbol:'₭',internationalCurrencySymbol:'₭'},LBP:{currencySymbol:'ل.ل',internationalCurrencySymbol:'ل.ل'},LKR:{currencySymbol:'₨',internationalCurrencySymbol:'₨'},LRD:{currencySymbol:'$',internationalCurrencySymbol:'$'},LTL:{currencySymbol:'Lt',internationalCurrencySymbol:'Lt'},MAD:{currencySymbol:'د.م.',internationalCurrencySymbol:'د.م.'},MDL:{currencySymbol:'L',internationalCurrencySymbol:'L'},MGA:{currencySymbol:'Ar',internationalCurrencySymbol:'Ar',minimumFractionDigits:0,maximumFractionDigits:0},MKD:{currencySymbol:'ден',internationalCurrencySymbol:'ден'},MMK:{currencySymbol:'K',internationalCurrencySymbol:'K'},MNT:{currencySymbol:'₮',internationalCurrencySymbol:'₮'},MOP:{currencySymbol:'P',internationalCurrencySymbol:'P'},MRO:{currencySymbol:'UM',internationalCurrencySymbol:'UM',minimumFractionDigits:0,maximumFractionDigits:0},MUR:{currencySymbol:'₨',internationalCurrencySymbol:'₨'},MWK:{currencySymbol:'MK',internationalCurrencySymbol:'MK'},MXN:{currencySymbol:'$',internationalCurrencySymbol:'$'},MYR:{currencySymbol:'RM',internationalCurrencySymbol:'RM'},MZN:{currencySymbol:'MTn',internationalCurrencySymbol:'MTn'},NAD:{currencySymbol:'$',internationalCurrencySymbol:'$'},NGN:{currencySymbol:'₦',internationalCurrencySymbol:'₦'},NIO:{currencySymbol:'C$',internationalCurrencySymbol:'C$'},NOK:{currencySymbol:'kr',internationalCurrencySymbol:'kr'},NPR:{currencySymbol:'₨',internationalCurrencySymbol:'₨'},NZD:{currencySymbol:'$',internationalCurrencySymbol:'$'},OMR:{currencySymbol:'ر.ع.',internationalCurrencySymbol:'ر.ع.',minimumFractionDigits:3,maximumFractionDigits:3},PAB:{currencySymbol:'B/.',internationalCurrencySymbol:'B/.'},PEN:{currencySymbol:'S/.',internationalCurrencySymbol:'S/.'},PGK:{currencySymbol:'K',internationalCurrencySymbol:'K'},PHP:{currencySymbol:'₱',internationalCurrencySymbol:'₱'},PKR:{currencySymbol:'₨',internationalCurrencySymbol:'₨'},PLN:{currencySymbol:'zł',internationalCurrencySymbol:'zł'},PYG:{currencySymbol:'₲',internationalCurrencySymbol:'₲'},QAR:{currencySymbol:'ر.ق',internationalCurrencySymbol:'ر.ق'},RON:{currencySymbol:'Lei',internationalCurrencySymbol:'Lei'},RSD:{currencySymbol:'РСД',internationalCurrencySymbol:'РСД'},RUB:{currencySymbol:'₽',internationalCurrencySymbol:'₽'},RWF:{currencySymbol:'FRw',internationalCurrencySymbol:'FRw'},SAR:{currencySymbol:'ر.س',internationalCurrencySymbol:'ر.س'},SBD:{currencySymbol:'$',internationalCurrencySymbol:'$'},SCR:{currencySymbol:'₨',internationalCurrencySymbol:'₨'},SEK:{currencySymbol:'kr',internationalCurrencySymbol:'kr'},SGD:{currencySymbol:'S$',internationalCurrencySymbol:'S$'},SLL:{currencySymbol:'Le',internationalCurrencySymbol:'Le'},SRD:{currencySymbol:'$',internationalCurrencySymbol:'$'},STD:{currencySymbol:'Db',internationalCurrencySymbol:'Db'},SVC:{currencySymbol:'₡',internationalCurrencySymbol:'₡'},SZL:{currencySymbol:'E',internationalCurrencySymbol:'E'},THB:{currencySymbol:'฿',internationalCurrencySymbol:'฿'},TJS:{currencySymbol:'ЅМ',internationalCurrencySymbol:'ЅМ'},TMT:{currencySymbol:'m',internationalCurrencySymbol:'m'},TND:{currencySymbol:'د.ت',internationalCurrencySymbol:'د.ت',minimumFractionDigits:3,maximumFractionDigits:3},TRY:{currencySymbol:'₺',internationalCurrencySymbol:'₺'},TTD:{currencySymbol:'$',internationalCurrencySymbol:'$'},TWD:{currencySymbol:'$',internationalCurrencySymbol:'$'},TZS:{currencySymbol:'Sh',internationalCurrencySymbol:'Sh'},UAH:{currencySymbol:'₴',internationalCurrencySymbol:'₴'},UGX:{currencySymbol:'USh',internationalCurrencySymbol:'USh'},USD:{currencySymbol:'$',internationalCurrencySymbol:'US$'},UYU:{currencySymbol:'$',internationalCurrencySymbol:'$'},UZS:{currencySymbol:'лв',internationalCurrencySymbol:'лв'},VEF:{currencySymbol:'Bs F',internationalCurrencySymbol:'Bs F'},VND:{currencySymbol:'₫',internationalCurrencySymbol:'₫',minimumFractionDigits:0,maximumFractionDigits:0},XAF:{currencySymbol:'Fr',internationalCurrencySymbol:'Fr'},XCD:{currencySymbol:'$',internationalCurrencySymbol:'$'},XOF:{currencySymbol:'Fr',internationalCurrencySymbol:'Fr'},YER:{currencySymbol:'﷼',internationalCurrencySymbol:'﷼'},ZAR:{currencySymbol:'R',internationalCurrencySymbol:'R'},ZMW:{currencySymbol:'ZMK',internationalCurrencySymbol:'ZMK'}};exports['default']=NumberFormatter;module.exports=exports['default'];},{"./formatter":14,"./number_formatter_settings_formatter":17,"./utils":22,"stround":3}],17:[function(_dereq_,module,exports){'use strict';Object.defineProperty(exports,'__esModule',{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if('value' in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _get=function get(_x,_x2,_x3){var _again=true;_function: while(_again){var object=_x,property=_x2,receiver=_x3;_again=false;if(object===null)object=Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property);if(desc===undefined){var parent=Object.getPrototypeOf(object);if(parent===null){return undefined;}else {_x=parent;_x2=property;_x3=receiver;_again=true;desc=parent=undefined;continue _function;}}else if('value' in desc){return desc.value;}else {var getter=desc.get;if(getter===undefined){return undefined;}return getter.call(receiver);}}};function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}function _inherits(subClass,superClass){if(typeof superClass!=='function'&&superClass!==null){throw new TypeError('Super expression must either be null or a function, not '+(typeof superClass==="undefined"?"undefined":_typeof(superClass)));}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}var _formatter=_dereq_('./formatter');var _formatter2=_interopRequireDefault(_formatter);var NumberFormatterSettings=function NumberFormatterSettings(){_classCallCheck(this,NumberFormatterSettings); /** @type boolean */this.alwaysShowsDecimalSeparator=false; /** @type number */this.groupingSize=0; /** @type number */this.maximumFractionDigits=0; /** @type number */this.minimumFractionDigits=0; /** @type number */this.minimumIntegerDigits=0; /** @type string */this.prefix=''; /** @type string */this.suffix=''; /** @type boolean */this.usesGroupingSeparator=false;} /**
+	 * Returns a string composed of the given character repeated `length` times.
+	 *
+	 * @param {string} character
+	 * @param {number} length
+	 * @returns {string}
+	 * @private
+	 */;function chars(character,length){return new Array(length+1).join(character);} /**
+	 * @const
+	 * @private
+	 */var DIGIT='#'; /**
+	 * @const
+	 * @private
+	 */var PADDING='0'; /**
+	 * @const
+	 * @private
+	 */var DECIMAL_SEPARATOR='.'; /**
+	 * @const
+	 * @private
+	 */var GROUPING_SEPARATOR=',';var NumberFormatterSettingsFormatter=function(_Formatter){_inherits(NumberFormatterSettingsFormatter,_Formatter);function NumberFormatterSettingsFormatter(){_classCallCheck(this,NumberFormatterSettingsFormatter);_get(Object.getPrototypeOf(NumberFormatterSettingsFormatter.prototype),'constructor',this).apply(this,arguments);}_createClass(NumberFormatterSettingsFormatter,[{key:'format', /**
+	     * @param {NumberFormatterSettings} settings
+	     * @returns {string}
+	     */value:function format(settings){var result='';var minimumIntegerDigits=settings.minimumIntegerDigits;if(minimumIntegerDigits!==0){result+=chars(PADDING,minimumIntegerDigits);}result=DIGIT+result;if(settings.usesGroupingSeparator){while(result.length<=settings.groupingSize){result=DIGIT+result;}result=result.slice(0,-settings.groupingSize)+GROUPING_SEPARATOR+result.slice(-settings.groupingSize);}var minimumFractionDigits=settings.minimumFractionDigits;var maximumFractionDigits=settings.maximumFractionDigits;var hasFractionalPart=settings.alwaysShowsDecimalSeparator||minimumFractionDigits>0||maximumFractionDigits>0;if(hasFractionalPart){result+=DECIMAL_SEPARATOR;for(var i=0,_length=maximumFractionDigits;i<_length;i++){result+=i<minimumFractionDigits?PADDING:DIGIT;}}return settings.prefix+result+settings.suffix;} /**
+	     * @param {string} string
+	     * @returns {?NumberFormatterSettings}
+	     */},{key:'parse',value:function parse(string){var result=new NumberFormatterSettings();var hasPassedPrefix=false;var hasStartedSuffix=false;var decimalSeparatorIndex=null;var groupingSeparatorIndex=null;var lastIntegerDigitIndex=null;for(var i=0,length=string.length;i<length;i++){var c=string[i];switch(c){case DIGIT:if(hasStartedSuffix){return null;}hasPassedPrefix=true;if(decimalSeparatorIndex!==null){result.maximumFractionDigits++;}break;case PADDING:if(hasStartedSuffix){return null;}hasPassedPrefix=true;if(decimalSeparatorIndex===null){result.minimumIntegerDigits++;}else {result.minimumFractionDigits++;result.maximumFractionDigits++;}break;case DECIMAL_SEPARATOR:if(hasStartedSuffix){return null;}hasPassedPrefix=true;decimalSeparatorIndex=i;lastIntegerDigitIndex=i-1;break;case GROUPING_SEPARATOR:if(hasStartedSuffix){return null;}hasPassedPrefix=true;groupingSeparatorIndex=i;break;default:if(hasPassedPrefix){hasStartedSuffix=true;result.suffix+=c;}else {result.prefix+=c;}}}if(decimalSeparatorIndex===null){lastIntegerDigitIndex=length-1;}if(decimalSeparatorIndex===length-1){result.alwaysShowsDecimalSeparator=true;}if(groupingSeparatorIndex!==null){result.groupingSize=lastIntegerDigitIndex-groupingSeparatorIndex;result.usesGroupingSeparator=true;}return result;}}]);return NumberFormatterSettingsFormatter;}(_formatter2['default']);exports['default']=NumberFormatterSettingsFormatter;module.exports=exports['default'];},{"./formatter":14}],18:[function(_dereq_,module,exports){'use strict';Object.defineProperty(exports,'__esModule',{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if('value' in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _get=function get(_x,_x2,_x3){var _again=true;_function: while(_again){var object=_x,property=_x2,receiver=_x3;_again=false;if(object===null)object=Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property);if(desc===undefined){var parent=Object.getPrototypeOf(object);if(parent===null){return undefined;}else {_x=parent;_x2=property;_x3=receiver;_again=true;desc=parent=undefined;continue _function;}}else if('value' in desc){return desc.value;}else {var getter=desc.get;if(getter===undefined){return undefined;}return getter.call(receiver);}}};function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}function _inherits(subClass,superClass){if(typeof superClass!=='function'&&superClass!==null){throw new TypeError('Super expression must either be null or a function, not '+(typeof superClass==="undefined"?"undefined":_typeof(superClass)));}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var _delimited_text_formatter=_dereq_('./delimited_text_formatter');var _delimited_text_formatter2=_interopRequireDefault(_delimited_text_formatter); /**
+	 * @const
+	 * @private
+	 */var NANPPhoneDelimiters={name:'NANPPhoneDelimiters',0:'(',4:')',5:' ',9:'-'}; /**
+	 * @const
+	 * @private
+	 */var NANPPhoneDelimitersWithOne={name:'NANPPhoneDelimitersWithOne',1:' ',2:'(',6:')',7:' ',11:'-'}; /**
+	 * @const
+	 * @private
+	 */var E164PhoneDelimitersWithOneDigit={name:'E164PhoneDelimitersWithOneDigit',2:' ',3:'(',7:')',8:' ',12:'-'}; /**
+	 * @const
+	 * @private
+	 */var E164PhoneDelimitersWithTwoDigit={name:'E164PhoneDelimitersWithTwoDigit',3:' ',4:'(',8:')',9:' ',13:'-'}; /**
+	 * @const
+	 * @private
+	 */var E164PhoneDelimitersWithThreeDigit={name:'E164PhoneDelimitersWithThreeDigit',4:' ',5:'(',9:')',10:' ',14:'-'}; /**
+	 * This should match any characters in the maps above.
+	 *
+	 * @const
+	 * @private
+	 */var DELIMITER_PATTERN=/[-\(\) ]/g; /**
+	 * @const
+	 * @private
+	 */var DEFAULT_COUNTRY_CODE={"E164":"1","country":["American Samoa","Anguilla","Antigua and Barbuda","Bahamas","Barbados","Bermuda","British Virgin Islands","Canada","Cayman Islands","Dominica","Dominican Republic","Grenada","Guam","Jamaica","Montserrat","Northern Mariana Islands","Puerto Rico","Saint Kitts and Nevis","Saint Lucia","Saint Martin","Saint Vincent and the Grenadines","Sint Maarten","Trinidad and Tobago","Turks and Caicos Islands","U.S. Virgin Islands","United States"]}; /**
+	 * This is an internal store for the current country
+	 *
+	 * @private
+	 */var currentCountryCode=DEFAULT_COUNTRY_CODE; /**
+	 * @extends DelimitedTextFormatter
+	 */var PhoneFormatter=function(_DelimitedTextFormatter){_inherits(PhoneFormatter,_DelimitedTextFormatter); /**
+	   * @throws {Error} if anything is passed in
+	   * @param {Array} args
+	   */function PhoneFormatter(){_classCallCheck(this,PhoneFormatter);_get(Object.getPrototypeOf(PhoneFormatter.prototype),'constructor',this).call(this);for(var _len=arguments.length,args=Array(_len),_key=0;_key<_len;_key++){args[_key]=arguments[_key];}if(args.length!==0){throw new Error('were you trying to set a delimiter ('+args[0]+')?');}} /**
+	   * @param {string} chr
+	   * @returns {boolean}
+	   */_createClass(PhoneFormatter,[{key:'isDelimiter',value:function isDelimiter(chr){var map=this.delimiterMap;for(var index in map){if(map.hasOwnProperty(index)){if(map[index]===chr){return true;}}}return false;} /**
+	     * @param {number} index
+	     * @returns {?string}
+	     */},{key:'delimiterAt',value:function delimiterAt(index){return this.delimiterMap[index];} /**
+	     * @param {number} index
+	     * @returns {boolean}
+	     */},{key:'hasDelimiterAtIndex',value:function hasDelimiterAtIndex(index){var delimiter=this.delimiterAt(index);return delimiter!==undefined&&delimiter!==null;} /**
+	     * Will call parse on the formatter.
+	     *
+	     * @param {string} text
+	     * @param {function(string)} error
+	     * @returns {string} returns value with delimiters removed
+	     */},{key:'parse',value:function parse(text,error){if(!error){error=function error(){};}var digits=this.digitsWithoutCountryCode(text); // Source: http://en.wikipedia.org/wiki/North_American_Numbering_Plan
+	//
+	// Area Code
+	if(text.length<10){error('phone-formatter.number-too-short');}if(digits[0]==='0'){error('phone-formatter.area-code-zero');}if(digits[0]==='1'){error('phone-formatter.area-code-one');}if(digits[1]==='9'){error('phone-formatter.area-code-n9n');} // Central Office Code
+	if(digits[3]==='1'){error('phone-formatter.central-office-one');}if(digits.slice(4,6)==='11'){error('phone-formatter.central-office-n11');}return _get(Object.getPrototypeOf(PhoneFormatter.prototype),'parse',this).call(this,text,error);} /**
+	     * @param {string} value
+	     * @returns {string}
+	     */},{key:'format',value:function format(value){this.guessFormatFromText(value);return _get(Object.getPrototypeOf(PhoneFormatter.prototype),'format',this).call(this,this.removeDelimiterMapChars(value));} /**
+	     * Determines whether the given change should be allowed and, if so, whether
+	     * it should be altered.
+	     *
+	     * @param {TextFieldStateChange} change
+	     * @param {function(string)} error
+	     * @returns {boolean}
+	     */},{key:'isChangeValid',value:function isChangeValid(change,error){this.guessFormatFromText(change.proposed.text);if(change.inserted.text.length>1){ // handle pastes
+	var text=change.current.text;var selectedRange=change.current.selectedRange;var toInsert=change.inserted.text; // Replace the selection with the new text, remove non-digits, then format.
+	var formatted=this.format((text.slice(0,selectedRange.start)+toInsert+text.slice(selectedRange.start+selectedRange.length)).replace(/[^\d]/g,''));change.proposed={text:formatted,selectedRange:{start:formatted.length-(text.length-(selectedRange.start+selectedRange.length)),length:0}};return _get(Object.getPrototypeOf(PhoneFormatter.prototype),'isChangeValid',this).call(this,change,error);}if(/^\d*$/.test(change.inserted.text)||change.proposed.text.indexOf('+')===0){var formatName=this.delimiterMap.name; // First guess at the localized format
+	if(currentCountryCode.localizedFormat){this.delimiterMap=currentCountryCode.localizedFormat;this.maximumLength=currentCountryCode.localizedFormat.maximumLength;formatName='localized-'+currentCountryCode.E164;} // We need to store the change and current format guess so that if the isChangeValid
+	// call to super changes the proposed text such that the format we thought is no longer
+	// valid. If that does happen we actually just rerun it through with the correct format
+	var originalProposed=change.proposed.text;var _isChangeValid=_get(Object.getPrototypeOf(PhoneFormatter.prototype),'isChangeValid',this).call(this,change,error);this.guessFormatFromText(change.proposed.text); // Make sure if the localizedFormat changed, respect that
+	if(currentCountryCode.localizedFormat){this.delimiterMap=currentCountryCode.localizedFormat;this.maximumLength=currentCountryCode.localizedFormat.maximumLength;this.delimiterMap.name='localized-'+currentCountryCode.E164;}if(formatName===this.delimiterMap.name){return _isChangeValid;}else {var originalChange=change;originalChange.proposed.text=originalProposed;return _get(Object.getPrototypeOf(PhoneFormatter.prototype),'isChangeValid',this).call(this,originalChange,error);}}else {return false;}} /**
+	     * Re-configures this formatter to use the delimiters appropriate
+	     * for the given text.
+	     *
+	     * @param {string} text A potentially formatted string containing a phone number.
+	     * @private
+	     */},{key:'guessFormatFromText',value:function guessFormatFromText(text){currentCountryCode=DEFAULT_COUNTRY_CODE;if(text&&text[0]==='+'){if(text.length>1){var isValidCountryCode=function isValidCountryCode(countryCode){var matchingCodes=COUNTRY_CODES.filter(function(country){return country.E164===countryCode;});return matchingCodes.length>0;};var rawText=this.removeDelimiterMapChars(text);if(currentCountryCode=isValidCountryCode(rawText[1])){this.delimiterMap=E164PhoneDelimitersWithOneDigit;this.maximumLength=1+1+10+5;}else if(text.length>2&&(currentCountryCode=isValidCountryCode(rawText.slice(1,3)))){this.delimiterMap=E164PhoneDelimitersWithTwoDigit;this.maximumLength=1+2+10+5;}else {currentCountryCode=isValidCountryCode(rawText.slice(1,4))||DEFAULT_COUNTRY_CODE;this.delimiterMap=E164PhoneDelimitersWithThreeDigit;this.maximumLength=1+3+10+5;}}else {this.delimiterMap=E164PhoneDelimitersWithThreeDigit;this.maximumLength=1+3+10+5;}}else if(text&&text[0]==='1'){this.delimiterMap=NANPPhoneDelimitersWithOne;this.maximumLength=1+10+5;}else if(text&&text[0]===' '){this.delimiterMap=NANPPhoneDelimiters;this.maximumLength=10+5;}else {this.delimiterMap=NANPPhoneDelimiters;this.maximumLength=10+4;}} /**
+	     * Gives back just the phone number digits as a string without the
+	     * country code. Future-proofing internationalization where the country code
+	     * isn't just +1.
+	     *
+	     * @param {string} text
+	     * @private
+	     */},{key:'digitsWithoutCountryCode',value:function digitsWithoutCountryCode(text){var digits=(text||'').replace(/[^\d]/g,'');var extraDigits=digits.length-10;if(extraDigits>0){digits=digits.substr(extraDigits);}return digits;} /**
+	     * Removes characters from the phone number that will be added
+	     * by the formatter.
+	     *
+	     * @param {string} text
+	     * @private
+	     */},{key:'removeDelimiterMapChars',value:function removeDelimiterMapChars(text){return (text||'').replace(DELIMITER_PATTERN,'');}}]);return PhoneFormatter;}(_delimited_text_formatter2['default']);var COUNTRY_CODES=[{"E164":"93","country":"Afghanistan"},{"E164":"355","country":"Albania"},{"E164":"213","country":"Algeria"},{"E164":"1","country":["American Samoa","Anguilla","Antigua and Barbuda","Bahamas","Barbados","Bermuda","British Virgin Islands","Canada","Cayman Islands","Dominica","Dominican Republic","Grenada","Guam","Jamaica","Montserrat","Northern Mariana Islands","Puerto Rico","Saint Kitts and Nevis","Saint Lucia","Saint Martin","Saint Vincent and the Grenadines","Sint Maarten","Trinidad and Tobago","Turks and Caicos Islands","U.S. Virgin Islands","United States"]},{"E164":"376","country":"Andorra"},{"E164":"244","country":"Angola"},{"E164":"672","country":"Antarctica"},{"E164":"54","country":"Argentina"},{"E164":"374","country":"Armenia"},{"E164":"297","country":"Aruba"},{"E164":"43","country":"Austria"},{"E164":"994","country":"Azerbaijan"},{"E164":"973","country":"Bahrain"},{"E164":"880","country":"Bangladesh"},{"E164":"375","country":"Belarus"},{"E164":"32","country":"Belgium"},{"E164":"501","country":"Belize"},{"E164":"229","country":"Benin"},{"E164":"975","country":"Bhutan"},{"E164":"591","country":"Bolivia"},{"E164":"387","country":"Bosnia and Herzegovina"},{"E164":"267","country":"Botswana"},{"E164":"55","country":"Brazil"},{"E164":"246","country":"British Indian Ocean Territory"},{"E164":"673","country":"Brunei"},{"E164":"359","country":"Bulgaria"},{"E164":"226","country":"Burkina Faso"},{"E164":"257","country":"Burundi"},{"E164":"855","country":"Cambodia"},{"E164":"237","country":"Cameroon"},{"E164":"238","country":"Cape Verde"},{"E164":"236","country":"Central African Republic"},{"E164":"235","country":"Chad"},{"E164":"56","country":"Chile"},{"E164":"86","country":"China"},{"E164":"61","country":["Australia","Christmas Island","Cocos Islands"]},{"E164":"57","country":"Colombia"},{"E164":"269","country":"Comoros"},{"E164":"682","country":"Cook Islands"},{"E164":"506","country":"Costa Rica"},{"E164":"385","country":"Croatia"},{"E164":"53","country":"Cuba"},{"E164":"599","country":["Curacao","Netherlands Antilles"]},{"E164":"357","country":"Cyprus"},{"E164":"420","country":"Czech Republic"},{"E164":"243","country":"Democratic Republic of the Congo"},{"E164":"45","country":"Denmark"},{"E164":"253","country":"Djibouti"},{"E164":"670","country":"East Timor"},{"E164":"593","country":"Ecuador"},{"E164":"20","country":"Egypt"},{"E164":"503","country":"El Salvador"},{"E164":"240","country":"Equatorial Guinea"},{"E164":"291","country":"Eritrea"},{"E164":"372","country":"Estonia"},{"E164":"251","country":"Ethiopia"},{"E164":"500","country":"Falkland Islands"},{"E164":"298","country":"Faroe Islands"},{"E164":"679","country":"Fiji"},{"E164":"358","country":"Finland"},{"E164":"33","country":"France"},{"E164":"689","country":"French Polynesia"},{"E164":"241","country":"Gabon"},{"E164":"220","country":"Gambia"},{"E164":"995","country":"Georgia"},{"E164":"49","country":"Germany"},{"E164":"233","country":"Ghana"},{"E164":"350","country":"Gibraltar"},{"E164":"30","country":"Greece"},{"E164":"299","country":"Greenland"},{"E164":"502","country":"Guatemala"},{"E164":"44","country":["Guernsey","Isle of Man","Jersey","United Kingdom"]},{"E164":"224","country":"Guinea"},{"E164":"245","country":"Guinea-Bissau"},{"E164":"592","country":"Guyana"},{"E164":"509","country":"Haiti"},{"E164":"504","country":"Honduras"},{"E164":"852","country":"Hong Kong"},{"E164":"36","country":"Hungary"},{"E164":"354","country":"Iceland"},{"E164":"91","country":"India"},{"E164":"62","country":"Indonesia"},{"E164":"98","country":"Iran"},{"E164":"964","country":"Iraq"},{"E164":"353","country":"Ireland"},{"E164":"972","country":"Israel"},{"E164":"39","country":["Italy","Vatican"]},{"E164":"225","country":"Ivory Coast"},{"E164":"81","country":"Japan"},{"E164":"962","country":"Jordan"},{"E164":"7","country":["Kazakhstan","Russia"],"localizedFormat":{"maximumLength":1+1+10+6,2:' ',3:'(',7:')',8:' ',12:'-',15:'-'}},{"E164":"254","country":"Kenya"},{"E164":"686","country":"Kiribati"},{"E164":"383","country":"Kosovo"},{"E164":"965","country":"Kuwait"},{"E164":"996","country":"Kyrgyzstan"},{"E164":"856","country":"Laos"},{"E164":"371","country":"Latvia"},{"E164":"961","country":"Lebanon"},{"E164":"266","country":"Lesotho"},{"E164":"231","country":"Liberia"},{"E164":"218","country":"Libya"},{"E164":"423","country":"Liechtenstein"},{"E164":"370","country":"Lithuania"},{"E164":"352","country":"Luxembourg"},{"E164":"853","country":"Macao"},{"E164":"389","country":"Macedonia"},{"E164":"261","country":"Madagascar"},{"E164":"265","country":"Malawi"},{"E164":"60","country":"Malaysia"},{"E164":"960","country":"Maldives"},{"E164":"223","country":"Mali"},{"E164":"356","country":"Malta"},{"E164":"692","country":"Marshall Islands"},{"E164":"222","country":"Mauritania"},{"E164":"230","country":"Mauritius"},{"E164":"262","country":["Mayotte","Reunion"]},{"E164":"52","country":"Mexico"},{"E164":"691","country":"Micronesia"},{"E164":"373","country":"Moldova"},{"E164":"377","country":"Monaco"},{"E164":"976","country":"Mongolia"},{"E164":"382","country":"Montenegro"},{"E164":"212","country":["Morocco","Western Sahara"]},{"E164":"258","country":"Mozambique"},{"E164":"95","country":"Myanmar"},{"E164":"264","country":"Namibia"},{"E164":"674","country":"Nauru"},{"E164":"977","country":"Nepal"},{"E164":"31","country":"Netherlands"},{"E164":"687","country":"New Caledonia"},{"E164":"64","country":"New Zealand"},{"E164":"64","country":"Pitcairn"},{"E164":"505","country":"Nicaragua"},{"E164":"227","country":"Niger"},{"E164":"234","country":"Nigeria"},{"E164":"683","country":"Niue"},{"E164":"850","country":"North Korea"},{"E164":"47","country":["Norway","Svalbard and Jan Mayen"]},{"E164":"968","country":"Oman"},{"E164":"92","country":"Pakistan"},{"E164":"680","country":"Palau"},{"E164":"970","country":"Palestine"},{"E164":"507","country":"Panama"},{"E164":"675","country":"Papua New Guinea"},{"E164":"595","country":"Paraguay"},{"E164":"51","country":"Peru"},{"E164":"63","country":"Philippines"},{"E164":"48","country":"Poland"},{"E164":"351","country":"Portugal"},{"E164":"974","country":"Qatar"},{"E164":"242","country":"Republic of the Congo"},{"E164":"40","country":"Romania"},{"E164":"250","country":"Rwanda"},{"E164":"590","country":"Saint Barthelemy"},{"E164":"290","country":"Saint Helena"},{"E164":"508","country":"Saint Pierre and Miquelon"},{"E164":"685","country":"Samoa"},{"E164":"378","country":"San Marino"},{"E164":"239","country":"Sao Tome and Principe"},{"E164":"966","country":"Saudi Arabia"},{"E164":"221","country":"Senegal"},{"E164":"381","country":"Serbia"},{"E164":"248","country":"Seychelles"},{"E164":"232","country":"Sierra Leone"},{"E164":"65","country":"Singapore"},{"E164":"421","country":"Slovakia"},{"E164":"386","country":"Slovenia"},{"E164":"677","country":"Solomon Islands"},{"E164":"252","country":"Somalia"},{"E164":"27","country":"South Africa"},{"E164":"82","country":"South Korea"},{"E164":"211","country":"South Sudan"},{"E164":"34","country":"Spain"},{"E164":"94","country":"Sri Lanka"},{"E164":"249","country":"Sudan"},{"E164":"597","country":"Suriname"},{"E164":"268","country":"Swaziland"},{"E164":"46","country":"Sweden"},{"E164":"41","country":"Switzerland"},{"E164":"963","country":"Syria"},{"E164":"886","country":"Taiwan"},{"E164":"992","country":"Tajikistan"},{"E164":"255","country":"Tanzania"},{"E164":"66","country":"Thailand"},{"E164":"228","country":"Togo"},{"E164":"690","country":"Tokelau"},{"E164":"676","country":"Tonga"},{"E164":"216","country":"Tunisia"},{"E164":"90","country":"Turkey"},{"E164":"993","country":"Turkmenistan"},{"E164":"688","country":"Tuvalu"},{"E164":"256","country":"Uganda"},{"E164":"380","country":"Ukraine"},{"E164":"971","country":"United Arab Emirates"},{"E164":"598","country":"Uruguay"},{"E164":"998","country":"Uzbekistan"},{"E164":"678","country":"Vanuatu"},{"E164":"58","country":"Venezuela"},{"E164":"84","country":"Vietnam"},{"E164":"681","country":"Wallis and Futuna"},{"E164":"967","country":"Yemen"},{"E164":"260","country":"Zambia"},{"E164":"263","country":"Zimbabwe"}];exports['default']=PhoneFormatter;module.exports=exports['default'];},{"./delimited_text_formatter":10}],19:[function(_dereq_,module,exports){'use strict';Object.defineProperty(exports,'__esModule',{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if('value' in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _get=function get(_x,_x2,_x3){var _again=true;_function: while(_again){var object=_x,property=_x2,receiver=_x3;_again=false;if(object===null)object=Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property);if(desc===undefined){var parent=Object.getPrototypeOf(object);if(parent===null){return undefined;}else {_x=parent;_x2=property;_x3=receiver;_again=true;desc=parent=undefined;continue _function;}}else if('value' in desc){return desc.value;}else {var getter=desc.get;if(getter===undefined){return undefined;}return getter.call(receiver);}}};function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}function _inherits(subClass,superClass){if(typeof superClass!=='function'&&superClass!==null){throw new TypeError('Super expression must either be null or a function, not '+(typeof superClass==="undefined"?"undefined":_typeof(superClass)));}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var _delimited_text_formatter=_dereq_('./delimited_text_formatter');var _delimited_text_formatter2=_interopRequireDefault(_delimited_text_formatter); /**
+	 * @const
+	 * @private
+	 */var DIGITS_PATTERN=/^\d*$/; /**
+	 * @extends DelimitedTextFormatter
+	 */var SocialSecurityNumberFormatter=function(_DelimitedTextFormatter){_inherits(SocialSecurityNumberFormatter,_DelimitedTextFormatter);function SocialSecurityNumberFormatter(){_classCallCheck(this,SocialSecurityNumberFormatter);_get(Object.getPrototypeOf(SocialSecurityNumberFormatter.prototype),'constructor',this).call(this,'-');this.maximumLength=9+2;} /**
+	   * @param {number} index
+	   * @returns {boolean}
+	   */_createClass(SocialSecurityNumberFormatter,[{key:'hasDelimiterAtIndex',value:function hasDelimiterAtIndex(index){return index===3||index===6;} /**
+	     * Determines whether the given change should be allowed and, if so, whether
+	     * it should be altered.
+	     *
+	     * @param {TextFieldStateChange} change
+	     * @param {function(string)} error
+	     * @returns {boolean}
+	     */},{key:'isChangeValid',value:function isChangeValid(change,error){if(DIGITS_PATTERN.test(change.inserted.text)){return _get(Object.getPrototypeOf(SocialSecurityNumberFormatter.prototype),'isChangeValid',this).call(this,change,error);}else {return false;}}}]);return SocialSecurityNumberFormatter;}(_delimited_text_formatter2['default']);exports['default']=SocialSecurityNumberFormatter;module.exports=exports['default'];},{"./delimited_text_formatter":10}],20:[function(_dereq_,module,exports){'use strict';Object.defineProperty(exports,'__esModule',{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if('value' in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _get=function get(_x,_x2,_x3){var _again=true;_function: while(_again){var object=_x,property=_x2,receiver=_x3;_again=false;if(object===null)object=Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property);if(desc===undefined){var parent=Object.getPrototypeOf(object);if(parent===null){return undefined;}else {_x=parent;_x2=property;_x3=receiver;_again=true;desc=parent=undefined;continue _function;}}else if('value' in desc){return desc.value;}else {var getter=desc.get;if(getter===undefined){return undefined;}return getter.call(receiver);}}};function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{'default':obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}function _inherits(subClass,superClass){if(typeof superClass!=='function'&&superClass!==null){throw new TypeError('Super expression must either be null or a function, not '+(typeof superClass==="undefined"?"undefined":_typeof(superClass)));}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var _formatter=_dereq_('./formatter');var _formatter2=_interopRequireDefault(_formatter);var _undo_manager=_dereq_('./undo_manager');var _undo_manager2=_interopRequireDefault(_undo_manager);var _utils=_dereq_('./utils');var _caret=_dereq_('./caret');var _caret2=_interopRequireDefault(_caret); /**
+	 * Simulates input behavior.
+	 *
+	 * @external InputSim
+	 * @see https://github.com/iamJoeTaylor/input-sim
+	 */var _inputSim=_dereq_('input-sim'); /**
+	 * TextField is the simplest input and the base for more complex
+	 * types to inherit.
+	 *
+	 * @extends external:InputSim.Input
+	 */var _installCaret=(0,_caret2['default'])();var getCaret=_installCaret.getCaret;var setCaret=_installCaret.setCaret;var TextField=function(_Input){_inherits(TextField,_Input); /**
+	   * Sets up the initial properties of the TextField and
+	   * sets  up the event listeners
+	   *
+	   * @param {HTMLElement} element
+	   * @param {Formatter} formatter
+	   */function TextField(element,formatter){_classCallCheck(this,TextField);_get(Object.getPrototypeOf(TextField.prototype),'constructor',this).call(this);var caret=getCaret(element);if(typeof element.get==='function'){console.warn('DEPRECATION: FieldKit.TextField instances should no longer be '+'created with a jQuery-wrapped element.');element=element.get(0);}this.element=element;this._formatter=formatter;this._enabled=true;this._manualCaret={start:0,end:0};this._placeholder=null;this._disabledPlaceholder=null;this._focusedPlaceholder=null;this._unfocusedPlaceholder=null;this._isDirty=false;this._valueOnFocus='';this._currentValue=''; // Make sure textDidChange fires while the value is correct
+	this._needsKeyUpTextDidChangeTrigger=false;this._blur=(0,_utils.bind)(this._blur,this);this._focus=(0,_utils.bind)(this._focus,this);this._click=(0,_utils.bind)(this._click,this);this._paste=(0,_utils.bind)(this._paste,this);this._keyUp=(0,_utils.bind)(this._keyUp,this);this._keyPress=(0,_utils.bind)(this._keyPress,this);this._keyDown=(0,_utils.bind)(this._keyDown,this);if(element['field-kit-text-field']){throw new Error('already attached a TextField to this element');}else {element['field-kit-text-field']=this;}element.addEventListener('keydown',this._keyDown);element.addEventListener('keypress',this._keyPress);element.addEventListener('keyup',this._keyUp);element.addEventListener('click',this._click);element.addEventListener('paste',this._paste);element.addEventListener('focus',this._focus);element.addEventListener('blur',this._blur);if(!element.getAttribute('autocapitalize')){element.setAttribute('autocapitalize','off');}var window=element.ownerDocument.defaultView; /**
+	     * Fixes caret bug (Android) that caused the input
+	     * to place inserted characters in the wrong place
+	     * Expected: 1234 5678|  =>  1234 5678 9|
+	     * Bug: 1234 5678|  =>  1234 5679| 8
+	     *
+	     * @private
+	     */this._needsManualCaret=window.navigator.userAgent.toLowerCase().indexOf('android')>-1;this.setText(element.value);this.setSelectedRange({start:caret.start,length:caret.end-caret.start});} /**
+	   * Helps calculate the changes after an event on a FieldKit.TextField.
+	   *
+	   * @private
+	   */ /**
+	   * **** Public Events ****
+	   */ /**
+	   * Called when the user has changed the text of the field. Can be used in
+	   * subclasses to perform actions suitable for this event.
+	   *
+	   * @private
+	   */_createClass(TextField,[{key:'textDidChange',value:function textDidChange(){} /**
+	     * Called when the user has in some way declared that they are done editing,
+	     * such as leaving the field or perhaps pressing enter. Can be used in
+	     * subclasses to perform actions suitable for this event.
+	     *
+	     * @private
+	     */},{key:'textFieldDidEndEditing',value:function textFieldDidEndEditing(){} /**
+	     * Performs actions necessary for beginning editing.
+	     *
+	     * @private
+	     */},{key:'textFieldDidBeginEditing',value:function textFieldDidBeginEditing(){} /**
+	     * **** Private Events ****
+	     */ /**
+	     * Performs actions necessary for text change.
+	     *
+	     * @private
+	     */},{key:'_textDidChange',value:function _textDidChange(){var delegate=this._delegate;this.textDidChange();if(delegate&&typeof delegate.textDidChange==='function'){delegate.textDidChange(this);} // manually fire the HTML5 input event
+	this._fireEvent('input');} /**
+	     * Performs actions necessary for ending editing.
+	     *
+	     * @private
+	     */},{key:'_textFieldDidEndEditing',value:function _textFieldDidEndEditing(){var delegate=this._delegate;this.textFieldDidEndEditing();if(delegate&&typeof delegate.textFieldDidEndEditing==='function'){delegate.textFieldDidEndEditing(this);} // manually fire the HTML5 change event, only when a change has been made since focus
+	if(this._isDirty&&this._valueOnFocus!==this.element.value){this._fireEvent('change');} // reset the dirty property
+	this._isDirty=false;this._valueOnFocus='';} /**
+	     * Performs actions necessary for beginning editing.
+	     *
+	     * @private
+	     */},{key:'_textFieldDidBeginEditing',value:function _textFieldDidBeginEditing(){var delegate=this._delegate;this.textFieldDidBeginEditing();if(delegate&&typeof delegate.textFieldDidBeginEditing==='function'){delegate.textFieldDidBeginEditing(this);}} /**
+	     * **** Public Methods ****
+	     */ /**
+	     * Gets the current delegate for this text field.
+	     *
+	     * @returns {TextFieldDelegate}
+	     */},{key:'delegate',value:function delegate(){return this._delegate;} /**
+	     * Sets the current delegate for this text field.
+	     *
+	     * @param {TextFieldDelegate} delegate
+	     */},{key:'setDelegate',value:function setDelegate(delegate){this._delegate=delegate;} /**
+	     * Tears down FieldKit
+	     */},{key:'destroy',value:function destroy(){var element=this.element;element.removeEventListener('keydown',this._keyDown);element.removeEventListener('keypress',this._keyPress);element.removeEventListener('keyup',this._keyUp);element.removeEventListener('click',this._click);element.removeEventListener('paste',this._paste);element.removeEventListener('focus',this._focus);element.removeEventListener('blur',this._blur);delete element['field-kit-text-field'];} /**
+	     * Gets the current formatter. Formatters are used to translate between text
+	     * and value properties of the field.
+	     *
+	     * @returns {Formatter}
+	     */},{key:'formatter',value:function formatter(){if(!this._formatter){this._formatter=new _formatter2['default']();var maximumLengthString=this.element.getAttribute('maxlength');if(maximumLengthString!==undefined&&maximumLengthString!==null){this._formatter.maximumLength=parseInt(maximumLengthString,10);}}return this._formatter;} /**
+	     * Sets the current formatter.
+	     *
+	     * @param {Formatter} formatter
+	     */},{key:'setFormatter',value:function setFormatter(formatter){var value=this.value();this._formatter=formatter;this.setValue(value);} /**
+	     * Builds a change instance and formats the change to see if it's valid
+	     *
+	     * @param   {object} current
+	     * @param   {object} proposed
+	     * @returns {?object} false if change doesn't have changes or change isn't valid. Change object if it is.
+	     */},{key:'hasChangesAndIsValid',value:function hasChangesAndIsValid(current,proposed){var _this=this;var change=new TextFieldStateChange(this);var error=function error(errorType){var delegate=_this.delegate();if(delegate){if(typeof delegate.textFieldDidFailToValidateChange==='function'){delegate.textFieldDidFailToValidateChange(_this,change,errorType);}}};change.current={text:current.text,selectedRange:current.selectedRange};change.proposed={text:proposed.text,selectedRange:proposed.selectedRange};if(change.hasChanges()&&this.formatter().isChangeValid(change,error)){return change;}return null;} /**
+	     * Handles a key event could be trying to end editing.
+	     *
+	     */},{key:'insertNewline',value:function insertNewline(){this._textFieldDidEndEditing();this._didEndEditingButKeptFocus=true;} /**
+	     * Debug support
+	     *
+	     * @returns {string}
+	     */},{key:'inspect',value:function inspect(){return '#<TextField text="'+this.text()+'">';} /**
+	     * Replaces the current selection with text from the given pasteboard.
+	     *
+	     * @param {DataTransfer} pasteboard
+	     */},{key:'readSelectionFromPasteboard',value:function readSelectionFromPasteboard(pasteboard){var range=undefined,text=undefined;text=pasteboard.getData('Text');this.replaceSelection(text);range=this.selectedRange();range.start+=range.length;range.length=0;this.setSelectedRange(range);} /**
+	     * Checks changes after invoking the passed function for validity and rolls
+	     * them back if the changes turned out to be invalid.
+	     *
+	     * @returns {Object} whatever object `callback` returns
+	     */},{key:'rollbackInvalidChanges',value:function rollbackInvalidChanges(callback){var result=null;var errorType=null;var change=TextFieldStateChange.build(this,function(){return result=callback();});var error=function error(type){errorType=type;};if(change.hasChanges()){var formatter=this.formatter();if(formatter&&typeof formatter.isChangeValid==='function'){if(!this._isDirty){this._valueOnFocus=change.current.text||'';this._isDirty=true;}if(formatter.isChangeValid(change,error)){change.recomputeDiff();this.setText(change.proposed.text);this.setSelectedRange(change.proposed.selectedRange);}else {var delegate=this.delegate();if(delegate){if(typeof delegate.textFieldDidFailToValidateChange==='function'){delegate.textFieldDidFailToValidateChange(this,change,errorType);}}this.setText(change.current.text);this.setSelectedRange(change.current.selectedRange);return result;}}if(change.inserted.text.length||change.deleted.text.length){this.undoManager().proxyFor(this)._applyChangeFromUndoManager(change);this._textDidChange();}}return result;} /**
+	     * Gets the object value. This is the value that should be considered the
+	     * 'real' value of the field.
+	     *
+	     * @returns {Object}
+	     */},{key:'value',value:function value(){var _this2=this;var text=this.text();var delegate=this.delegate();var formatter=this.formatter();if(!formatter){return text;}return formatter.parse(text,function(errorType){if(delegate){if(typeof delegate.textFieldDidFailToParseString==='function'){delegate.textFieldDidFailToParseString(_this2,text,errorType);}}});} /**
+	     * Sets the object value of the field.
+	     *
+	     * @param {string} value
+	     */},{key:'setValue',value:function setValue(value){if(this._formatter){value=this._formatter.format(value);}this.setText(''+value);} /**
+	     * **** InputSim Overrides ****
+	     */ /**
+	     * Gets the formatted text value. This is the same as the value of the
+	     * underlying input element.
+	     *
+	     * @augments external:InputSim.Input#text
+	     * @returns {string}
+	     */},{key:'text',value:function text(){return this.element.value;} /**
+	     * Sets the formatted text value. This generally should not be used. Instead,
+	     * use the value setter.
+	     *
+	     * @augments external:InputSim.Input#setText
+	     * @param {string} text
+	     */},{key:'setText',value:function setText(text){this.element.value=text;this._currentValue=text;} /**
+	     * Gets the range of the current selection.
+	     *
+	     * @augments external:InputSim.Input#selectedRange
+	     * @returns {Object} {start: number, length: number}
+	     */},{key:'selectedRange',value:function selectedRange(){var caret=this._needsManualCaret?this._manualCaret:getCaret(this.element);return {start:caret.start,length:caret.end-caret.start};} /**
+	     * Sets the range of the current selection and the selection affinity.
+	     *
+	     * @augments external:InputSim.Input#setSelectedRangeWithAffinity
+	     * @param {{start: number, length: number}} range
+	     * @param {Affinity} affinity
+	     */},{key:'setSelectedRangeWithAffinity',value:function setSelectedRangeWithAffinity(range,affinity){var newRange=_get(Object.getPrototypeOf(TextField.prototype),'setSelectedRangeWithAffinity',this).call(this,range,affinity);var caret={start:newRange.start,end:newRange.start+newRange.length};this._manualCaret=caret;setCaret(this.element,caret.start,caret.end);this.selectionAffinity=range.length===0?null:affinity;} /**
+	     * **** Undo Support ****
+	     */ /**
+	     * Gets whether this text field records undo actions with its undo manager.
+	     *
+	     * @returns {boolean}
+	     */},{key:'allowsUndo',value:function allowsUndo(){return this._allowsUndo;} /**
+	     * Sets whether this text field records undo actions with its undo manager.
+	     *
+	     * @param {boolean} allowsUndo
+	     */},{key:'setAllowsUndo',value:function setAllowsUndo(allowsUndo){this._allowsUndo=allowsUndo;} /**
+	     * Triggers a redo in the underlying UndoManager, if applicable.
+	     *
+	     * @param {Event} event
+	     */},{key:'redo',value:function redo(event){if(this.undoManager().canRedo()){this.undoManager().redo();}event.preventDefault();} /**
+	     * Triggers an undo in the underlying UndoManager, if applicable.
+	     *
+	     * @param {Event} event
+	     */},{key:'undo',value:function undo(event){if(this.undoManager().canUndo()){this.undoManager().undo();}event.preventDefault();} /**
+	     * Gets the UndoManager for this text field.
+	     *
+	     * @returns {UndoManager}
+	     */},{key:'undoManager',value:function undoManager(){return this._undoManager||(this._undoManager=new _undo_manager2['default']());} /**
+	     * **** Enabled/disabled support *****
+	     */ /**
+	     * Removes focus from this field if it has focus.
+	     */},{key:'becomeFirstResponder',value:function becomeFirstResponder(){var _this3=this;this.element.focus();this.rollbackInvalidChanges(function(){_this3.element.select();_this3._syncPlaceholder();});} /**
+	     * Determines whether this field has focus.
+	     *
+	     * @returns {boolean} true if this field has focus
+	     */},{key:'hasFocus',value:function hasFocus(){return this.element.ownerDocument.activeElement===this.element;} /**
+	     * Determines whether this field is enabled or disabled.
+	     *
+	     * @returns {boolean} true if this field is enabled
+	     */},{key:'isEnabled',value:function isEnabled(){return this._enabled;} /**
+	     * Sets whether this text field is enabled
+	     * and syncs the placeholder to match
+	     *
+	     * @param {boolean} enabled
+	     */},{key:'setEnabled',value:function setEnabled(enabled){this._enabled=enabled;this._syncPlaceholder();} /**
+	     * Removes focus from this field if it has focus.
+	     *
+	     * @param {Event} event
+	     */},{key:'resignFirstResponder',value:function resignFirstResponder(event){if(event!==undefined&&event!==null){event.preventDefault();}this.element.blur();this._syncPlaceholder();} /*
+	     * **** Placeholder support ****
+	     */ /**
+	     * Gets the disabled placeholder if one
+	     * has been set.
+	     *
+	     * @returns {string}
+	     */},{key:'disabledPlaceholder',value:function disabledPlaceholder(){return this._disabledPlaceholder;} /**
+	     * Sets the disabled placeholder.
+	     *
+	     * @param {string} disabledPlaceholder
+	     */},{key:'setDisabledPlaceholder',value:function setDisabledPlaceholder(disabledPlaceholder){this._disabledPlaceholder=disabledPlaceholder;this._syncPlaceholder();} /**
+	     * Gets the focused placeholder if one
+	     * has been set.
+	     *
+	     * @returns {string}
+	     */},{key:'focusedPlaceholder',value:function focusedPlaceholder(){return this._focusedPlaceholder;} /**
+	     * Sets the focused placeholder.
+	     *
+	     * @param {string} focusedPlaceholder
+	     */},{key:'setFocusedPlaceholder',value:function setFocusedPlaceholder(focusedPlaceholder){this._focusedPlaceholder=focusedPlaceholder;this._syncPlaceholder();} /**
+	     * Gets the placeholder if one has
+	     * been set.
+	     *
+	     * @TODO Does this do anything?
+	     *
+	     * @returns {string}
+	     */},{key:'placeholder',value:function placeholder(){return this._placeholder;} /**
+	     * Sets the placeholder.
+	     *
+	     * @param {string} placeholder
+	     */},{key:'setPlaceholder',value:function setPlaceholder(placeholder){this._placeholder=placeholder;this.element.setAttribute('placeholder',this._placeholder);} /**
+	     * Gets the unfocused placeholder if one
+	     * has been set.
+	     *
+	     * @returns {string}
+	     */},{key:'unfocusedPlaceholder',value:function unfocusedPlaceholder(){return this._unfocusedPlaceholder;} /**
+	     * Sets the unfocused placeholder.
+	     *
+	     * @param {string} unfocusedPlaceholder
+	     */},{key:'setUnfocusedPlaceholder',value:function setUnfocusedPlaceholder(unfocusedPlaceholder){this._unfocusedPlaceholder=unfocusedPlaceholder;this._syncPlaceholder();} /**
+	     * **** Private Methods ****
+	     */ /**
+	     * Applies the given change as an undo/redo.
+	     *
+	     * @param {Object} change object with current and proposed properties
+	     * @private
+	     */},{key:'_applyChangeFromUndoManager',value:function _applyChangeFromUndoManager(change){this.undoManager().proxyFor(this)._applyChangeFromUndoManager(change);if(this.undoManager().isUndoing()){this.setText(change.current.text);this.setSelectedRange(change.current.selectedRange);}else {this.setText(change.proposed.text);this.setSelectedRange(change.proposed.selectedRange);}this._textDidChange();} /**
+	     * Handles clicks by resetting the selection affinity.
+	     *
+	     * @private
+	     */},{key:'_click',value:function _click(){this._manualCaret=getCaret(this.element);this._selectedRange={start:this._manualCaret.start,length:this._manualCaret.end-this._manualCaret.start};this.selectionAffinity=null;} /**
+	     * Fires event on the element
+	     *
+	     * @param {string} eventType
+	     * @private
+	     */},{key:'_fireEvent',value:function _fireEvent(eventType){var document=this.element.ownerDocument;var window=document.defaultView;if(typeof window.CustomEvent==='function'){this.element.dispatchEvent(new window.CustomEvent(eventType,{}));}else {var _event=document.createEvent('Event');_event.initEvent(eventType,false,false);this.element.dispatchEvent(_event);}} /**
+	     * Handles gaining focus. This method delegates to other methods, and syncs
+	     * the placeholder appropriately.
+	     *
+	     * @private
+	     */},{key:'_focus',value:function _focus(){this._textFieldDidBeginEditing();this._syncPlaceholder();} /**
+	     * Handles losing focus. This method delegates to other methods, and syncs the
+	     * placeholder appropriately.
+	     *
+	     * @private
+	     */},{key:'_blur',value:function _blur(){this._textFieldDidEndEditing();this._syncPlaceholder();} /**
+	     * Handles keyDown events. This method essentially just delegates to other,
+	     * more semantic, methods based on the modifier keys and the pressed key of the
+	     * event.
+	     *
+	     * @param {Event} event
+	     * @private
+	     */},{key:'_keyDown',value:function _keyDown(event){var _this4=this;if(this._didEndEditingButKeptFocus){this._textFieldDidBeginEditing();this._didEndEditingButKeptFocus=false;}var action=this._bindings.actionForEvent(event);if(action){switch(action){case 'undo':case 'redo':this[action](event);break;default:this.rollbackInvalidChanges(function(){return _this4[action](event);});break;}}} /**
+	     * Handles inserting characters based on the typed key for normal keyboards.
+	     *
+	     * NOTE: Does not fire on some versions of Android, in which case we handle
+	     * changes in _keyUp instead.
+	     *
+	     * @param {Event} event
+	     * @private
+	     */},{key:'_keyPress',value:function _keyPress(event){var _this5=this;var keyCode=event.keyCode;if(!event.metaKey&&!event.ctrlKey&&keyCode!==_inputSim.KEYS.ENTER&&keyCode!==_inputSim.KEYS.TAB&&keyCode!==_inputSim.KEYS.BACKSPACE){if(event.charCode!==0){(function(){var newText=String.fromCharCode(event.charCode||event.keyCode);_this5._processChange({currentText:_this5.text(),proposedText:(0,_utils.replaceStringSelection)(newText,_this5.text(),_this5.selectedRange()),onSuccess:function onSuccess(change,changeTriggeredFormatting){if(!changeTriggeredFormatting&&event instanceof KeyboardEvent){ // HACK(JoeTaylor) Use Browser's native input when using the formatter
+	// would not make a difference https://code.google.com/p/chromium/issues/detail?id=32865
+	if(!_this5._isDirty){_this5._valueOnFocus=change.current.text||'';_this5._isDirty=true;}_this5.undoManager().proxyFor(_this5)._applyChangeFromUndoManager(change);_this5._manualCaret={start:change.proposed.selectedRange.start,end:change.proposed.selectedRange.start+change.proposed.selectedRange.length};_this5._needsKeyUpTextDidChangeTrigger=true;}else {event.preventDefault();_this5.rollbackInvalidChanges(function(){return _this5.insertText(newText);});}_this5._currentValue=change.proposed.text;},onFail:function onFail(){event.preventDefault();_this5.rollbackInvalidChanges(function(){return _this5.insertText(newText);});}});})();}else {event.preventDefault();}}} /**
+	     * Handles keyup events. On Some Android we need to do all input processing
+	     * here because no other information comes in.
+	     *
+	     * @param {Event} event
+	     * @private
+	     */},{key:'_keyUp',value:function _keyUp(event){var _this6=this;if(this._needsKeyUpTextDidChangeTrigger){this._textDidChange();this._needsKeyUpTextDidChangeTrigger=false;}var keyCode=event.keyCode; // NOTE: Certain Androids on Chrome always return 229
+	// https://code.google.com/p/chromium/issues/detail?id=118639
+	if(keyCode===229){(function(){ // Text has already been changed at this point, so we check the previous text
+	// to determine whether we need to undo the change.
+	var previousText=_this6._currentValue||'';_this6._processChange({currentText:previousText,proposedText:_this6.text(),onSuccess:function onSuccess(change,changeTriggeredFormatting){if(changeTriggeredFormatting){var newText=change.proposed.text;_this6.setSelectedRange(change.proposed.selectedRange);_this6.setText(newText);}if(!_this6._isDirty){_this6._valueOnFocus=change.current.text||'';_this6._isDirty=true;}_this6.undoManager().proxyFor(_this6)._applyChangeFromUndoManager(change);_this6._textDidChange();_this6._currentValue=change.proposed.text;},onFail:function onFail(){ // Need to rollback the letter input in the Keyup event because it is not valid,
+	// so we set text to the previous state (as collected from the UndoManager).
+	_this6.setText(previousText);}});})();}else {this.rollbackInvalidChanges(function(){if(event.keyCode===_inputSim.KEYS.TAB){_this6.selectAll(event);}});}} /**
+	     * Checks if a change is valid and calls `onSuccess` if so,
+	     * and `onFail` if not.
+	     *
+	     * @param {object} options
+	     * @param {string} options.currentText
+	     * @param {string} options.proposedText
+	     * @param {function} options.onSuccess
+	     * @param {function=} options.onFail
+	     * @private
+	     */},{key:'_processChange',value:function _processChange(_ref){var currentText=_ref.currentText;var proposedText=_ref.proposedText;var onSuccess=_ref.onSuccess;var _ref$onFail=_ref.onFail;var onFail=_ref$onFail===undefined?function(){}:_ref$onFail;var current={text:currentText,selectedRange:this.selectedRange()};var proposed={text:proposedText,selectedRange:{start:current.selectedRange.start+1,length:0}};var change=this.hasChangesAndIsValid(current,proposed);var changeTriggeredFormatting=change&&(change.proposed.text!==proposed.text||change.proposed.selectedRange.start!==proposed.selectedRange.start||change.proposed.selectedRange.length!==proposed.selectedRange.length);if(change){onSuccess(change,changeTriggeredFormatting);}else {onFail();}} /**
+	     * Handles paste events.
+	     *
+	     * @param {Event} event
+	     * @private
+	     */},{key:'_paste',value:function _paste(event){var _this7=this;event.preventDefault();this.rollbackInvalidChanges(function(){_this7.readSelectionFromPasteboard(event.clipboardData);});} /**
+	     * @private
+	     */},{key:'_syncPlaceholder',value:function _syncPlaceholder(){if(!this._enabled){var disabledPlaceholder=this._disabledPlaceholder;if(disabledPlaceholder!==undefined&&disabledPlaceholder!==null){this.setPlaceholder(disabledPlaceholder);}}else if(this.hasFocus()){var focusedPlaceholder=this._focusedPlaceholder;if(focusedPlaceholder!==undefined&&focusedPlaceholder!==null){this.setPlaceholder(focusedPlaceholder);}}else {var unfocusedPlaceholder=this._unfocusedPlaceholder;if(unfocusedPlaceholder!==undefined&&unfocusedPlaceholder!==null){this.setPlaceholder(unfocusedPlaceholder);}}}}]);return TextField;}(_inputSim.Input);var TextFieldStateChange=function(){ /**
+	   * @param {TextField} field
+	   */function TextFieldStateChange(field){_classCallCheck(this,TextFieldStateChange);this.field=field;} /**
+	   * Builds a new {TextFieldStateChange} that will allow you to
+	   * compute differences, and see the current vs proposed changes.
+	   *
+	   * @param {TextField} field
+	   * @param {Function} callback called when you want changes to the field
+	   *    take place. Current will be calculated before this callback.
+	   *    Proposed will be calculated after this callback.
+	   *
+	   * @returns {Object} change object with current and proposed properties
+	   */ /**
+	   * Determines whether this field has changes.
+	   *
+	   * @returns {boolean} true if either the current text doesn't match the proposed text
+	   *    or the current selection range doesn't match the proposed selection range
+	   */_createClass(TextFieldStateChange,[{key:'hasChanges',value:function hasChanges(){this.recomputeDiff();return this.current.text!==this.proposed.text||this.current.selectedRange.start!==this.proposed.selectedRange.start||this.current.selectedRange.length!==this.proposed.selectedRange.length;} /**
+	     * Updates {TextFieldStateChange} inserted and {TextFieldStateChange} deleted
+	     * based on proposed and current
+	     */},{key:'recomputeDiff',value:function recomputeDiff(){if(this.proposed.text!==this.current.text){var ctext=this.current.text;var ptext=this.proposed.text;var sharedPrefixLength=0;var sharedSuffixLength=0;var minTextLength=Math.min(ctext.length,ptext.length);var i=undefined;for(i=0;i<minTextLength;i++){if(ptext[i]===ctext[i]){sharedPrefixLength=i+1;}else {break;}}for(i=0;i<minTextLength-sharedPrefixLength;i++){if(ptext[ptext.length-1-i]===ctext[ctext.length-1-i]){sharedSuffixLength=i+1;}else {break;}}var inserted={start:sharedPrefixLength,end:ptext.length-sharedSuffixLength};var deleted={start:sharedPrefixLength,end:ctext.length-sharedSuffixLength};inserted.text=ptext.substring(inserted.start,inserted.end);deleted.text=ctext.substring(deleted.start,deleted.end);this.inserted=inserted;this.deleted=deleted;}else {this.inserted={start:this.proposed.selectedRange.start,end:this.proposed.selectedRange.start+this.proposed.selectedRange.length,text:''};this.deleted={start:this.current.selectedRange.start,end:this.current.selectedRange.start+this.current.selectedRange.length,text:''};}}}]);return TextFieldStateChange;}();TextFieldStateChange.build=function(field,callback){var change=new this(field);change.current={text:field.text(),selectedRange:field.selectedRange()};callback();change.proposed={text:field.text(),selectedRange:field.selectedRange()};change.recomputeDiff();return change;};exports['default']=TextField;module.exports=exports['default'];},{"./caret":8,"./formatter":14,"./undo_manager":21,"./utils":22,"input-sim":2}],21:[function(_dereq_,module,exports){'use strict';Object.defineProperty(exports,'__esModule',{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if('value' in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}var _utils=_dereq_('./utils'); /**
+	 * UndoManager is a general-purpose recorder of operations for undo and redo.
+	 *
+	 * Registering an undo action is done by specifying the changed object, along
+	 * with a method to invoke to revert its state and the arguments for that
+	 * method. When performing undo an UndoManager saves the operations reverted so
+	 * that you can redo the undos.
+	 */var UndoManager=function(){function UndoManager(){_classCallCheck(this,UndoManager); /** @private */this._undos=[]; /** @private */this._redos=[]; /** @private */this._isUndoing=false; /** @private */this._isRedoing=false;} /**
+	   * Determines whether there are any undo actions on the stack.
+	   *
+	   * @returns {boolean}
+	   */_createClass(UndoManager,[{key:'canUndo',value:function canUndo(){return this._undos.length!==0;} /**
+	     * Determines whether there are any redo actions on the stack.
+	     *
+	     * @returns {boolean}
+	     */},{key:'canRedo',value:function canRedo(){return this._redos.length!==0;} /**
+	     * Indicates whether or not this manager is currently processing an undo.
+	     *
+	     * @returns {boolean}
+	     */},{key:'isUndoing',value:function isUndoing(){return this._isUndoing;} /**
+	     * Indicates whether or not this manager is currently processing a redo.
+	     *
+	     * @returns {boolean}
+	     */},{key:'isRedoing',value:function isRedoing(){return this._isRedoing;} /**
+	     * Manually registers an simple undo action with the given args.
+	     *
+	     * If this undo manager is currently undoing then this will register a redo
+	     * action instead. If this undo manager is neither undoing or redoing then the
+	     * redo stack will be cleared.
+	     *
+	     * @param {Object} target call `selector` on this object
+	     * @param {string} selector the method name to call on `target`
+	     * @param {...Object} args arguments to pass when calling `selector` on `target`
+	     */},{key:'registerUndo',value:function registerUndo(target,selector){for(var _len=arguments.length,args=Array(_len>2?_len-2:0),_key=2;_key<_len;_key++){args[_key-2]=arguments[_key];}if(this._isUndoing){this._appendRedo.apply(this,[target,selector].concat(args));}else {if(!this._isRedoing){this._redos.length=0;}this._appendUndo.apply(this,[target,selector].concat(args));}} /**
+	     * Appends an undo action to the internal stack.
+	     *
+	     * @param {Object} target call `selector` on this object
+	     * @param {string} selector the method name to call on `target`
+	     * @param {...Object} args arguments to pass when calling `selector` on `target`
+	     * @private
+	     */},{key:'_appendUndo',value:function _appendUndo(target,selector){for(var _len2=arguments.length,args=Array(_len2>2?_len2-2:0),_key2=2;_key2<_len2;_key2++){args[_key2-2]=arguments[_key2];}this._undos.push({target:target,selector:selector,args:args});} /**
+	     * Appends a redo action to the internal stack.
+	     *
+	     * @param {Object} target call `selector` on this object
+	     * @param {string} selector the method name to call on `target`
+	     * @param {...Object} args arguments to pass when calling `selector` on `target`
+	     * @private
+	     */},{key:'_appendRedo',value:function _appendRedo(target,selector){for(var _len3=arguments.length,args=Array(_len3>2?_len3-2:0),_key3=2;_key3<_len3;_key3++){args[_key3-2]=arguments[_key3];}this._redos.push({target:target,selector:selector,args:args});} /**
+	     * Performs the top-most undo action on the stack.
+	     *
+	     * @throws {Error} Raises an error if there are no available undo actions.
+	     */},{key:'undo',value:function undo(){if(!this.canUndo()){throw new Error('there are no registered undos');}var data=this._undos.pop();var target=data.target;var selector=data.selector;var args=data.args;this._isUndoing=true;target[selector].apply(target,args);this._isUndoing=false;} /**
+	     * Performs the top-most redo action on the stack.
+	     *
+	     * @throws {Error} Raises an error if there are no available redo actions.
+	     */},{key:'redo',value:function redo(){if(!this.canRedo()){throw new Error('there are no registered redos');}var data=this._redos.pop();var target=data.target;var selector=data.selector;var args=data.args;this._isRedoing=true;target[selector].apply(target,args);this._isRedoing=false;} /**
+	     * Returns a proxy object based on target that will register undo/redo actions
+	     * by calling methods on the proxy.
+	     *
+	     * @example
+	     *     setSize(size) {
+	     *       this.undoManager.proxyFor(this).setSize(this._size);
+	     *       this._size = size;
+	     *     }
+	     *
+	     * @param {Object} target call `selector` on this object
+	     * @returns {Object}
+	     */},{key:'proxyFor',value:function proxyFor(target){var proxy={};var self=this;function proxyMethod(selector){return function(){for(var _len4=arguments.length,args=Array(_len4),_key4=0;_key4<_len4;_key4++){args[_key4]=arguments[_key4];}self.registerUndo.apply(self,[target,selector].concat(args));};}(0,_utils.getAllPropertyNames)(target).forEach(function(selector){ // don't trigger anything that has a getter
+	if((0,_utils.hasGetter)(target,selector)){return;} // don't try to proxy properties that aren't functions
+	if(typeof target[selector]!=='function'){return;} // set up a proxy function to register an undo
+	proxy[selector]=proxyMethod(selector);});return proxy;}}]);return UndoManager;}();exports['default']=UndoManager;module.exports=exports['default'];},{"./utils":22}],22:[function(_dereq_,module,exports){ /**
+	 * @const
+	 * @private
+	 */'use strict';Object.defineProperty(exports,'__esModule',{value:true});exports.isDigits=isDigits;exports.startsWith=startsWith;exports.endsWith=endsWith;exports.zpad=zpad;exports.zpad2=zpad2;exports.bind=bind;exports.replaceStringSelection=replaceStringSelection;exports.forEach=forEach;exports.hasGetter=hasGetter;exports.getAllPropertyNames=getAllPropertyNames;function _toConsumableArray(arr){if(Array.isArray(arr)){for(var i=0,arr2=Array(arr.length);i<arr.length;i++){arr2[i]=arr[i];}return arr2;}else {return Array.from(arr);}}var DIGITS_PATTERN=/^\d*$/; /**
+	 * @const
+	 * @private
+	 */var SURROUNDING_SPACE_PATTERN=/(^\s+|\s+$)/; /**
+	 * @param {string} string
+	 * @returns {boolean}
+	 */function isDigits(string){return DIGITS_PATTERN.test(string);} /**
+	 * @param {string} prefix
+	 * @param {string} string
+	 * @returns {boolean}
+	 */function startsWith(prefix,string){return string.slice(0,prefix.length)===prefix;} /**
+	 * @param {string} suffix
+	 * @param {string} string
+	 * @returns {boolean}
+	 */function endsWith(suffix,string){return string.slice(string.length-suffix.length)===suffix;} /**
+	 * @param {string} string
+	 * @returns {string}
+	 */var trim=typeof ''.trim==='function'?function(string){return string.trim();}:function(string){return string.replace(SURROUNDING_SPACE_PATTERN,'');};exports.trim=trim; /**
+	 * Will pad n with `0` up until length.
+	 *
+	 * @example
+	 *     zpad(16, '1234');
+	 *     // => 0000000000001234
+	 *
+	 * @param {number} length
+	 * @param {(string|number)} n
+	 * @returns {string}
+	 */function zpad(length,n){var result=''+n;while(result.length<length){result='0'+result;}return result;} /**
+	 * Will pad n with `0` up until length is 2.
+	 *
+	 * @example
+	 *     zpad2('2');
+	 *     // => 02
+	 *
+	 * @param {(string|number)} n
+	 * @returns {string}
+	 */function zpad2(n){return zpad(2,n);} /**
+	 * PhantomJS 1.9 does not have Function.bind.
+	 *
+	 * @param {Function} fn
+	 * @param {*} context
+	 * @returns {*}
+	 */function bind(fn,context){return fn.bind(context);}if(!Function.prototype.bind){Function.prototype.bind=function(context){for(var _len=arguments.length,prependedArgs=Array(_len>1?_len-1:0),_key=1;_key<_len;_key++){prependedArgs[_key-1]=arguments[_key];}var self=this;return function(){for(var _len2=arguments.length,args=Array(_len2),_key2=0;_key2<_len2;_key2++){args[_key2]=arguments[_key2];}return self.apply(context,prependedArgs.concat(args));};};} /**
+	 * Replaces the characters within the selection with given text.
+	 *
+	 * @example
+	 *     // 12|34567|8
+	 *     replaceStringSelection('12345678', '00', { start: 2, length: 5 });
+	 *     // 12|00|8
+	 *
+	 * @param   {string} replacement
+	 * @param   {string} text
+	 * @param   {object} {start: number, length: number}
+	 * @returns {string}
+	 */function replaceStringSelection(replacement,text,range){var end=range.start+range.length;return text.substring(0,range.start)+replacement+text.substring(end);}var hasOwnProp=Object.prototype.hasOwnProperty; /**
+	 * @param {*} iterable
+	 * @param {Function} iterator
+	 */function forEach(iterable,iterator){if(iterable&&typeof iterable.forEach==='function'){iterable.forEach(iterator);}else if({}.toString.call(iterable)==='[object Array]'){for(var i=0,l=iterable.length;i<l;i++){iterator.call(null,iterable[i],i,iterable);}}else {for(var key in iterable){if(hasOwnProp.call(iterable,key)){iterator.call(null,iterable[key],key,iterable);}}}}var getOwnPropertyNames=function(){var getOwnPropertyNames=Object.getOwnPropertyNames;try{Object.getOwnPropertyNames({},'sq');}catch(e){ // IE 8
+	getOwnPropertyNames=function getOwnPropertyNames(object){var result=[];for(var key in object){if(hasOwnProp.call(object,key)){result.push(key);}}return result;};}return getOwnPropertyNames;}();var getPrototypeOf=Object.getPrototypeOf||function(object){return object.__proto__;}; /**
+	 * @param {Object} object
+	 * @param {string} property
+	 * @returns {boolean}
+	 */function hasGetter(object,property){ // Skip if getOwnPropertyDescriptor throws (IE8)
+	try{Object.getOwnPropertyDescriptor({},'sq');}catch(e){return false;}var descriptor=undefined;if(object&&object.constructor&&object.constructor.prototype){descriptor=Object.getOwnPropertyDescriptor(object.constructor.prototype,property);}if(!descriptor){descriptor=Object.getOwnPropertyDescriptor(object,property);}if(descriptor&&descriptor.get){return true;}else {return false;}} /**
+	 * @param {Object} object
+	 * @returns {?string[]}
+	 */function getAllPropertyNames(object){if(object===null||object===undefined){return [];}var result=getOwnPropertyNames(object);var prototype=object.constructor&&object.constructor.prototype;while(prototype){result.push.apply(result,_toConsumableArray(getOwnPropertyNames(prototype)));prototype=getPrototypeOf(prototype);}return result;}},{}]},{},[15])(15);}); //# sourceMappingURL=field-kit.js.map
+
+/***/ },
+/* 200 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(200);
+	var content = __webpack_require__(201);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(202)(content, {});
+	var update = __webpack_require__(203)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -23559,10 +25134,10 @@
 	}
 
 /***/ },
-/* 200 */
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(201)();
+	exports = module.exports = __webpack_require__(202)();
 	// imports
 	
 	
@@ -23573,7 +25148,7 @@
 
 
 /***/ },
-/* 201 */
+/* 202 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -23628,7 +25203,7 @@
 	};
 
 /***/ },
-/* 202 */
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -23880,16 +25455,16 @@
 
 
 /***/ },
-/* 203 */
+/* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(204);
+	var content = __webpack_require__(205);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(202)(content, {});
+	var update = __webpack_require__(203)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -23906,21 +25481,2842 @@
 	}
 
 /***/ },
-/* 204 */
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(201)();
+	exports = module.exports = __webpack_require__(202)();
 	// imports
 	
 	
 	// module
-	exports.push([module.id, "/* Fonts */\n\n/* Colors */\n\n/* Spacing */\n\n/* Sizing */\n\n/* Animation */\n\n/* \tOuter container for fields\n\t\tthat prevents overflow outside\n\t\tof the field area */\n\n.CreditCardPaymentInput .fields-container {\n\n\toverflow: hidden;\n\n\tposition: relative;\n\n\twidth: 100%;\n\t\n}\n\n/*\tInner container for fields\n\t\tthat allows for natural field sizing */\n\n.CreditCardPaymentInput .fields {\n\n\twidth: 100%;\n\n\t// display: flex;\n\t\n}\n\n/*\tMake the card number field half the width of the inner container\n\t\tso that it shows exclusively in card number mode */\n\n.CreditCardPaymentInput .CardNumber {\n\n\t// flex: 2;\n\n\tposition: relative;\n\n\tmargin-right: calc( 24px / 2 );\n\n\twidth: calc( 100% - ( 24px ) );\n\n\tfloat: left;\n\n\tbox-sizing: border-box;\n\n\t// flex: 0 0 180;\n\n\t// width: 50%;\n\t\n}\n\n.CreditCardPaymentInput .ExpirationDate, .CreditCardPaymentInput .SecurityCode {\n\n\t// flex: 0 0;\n\n\twidth: 2px;\n\n\tfloat: left;\n\n\ttext-align: center;\n\n\tbox-sizing: border-box;\n\t\n}\n\n/* \tPosition a ghost card number field over the container\n\t\tin order to show a peak at the last 5 credit card digits\n\t\twhen not in credit card editing mode */\n\n.CreditCardPaymentInput .AbbreviatedCardNumberGhost, .CreditCardPaymentInput .CardNumberGhost {\n\n\tposition: absolute;\n\n\tright: 0;\n\n\tdisplay: -webkit-box;\n\n\tdisplay: -webkit-flex;\n\n\tdisplay: -ms-flexbox;\n\n\tdisplay: flex;\n\n\t-webkit-box-align: center;\n\n\t-webkit-align-items: center;\n\n\t-ms-flex-align: center;\n\n\talign-items: center;\n\n\theight: 48px;\n\n\tfont-size: 1rem;\n\n\tfont-weight: 300;\n\n\tcolor: #555555;\n\n\tvisibility: hidden;\n\t\n}\n\n.CreditCardPaymentInput .CardNumberGhost {\n\n\tpadding: 0 calc(24px/3);\n\t\n}\n\n/* Style the combo field when the credit card portion is active */\n.CreditCardPaymentInput.CreditCardNumber {\n\t\n\t/*\tAnimate the credit card field into view\n\t\twhen in credit card mode */\n\t/*.fields {\n\t\ttransform: translateX(0%);\n\t\ttransition: transform $animation-duration ease-in-out;\n\t}*/\n\n\t/*\tShow the credit card field\n\t\twhen in credid card number mode */\n\t\n}\n/*\tAnimate the other fields out of view */\n.CreditCardPaymentInput.CreditCardNumber .ExpirationDate, .CreditCardPaymentInput.CreditCardNumber .SecurityCode {\n\n\topacity: 0;\n\n\t-webkit-transform: scale(0.8);\n\n\ttransform: scale(0.8);\n\n\t-webkit-transition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\t\n}\n\n/* Style the combo field when the credit card portion is active */\n.CreditCardPaymentInput.CreditCardExpirationDate, .CreditCardPaymentInput.CreditCardSecurityCode {\n\t\n\t/*\tAnimate the credit card field out of view\n\t\twhen not in credit card mode */\n\t/*.fields {\n\t\ttransform: translateX(-25%);\n\t\ttransition: transform $animation-duration ease-in-out;\n\t}*/\n\n\t/*\tHide the credit card field\n\t\twhen not in credid card number mode\n\t\tand expand the other fields */\n\t/*.CardNumber {\n\t\tflex: 0;\n\t}\n\n\t.ExpirationDate,\n\t.SecurityCode {\n\t\tflex: 1;\n\t}*/\n\n\t\n}\n/*\tAnimate the other fields out of view */\n.CreditCardPaymentInput.CreditCardExpirationDate .ExpirationDate, .CreditCardPaymentInput.CreditCardExpirationDate .SecurityCode, .CreditCardPaymentInput.CreditCardSecurityCode .ExpirationDate, .CreditCardPaymentInput.CreditCardSecurityCode .SecurityCode {\n\n\topacity: 1;\n\n\t-webkit-transform: scale(1);\n\n\ttransform: scale(1);\n\n\t-webkit-transition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\t\n}\n\n", ""]);
+	exports.push([module.id, "/* Fonts */\n\n/* Colors */\n\n/* Spacing */\n\n/* Sizing */\n\n/* Animation */\n\n/* \tOuter container for fields\n\t\tthat prevents overflow outside\n\t\tof the field area */\n\n.CreditCardPaymentInput .fields-container {\n\n\toverflow: hidden;\n\n\tposition: relative;\n\n\twidth: 100%;\n}\n\n/*\tInner container for fields\n\t\tthat allows for natural field sizing */\n\n.CreditCardPaymentInput .fields {\n\n\twidth: 100%;\n\n\t// display: flex;\n}\n\n/*\tMake the card number field half the width of the inner container\n\t\tso that it shows exclusively in card number mode */\n\n.CreditCardPaymentInput .CardNumber {\n\n\t// flex: 2;\n\n\tposition: relative;\n\n\tmargin-right: calc( 24px / 2 );\n\n\twidth: calc( 100% - ( 24px ) );\n\n\tfloat: left;\n\n\tbox-sizing: border-box;\n\n\t// flex: 0 0 180;\n\n\t// width: 50%;\n}\n\n.CreditCardPaymentInput .ExpirationDate, .CreditCardPaymentInput .SecurityCode {\n\n\t// flex: 0 0;\n\n\twidth: 2px;\n\n\tfloat: left;\n\n\ttext-align: center;\n\n\tbox-sizing: border-box;\n}\n\n/* \tPosition a ghost card number field over the container\n\t\tin order to show a peak at the last 5 credit card digits\n\t\twhen not in credit card editing mode */\n\n.CreditCardPaymentInput .AbbreviatedCardNumberGhost, .CreditCardPaymentInput .CardNumberGhost {\n\n\tposition: absolute;\n\n\tleft: 0;\n\n\tdisplay: -webkit-box;\n\n\tdisplay: -webkit-flex;\n\n\tdisplay: -ms-flexbox;\n\n\tdisplay: flex;\n\n\t-webkit-box-align: center;\n\n\t-webkit-align-items: center;\n\n\t-ms-flex-align: center;\n\n\talign-items: center;\n\n\theight: 48px;\n\n\tfont-size: 1rem;\n\n\tfont-weight: 300;\n\n\tcolor: #555555;\n\n\t// visibility: hidden;\n\n\topacity: 0;\n}\n\n/* Style the combo field when the credit card portion is active */\n.CreditCardPaymentInput.CreditCardNumber {\n\t\n\t/*\tAnimate the credit card field into view\n\t\twhen in credit card mode */\n\t/*.fields {\n\t\ttransform: translateX(0%);\n\t\ttransition: transform $animation-duration ease-in-out;\n\t}*/\n}\n/*\tAnimate the other fields out of view */\n.CreditCardPaymentInput.CreditCardNumber .ExpirationDate, .CreditCardPaymentInput.CreditCardNumber .SecurityCode, .CreditCardPaymentInput.CreditCardNumber .AbbreviatedCardNumberGhost {\n\n\topacity: 0;\n\n\t-webkit-transform: scale(0.8);\n\n\ttransform: scale(0.8);\n\n\t-webkit-transition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n}\n/*\tShow the credit card field\n\t\twhen in credid card number mode */\n.CreditCardPaymentInput.CreditCardNumber .CardNumber {\n\n\topacity: 1;\n\n\t// transform: scale(0.8);\n\n\t-webkit-transition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n}\n\n/* Style the combo field when the credit card portion is active */\n.CreditCardPaymentInput.CreditCardExpirationDate, .CreditCardPaymentInput.CreditCardSecurityCode {\n\t\n\t/*\tAnimate the credit card field out of view\n\t\twhen not in credit card mode */\n\t/*.fields {\n\t\ttransform: translateX(-25%);\n\t\ttransition: transform $animation-duration ease-in-out;\n\t}*/\n\n\t/*\tHide the credit card field\n\t\twhen not in credid card number mode\n\t\tand expand the other fields */\n\t/*.CardNumber {\n\t\tflex: 0;\n\t}\n\n\t.ExpirationDate,\n\t.SecurityCode {\n\t\tflex: 1;\n\t}*/\n\n\t\n}\n/*\tAnimate the other fields into view */\n.CreditCardPaymentInput.CreditCardExpirationDate .ExpirationDate, .CreditCardPaymentInput.CreditCardExpirationDate .SecurityCode, .CreditCardPaymentInput.CreditCardExpirationDate .AbbreviatedCardNumberGhost, .CreditCardPaymentInput.CreditCardSecurityCode .ExpirationDate, .CreditCardPaymentInput.CreditCardSecurityCode .SecurityCode, .CreditCardPaymentInput.CreditCardSecurityCode .AbbreviatedCardNumberGhost {\n\n\topacity: 1;\n\n\t-webkit-transform: scale(1);\n\n\ttransform: scale(1);\n\n\t-webkit-transition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n}\n/*\tAnimate the credit card field out of view */\n.CreditCardPaymentInput.CreditCardExpirationDate .CardNumber, .CreditCardPaymentInput.CreditCardSecurityCode .CardNumber {\n\n\topacity: 0;\n\n\t// transform: scale(0.8);\n\n\t-webkit-transition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n}\n\n", ""]);
 	
 	// exports
 
 
 /***/ },
-/* 205 */
+/* 206 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _expect = __webpack_require__(2);
+	
+	var _expect2 = _interopRequireDefault(_expect);
+	
+	var _react = __webpack_require__(32);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactAddonsTestUtils = __webpack_require__(62);
+	
+	var _reactAddonsTestUtils2 = _interopRequireDefault(_reactAddonsTestUtils);
+	
+	var _reactDom = __webpack_require__(197);
+	
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+	
+	var _CreditCardNumberInput = __webpack_require__(207);
+	
+	var _CreditCardNumberInput2 = _interopRequireDefault(_CreditCardNumberInput);
+	
+	var _CreditCardInputStates = __webpack_require__(30);
+	
+	var cardStates = _interopRequireWildcard(_CreditCardInputStates);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	// const DELETE_KEY_CODE = 46
+	
+	function setup(propOverrides) {
+		var props = Object.assign({
+			style: '',
+			placeholder: 'hi',
+			className: 'there',
+			cardNumber: {
+				status: cardStates.VALID,
+				value: '4242424242424242',
+				cursorPosition: 2
+			},
+			onChange: _expect2.default.createSpy(),
+			onFocus: _expect2.default.createSpy()
+		}, propOverrides);
+	
+		var renderer = _reactAddonsTestUtils2.default.createRenderer();
+		renderer.render(_react2.default.createElement(_CreditCardNumberInput2.default, props));
+		var output = renderer.getRenderOutput();
+		var instance = renderer.getMountedInstance();
+	
+		return {
+			props: props,
+			output: output,
+			renderer: renderer,
+			instance: instance
+		};
+	}
+	
+	describe('CreditCardNumberInput', function () {
+		it('should render an input field', function () {
+			var _setup = setup();
+	
+			var output = _setup.output;
+	
+	
+			(0, _expect2.default)(output.type).toBe('input');
+			(0, _expect2.default)(output.props.className).toBe('CardNumber');
+		});
+	
+		describe('Formatting a Number', function () {
+			it('should return a blank string when given an undefined input', function () {
+				var _setup2 = setup();
+	
+				var instance = _setup2.instance;
+	
+				(0, _expect2.default)(instance.format(undefined)).toBe('');
+			});
+	
+			it('should add a space after the 4th character in a credit card number', function () {
+				var _setup3 = setup();
+	
+				var instance = _setup3.instance;
+	
+				(0, _expect2.default)(instance.format('12345')).toBe('1234 5');
+			});
+	
+			it('should add a space after the 11th characters in a credit card number', function () {
+				var _setup4 = setup();
+	
+				var instance = _setup4.instance;
+	
+				(0, _expect2.default)(instance.format('123456789109876')).toBe('1234 567891 09876');
+			});
+		});
+	
+		describe('Unformatting a Number', function () {
+			it('return a blank string when given an undefined input', function () {
+				var _setup5 = setup();
+	
+				var instance = _setup5.instance;
+	
+				(0, _expect2.default)(instance.unformat(undefined)).toBe('');
+			});
+	
+			it('should remove the spaces we previously added', function () {
+				var _setup6 = setup();
+	
+				var instance = _setup6.instance;
+	
+				(0, _expect2.default)(instance.unformat('1234 567891 09876')).toBe('123456789109876');
+			});
+	
+			it('should only accept numbers', function () {
+				var _setup7 = setup();
+	
+				var instance = _setup7.instance;
+	
+				(0, _expect2.default)(instance.unformat('abcde')).toBe('');
+			});
+		});
+	
+		describe('Knowing When Editing is Finished', function () {
+			it('should return false if the field has not been defined', function () {
+				var _setup8 = setup();
+	
+				var instance = _setup8.instance;
+	
+				(0, _expect2.default)(instance.isDoneEditing()).toBe(false);
+			});
+	
+			it('should return false if cardtype is not amex and there are less than 16 digits', function () {
+				var _setup9 = setup();
+	
+				var instance = _setup9.instance;
+	
+				instance.field = {
+					cardType: function cardType() {
+						return 'visa';
+					},
+					value: function value() {
+						return '424242424242';
+					}
+				};
+				(0, _expect2.default)(instance.isDoneEditing()).toBe(false);
+			});
+	
+			it('should return false if cardtype is amex and there are less than 15 digits', function () {
+				var _setup10 = setup();
+	
+				var instance = _setup10.instance;
+	
+				instance.field = {
+					cardType: function cardType() {
+						return 'amex';
+					},
+					value: function value() {
+						return '3725000000';
+					}
+				};
+				(0, _expect2.default)(instance.isDoneEditing()).toBe(false);
+			});
+	
+			it('should return true if cardtype is not amex and there are 16 digits', function () {
+				var _setup11 = setup();
+	
+				var instance = _setup11.instance;
+	
+				instance.field = {
+					cardType: function cardType() {
+						return 'visa';
+					},
+					value: function value() {
+						return '4242424242424242';
+					}
+				};
+				(0, _expect2.default)(instance.isDoneEditing()).toBe(true);
+			});
+	
+			it('should return true if cardtype is amex and there are 15 digits', function () {
+				var _setup12 = setup();
+	
+				var instance = _setup12.instance;
+	
+				instance.field = {
+					cardType: function cardType() {
+						return 'amex';
+					},
+					value: function value() {
+						return '372500000098765';
+					}
+				};
+				(0, _expect2.default)(instance.isDoneEditing()).toBe(true);
+			});
+		});
+	});
+
+/***/ },
+/* 207 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _react = __webpack_require__(32);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _fieldKit = __webpack_require__(199);
+	
+	var _fieldKit2 = _interopRequireDefault(_fieldKit);
+	
+	var _reactDom = __webpack_require__(197);
+	
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+	
+	__webpack_require__(200);
+	
+	__webpack_require__(204);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var CreditCardNumberInput = _react2.default.createClass({
+		displayName: 'CreditCardNumberInput',
+	
+	
+		componentDidMount: function componentDidMount() {
+	
+			// Set up fieldkit formatting
+			this.field = new _fieldKit2.default.CardTextField(_reactDom2.default.findDOMNode(this));
+			this.field.setValue(this.props.cardNumber.value);
+			this.field.setCardMaskStrategy(_fieldKit2.default.CardTextField.CardMaskStrategy.DoneEditing);
+		},
+	
+		format: function format() {
+			var cardNumber = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+	
+	
+			var newString = cardNumber;
+	
+			if (newString.length <= 4) return newString;
+	
+			if (newString.length > 4) {
+				newString = [newString.slice(0, 4), ' ', newString.slice(4)].join('');
+			}
+	
+			if (newString.length > 11) {
+				newString = [newString.slice(0, 11), ' ', newString.slice(11)].join('');
+			}
+	
+			return newString;
+		},
+	
+		unformat: function unformat() {
+			var cardNumber = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+	
+	
+			var newString = cardNumber;
+	
+			// Remove any non-numerical characters
+			newString = newString.replace(/\D/g, '');
+	
+			return newString;
+		},
+	
+		isDoneEditing: function isDoneEditing() {
+			var done = false;
+	
+			if (this.field) {
+				done = this.field.cardType() === 'amex' ? this.field.value().length === 15 : this.field.value().length === 16;
+			}
+	
+			return done;
+		},
+	
+		getField: function getField() {
+			return this.field;
+		},
+	
+		render: function render() {
+			var _this = this;
+	
+			return _react2.default.createElement('input', {
+				style: this.props.style,
+				placeholder: 'Card Number',
+				className: 'CardNumber',
+				onChange: function onChange(e) {
+					e.preventDefault();
+					_this.props.onChange(_this.unformat(e.target.value.trim()), e.target.selectionStart);
+	
+					if (_this.isDoneEditing()) {
+						// TODO check whether card is valid
+						// this.props.onDidFinishEditing()
+					}
+				},
+				onFocus: function onFocus(e) {
+					_this.props.onFocus();
+				}
+			});
+		}
+	
+	});
+	
+	exports.default = CreditCardNumberInput;
+
+/***/ },
+/* 208 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _expect = __webpack_require__(2);
+	
+	var _expect2 = _interopRequireDefault(_expect);
+	
+	var _react = __webpack_require__(32);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactAddonsTestUtils = __webpack_require__(62);
+	
+	var _reactAddonsTestUtils2 = _interopRequireDefault(_reactAddonsTestUtils);
+	
+	var _reactDom = __webpack_require__(197);
+	
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+	
+	var _CreditCardPaymentInput = __webpack_require__(209);
+	
+	var _CreditCardPaymentInput2 = _interopRequireDefault(_CreditCardPaymentInput);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	// const DELETE_KEY_CODE = 46
+	
+	function setup(propOverrides) {
+		var props = Object.assign({
+			icon: 'back',
+			placeholder: 'hi',
+			payment: {
+				cardNumber: '1234567891098876',
+				expirationMonth: '12',
+				expirationYear: '20',
+				securityCode: '1234',
+				currentField: 'CreditCardNumber'
+			},
+			onCreditCardChange: _expect2.default.createSpy(),
+			onCreditCardFocus: _expect2.default.createSpy()
+		}, propOverrides);
+	
+		var renderer = _reactAddonsTestUtils2.default.createRenderer();
+		renderer.render(_react2.default.createElement(_CreditCardPaymentInput2.default, props));
+		var output = renderer.getRenderOutput();
+		var instance = renderer.getMountedInstance();
+		// instance.abbreviatedCardNumberGhost = document.createElement('div')
+		// instance.cardNumberGhost = document.createElement('div')
+		// instance.creditCardInput = document.createElement('div')
+		// instance.originalCreditCardInputWidth = document.createElement('div')
+		// instance.fields = document.createElement('div')
+	
+		return {
+			props: props,
+			output: output,
+			renderer: renderer,
+			instance: instance
+		};
+	}
+	
+	describe('CreditCardPaymentInput', function () {
+		it('should render an input field', function () {
+			var _setup = setup();
+	
+			var output = _setup.output;
+			// let [ svg, fieldsContainer ] = output.props.children
+			// let fields = fieldsContainer.props.children
+			// let [ cardNumberInput, expirationDateInput, securityCodeInput ] = fields.props.children
+	
+			(0, _expect2.default)(output.type).toBe('div');
+			(0, _expect2.default)(output.props.className).toBe('Input CreditCardPaymentInput CreditCardNumber');
+	
+			// Can't test types of children because they're wrapped in <Motion> object
+			// expect( cardNumberInput.type ).toBe('input')
+			// expect( cardNumberInput.props.className ).toBe('CardNumber')
+	
+			// expect( expirationDateInput.type ).toBe('input')
+			// expect( expirationDateInput.props.className ).toBe('ExpirationDate')
+	
+			// expect( securityCodeInput.type ).toBe('input')
+			// expect( securityCodeInput.props.className ).toBe('SecurityCode')
+		});
+	
+		describe('Transitioning Between Fields', function () {
+			describe('Getting Field Styles', function () {
+				it('should return default styles if the field variables have not been initialized', function () {
+					var _setup2 = setup();
+	
+					var instance = _setup2.instance;
+	
+					(0, _expect2.default)(instance.getFieldStyles()).toEqual({
+						cardNumberFieldWidth: 200,
+						cardNumberFieldLeftPosition: 0,
+						otherFieldsWidth: 2
+					});
+				});
+	
+				it('should return default styles if the currentField is CreditCardNumber', function () {
+					var _setup3 = setup();
+	
+					var instance = _setup3.instance;
+	
+					(0, _expect2.default)(instance.getFieldStyles()).toEqual({
+						cardNumberFieldWidth: 200,
+						cardNumberFieldLeftPosition: 0,
+						otherFieldsWidth: 2
+					});
+				});
+	
+				it('should return a cardNumberFieldWidth equal to length of the numbers in the field', function () {
+					var _setup4 = setup({
+						payment: { currentField: 'CreditCardExpirationDate' }
+					});
+	
+					var instance = _setup4.instance;
+	
+					instance.cardNumberGhost = { scrollWidth: 100 };
+					(0, _expect2.default)(instance.getFieldStyles().cardNumberFieldWidth).toBe(100);
+				});
+	
+				it('should return a cardNumberFieldLeftPosition equal to the negative difference between the size of the field and the size of the last 4 digits', function () {
+					var _setup5 = setup({
+						payment: { currentField: 'CreditCardExpirationDate' }
+					});
+	
+					var instance = _setup5.instance;
+	
+					instance.cardNumberGhost = { scrollWidth: 100 };
+					instance.abbreviatedCardNumberGhost = { scrollWidth: 50 };
+					(0, _expect2.default)(instance.getFieldStyles().cardNumberFieldLeftPosition).toBe(-50 + 16);
+				});
+	
+				it('should return a otherFieldsWidth equal to half the remaining space in the field', function () {
+					var _setup6 = setup({
+						payment: { currentField: 'CreditCardExpirationDate' }
+					});
+	
+					var instance = _setup6.instance;
+	
+					instance.fields = { scrollWidth: 200 };
+					instance.abbreviatedCardNumberGhost = { scrollWidth: 50 };
+					(0, _expect2.default)(instance.getFieldStyles().otherFieldsWidth).toBe(75 - 16);
+				});
+			});
+		});
+	});
+
+/***/ },
+/* 209 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _react = __webpack_require__(32);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _fieldKit = __webpack_require__(199);
+	
+	var _fieldKit2 = _interopRequireDefault(_fieldKit);
+	
+	var _reactDom = __webpack_require__(197);
+	
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+	
+	var _svgInlineReact = __webpack_require__(210);
+	
+	var _svgInlineReact2 = _interopRequireDefault(_svgInlineReact);
+	
+	var _DonationCreditCardNumberInput = __webpack_require__(211);
+	
+	var _DonationCreditCardNumberInput2 = _interopRequireDefault(_DonationCreditCardNumberInput);
+	
+	var _DonationCreditCardExpirationDateInput = __webpack_require__(238);
+	
+	var _DonationCreditCardExpirationDateInput2 = _interopRequireDefault(_DonationCreditCardExpirationDateInput);
+	
+	var _DonationCreditCardSecurityCodeInput = __webpack_require__(239);
+	
+	var _DonationCreditCardSecurityCodeInput2 = _interopRequireDefault(_DonationCreditCardSecurityCodeInput);
+	
+	__webpack_require__(200);
+	
+	__webpack_require__(204);
+	
+	var _reactMotion = __webpack_require__(241);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var CreditCardPaymentInput = _react2.default.createClass({
+		displayName: 'CreditCardPaymentInput',
+	
+	
+		getFieldStyles: function getFieldStyles() {
+			var currentField = this.props.payment.currentField;
+	
+			// Set default styles
+			var styles = {
+				cardNumberFieldWidth: 200,
+				cardNumberFieldLeftPosition: 0,
+				otherFieldsWidth: 2
+			};
+	
+			// Only set styles different from default
+			// if we're not in credit card number mode
+			if (currentField !== 'CreditCardNumber') {
+				if (this.cardNumberGhost) {
+					styles.cardNumberFieldWidth = this.cardNumberGhost.scrollWidth;
+				}
+				if (this.fields && this.abbreviatedCardNumberGhost) {
+					styles.otherFieldsWidth = (this.fields.scrollWidth - this.abbreviatedCardNumberGhost.scrollWidth) / 2 - 16;
+				}
+	
+				if (this.cardNumberGhost && this.abbreviatedCardNumberGhost) {
+					styles.cardNumberFieldLeftPosition = -(this.cardNumberGhost.scrollWidth - this.abbreviatedCardNumberGhost.scrollWidth) + 16; // Always add 8 because this trails the last character added by the user
+				}
+			}
+	
+			return styles;
+		},
+	
+		getCardNumber: function getCardNumber() {
+			var number = '';
+	
+			if (this.cardNumberInput && this.cardNumberInput.getWrappedInstance().field) {
+				number = this.cardNumberInput.getWrappedInstance().field.value();
+			}
+	
+			return number;
+		},
+	
+		getAbbreviatedCardNumber: function getAbbreviatedCardNumber() {
+			var number = '';
+	
+			if (this.cardNumberInput && this.cardNumberInput.getWrappedInstance().field) {
+				var field = this.cardNumberInput.getWrappedInstance().field;
+				number = field.cardType() === 'amex' ? field.value().slice(-5) : field.value().slice(-4);
+			}
+	
+			return number;
+		},
+	
+		render: function render() {
+			var _this = this;
+	
+			// let creditCardNumberInputWidthWhenCurrentField = this.originalCreditCardInputWidth ? this.originalCreditCardInputWidth : 180
+	
+			var _getFieldStyles = this.getFieldStyles();
+	
+			var cardNumberFieldWidth = _getFieldStyles.cardNumberFieldWidth;
+			var cardNumberFieldLeftPosition = _getFieldStyles.cardNumberFieldLeftPosition;
+			var otherFieldsWidth = _getFieldStyles.otherFieldsWidth;
+	
+			var style = {
+				cardNumberFieldWidth: (0, _reactMotion.spring)(cardNumberFieldWidth),
+				otherFieldsWidth: (0, _reactMotion.spring)(otherFieldsWidth),
+				cardNumberFieldLeftPosition: (0, _reactMotion.spring)(cardNumberFieldLeftPosition)
+			};
+	
+			return _react2.default.createElement(
+				'div',
+				{ className: 'Input CreditCardPaymentInput ' + this.props.payment.currentField },
+				_react2.default.createElement(_svgInlineReact2.default, { src: __webpack_require__(255)("./" + this.props.icon + '.svg') }),
+				_react2.default.createElement(
+					'div',
+					{ className: 'fields-container' },
+					_react2.default.createElement(
+						_reactMotion.Motion,
+						{ style: style },
+						function (interpolatedStyle) {
+							return _react2.default.createElement(
+								'div',
+								{ className: 'fields',
+									key: 'fields',
+									ref: function ref(_ref5) {
+										return _this.fields = _ref5;
+									}
+								},
+								_react2.default.createElement(
+									'div',
+									{ className: 'AbbreviatedCardNumberGhost',
+										ref: function ref(_ref) {
+											return _this.abbreviatedCardNumberGhost = _ref;
+										} },
+									_this.getAbbreviatedCardNumber()
+								),
+								_react2.default.createElement(
+									'div',
+									{ className: 'CardNumberGhost',
+										ref: function ref(_ref2) {
+											return _this.cardNumberGhost = _ref2;
+										} },
+									_this.getCardNumber()
+								),
+								_react2.default.createElement(_DonationCreditCardNumberInput2.default, {
+									style: {
+										width: interpolatedStyle.cardNumberFieldWidth + 'px',
+										marginLeft: interpolatedStyle.cardNumberFieldLeftPosition + 'px'
+									},
+									cardNumber: _this.props.payment.cardNumber,
+									ref: function ref(_ref3) {
+										return _this.cardNumberInput = _ref3;
+									}
+								}),
+								_react2.default.createElement(_DonationCreditCardExpirationDateInput2.default, {
+									expirationMonth: _this.props.payment.expirationMonth,
+									expirationYear: _this.props.payment.expirationYear,
+									style: {
+										width: interpolatedStyle.otherFieldsWidth + 'px'
+									},
+									ref: function ref(_ref4) {
+										return _this.expirationDateInput = _ref4;
+									}
+								}),
+								_react2.default.createElement(_DonationCreditCardSecurityCodeInput2.default, {
+									securityCode: _this.props.payment.securityCode,
+									style: {
+										width: interpolatedStyle.otherFieldsWidth + 'px'
+									}
+								})
+							);
+						}
+					)
+				)
+			);
+		}
+	});
+	
+	exports.default = CreditCardPaymentInput;
+
+/***/ },
+/* 210 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+	
+	var _extends = Object.assign || function (target) {
+	    for (var i = 1; i < arguments.length; i++) {
+	        var source = arguments[i];for (var key in source) {
+	            if (Object.prototype.hasOwnProperty.call(source, key)) {
+	                target[key] = source[key];
+	            }
+	        }
+	    }return target;
+	};
+	
+	var _createClass = function () {
+	    function defineProperties(target, props) {
+	        for (var i = 0; i < props.length; i++) {
+	            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+	        }
+	    }return function (Constructor, protoProps, staticProps) {
+	        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+	    };
+	}();
+	
+	var _get = function get(_x, _x2, _x3) {
+	    var _again = true;_function: while (_again) {
+	        var object = _x,
+	            property = _x2,
+	            receiver = _x3;_again = false;if (object === null) object = Function.prototype;var desc = Object.getOwnPropertyDescriptor(object, property);if (desc === undefined) {
+	            var parent = Object.getPrototypeOf(object);if (parent === null) {
+	                return undefined;
+	            } else {
+	                _x = parent;_x2 = property;_x3 = receiver;_again = true;desc = parent = undefined;continue _function;
+	            }
+	        } else if ('value' in desc) {
+	            return desc.value;
+	        } else {
+	            var getter = desc.get;if (getter === undefined) {
+	                return undefined;
+	            }return getter.call(receiver);
+	        }
+	    }
+	};
+	
+	function _interopRequireDefault(obj) {
+	    return obj && obj.__esModule ? obj : { 'default': obj };
+	}
+	
+	function _classCallCheck(instance, Constructor) {
+	    if (!(instance instanceof Constructor)) {
+	        throw new TypeError('Cannot call a class as a function');
+	    }
+	}
+	
+	function _inherits(subClass, superClass) {
+	    if (typeof superClass !== 'function' && superClass !== null) {
+	        throw new TypeError('Super expression must either be null or a function, not ' + (typeof superClass === 'undefined' ? 'undefined' : _typeof(superClass)));
+	    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+	}
+	
+	var _react = __webpack_require__(32);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var DOMParser = typeof window !== 'undefined' && window.DOMParser;
+	
+	function isParserAvailable(src) {
+	    // kinda naive but meh, ain't gonna use full-blown parser for this
+	    return typeof DOMParser === 'function' && typeof src === 'string' && src.trim().substr(0, 4) === '<svg';
+	}
+	
+	// parse SVG string using `DOMParser`
+	function parseFromSVGString(src) {
+	    var parser = new DOMParser();
+	    return parser.parseFromString(src, "image/svg+xml");
+	}
+	
+	// Transform DOM prop/attr names applicable to `<svg>` element but react-limited
+	function switchSVGAttrToReactProp(propName) {
+	    switch (propName) {
+	        case 'class':
+	            return 'className';
+	        default:
+	            return propName;
+	    }
+	}
+	
+	var InlineSVG = function (_React$Component) {
+	    _inherits(InlineSVG, _React$Component);
+	
+	    function InlineSVG() {
+	        _classCallCheck(this, InlineSVG);
+	
+	        _get(Object.getPrototypeOf(InlineSVG.prototype), 'constructor', this).call(this);
+	        this._extractSVGProps = this._extractSVGProps.bind(this);
+	    }
+	
+	    // Serialize `Attr` objects in `NamedNodeMap`
+	
+	    _createClass(InlineSVG, [{
+	        key: '_serializeAttrs',
+	        value: function _serializeAttrs(map) {
+	            var ret = {};
+	            var prop;
+	            for (var i = 0; i < map.length; i++) {
+	                prop = switchSVGAttrToReactProp(map[i].name);
+	                ret[prop] = map[i].value;
+	            }
+	            return ret;
+	        }
+	
+	        // get <svg /> element props
+	    }, {
+	        key: '_extractSVGProps',
+	        value: function _extractSVGProps(src) {
+	            var map = parseFromSVGString(src).documentElement.attributes;
+	            return map.length > 0 ? this._serializeAttrs(map) : null;
+	        }
+	
+	        // get content inside <svg> element.
+	    }, {
+	        key: '_stripSVG',
+	        value: function _stripSVG(src) {
+	            return parseFromSVGString(src).documentElement.innerHTML;
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var svgProps = {};
+	            var src = this.props.src;
+	            var __html = src;
+	            var Element = this.props.element;
+	
+	            if (this.props.children != null) {
+	                console.info('<InlineSVG />: `children` will be always ignored.');
+	            }
+	
+	            if (this.props.raw === true) {
+	                if (isParserAvailable(src)) {
+	                    Element = 'svg';
+	                    svgProps = this._extractSVGProps(src);
+	                    __html = this._stripSVG(src);
+	                } else {
+	                    console && console.info('<InlineSVG />: `raw` prop works only when `window.DOMParser` exists.');
+	                }
+	            }
+	
+	            return _react2['default'].createElement(Element, _extends({}, svgProps, this.props, { src: null, children: null,
+	                dangerouslySetInnerHTML: { __html: __html } }));
+	        }
+	    }]);
+	
+	    return InlineSVG;
+	}(_react2['default'].Component);
+	
+	exports['default'] = InlineSVG;
+	
+	InlineSVG.defaultProps = { element: 'i' };
+	InlineSVG.propTypes = {
+	    src: _react2['default'].PropTypes.string.isRequired,
+	    element: _react2['default'].PropTypes.string,
+	    raw: _react2['default'].PropTypes.bool
+	};
+	module.exports = exports['default'];
+
+/***/ },
+/* 211 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _reactRedux = __webpack_require__(212);
+	
+	var _actions = __webpack_require__(28);
+	
+	var actions = _interopRequireWildcard(_actions);
+	
+	var _CreditCardNumberInput = __webpack_require__(207);
+	
+	var _CreditCardNumberInput2 = _interopRequireDefault(_CreditCardNumberInput);
+	
+	var _CreditCardInputStates = __webpack_require__(30);
+	
+	var cardStates = _interopRequireWildcard(_CreditCardInputStates);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+		return {
+			onChange: function onChange(value, cursorPosition) {
+				dispatch(actions.setCreditCardNumber(value, cardStates.VALID, cursorPosition));
+			},
+			onFocus: function onFocus() {
+				dispatch(actions.didStartEditingCreditCardNumber());
+			}
+		};
+	};
+	
+	// onDidFinishEditing: () => {
+	// 	dispatch( actions.didFinishEditingCreditCardNumber() )
+	// }
+	var DonationCreditCardNumberInput = (0, _reactRedux.connect)(null, mapDispatchToProps, null, { withRef: true })(_CreditCardNumberInput2.default);
+	
+	exports.default = DonationCreditCardNumberInput;
+
+/***/ },
+/* 212 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	exports.connect = exports.Provider = undefined;
+	
+	var _Provider = __webpack_require__(213);
+	
+	var _Provider2 = _interopRequireDefault(_Provider);
+	
+	var _connect = __webpack_require__(216);
+	
+	var _connect2 = _interopRequireDefault(_connect);
+	
+	function _interopRequireDefault(obj) {
+	  return obj && obj.__esModule ? obj : { "default": obj };
+	}
+	
+	exports.Provider = _Provider2["default"];
+	exports.connect = _connect2["default"];
+
+/***/ },
+/* 213 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	
+	exports.__esModule = true;
+	exports["default"] = undefined;
+	
+	var _react = __webpack_require__(32);
+	
+	var _storeShape = __webpack_require__(214);
+	
+	var _storeShape2 = _interopRequireDefault(_storeShape);
+	
+	var _warning = __webpack_require__(215);
+	
+	var _warning2 = _interopRequireDefault(_warning);
+	
+	function _interopRequireDefault(obj) {
+	  return obj && obj.__esModule ? obj : { "default": obj };
+	}
+	
+	function _classCallCheck(instance, Constructor) {
+	  if (!(instance instanceof Constructor)) {
+	    throw new TypeError("Cannot call a class as a function");
+	  }
+	}
+	
+	function _possibleConstructorReturn(self, call) {
+	  if (!self) {
+	    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+	  }return call && ((typeof call === 'undefined' ? 'undefined' : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+	}
+	
+	function _inherits(subClass, superClass) {
+	  if (typeof superClass !== "function" && superClass !== null) {
+	    throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === 'undefined' ? 'undefined' : _typeof(superClass)));
+	  }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+	}
+	
+	var didWarnAboutReceivingStore = false;
+	function warnAboutReceivingStore() {
+	  if (didWarnAboutReceivingStore) {
+	    return;
+	  }
+	  didWarnAboutReceivingStore = true;
+	
+	  (0, _warning2["default"])('<Provider> does not support changing `store` on the fly. ' + 'It is most likely that you see this error because you updated to ' + 'Redux 2.x and React Redux 2.x which no longer hot reload reducers ' + 'automatically. See https://github.com/reactjs/react-redux/releases/' + 'tag/v2.0.0 for the migration instructions.');
+	}
+	
+	var Provider = function (_Component) {
+	  _inherits(Provider, _Component);
+	
+	  Provider.prototype.getChildContext = function getChildContext() {
+	    return { store: this.store };
+	  };
+	
+	  function Provider(props, context) {
+	    _classCallCheck(this, Provider);
+	
+	    var _this = _possibleConstructorReturn(this, _Component.call(this, props, context));
+	
+	    _this.store = props.store;
+	    return _this;
+	  }
+	
+	  Provider.prototype.render = function render() {
+	    var children = this.props.children;
+	
+	    return _react.Children.only(children);
+	  };
+	
+	  return Provider;
+	}(_react.Component);
+	
+	exports["default"] = Provider;
+	
+	if (process.env.NODE_ENV !== 'production') {
+	  Provider.prototype.componentWillReceiveProps = function (nextProps) {
+	    var store = this.store;
+	    var nextStore = nextProps.store;
+	
+	    if (store !== nextStore) {
+	      warnAboutReceivingStore();
+	    }
+	  };
+	}
+	
+	Provider.propTypes = {
+	  store: _storeShape2["default"].isRequired,
+	  children: _react.PropTypes.element.isRequired
+	};
+	Provider.childContextTypes = {
+	  store: _storeShape2["default"].isRequired
+	};
+
+/***/ },
+/* 214 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	
+	var _react = __webpack_require__(32);
+	
+	exports["default"] = _react.PropTypes.shape({
+	  subscribe: _react.PropTypes.func.isRequired,
+	  dispatch: _react.PropTypes.func.isRequired,
+	  getState: _react.PropTypes.func.isRequired
+	});
+
+/***/ },
+/* 215 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	exports["default"] = warning;
+	/**
+	 * Prints a warning in the console if it exists.
+	 *
+	 * @param {String} message The warning message.
+	 * @returns {void}
+	 */
+	function warning(message) {
+	  /* eslint-disable no-console */
+	  if (typeof console !== 'undefined' && typeof console.error === 'function') {
+	    console.error(message);
+	  }
+	  /* eslint-enable no-console */
+	  try {
+	    // This error was thrown as a convenience so that you can use this stack
+	    // to find the callsite that caused this warning to fire.
+	    throw new Error(message);
+	    /* eslint-disable no-empty */
+	  } catch (e) {}
+	  /* eslint-enable no-empty */
+	}
+
+/***/ },
+/* 216 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	
+	var _extends = Object.assign || function (target) {
+	  for (var i = 1; i < arguments.length; i++) {
+	    var source = arguments[i];for (var key in source) {
+	      if (Object.prototype.hasOwnProperty.call(source, key)) {
+	        target[key] = source[key];
+	      }
+	    }
+	  }return target;
+	};
+	
+	exports.__esModule = true;
+	exports["default"] = connect;
+	
+	var _react = __webpack_require__(32);
+	
+	var _storeShape = __webpack_require__(214);
+	
+	var _storeShape2 = _interopRequireDefault(_storeShape);
+	
+	var _shallowEqual = __webpack_require__(217);
+	
+	var _shallowEqual2 = _interopRequireDefault(_shallowEqual);
+	
+	var _wrapActionCreators = __webpack_require__(218);
+	
+	var _wrapActionCreators2 = _interopRequireDefault(_wrapActionCreators);
+	
+	var _warning = __webpack_require__(215);
+	
+	var _warning2 = _interopRequireDefault(_warning);
+	
+	var _isPlainObject = __webpack_require__(232);
+	
+	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
+	
+	var _hoistNonReactStatics = __webpack_require__(236);
+	
+	var _hoistNonReactStatics2 = _interopRequireDefault(_hoistNonReactStatics);
+	
+	var _invariant = __webpack_require__(237);
+	
+	var _invariant2 = _interopRequireDefault(_invariant);
+	
+	function _interopRequireDefault(obj) {
+	  return obj && obj.__esModule ? obj : { "default": obj };
+	}
+	
+	function _classCallCheck(instance, Constructor) {
+	  if (!(instance instanceof Constructor)) {
+	    throw new TypeError("Cannot call a class as a function");
+	  }
+	}
+	
+	function _possibleConstructorReturn(self, call) {
+	  if (!self) {
+	    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+	  }return call && ((typeof call === 'undefined' ? 'undefined' : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+	}
+	
+	function _inherits(subClass, superClass) {
+	  if (typeof superClass !== "function" && superClass !== null) {
+	    throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === 'undefined' ? 'undefined' : _typeof(superClass)));
+	  }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+	}
+	
+	var defaultMapStateToProps = function defaultMapStateToProps(state) {
+	  return {};
+	}; // eslint-disable-line no-unused-vars
+	var defaultMapDispatchToProps = function defaultMapDispatchToProps(dispatch) {
+	  return { dispatch: dispatch };
+	};
+	var defaultMergeProps = function defaultMergeProps(stateProps, dispatchProps, parentProps) {
+	  return _extends({}, parentProps, stateProps, dispatchProps);
+	};
+	
+	function getDisplayName(WrappedComponent) {
+	  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+	}
+	
+	var errorObject = { value: null };
+	function tryCatch(fn, ctx) {
+	  try {
+	    return fn.apply(ctx);
+	  } catch (e) {
+	    errorObject.value = e;
+	    return errorObject;
+	  }
+	}
+	
+	// Helps track hot reloading.
+	var nextVersion = 0;
+	
+	function connect(mapStateToProps, mapDispatchToProps, mergeProps) {
+	  var options = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
+	
+	  var shouldSubscribe = Boolean(mapStateToProps);
+	  var mapState = mapStateToProps || defaultMapStateToProps;
+	
+	  var mapDispatch = undefined;
+	  if (typeof mapDispatchToProps === 'function') {
+	    mapDispatch = mapDispatchToProps;
+	  } else if (!mapDispatchToProps) {
+	    mapDispatch = defaultMapDispatchToProps;
+	  } else {
+	    mapDispatch = (0, _wrapActionCreators2["default"])(mapDispatchToProps);
+	  }
+	
+	  var finalMergeProps = mergeProps || defaultMergeProps;
+	  var _options$pure = options.pure;
+	  var pure = _options$pure === undefined ? true : _options$pure;
+	  var _options$withRef = options.withRef;
+	  var withRef = _options$withRef === undefined ? false : _options$withRef;
+	
+	  var checkMergedEquals = pure && finalMergeProps !== defaultMergeProps;
+	
+	  // Helps track hot reloading.
+	  var version = nextVersion++;
+	
+	  return function wrapWithConnect(WrappedComponent) {
+	    var connectDisplayName = 'Connect(' + getDisplayName(WrappedComponent) + ')';
+	
+	    function checkStateShape(props, methodName) {
+	      if (!(0, _isPlainObject2["default"])(props)) {
+	        (0, _warning2["default"])(methodName + '() in ' + connectDisplayName + ' must return a plain object. ' + ('Instead received ' + props + '.'));
+	      }
+	    }
+	
+	    function computeMergedProps(stateProps, dispatchProps, parentProps) {
+	      var mergedProps = finalMergeProps(stateProps, dispatchProps, parentProps);
+	      if (process.env.NODE_ENV !== 'production') {
+	        checkStateShape(mergedProps, 'mergeProps');
+	      }
+	      return mergedProps;
+	    }
+	
+	    var Connect = function (_Component) {
+	      _inherits(Connect, _Component);
+	
+	      Connect.prototype.shouldComponentUpdate = function shouldComponentUpdate() {
+	        return !pure || this.haveOwnPropsChanged || this.hasStoreStateChanged;
+	      };
+	
+	      function Connect(props, context) {
+	        _classCallCheck(this, Connect);
+	
+	        var _this = _possibleConstructorReturn(this, _Component.call(this, props, context));
+	
+	        _this.version = version;
+	        _this.store = props.store || context.store;
+	
+	        (0, _invariant2["default"])(_this.store, 'Could not find "store" in either the context or ' + ('props of "' + connectDisplayName + '". ') + 'Either wrap the root component in a <Provider>, ' + ('or explicitly pass "store" as a prop to "' + connectDisplayName + '".'));
+	
+	        var storeState = _this.store.getState();
+	        _this.state = { storeState: storeState };
+	        _this.clearCache();
+	        return _this;
+	      }
+	
+	      Connect.prototype.computeStateProps = function computeStateProps(store, props) {
+	        if (!this.finalMapStateToProps) {
+	          return this.configureFinalMapState(store, props);
+	        }
+	
+	        var state = store.getState();
+	        var stateProps = this.doStatePropsDependOnOwnProps ? this.finalMapStateToProps(state, props) : this.finalMapStateToProps(state);
+	
+	        if (process.env.NODE_ENV !== 'production') {
+	          checkStateShape(stateProps, 'mapStateToProps');
+	        }
+	        return stateProps;
+	      };
+	
+	      Connect.prototype.configureFinalMapState = function configureFinalMapState(store, props) {
+	        var mappedState = mapState(store.getState(), props);
+	        var isFactory = typeof mappedState === 'function';
+	
+	        this.finalMapStateToProps = isFactory ? mappedState : mapState;
+	        this.doStatePropsDependOnOwnProps = this.finalMapStateToProps.length !== 1;
+	
+	        if (isFactory) {
+	          return this.computeStateProps(store, props);
+	        }
+	
+	        if (process.env.NODE_ENV !== 'production') {
+	          checkStateShape(mappedState, 'mapStateToProps');
+	        }
+	        return mappedState;
+	      };
+	
+	      Connect.prototype.computeDispatchProps = function computeDispatchProps(store, props) {
+	        if (!this.finalMapDispatchToProps) {
+	          return this.configureFinalMapDispatch(store, props);
+	        }
+	
+	        var dispatch = store.dispatch;
+	
+	        var dispatchProps = this.doDispatchPropsDependOnOwnProps ? this.finalMapDispatchToProps(dispatch, props) : this.finalMapDispatchToProps(dispatch);
+	
+	        if (process.env.NODE_ENV !== 'production') {
+	          checkStateShape(dispatchProps, 'mapDispatchToProps');
+	        }
+	        return dispatchProps;
+	      };
+	
+	      Connect.prototype.configureFinalMapDispatch = function configureFinalMapDispatch(store, props) {
+	        var mappedDispatch = mapDispatch(store.dispatch, props);
+	        var isFactory = typeof mappedDispatch === 'function';
+	
+	        this.finalMapDispatchToProps = isFactory ? mappedDispatch : mapDispatch;
+	        this.doDispatchPropsDependOnOwnProps = this.finalMapDispatchToProps.length !== 1;
+	
+	        if (isFactory) {
+	          return this.computeDispatchProps(store, props);
+	        }
+	
+	        if (process.env.NODE_ENV !== 'production') {
+	          checkStateShape(mappedDispatch, 'mapDispatchToProps');
+	        }
+	        return mappedDispatch;
+	      };
+	
+	      Connect.prototype.updateStatePropsIfNeeded = function updateStatePropsIfNeeded() {
+	        var nextStateProps = this.computeStateProps(this.store, this.props);
+	        if (this.stateProps && (0, _shallowEqual2["default"])(nextStateProps, this.stateProps)) {
+	          return false;
+	        }
+	
+	        this.stateProps = nextStateProps;
+	        return true;
+	      };
+	
+	      Connect.prototype.updateDispatchPropsIfNeeded = function updateDispatchPropsIfNeeded() {
+	        var nextDispatchProps = this.computeDispatchProps(this.store, this.props);
+	        if (this.dispatchProps && (0, _shallowEqual2["default"])(nextDispatchProps, this.dispatchProps)) {
+	          return false;
+	        }
+	
+	        this.dispatchProps = nextDispatchProps;
+	        return true;
+	      };
+	
+	      Connect.prototype.updateMergedPropsIfNeeded = function updateMergedPropsIfNeeded() {
+	        var nextMergedProps = computeMergedProps(this.stateProps, this.dispatchProps, this.props);
+	        if (this.mergedProps && checkMergedEquals && (0, _shallowEqual2["default"])(nextMergedProps, this.mergedProps)) {
+	          return false;
+	        }
+	
+	        this.mergedProps = nextMergedProps;
+	        return true;
+	      };
+	
+	      Connect.prototype.isSubscribed = function isSubscribed() {
+	        return typeof this.unsubscribe === 'function';
+	      };
+	
+	      Connect.prototype.trySubscribe = function trySubscribe() {
+	        if (shouldSubscribe && !this.unsubscribe) {
+	          this.unsubscribe = this.store.subscribe(this.handleChange.bind(this));
+	          this.handleChange();
+	        }
+	      };
+	
+	      Connect.prototype.tryUnsubscribe = function tryUnsubscribe() {
+	        if (this.unsubscribe) {
+	          this.unsubscribe();
+	          this.unsubscribe = null;
+	        }
+	      };
+	
+	      Connect.prototype.componentDidMount = function componentDidMount() {
+	        this.trySubscribe();
+	      };
+	
+	      Connect.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+	        if (!pure || !(0, _shallowEqual2["default"])(nextProps, this.props)) {
+	          this.haveOwnPropsChanged = true;
+	        }
+	      };
+	
+	      Connect.prototype.componentWillUnmount = function componentWillUnmount() {
+	        this.tryUnsubscribe();
+	        this.clearCache();
+	      };
+	
+	      Connect.prototype.clearCache = function clearCache() {
+	        this.dispatchProps = null;
+	        this.stateProps = null;
+	        this.mergedProps = null;
+	        this.haveOwnPropsChanged = true;
+	        this.hasStoreStateChanged = true;
+	        this.haveStatePropsBeenPrecalculated = false;
+	        this.statePropsPrecalculationError = null;
+	        this.renderedElement = null;
+	        this.finalMapDispatchToProps = null;
+	        this.finalMapStateToProps = null;
+	      };
+	
+	      Connect.prototype.handleChange = function handleChange() {
+	        if (!this.unsubscribe) {
+	          return;
+	        }
+	
+	        var storeState = this.store.getState();
+	        var prevStoreState = this.state.storeState;
+	        if (pure && prevStoreState === storeState) {
+	          return;
+	        }
+	
+	        if (pure && !this.doStatePropsDependOnOwnProps) {
+	          var haveStatePropsChanged = tryCatch(this.updateStatePropsIfNeeded, this);
+	          if (!haveStatePropsChanged) {
+	            return;
+	          }
+	          if (haveStatePropsChanged === errorObject) {
+	            this.statePropsPrecalculationError = errorObject.value;
+	          }
+	          this.haveStatePropsBeenPrecalculated = true;
+	        }
+	
+	        this.hasStoreStateChanged = true;
+	        this.setState({ storeState: storeState });
+	      };
+	
+	      Connect.prototype.getWrappedInstance = function getWrappedInstance() {
+	        (0, _invariant2["default"])(withRef, 'To access the wrapped instance, you need to specify ' + '{ withRef: true } as the fourth argument of the connect() call.');
+	
+	        return this.refs.wrappedInstance;
+	      };
+	
+	      Connect.prototype.render = function render() {
+	        var haveOwnPropsChanged = this.haveOwnPropsChanged;
+	        var hasStoreStateChanged = this.hasStoreStateChanged;
+	        var haveStatePropsBeenPrecalculated = this.haveStatePropsBeenPrecalculated;
+	        var statePropsPrecalculationError = this.statePropsPrecalculationError;
+	        var renderedElement = this.renderedElement;
+	
+	        this.haveOwnPropsChanged = false;
+	        this.hasStoreStateChanged = false;
+	        this.haveStatePropsBeenPrecalculated = false;
+	        this.statePropsPrecalculationError = null;
+	
+	        if (statePropsPrecalculationError) {
+	          throw statePropsPrecalculationError;
+	        }
+	
+	        var shouldUpdateStateProps = true;
+	        var shouldUpdateDispatchProps = true;
+	        if (pure && renderedElement) {
+	          shouldUpdateStateProps = hasStoreStateChanged || haveOwnPropsChanged && this.doStatePropsDependOnOwnProps;
+	          shouldUpdateDispatchProps = haveOwnPropsChanged && this.doDispatchPropsDependOnOwnProps;
+	        }
+	
+	        var haveStatePropsChanged = false;
+	        var haveDispatchPropsChanged = false;
+	        if (haveStatePropsBeenPrecalculated) {
+	          haveStatePropsChanged = true;
+	        } else if (shouldUpdateStateProps) {
+	          haveStatePropsChanged = this.updateStatePropsIfNeeded();
+	        }
+	        if (shouldUpdateDispatchProps) {
+	          haveDispatchPropsChanged = this.updateDispatchPropsIfNeeded();
+	        }
+	
+	        var haveMergedPropsChanged = true;
+	        if (haveStatePropsChanged || haveDispatchPropsChanged || haveOwnPropsChanged) {
+	          haveMergedPropsChanged = this.updateMergedPropsIfNeeded();
+	        } else {
+	          haveMergedPropsChanged = false;
+	        }
+	
+	        if (!haveMergedPropsChanged && renderedElement) {
+	          return renderedElement;
+	        }
+	
+	        if (withRef) {
+	          this.renderedElement = (0, _react.createElement)(WrappedComponent, _extends({}, this.mergedProps, {
+	            ref: 'wrappedInstance'
+	          }));
+	        } else {
+	          this.renderedElement = (0, _react.createElement)(WrappedComponent, this.mergedProps);
+	        }
+	
+	        return this.renderedElement;
+	      };
+	
+	      return Connect;
+	    }(_react.Component);
+	
+	    Connect.displayName = connectDisplayName;
+	    Connect.WrappedComponent = WrappedComponent;
+	    Connect.contextTypes = {
+	      store: _storeShape2["default"]
+	    };
+	    Connect.propTypes = {
+	      store: _storeShape2["default"]
+	    };
+	
+	    if (process.env.NODE_ENV !== 'production') {
+	      Connect.prototype.componentWillUpdate = function componentWillUpdate() {
+	        if (this.version === version) {
+	          return;
+	        }
+	
+	        // We are hot reloading!
+	        this.version = version;
+	        this.trySubscribe();
+	        this.clearCache();
+	      };
+	    }
+	
+	    return (0, _hoistNonReactStatics2["default"])(Connect, WrappedComponent);
+	  };
+	}
+
+/***/ },
+/* 217 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	exports.__esModule = true;
+	exports["default"] = shallowEqual;
+	function shallowEqual(objA, objB) {
+	  if (objA === objB) {
+	    return true;
+	  }
+	
+	  var keysA = Object.keys(objA);
+	  var keysB = Object.keys(objB);
+	
+	  if (keysA.length !== keysB.length) {
+	    return false;
+	  }
+	
+	  // Test for A's keys different from B.
+	  var hasOwn = Object.prototype.hasOwnProperty;
+	  for (var i = 0; i < keysA.length; i++) {
+	    if (!hasOwn.call(objB, keysA[i]) || objA[keysA[i]] !== objB[keysA[i]]) {
+	      return false;
+	    }
+	  }
+	
+	  return true;
+	}
+
+/***/ },
+/* 218 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	exports["default"] = wrapActionCreators;
+	
+	var _redux = __webpack_require__(219);
+	
+	function wrapActionCreators(actionCreators) {
+	  return function (dispatch) {
+	    return (0, _redux.bindActionCreators)(actionCreators, dispatch);
+	  };
+	}
+
+/***/ },
+/* 219 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	exports.compose = exports.applyMiddleware = exports.bindActionCreators = exports.combineReducers = exports.createStore = undefined;
+	
+	var _createStore = __webpack_require__(220);
+	
+	var _createStore2 = _interopRequireDefault(_createStore);
+	
+	var _combineReducers = __webpack_require__(227);
+	
+	var _combineReducers2 = _interopRequireDefault(_combineReducers);
+	
+	var _bindActionCreators = __webpack_require__(229);
+	
+	var _bindActionCreators2 = _interopRequireDefault(_bindActionCreators);
+	
+	var _applyMiddleware = __webpack_require__(230);
+	
+	var _applyMiddleware2 = _interopRequireDefault(_applyMiddleware);
+	
+	var _compose = __webpack_require__(231);
+	
+	var _compose2 = _interopRequireDefault(_compose);
+	
+	var _warning = __webpack_require__(228);
+	
+	var _warning2 = _interopRequireDefault(_warning);
+	
+	function _interopRequireDefault(obj) {
+	  return obj && obj.__esModule ? obj : { "default": obj };
+	}
+	
+	/*
+	* This is a dummy function to check if the function name has been altered by minification.
+	* If the function has been minified and NODE_ENV !== 'production', warn the user.
+	*/
+	function isCrushed() {}
+	
+	if (process.env.NODE_ENV !== 'production' && typeof isCrushed.name === 'string' && isCrushed.name !== 'isCrushed') {
+	  (0, _warning2["default"])('You are currently using minified code outside of NODE_ENV === \'production\'. ' + 'This means that you are running a slower development build of Redux. ' + 'You can use loose-envify (https://github.com/zertosh/loose-envify) for browserify ' + 'or DefinePlugin for webpack (http://stackoverflow.com/questions/30030031) ' + 'to ensure you have the correct code for your production build.');
+	}
+	
+	exports.createStore = _createStore2["default"];
+	exports.combineReducers = _combineReducers2["default"];
+	exports.bindActionCreators = _bindActionCreators2["default"];
+	exports.applyMiddleware = _applyMiddleware2["default"];
+	exports.compose = _compose2["default"];
+
+/***/ },
+/* 220 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	
+	exports.__esModule = true;
+	exports.ActionTypes = undefined;
+	exports["default"] = createStore;
+	
+	var _isPlainObject = __webpack_require__(221);
+	
+	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
+	
+	var _symbolObservable = __webpack_require__(225);
+	
+	var _symbolObservable2 = _interopRequireDefault(_symbolObservable);
+	
+	function _interopRequireDefault(obj) {
+	  return obj && obj.__esModule ? obj : { "default": obj };
+	}
+	
+	/**
+	 * These are private action types reserved by Redux.
+	 * For any unknown actions, you must return the current state.
+	 * If the current state is undefined, you must return the initial state.
+	 * Do not reference these action types directly in your code.
+	 */
+	var ActionTypes = exports.ActionTypes = {
+	  INIT: '@@redux/INIT'
+	};
+	
+	/**
+	 * Creates a Redux store that holds the state tree.
+	 * The only way to change the data in the store is to call `dispatch()` on it.
+	 *
+	 * There should only be a single store in your app. To specify how different
+	 * parts of the state tree respond to actions, you may combine several reducers
+	 * into a single reducer function by using `combineReducers`.
+	 *
+	 * @param {Function} reducer A function that returns the next state tree, given
+	 * the current state tree and the action to handle.
+	 *
+	 * @param {any} [initialState] The initial state. You may optionally specify it
+	 * to hydrate the state from the server in universal apps, or to restore a
+	 * previously serialized user session.
+	 * If you use `combineReducers` to produce the root reducer function, this must be
+	 * an object with the same shape as `combineReducers` keys.
+	 *
+	 * @param {Function} enhancer The store enhancer. You may optionally specify it
+	 * to enhance the store with third-party capabilities such as middleware,
+	 * time travel, persistence, etc. The only store enhancer that ships with Redux
+	 * is `applyMiddleware()`.
+	 *
+	 * @returns {Store} A Redux store that lets you read the state, dispatch actions
+	 * and subscribe to changes.
+	 */
+	function createStore(reducer, initialState, enhancer) {
+	  var _ref2;
+	
+	  if (typeof initialState === 'function' && typeof enhancer === 'undefined') {
+	    enhancer = initialState;
+	    initialState = undefined;
+	  }
+	
+	  if (typeof enhancer !== 'undefined') {
+	    if (typeof enhancer !== 'function') {
+	      throw new Error('Expected the enhancer to be a function.');
+	    }
+	
+	    return enhancer(createStore)(reducer, initialState);
+	  }
+	
+	  if (typeof reducer !== 'function') {
+	    throw new Error('Expected the reducer to be a function.');
+	  }
+	
+	  var currentReducer = reducer;
+	  var currentState = initialState;
+	  var currentListeners = [];
+	  var nextListeners = currentListeners;
+	  var isDispatching = false;
+	
+	  function ensureCanMutateNextListeners() {
+	    if (nextListeners === currentListeners) {
+	      nextListeners = currentListeners.slice();
+	    }
+	  }
+	
+	  /**
+	   * Reads the state tree managed by the store.
+	   *
+	   * @returns {any} The current state tree of your application.
+	   */
+	  function getState() {
+	    return currentState;
+	  }
+	
+	  /**
+	   * Adds a change listener. It will be called any time an action is dispatched,
+	   * and some part of the state tree may potentially have changed. You may then
+	   * call `getState()` to read the current state tree inside the callback.
+	   *
+	   * You may call `dispatch()` from a change listener, with the following
+	   * caveats:
+	   *
+	   * 1. The subscriptions are snapshotted just before every `dispatch()` call.
+	   * If you subscribe or unsubscribe while the listeners are being invoked, this
+	   * will not have any effect on the `dispatch()` that is currently in progress.
+	   * However, the next `dispatch()` call, whether nested or not, will use a more
+	   * recent snapshot of the subscription list.
+	   *
+	   * 2. The listener should not expect to see all state changes, as the state
+	   * might have been updated multiple times during a nested `dispatch()` before
+	   * the listener is called. It is, however, guaranteed that all subscribers
+	   * registered before the `dispatch()` started will be called with the latest
+	   * state by the time it exits.
+	   *
+	   * @param {Function} listener A callback to be invoked on every dispatch.
+	   * @returns {Function} A function to remove this change listener.
+	   */
+	  function subscribe(listener) {
+	    if (typeof listener !== 'function') {
+	      throw new Error('Expected listener to be a function.');
+	    }
+	
+	    var isSubscribed = true;
+	
+	    ensureCanMutateNextListeners();
+	    nextListeners.push(listener);
+	
+	    return function unsubscribe() {
+	      if (!isSubscribed) {
+	        return;
+	      }
+	
+	      isSubscribed = false;
+	
+	      ensureCanMutateNextListeners();
+	      var index = nextListeners.indexOf(listener);
+	      nextListeners.splice(index, 1);
+	    };
+	  }
+	
+	  /**
+	   * Dispatches an action. It is the only way to trigger a state change.
+	   *
+	   * The `reducer` function, used to create the store, will be called with the
+	   * current state tree and the given `action`. Its return value will
+	   * be considered the **next** state of the tree, and the change listeners
+	   * will be notified.
+	   *
+	   * The base implementation only supports plain object actions. If you want to
+	   * dispatch a Promise, an Observable, a thunk, or something else, you need to
+	   * wrap your store creating function into the corresponding middleware. For
+	   * example, see the documentation for the `redux-thunk` package. Even the
+	   * middleware will eventually dispatch plain object actions using this method.
+	   *
+	   * @param {Object} action A plain object representing “what changed”. It is
+	   * a good idea to keep actions serializable so you can record and replay user
+	   * sessions, or use the time travelling `redux-devtools`. An action must have
+	   * a `type` property which may not be `undefined`. It is a good idea to use
+	   * string constants for action types.
+	   *
+	   * @returns {Object} For convenience, the same action object you dispatched.
+	   *
+	   * Note that, if you use a custom middleware, it may wrap `dispatch()` to
+	   * return something else (for example, a Promise you can await).
+	   */
+	  function dispatch(action) {
+	    if (!(0, _isPlainObject2["default"])(action)) {
+	      throw new Error('Actions must be plain objects. ' + 'Use custom middleware for async actions.');
+	    }
+	
+	    if (typeof action.type === 'undefined') {
+	      throw new Error('Actions may not have an undefined "type" property. ' + 'Have you misspelled a constant?');
+	    }
+	
+	    if (isDispatching) {
+	      throw new Error('Reducers may not dispatch actions.');
+	    }
+	
+	    try {
+	      isDispatching = true;
+	      currentState = currentReducer(currentState, action);
+	    } finally {
+	      isDispatching = false;
+	    }
+	
+	    var listeners = currentListeners = nextListeners;
+	    for (var i = 0; i < listeners.length; i++) {
+	      listeners[i]();
+	    }
+	
+	    return action;
+	  }
+	
+	  /**
+	   * Replaces the reducer currently used by the store to calculate the state.
+	   *
+	   * You might need this if your app implements code splitting and you want to
+	   * load some of the reducers dynamically. You might also need this if you
+	   * implement a hot reloading mechanism for Redux.
+	   *
+	   * @param {Function} nextReducer The reducer for the store to use instead.
+	   * @returns {void}
+	   */
+	  function replaceReducer(nextReducer) {
+	    if (typeof nextReducer !== 'function') {
+	      throw new Error('Expected the nextReducer to be a function.');
+	    }
+	
+	    currentReducer = nextReducer;
+	    dispatch({ type: ActionTypes.INIT });
+	  }
+	
+	  /**
+	   * Interoperability point for observable/reactive libraries.
+	   * @returns {observable} A minimal observable of state changes.
+	   * For more information, see the observable proposal:
+	   * https://github.com/zenparsing/es-observable
+	   */
+	  function observable() {
+	    var _ref;
+	
+	    var outerSubscribe = subscribe;
+	    return _ref = {
+	      /**
+	       * The minimal observable subscription method.
+	       * @param {Object} observer Any object that can be used as an observer.
+	       * The observer object should have a `next` method.
+	       * @returns {subscription} An object with an `unsubscribe` method that can
+	       * be used to unsubscribe the observable from the store, and prevent further
+	       * emission of values from the observable.
+	       */
+	
+	      subscribe: function subscribe(observer) {
+	        if ((typeof observer === 'undefined' ? 'undefined' : _typeof(observer)) !== 'object') {
+	          throw new TypeError('Expected the observer to be an object.');
+	        }
+	
+	        function observeState() {
+	          if (observer.next) {
+	            observer.next(getState());
+	          }
+	        }
+	
+	        observeState();
+	        var unsubscribe = outerSubscribe(observeState);
+	        return { unsubscribe: unsubscribe };
+	      }
+	    }, _ref[_symbolObservable2["default"]] = function () {
+	      return this;
+	    }, _ref;
+	  }
+	
+	  // When a store is created, an "INIT" action is dispatched so that every
+	  // reducer returns their initial state. This effectively populates
+	  // the initial state tree.
+	  dispatch({ type: ActionTypes.INIT });
+	
+	  return _ref2 = {
+	    dispatch: dispatch,
+	    subscribe: subscribe,
+	    getState: getState,
+	    replaceReducer: replaceReducer
+	  }, _ref2[_symbolObservable2["default"]] = observable, _ref2;
+	}
+
+/***/ },
+/* 221 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var getPrototype = __webpack_require__(222),
+	    isHostObject = __webpack_require__(223),
+	    isObjectLike = __webpack_require__(224);
+	
+	/** `Object#toString` result references. */
+	var objectTag = '[object Object]';
+	
+	/** Used for built-in method references. */
+	var objectProto = Object.prototype;
+	
+	/** Used to resolve the decompiled source of functions. */
+	var funcToString = Function.prototype.toString;
+	
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+	
+	/** Used to infer the `Object` constructor. */
+	var objectCtorString = funcToString.call(Object);
+	
+	/**
+	 * Used to resolve the
+	 * [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var objectToString = objectProto.toString;
+	
+	/**
+	 * Checks if `value` is a plain object, that is, an object created by the
+	 * `Object` constructor or one with a `[[Prototype]]` of `null`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 0.8.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a plain object,
+	 *  else `false`.
+	 * @example
+	 *
+	 * function Foo() {
+	 *   this.a = 1;
+	 * }
+	 *
+	 * _.isPlainObject(new Foo);
+	 * // => false
+	 *
+	 * _.isPlainObject([1, 2, 3]);
+	 * // => false
+	 *
+	 * _.isPlainObject({ 'x': 0, 'y': 0 });
+	 * // => true
+	 *
+	 * _.isPlainObject(Object.create(null));
+	 * // => true
+	 */
+	function isPlainObject(value) {
+	  if (!isObjectLike(value) || objectToString.call(value) != objectTag || isHostObject(value)) {
+	    return false;
+	  }
+	  var proto = getPrototype(value);
+	  if (proto === null) {
+	    return true;
+	  }
+	  var Ctor = hasOwnProperty.call(proto, 'constructor') && proto.constructor;
+	  return typeof Ctor == 'function' && Ctor instanceof Ctor && funcToString.call(Ctor) == objectCtorString;
+	}
+	
+	module.exports = isPlainObject;
+
+/***/ },
+/* 222 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	/* Built-in method references for those with the same name as other `lodash` methods. */
+	var nativeGetPrototype = Object.getPrototypeOf;
+	
+	/**
+	 * Gets the `[[Prototype]]` of `value`.
+	 *
+	 * @private
+	 * @param {*} value The value to query.
+	 * @returns {null|Object} Returns the `[[Prototype]]`.
+	 */
+	function getPrototype(value) {
+	  return nativeGetPrototype(Object(value));
+	}
+	
+	module.exports = getPrototype;
+
+/***/ },
+/* 223 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	/**
+	 * Checks if `value` is a host object in IE < 9.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a host object, else `false`.
+	 */
+	function isHostObject(value) {
+	  // Many host objects are `Object` objects that can coerce to strings
+	  // despite having improperly defined `toString` methods.
+	  var result = false;
+	  if (value != null && typeof value.toString != 'function') {
+	    try {
+	      result = !!(value + '');
+	    } catch (e) {}
+	  }
+	  return result;
+	}
+	
+	module.exports = isHostObject;
+
+/***/ },
+/* 224 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	
+	/**
+	 * Checks if `value` is object-like. A value is object-like if it's not `null`
+	 * and has a `typeof` result of "object".
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+	 * @example
+	 *
+	 * _.isObjectLike({});
+	 * // => true
+	 *
+	 * _.isObjectLike([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObjectLike(_.noop);
+	 * // => false
+	 *
+	 * _.isObjectLike(null);
+	 * // => false
+	 */
+	function isObjectLike(value) {
+	  return !!value && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) == 'object';
+	}
+	
+	module.exports = isObjectLike;
+
+/***/ },
+/* 225 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* global window */
+	'use strict';
+	
+	module.exports = __webpack_require__(226)(global || window || undefined);
+
+/***/ },
+/* 226 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	module.exports = function symbolObservablePonyfill(root) {
+		var result;
+		var _Symbol = root.Symbol;
+	
+		if (typeof _Symbol === 'function') {
+			if (_Symbol.observable) {
+				result = _Symbol.observable;
+			} else {
+				if (typeof _Symbol.for === 'function') {
+					result = _Symbol.for('observable');
+				} else {
+					result = _Symbol('observable');
+				}
+				_Symbol.observable = result;
+			}
+		} else {
+			result = '@@observable';
+		}
+	
+		return result;
+	};
+
+/***/ },
+/* 227 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	exports["default"] = combineReducers;
+	
+	var _createStore = __webpack_require__(220);
+	
+	var _isPlainObject = __webpack_require__(221);
+	
+	var _isPlainObject2 = _interopRequireDefault(_isPlainObject);
+	
+	var _warning = __webpack_require__(228);
+	
+	var _warning2 = _interopRequireDefault(_warning);
+	
+	function _interopRequireDefault(obj) {
+	  return obj && obj.__esModule ? obj : { "default": obj };
+	}
+	
+	function getUndefinedStateErrorMessage(key, action) {
+	  var actionType = action && action.type;
+	  var actionName = actionType && '"' + actionType.toString() + '"' || 'an action';
+	
+	  return 'Given action ' + actionName + ', reducer "' + key + '" returned undefined. ' + 'To ignore an action, you must explicitly return the previous state.';
+	}
+	
+	function getUnexpectedStateShapeWarningMessage(inputState, reducers, action) {
+	  var reducerKeys = Object.keys(reducers);
+	  var argumentName = action && action.type === _createStore.ActionTypes.INIT ? 'initialState argument passed to createStore' : 'previous state received by the reducer';
+	
+	  if (reducerKeys.length === 0) {
+	    return 'Store does not have a valid reducer. Make sure the argument passed ' + 'to combineReducers is an object whose values are reducers.';
+	  }
+	
+	  if (!(0, _isPlainObject2["default"])(inputState)) {
+	    return 'The ' + argumentName + ' has unexpected type of "' + {}.toString.call(inputState).match(/\s([a-z|A-Z]+)/)[1] + '". Expected argument to be an object with the following ' + ('keys: "' + reducerKeys.join('", "') + '"');
+	  }
+	
+	  var unexpectedKeys = Object.keys(inputState).filter(function (key) {
+	    return !reducers.hasOwnProperty(key);
+	  });
+	
+	  if (unexpectedKeys.length > 0) {
+	    return 'Unexpected ' + (unexpectedKeys.length > 1 ? 'keys' : 'key') + ' ' + ('"' + unexpectedKeys.join('", "') + '" found in ' + argumentName + '. ') + 'Expected to find one of the known reducer keys instead: ' + ('"' + reducerKeys.join('", "') + '". Unexpected keys will be ignored.');
+	  }
+	}
+	
+	function assertReducerSanity(reducers) {
+	  Object.keys(reducers).forEach(function (key) {
+	    var reducer = reducers[key];
+	    var initialState = reducer(undefined, { type: _createStore.ActionTypes.INIT });
+	
+	    if (typeof initialState === 'undefined') {
+	      throw new Error('Reducer "' + key + '" returned undefined during initialization. ' + 'If the state passed to the reducer is undefined, you must ' + 'explicitly return the initial state. The initial state may ' + 'not be undefined.');
+	    }
+	
+	    var type = '@@redux/PROBE_UNKNOWN_ACTION_' + Math.random().toString(36).substring(7).split('').join('.');
+	    if (typeof reducer(undefined, { type: type }) === 'undefined') {
+	      throw new Error('Reducer "' + key + '" returned undefined when probed with a random type. ' + ('Don\'t try to handle ' + _createStore.ActionTypes.INIT + ' or other actions in "redux/*" ') + 'namespace. They are considered private. Instead, you must return the ' + 'current state for any unknown actions, unless it is undefined, ' + 'in which case you must return the initial state, regardless of the ' + 'action type. The initial state may not be undefined.');
+	    }
+	  });
+	}
+	
+	/**
+	 * Turns an object whose values are different reducer functions, into a single
+	 * reducer function. It will call every child reducer, and gather their results
+	 * into a single state object, whose keys correspond to the keys of the passed
+	 * reducer functions.
+	 *
+	 * @param {Object} reducers An object whose values correspond to different
+	 * reducer functions that need to be combined into one. One handy way to obtain
+	 * it is to use ES6 `import * as reducers` syntax. The reducers may never return
+	 * undefined for any action. Instead, they should return their initial state
+	 * if the state passed to them was undefined, and the current state for any
+	 * unrecognized action.
+	 *
+	 * @returns {Function} A reducer function that invokes every reducer inside the
+	 * passed object, and builds a state object with the same shape.
+	 */
+	function combineReducers(reducers) {
+	  var reducerKeys = Object.keys(reducers);
+	  var finalReducers = {};
+	  for (var i = 0; i < reducerKeys.length; i++) {
+	    var key = reducerKeys[i];
+	    if (typeof reducers[key] === 'function') {
+	      finalReducers[key] = reducers[key];
+	    }
+	  }
+	  var finalReducerKeys = Object.keys(finalReducers);
+	
+	  var sanityError;
+	  try {
+	    assertReducerSanity(finalReducers);
+	  } catch (e) {
+	    sanityError = e;
+	  }
+	
+	  return function combination() {
+	    var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	    var action = arguments[1];
+	
+	    if (sanityError) {
+	      throw sanityError;
+	    }
+	
+	    if (process.env.NODE_ENV !== 'production') {
+	      var warningMessage = getUnexpectedStateShapeWarningMessage(state, finalReducers, action);
+	      if (warningMessage) {
+	        (0, _warning2["default"])(warningMessage);
+	      }
+	    }
+	
+	    var hasChanged = false;
+	    var nextState = {};
+	    for (var i = 0; i < finalReducerKeys.length; i++) {
+	      var key = finalReducerKeys[i];
+	      var reducer = finalReducers[key];
+	      var previousStateForKey = state[key];
+	      var nextStateForKey = reducer(previousStateForKey, action);
+	      if (typeof nextStateForKey === 'undefined') {
+	        var errorMessage = getUndefinedStateErrorMessage(key, action);
+	        throw new Error(errorMessage);
+	      }
+	      nextState[key] = nextStateForKey;
+	      hasChanged = hasChanged || nextStateForKey !== previousStateForKey;
+	    }
+	    return hasChanged ? nextState : state;
+	  };
+	}
+
+/***/ },
+/* 228 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	exports["default"] = warning;
+	/**
+	 * Prints a warning in the console if it exists.
+	 *
+	 * @param {String} message The warning message.
+	 * @returns {void}
+	 */
+	function warning(message) {
+	  /* eslint-disable no-console */
+	  if (typeof console !== 'undefined' && typeof console.error === 'function') {
+	    console.error(message);
+	  }
+	  /* eslint-enable no-console */
+	  try {
+	    // This error was thrown as a convenience so that you can use this stack
+	    // to find the callsite that caused this warning to fire.
+	    throw new Error(message);
+	    /* eslint-disable no-empty */
+	  } catch (e) {}
+	  /* eslint-enable no-empty */
+	}
+
+/***/ },
+/* 229 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	
+	exports.__esModule = true;
+	exports["default"] = bindActionCreators;
+	function bindActionCreator(actionCreator, dispatch) {
+	  return function () {
+	    return dispatch(actionCreator.apply(undefined, arguments));
+	  };
+	}
+	
+	/**
+	 * Turns an object whose values are action creators, into an object with the
+	 * same keys, but with every function wrapped into a `dispatch` call so they
+	 * may be invoked directly. This is just a convenience method, as you can call
+	 * `store.dispatch(MyActionCreators.doSomething())` yourself just fine.
+	 *
+	 * For convenience, you can also pass a single function as the first argument,
+	 * and get a function in return.
+	 *
+	 * @param {Function|Object} actionCreators An object whose values are action
+	 * creator functions. One handy way to obtain it is to use ES6 `import * as`
+	 * syntax. You may also pass a single function.
+	 *
+	 * @param {Function} dispatch The `dispatch` function available on your Redux
+	 * store.
+	 *
+	 * @returns {Function|Object} The object mimicking the original object, but with
+	 * every action creator wrapped into the `dispatch` call. If you passed a
+	 * function as `actionCreators`, the return value will also be a single
+	 * function.
+	 */
+	function bindActionCreators(actionCreators, dispatch) {
+	  if (typeof actionCreators === 'function') {
+	    return bindActionCreator(actionCreators, dispatch);
+	  }
+	
+	  if ((typeof actionCreators === 'undefined' ? 'undefined' : _typeof(actionCreators)) !== 'object' || actionCreators === null) {
+	    throw new Error('bindActionCreators expected an object or a function, instead received ' + (actionCreators === null ? 'null' : typeof actionCreators === 'undefined' ? 'undefined' : _typeof(actionCreators)) + '. ' + 'Did you write "import ActionCreators from" instead of "import * as ActionCreators from"?');
+	  }
+	
+	  var keys = Object.keys(actionCreators);
+	  var boundActionCreators = {};
+	  for (var i = 0; i < keys.length; i++) {
+	    var key = keys[i];
+	    var actionCreator = actionCreators[key];
+	    if (typeof actionCreator === 'function') {
+	      boundActionCreators[key] = bindActionCreator(actionCreator, dispatch);
+	    }
+	  }
+	  return boundActionCreators;
+	}
+
+/***/ },
+/* 230 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	
+	var _extends = Object.assign || function (target) {
+	  for (var i = 1; i < arguments.length; i++) {
+	    var source = arguments[i];for (var key in source) {
+	      if (Object.prototype.hasOwnProperty.call(source, key)) {
+	        target[key] = source[key];
+	      }
+	    }
+	  }return target;
+	};
+	
+	exports["default"] = applyMiddleware;
+	
+	var _compose = __webpack_require__(231);
+	
+	var _compose2 = _interopRequireDefault(_compose);
+	
+	function _interopRequireDefault(obj) {
+	  return obj && obj.__esModule ? obj : { "default": obj };
+	}
+	
+	/**
+	 * Creates a store enhancer that applies middleware to the dispatch method
+	 * of the Redux store. This is handy for a variety of tasks, such as expressing
+	 * asynchronous actions in a concise manner, or logging every action payload.
+	 *
+	 * See `redux-thunk` package as an example of the Redux middleware.
+	 *
+	 * Because middleware is potentially asynchronous, this should be the first
+	 * store enhancer in the composition chain.
+	 *
+	 * Note that each middleware will be given the `dispatch` and `getState` functions
+	 * as named arguments.
+	 *
+	 * @param {...Function} middlewares The middleware chain to be applied.
+	 * @returns {Function} A store enhancer applying the middleware.
+	 */
+	function applyMiddleware() {
+	  for (var _len = arguments.length, middlewares = Array(_len), _key = 0; _key < _len; _key++) {
+	    middlewares[_key] = arguments[_key];
+	  }
+	
+	  return function (createStore) {
+	    return function (reducer, initialState, enhancer) {
+	      var store = createStore(reducer, initialState, enhancer);
+	      var _dispatch = store.dispatch;
+	      var chain = [];
+	
+	      var middlewareAPI = {
+	        getState: store.getState,
+	        dispatch: function dispatch(action) {
+	          return _dispatch(action);
+	        }
+	      };
+	      chain = middlewares.map(function (middleware) {
+	        return middleware(middlewareAPI);
+	      });
+	      _dispatch = _compose2["default"].apply(undefined, chain)(store.dispatch);
+	
+	      return _extends({}, store, {
+	        dispatch: _dispatch
+	      });
+	    };
+	  };
+	}
+
+/***/ },
+/* 231 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	
+	exports.__esModule = true;
+	exports["default"] = compose;
+	/**
+	 * Composes single-argument functions from right to left. The rightmost
+	 * function can take multiple arguments as it provides the signature for
+	 * the resulting composite function.
+	 *
+	 * @param {...Function} funcs The functions to compose.
+	 * @returns {Function} A function obtained by composing the argument functions
+	 * from right to left. For example, compose(f, g, h) is identical to doing
+	 * (...args) => f(g(h(...args))).
+	 */
+	
+	function compose() {
+	  for (var _len = arguments.length, funcs = Array(_len), _key = 0; _key < _len; _key++) {
+	    funcs[_key] = arguments[_key];
+	  }
+	
+	  if (funcs.length === 0) {
+	    return function (arg) {
+	      return arg;
+	    };
+	  } else {
+	    var _ret = function () {
+	      var last = funcs[funcs.length - 1];
+	      var rest = funcs.slice(0, -1);
+	      return {
+	        v: function v() {
+	          return rest.reduceRight(function (composed, f) {
+	            return f(composed);
+	          }, last.apply(undefined, arguments));
+	        }
+	      };
+	    }();
+	
+	    if ((typeof _ret === "undefined" ? "undefined" : _typeof(_ret)) === "object") return _ret.v;
+	  }
+	}
+
+/***/ },
+/* 232 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var getPrototype = __webpack_require__(233),
+	    isHostObject = __webpack_require__(234),
+	    isObjectLike = __webpack_require__(235);
+	
+	/** `Object#toString` result references. */
+	var objectTag = '[object Object]';
+	
+	/** Used for built-in method references. */
+	var objectProto = Object.prototype;
+	
+	/** Used to resolve the decompiled source of functions. */
+	var funcToString = Function.prototype.toString;
+	
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+	
+	/** Used to infer the `Object` constructor. */
+	var objectCtorString = funcToString.call(Object);
+	
+	/**
+	 * Used to resolve the
+	 * [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var objectToString = objectProto.toString;
+	
+	/**
+	 * Checks if `value` is a plain object, that is, an object created by the
+	 * `Object` constructor or one with a `[[Prototype]]` of `null`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 0.8.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a plain object,
+	 *  else `false`.
+	 * @example
+	 *
+	 * function Foo() {
+	 *   this.a = 1;
+	 * }
+	 *
+	 * _.isPlainObject(new Foo);
+	 * // => false
+	 *
+	 * _.isPlainObject([1, 2, 3]);
+	 * // => false
+	 *
+	 * _.isPlainObject({ 'x': 0, 'y': 0 });
+	 * // => true
+	 *
+	 * _.isPlainObject(Object.create(null));
+	 * // => true
+	 */
+	function isPlainObject(value) {
+	  if (!isObjectLike(value) || objectToString.call(value) != objectTag || isHostObject(value)) {
+	    return false;
+	  }
+	  var proto = getPrototype(value);
+	  if (proto === null) {
+	    return true;
+	  }
+	  var Ctor = hasOwnProperty.call(proto, 'constructor') && proto.constructor;
+	  return typeof Ctor == 'function' && Ctor instanceof Ctor && funcToString.call(Ctor) == objectCtorString;
+	}
+	
+	module.exports = isPlainObject;
+
+/***/ },
+/* 233 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	/* Built-in method references for those with the same name as other `lodash` methods. */
+	var nativeGetPrototype = Object.getPrototypeOf;
+	
+	/**
+	 * Gets the `[[Prototype]]` of `value`.
+	 *
+	 * @private
+	 * @param {*} value The value to query.
+	 * @returns {null|Object} Returns the `[[Prototype]]`.
+	 */
+	function getPrototype(value) {
+	  return nativeGetPrototype(Object(value));
+	}
+	
+	module.exports = getPrototype;
+
+/***/ },
+/* 234 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	/**
+	 * Checks if `value` is a host object in IE < 9.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a host object, else `false`.
+	 */
+	function isHostObject(value) {
+	  // Many host objects are `Object` objects that can coerce to strings
+	  // despite having improperly defined `toString` methods.
+	  var result = false;
+	  if (value != null && typeof value.toString != 'function') {
+	    try {
+	      result = !!(value + '');
+	    } catch (e) {}
+	  }
+	  return result;
+	}
+	
+	module.exports = isHostObject;
+
+/***/ },
+/* 235 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	
+	/**
+	 * Checks if `value` is object-like. A value is object-like if it's not `null`
+	 * and has a `typeof` result of "object".
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+	 * @example
+	 *
+	 * _.isObjectLike({});
+	 * // => true
+	 *
+	 * _.isObjectLike([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObjectLike(_.noop);
+	 * // => false
+	 *
+	 * _.isObjectLike(null);
+	 * // => false
+	 */
+	function isObjectLike(value) {
+	  return !!value && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) == 'object';
+	}
+	
+	module.exports = isObjectLike;
+
+/***/ },
+/* 236 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2015, Yahoo! Inc.
+	 * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
+	 */
+	'use strict';
+	
+	var REACT_STATICS = {
+	    childContextTypes: true,
+	    contextTypes: true,
+	    defaultProps: true,
+	    displayName: true,
+	    getDefaultProps: true,
+	    mixins: true,
+	    propTypes: true,
+	    type: true
+	};
+	
+	var KNOWN_STATICS = {
+	    name: true,
+	    length: true,
+	    prototype: true,
+	    caller: true,
+	    arguments: true,
+	    arity: true
+	};
+	
+	module.exports = function hoistNonReactStatics(targetComponent, sourceComponent) {
+	    var keys = Object.getOwnPropertyNames(sourceComponent);
+	    for (var i = 0; i < keys.length; ++i) {
+	        if (!REACT_STATICS[keys[i]] && !KNOWN_STATICS[keys[i]]) {
+	            try {
+	                targetComponent[keys[i]] = sourceComponent[keys[i]];
+	            } catch (error) {}
+	        }
+	    }
+	
+	    return targetComponent;
+	};
+
+/***/ },
+/* 237 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 */
+	
+	'use strict';
+	
+	/**
+	 * Use invariant() to assert state which your program assumes to be true.
+	 *
+	 * Provide sprintf-style format (only %s is supported) and arguments
+	 * to provide information about what broke and what you were
+	 * expecting.
+	 *
+	 * The invariant message will be stripped in production, but the invariant
+	 * will remain to ensure logic does not differ in production.
+	 */
+	
+	var NODE_ENV = process.env.NODE_ENV;
+	
+	var invariant = function invariant(condition, format, a, b, c, d, e, f) {
+	  if (NODE_ENV !== 'production') {
+	    if (format === undefined) {
+	      throw new Error('invariant requires an error message argument');
+	    }
+	  }
+	
+	  if (!condition) {
+	    var error;
+	    if (format === undefined) {
+	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
+	    } else {
+	      var args = [a, b, c, d, e, f];
+	      var argIndex = 0;
+	      error = new Error(format.replace(/%s/g, function () {
+	        return args[argIndex++];
+	      }));
+	      error.name = 'Invariant Violation';
+	    }
+	
+	    error.framesToPop = 1; // we don't care about invariant's own frame
+	    throw error;
+	  }
+	};
+	
+	module.exports = invariant;
+
+/***/ },
+/* 238 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _reactRedux = __webpack_require__(212);
+	
+	var _actions = __webpack_require__(28);
+	
+	var actions = _interopRequireWildcard(_actions);
+	
+	var _CreditCardExpirationDateInput = __webpack_require__(198);
+	
+	var _CreditCardExpirationDateInput2 = _interopRequireDefault(_CreditCardExpirationDateInput);
+	
+	var _CreditCardInputStates = __webpack_require__(30);
+	
+	var cardStates = _interopRequireWildcard(_CreditCardInputStates);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+		return {
+			onChange: function onChange(value, cursorPosition) {
+				dispatch(actions.setCreditCardExpirationDate(value, cardStates.VALID, cursorPosition));
+			},
+			onFocus: function onFocus() {
+				dispatch(actions.didStartEditingCreditCardExpirationDate());
+			}
+		};
+	};
+	
+	// onDidFinishEditing: () => {
+	// 	dispatch( actions.didFinishEditingCreditCardExpirationDate() )
+	// }
+	var DonationCreditCardExpirationDateInput = (0, _reactRedux.connect)(null, mapDispatchToProps, null, { withRef: true })(_CreditCardExpirationDateInput2.default);
+	
+	exports.default = DonationCreditCardExpirationDateInput;
+
+/***/ },
+/* 239 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _reactRedux = __webpack_require__(212);
+	
+	var _actions = __webpack_require__(28);
+	
+	var actions = _interopRequireWildcard(_actions);
+	
+	var _CreditCardSecurityCodeInput = __webpack_require__(240);
+	
+	var _CreditCardSecurityCodeInput2 = _interopRequireDefault(_CreditCardSecurityCodeInput);
+	
+	var _CreditCardInputStates = __webpack_require__(30);
+	
+	var cardStates = _interopRequireWildcard(_CreditCardInputStates);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+		return {
+			onChange: function onChange(value, cursorPosition) {
+				dispatch(actions.setCreditCardSecurityCode(value, cardStates.VALID, cursorPosition));
+			},
+			onFocus: function onFocus() {
+				dispatch(actions.didStartEditingCreditCardSecurityCode());
+			}
+		};
+	};
+	
+	// onDidFinishEditing: () => {
+	// 	dispatch( actions.didFinishEditingCreditCardSecurityCode() )
+	// }
+	var DonationCreditCardSecurityCodeInput = (0, _reactRedux.connect)(null, mapDispatchToProps, null, { withRef: true })(_CreditCardSecurityCodeInput2.default);
+	
+	exports.default = DonationCreditCardSecurityCodeInput;
+
+/***/ },
+/* 240 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _react = __webpack_require__(32);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _fieldKit = __webpack_require__(199);
+	
+	var _fieldKit2 = _interopRequireDefault(_fieldKit);
+	
+	var _reactDom = __webpack_require__(197);
+	
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+	
+	__webpack_require__(200);
+	
+	__webpack_require__(204);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var CreditCardSecurityCodeInput = _react2.default.createClass({
+		displayName: 'CreditCardSecurityCodeInput',
+	
+	
+		format: function format() {
+			var code = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+	
+	
+			return code;
+		},
+	
+		unformat: function unformat() {
+			var code = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+	
+	
+			var newString = code;
+	
+			// Remove any non-numercal characters
+			newString = newString.replace(/\D/g, '');
+	
+			// Return a maximum of 4 characters
+			if (newString.length > 4) {
+				newString = newString.slice(0, 4);
+			}
+	
+			return newString;
+		},
+	
+		isDoneEditing: function isDoneEditing() {
+			var done = false;
+	
+			// if ( this.field) {
+			// 	done =  this.field.cardType() === 'amex' ?
+			// 			this.field.value().length === 15 :
+			// 			this.field.value().length === 16
+			// }
+	
+			return done;
+		},
+	
+		getField: function getField() {
+			return this.field;
+		},
+	
+		render: function render() {
+			var _this = this;
+	
+			return _react2.default.createElement('input', {
+				value: this.format(this.props.securityCode.value),
+				style: this.props.style,
+				placeholder: 'CVV',
+				className: 'SecurityCode',
+				onChange: function onChange(e) {
+					e.preventDefault();
+					_this.props.onChange(_this.unformat(e.target.value.trim(), e.target.selectionStart), e.target.selectionStart);
+	
+					if (_this.isDoneEditing()) {
+						// TODO check whether card is valid
+						// this.props.onDidFinishEditing()
+					}
+				},
+				onFocus: function onFocus(e) {
+					_this.props.onFocus();
+				}
+			});
+		}
+	
+	});
+	
+	exports.default = CreditCardSecurityCodeInput;
+
+/***/ },
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23931,34 +28327,34 @@
 	  return obj && obj.__esModule ? obj['default'] : obj;
 	}
 	
-	var _Motion = __webpack_require__(206);
+	var _Motion = __webpack_require__(242);
 	
 	exports.Motion = _interopRequire(_Motion);
 	
-	var _StaggeredMotion = __webpack_require__(213);
+	var _StaggeredMotion = __webpack_require__(249);
 	
 	exports.StaggeredMotion = _interopRequire(_StaggeredMotion);
 	
-	var _TransitionMotion = __webpack_require__(214);
+	var _TransitionMotion = __webpack_require__(250);
 	
 	exports.TransitionMotion = _interopRequire(_TransitionMotion);
 	
-	var _spring = __webpack_require__(216);
+	var _spring = __webpack_require__(252);
 	
 	exports.spring = _interopRequire(_spring);
 	
-	var _presets = __webpack_require__(217);
+	var _presets = __webpack_require__(253);
 	
 	exports.presets = _interopRequire(_presets);
 	
 	// deprecated, dummy warning function
 	
-	var _reorderKeys = __webpack_require__(218);
+	var _reorderKeys = __webpack_require__(254);
 	
 	exports.reorderKeys = _interopRequire(_reorderKeys);
 
 /***/ },
-/* 206 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23979,31 +28375,31 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 	
-	var _mapToZero = __webpack_require__(207);
+	var _mapToZero = __webpack_require__(243);
 	
 	var _mapToZero2 = _interopRequireDefault(_mapToZero);
 	
-	var _stripStyle = __webpack_require__(208);
+	var _stripStyle = __webpack_require__(244);
 	
 	var _stripStyle2 = _interopRequireDefault(_stripStyle);
 	
-	var _stepper3 = __webpack_require__(209);
+	var _stepper3 = __webpack_require__(245);
 	
 	var _stepper4 = _interopRequireDefault(_stepper3);
 	
-	var _performanceNow = __webpack_require__(210);
+	var _performanceNow = __webpack_require__(246);
 	
 	var _performanceNow2 = _interopRequireDefault(_performanceNow);
 	
-	var _raf = __webpack_require__(211);
+	var _raf = __webpack_require__(247);
 	
 	var _raf2 = _interopRequireDefault(_raf);
 	
-	var _shouldStopAnimation = __webpack_require__(212);
+	var _shouldStopAnimation = __webpack_require__(248);
 	
 	var _shouldStopAnimation2 = _interopRequireDefault(_shouldStopAnimation);
 	
-	var _react = __webpack_require__(31);
+	var _react = __webpack_require__(32);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
@@ -24214,7 +28610,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 207 */
+/* 243 */
 /***/ function(module, exports) {
 
 	
@@ -24238,7 +28634,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 208 */
+/* 244 */
 /***/ function(module, exports) {
 
 	
@@ -24264,7 +28660,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 209 */
+/* 245 */
 /***/ function(module, exports) {
 
 	
@@ -24312,7 +28708,7 @@
 	// array reference around.
 
 /***/ },
-/* 210 */
+/* 246 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -24350,12 +28746,12 @@
 	}).call(undefined);
 
 /***/ },
-/* 211 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var now = __webpack_require__(210),
+	var now = __webpack_require__(246),
 	    root = typeof window === 'undefined' ? global : window,
 	    vendors = ['moz', 'webkit'],
 	    suffix = 'AnimationFrame',
@@ -24430,7 +28826,7 @@
 	};
 
 /***/ },
-/* 212 */
+/* 248 */
 /***/ function(module, exports) {
 
 	
@@ -24466,7 +28862,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 213 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24487,31 +28883,31 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 	
-	var _mapToZero = __webpack_require__(207);
+	var _mapToZero = __webpack_require__(243);
 	
 	var _mapToZero2 = _interopRequireDefault(_mapToZero);
 	
-	var _stripStyle = __webpack_require__(208);
+	var _stripStyle = __webpack_require__(244);
 	
 	var _stripStyle2 = _interopRequireDefault(_stripStyle);
 	
-	var _stepper3 = __webpack_require__(209);
+	var _stepper3 = __webpack_require__(245);
 	
 	var _stepper4 = _interopRequireDefault(_stepper3);
 	
-	var _performanceNow = __webpack_require__(210);
+	var _performanceNow = __webpack_require__(246);
 	
 	var _performanceNow2 = _interopRequireDefault(_performanceNow);
 	
-	var _raf = __webpack_require__(211);
+	var _raf = __webpack_require__(247);
 	
 	var _raf2 = _interopRequireDefault(_raf);
 	
-	var _shouldStopAnimation = __webpack_require__(212);
+	var _shouldStopAnimation = __webpack_require__(248);
 	
 	var _shouldStopAnimation2 = _interopRequireDefault(_shouldStopAnimation);
 	
-	var _react = __webpack_require__(31);
+	var _react = __webpack_require__(32);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
@@ -24743,7 +29139,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 214 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24764,35 +29160,35 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 	
-	var _mapToZero = __webpack_require__(207);
+	var _mapToZero = __webpack_require__(243);
 	
 	var _mapToZero2 = _interopRequireDefault(_mapToZero);
 	
-	var _stripStyle = __webpack_require__(208);
+	var _stripStyle = __webpack_require__(244);
 	
 	var _stripStyle2 = _interopRequireDefault(_stripStyle);
 	
-	var _stepper3 = __webpack_require__(209);
+	var _stepper3 = __webpack_require__(245);
 	
 	var _stepper4 = _interopRequireDefault(_stepper3);
 	
-	var _mergeDiff = __webpack_require__(215);
+	var _mergeDiff = __webpack_require__(251);
 	
 	var _mergeDiff2 = _interopRequireDefault(_mergeDiff);
 	
-	var _performanceNow = __webpack_require__(210);
+	var _performanceNow = __webpack_require__(246);
 	
 	var _performanceNow2 = _interopRequireDefault(_performanceNow);
 	
-	var _raf = __webpack_require__(211);
+	var _raf = __webpack_require__(247);
 	
 	var _raf2 = _interopRequireDefault(_raf);
 	
-	var _shouldStopAnimation = __webpack_require__(212);
+	var _shouldStopAnimation = __webpack_require__(248);
 	
 	var _shouldStopAnimation2 = _interopRequireDefault(_shouldStopAnimation);
 	
-	var _react = __webpack_require__(31);
+	var _react = __webpack_require__(32);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
@@ -25246,7 +29642,7 @@
 	// that you've unmounted but that's still animating. This is where it lives
 
 /***/ },
-/* 215 */
+/* 251 */
 /***/ function(module, exports) {
 
 	
@@ -25359,7 +29755,7 @@
 	// to loop through and find a key's index each time), but I no longer care
 
 /***/ },
-/* 216 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25382,7 +29778,7 @@
 	  return obj && obj.__esModule ? obj : { 'default': obj };
 	}
 	
-	var _presets = __webpack_require__(217);
+	var _presets = __webpack_require__(253);
 	
 	var _presets2 = _interopRequireDefault(_presets);
 	
@@ -25397,7 +29793,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 217 */
+/* 253 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -25412,7 +29808,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 218 */
+/* 254 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -25434,26 +29830,27 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 219 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./back.svg": 220,
-		"./check-circle-large.svg": 221,
-		"./circle-check.svg": 222,
-		"./circle-thin.svg": 223,
-		"./credit-card.svg": 224,
-		"./donate-amount-circle.svg": 225,
-		"./email.svg": 226,
-		"./envelope.svg": 227,
-		"./facebook.svg": 228,
-		"./forward.svg": 229,
-		"./heart-hands-circle.svg": 230,
-		"./heart-hands.svg": 231,
-		"./heartstrings.svg": 232,
-		"./info.svg": 233,
-		"./twitter.svg": 234,
-		"./world-map.svg": 235
+		"./back.svg": 256,
+		"./check-circle-large.svg": 257,
+		"./circle-check.svg": 258,
+		"./circle-thin.svg": 259,
+		"./credit-card.svg": 260,
+		"./donate-amount-circle.svg": 261,
+		"./email.svg": 262,
+		"./envelope.svg": 263,
+		"./facebook.svg": 264,
+		"./forward.svg": 265,
+		"./heart-hands-circle.svg": 266,
+		"./heart-hands.svg": 267,
+		"./heartstrings.svg": 268,
+		"./info.svg": 269,
+		"./twitter.svg": 270,
+		"./warning.svg": 271,
+		"./world-map.svg": 272
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -25466,107 +29863,113 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 219;
+	webpackContext.id = 255;
 
 
 /***/ },
-/* 220 */
+/* 256 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>back</title><desc>Created with Sketch.</desc><defs></defs><g id=\"24x24\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"back\" sketch:type=\"MSArtboardGroup\" stroke-linecap=\"round\" stroke=\"#3E97BD\" stroke-width=\"2\"><g id=\"Left-Arrow-:-Glyph\" sketch:type=\"MSLayerGroup\" transform=\"translate(5.000000, 8.000000)\"><path d=\"M0,4 L14,4\" id=\"Path-1\" sketch:type=\"MSShapeGroup\"></path><path d=\"M2.84217094e-14,4 L4,0\" id=\"Path-2\" sketch:type=\"MSShapeGroup\"></path><path d=\"M2.84217094e-14,4 L4,8\" id=\"Path-3\" sketch:type=\"MSShapeGroup\"></path></g></g></g></svg>"
 
 /***/ },
-/* 221 */
+/* 257 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 60 60\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>Group 2</title><desc>Created with Sketch.</desc><defs></defs><g id=\"Explorations\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"Desktop\" sketch:type=\"MSArtboardGroup\" transform=\"translate(-484.000000, -291.000000)\" stroke=\"#FFFFFF\" stroke-width=\"2\"><g id=\"Group\" sketch:type=\"MSLayerGroup\" transform=\"translate(162.000000, 265.000000)\"><g id=\"Header\" transform=\"translate(222.000000, 26.000000)\" sketch:type=\"MSShapeGroup\"><g id=\"Group-2\" transform=\"translate(100.000000, 0.000000)\"><circle id=\"Oval-1\" cx=\"30\" cy=\"30\" r=\"29\"></circle><path d=\"M18,32 L26.5,39 L42,22\" id=\"Check-:-Glyph\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path></g></g></g></g></g></svg>"
 
 /***/ },
-/* 222 */
+/* 258 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>circle-check</title><desc>Created with Sketch.</desc><defs></defs><g id=\"24x24\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"circle-check\" sketch:type=\"MSArtboardGroup\" fill=\"#FFFFFF\"><path d=\"M22.0055144,5.37271088 C23.2658363,7.27166391 24,9.5500954 24,12 C24,18.627417 18.627417,24 12,24 C5.372583,24 0,18.627417 0,12 C0,5.372583 5.372583,0 12,0 C15.4481289,0 18.556582,1.45432521 20.7454267,3.78304311 L11.845703,13.6780395 L7.62469505,10.2191312 C7.19343311,9.87412164 6.56414074,9.94404302 6.21913119,10.375305 C5.87412164,10.8065669 5.94404302,11.4358593 6.37530495,11.7808688 L11.375305,15.7808688 C11.7889619,16.1117944 12.3889172,16.0627169 12.7432941,15.6689647 L22.0055144,5.37271088 Z\" id=\"Background\" sketch:type=\"MSShapeGroup\"></path></g></g></svg>"
 
 /***/ },
-/* 223 */
+/* 259 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>circle-thin</title><desc>Created with Sketch.</desc><defs></defs><g id=\"24x24\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"circle-thin\" sketch:type=\"MSArtboardGroup\" stroke=\"#FFFFFF\"><circle id=\"Background\" sketch:type=\"MSShapeGroup\" cx=\"12\" cy=\"12\" r=\"11\"></circle></g></g></svg>"
 
 /***/ },
-/* 224 */
+/* 260 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>credit-card</title><desc>Created with Sketch.</desc><defs></defs><g id=\"24x24\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"credit-card\" sketch:type=\"MSArtboardGroup\" stroke=\"#3E97BD\" stroke-width=\"2\"><g id=\"Credit-Card-:-Glyph\" sketch:type=\"MSLayerGroup\" transform=\"translate(5.000000, 7.000000)\"><path d=\"M12.9370688,10 C12.3741377,10 1.41041379,10 1,10 C0.5,10 4.72107065e-09,9.5 2.71210432e-09,9 C7.03137965e-10,8.5 3.52928353e-10,1.5 0,1 C-3.52928298e-10,0.500000002 0.50000011,4.17682067e-09 1,-2.93098879e-14 C1.49999989,-4.17687926e-09 12.3741379,-2.84217094e-14 12.9370689,-2.93098879e-14 C13.5,-2.84217094e-14 14,0.499999998 14,1 C14,1.5 14,6.33452938 14,9 C14,9.5 13.5,10 12.9370688,10 Z\" id=\"Path-34\" stroke-linejoin=\"round\" sketch:type=\"MSShapeGroup\"></path><path d=\"M2,4 L12,4\" id=\"Path-35\" stroke-linecap=\"square\" sketch:type=\"MSShapeGroup\"></path></g></g></g></svg>"
 
 /***/ },
-/* 225 */
+/* 261 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 56 60\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>Background</title><desc>Created with Sketch.</desc><defs></defs><g id=\"Mocks\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"Heartstrings-Medium-03\" sketch:type=\"MSArtboardGroup\" transform=\"translate(-188.000000, -210.000000)\" stroke=\"#00AB6B\" stroke-opacity=\"0\" stroke-width=\"2\" fill=\"#FFFFFF\"><g id=\"Widget\" sketch:type=\"MSLayerGroup\" transform=\"translate(11.000000, 186.000000)\"><g id=\"Donate-Icons\" transform=\"translate(120.000000, 24.000000)\" sketch:type=\"MSShapeGroup\"><g id=\"Donation-Amount-:-Circle\" transform=\"translate(57.000000, 0.000000)\"><path d=\"M0.5,14.1887305 C5.79263031,5.67099567 15.2340492,0 26,0 C42.5685425,0 56,13.4314575 56,30 C56,46.5685425 42.5685425,60 26,60 C15.2340492,60 5.79263031,54.3290043 0.5,45.8112695 C3.35260195,41.2204129 5,35.8025916 5,30 C5,24.1974084 3.35260195,18.7795871 0.5,14.1887305 Z\" id=\"Background\"></path></g></g></g></g></g></svg>"
 
 /***/ },
-/* 226 */
+/* 262 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 48 48\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>email</title><desc>Created with Sketch.</desc><defs></defs><g id=\"48x48\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"email\" sketch:type=\"MSArtboardGroup\" fill=\"#3E97BD\"><path d=\"M9.03666678,38.5154197 L11.7395467,26.8105837 C11.8462393,26.3125056 12.2730098,25.9211585 12.806473,25.8500045 L27.921262,24.2846161 C28.3480325,24.2490391 28.3480325,23.6086529 27.921262,23.5374989 L12.806473,22.0788415 C12.2730098,22.0432645 11.8462393,21.6519174 11.7395467,21.1538393 L9.03666678,9.48458033 C8.78771732,8.48842408 9.8546436,7.67015287 10.779313,8.13265399 L40.3331711,22.9326897 C41.2222763,23.3951908 41.2222763,24.6759632 40.3331711,25.1384643 L10.779313,39.867346 C9.8546436,40.3298471 8.78771732,39.5115759 9.03666678,38.5154197 L9.03666678,38.5154197 Z\" id=\"Shape\" sketch:type=\"MSShapeGroup\"></path></g></g></svg>"
 
 /***/ },
-/* 227 */
+/* 263 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>envelope</title><desc>Created with Sketch.</desc><defs></defs><g id=\"24x24\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"envelope\" sketch:type=\"MSArtboardGroup\" stroke=\"#3E97BD\" stroke-width=\"2\" stroke-linejoin=\"round\"><g id=\"Envelope-:-Glyph\" sketch:type=\"MSLayerGroup\" transform=\"translate(5.000000, 7.000000)\"><path d=\"M12.9370688,10 C12.3741377,10 1.41041379,10 1,10 C0.5,10 4.72107065e-09,9.5 2.71210432e-09,9 C7.03137965e-10,8.5 3.52928353e-10,1.5 0,1 C-3.52928298e-10,0.500000002 0.50000011,4.17682067e-09 1,-2.93098879e-14 C1.49999989,-4.17687926e-09 12.3741379,-2.84217094e-14 12.9370689,-2.93098879e-14 C13.5,-2.84217094e-14 14,0.499999998 14,1 C14,1.5 14,6.33452938 14,9 C14,9.5 13.5,10 12.9370688,10 Z\" id=\"Path-34\" sketch:type=\"MSShapeGroup\"></path><path d=\"M1,1 L7,6 L13,1\" id=\"Path-38\" sketch:type=\"MSShapeGroup\"></path></g></g></g></svg>"
 
 /***/ },
-/* 228 */
+/* 264 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 48 48\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>facebook</title><desc>Created with Sketch.</desc><defs></defs><g id=\"48x48\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"facebook\" sketch:type=\"MSArtboardGroup\" fill=\"#3E97BD\"><path d=\"M19.3205007,40 L19.3205007,25.4033824 L14,25.4033824 L14,19.7147195 L19.3205007,19.7147195 L19.3205007,15.5195424 C19.3205007,10.6509904 22.5411621,8 27.2454937,8 C29.4987635,8 31.4353823,8.15492709 32,8.2241288 L32,13.3120079 L28.7371185,13.3134202 C26.1788236,13.3134202 25.683502,14.4357589 25.683502,16.0827596 L25.683502,19.7147195 L31.7849221,19.7147195 L30.9903883,25.4033824 L25.683502,25.4033824 L25.683502,40\" id=\"Facebook-:-Icon\" sketch:type=\"MSShapeGroup\"></path></g></g></svg>"
 
 /***/ },
-/* 229 */
+/* 265 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>forward</title><desc>Created with Sketch.</desc><defs></defs><g id=\"24x24\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"forward\" sketch:type=\"MSArtboardGroup\" stroke-linecap=\"round\" stroke=\"#3E97BD\" stroke-width=\"2\"><g id=\"Left-Arrow-:-Glyph\" sketch:type=\"MSLayerGroup\" transform=\"translate(12.000000, 12.000000) rotate(-180.000000) translate(-12.000000, -12.000000) translate(5.000000, 8.000000)\"><path d=\"M0,4 L14,4\" id=\"Path-1\" sketch:type=\"MSShapeGroup\"></path><path d=\"M2.84217094e-14,4 L4,0\" id=\"Path-2\" sketch:type=\"MSShapeGroup\"></path><path d=\"M2.84217094e-14,4 L4,8\" id=\"Path-3\" sketch:type=\"MSShapeGroup\"></path></g></g></g></svg>"
 
 /***/ },
-/* 230 */
+/* 266 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 60 60\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>Oval 1</title><desc>Created with Sketch.</desc><defs><radialGradient cx=\"50%\" cy=\"50%\" fx=\"50%\" fy=\"50%\" r=\"50%\" id=\"radialGradient-1\"><stop stop-color=\"#000000\" stop-opacity=\"0\" offset=\"0%\"></stop><stop stop-color=\"#000000\" stop-opacity=\"0.3\" offset=\"100%\"></stop></radialGradient></defs><g id=\"Mocks\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"Heartstrings-Medium-02\" sketch:type=\"MSArtboardGroup\" transform=\"translate(-158.000000, -210.000000)\" fill=\"#FFFFFF\"><g id=\"Group\" sketch:type=\"MSLayerGroup\" transform=\"translate(11.000000, 186.000000)\"><g id=\"Header\" transform=\"translate(24.000000, 24.000000)\" sketch:type=\"MSShapeGroup\"><path d=\"M153,60 C169.568542,60 183,46.5685425 183,30 C183,13.4314575 169.568542,0 153,0 C136.431458,0 123,13.4314575 123,30 C123,46.5685425 136.431458,60 153,60 Z M173,25.2954545 C173.0036,28.4446591 171.6788,31.5 169.2664,33.9026705 C167.8308,35.3261364 166.1772,36.9703409 164.4868,38.6511364 L154.7312,48.2697727 C154.3088,48.6897727 153.7424,48.9184659 153.1352,48.9184659 C152.4868,48.9184659 151.8716,48.6615341 151.408,48.1961932 C150.9528,47.7431818 150.6984,47.1481818 150.686,46.5197727 C150.6736,45.9040909 150.9032,45.3246023 151.3344,44.891875 L160.8188,35.4569886 L159.9336,34.575625 L150.4484,44.0117045 C150.0256,44.4277273 149.4556,44.6596023 148.8524,44.6596023 C148.2084,44.6596023 147.5932,44.4026705 147.1248,43.9385227 C146.6576,43.4731818 146.3992,42.8654545 146.3992,42.2211364 C146.3992,41.6169886 146.6288,41.0538068 147.0512,40.6338068 L156.536,31.198125 L155.5276,30.1950568 L146.0376,39.6259659 C145.6152,40.0463636 145.0488,40.2746591 144.442,40.2746591 C143.794,40.2746591 143.178,40.0177273 142.7144,39.5535795 C142.2592,39.1001705 142.0048,38.5047727 141.9924,37.8767614 C141.9756,37.2610795 142.2096,36.6811932 142.6404,36.2484659 L151.67,27.2705682 L151.9448,27.5438068 C152.6752,28.2660795 153.6596,28.6618182 154.714,28.6618182 C155.8672,28.6618182 157.0204,28.1761932 157.8776,27.3322159 C159.568,25.6430682 159.666,22.9957955 158.0908,21.4295455 L153.6932,17.0557386 C155.826,15.0818182 158.5908,14.0003977 161.5168,14.0003977 C164.5728,14.0003977 167.4532,15.1836364 169.6272,17.329375 C171.798,19.4743182 172.9964,22.3053409 173,25.2954545 Z M150.7844,26.3884091 L141.7552,35.3671023 C141.3328,35.783125 140.762,36.0157955 140.1596,36.0157955 C139.5152,36.0157955 138.9,35.7588636 138.4324,35.2939205 C137.9648,34.829375 137.7068,34.2216477 137.7068,33.5765341 C137.7068,32.9731818 137.9356,32.41 138.3588,31.99 L147.388,23.0113068 L150.7844,26.3884091 Z M157.1476,26.6047727 C156.4908,27.2574432 155.6056,27.6328977 154.7148,27.6328977 C153.9312,27.6328977 153.2052,27.3429545 152.6716,26.8171591 L144.6064,18.7930114 L143.876,19.5188636 L146.662,22.2886364 L137.632,31.2673295 C137.3656,31.5326136 137.152,31.8388636 136.992,32.1769318 C136.742,32.703125 136.6392,33.2826136 136.6884,33.858125 C134.3044,31.4634091 132.996,28.4239773 133,25.2954545 C133.004,22.3053409 134.202,19.4743182 136.3728,17.3285795 C138.5424,15.1832386 141.4224,14 144.4832,14 C146.2924,14 148.0156,14.4040909 149.6076,15.1951705 C150.2556,15.5133523 150.8872,15.9051136 151.4824,16.3656818 L151.7656,16.5860227 L157.3652,22.1502273 C158.5344,23.3211364 158.44,25.3193182 157.1476,26.6047727 Z\" id=\"Oval-1\"></path></g></g></g></g></svg>"
 
 /***/ },
-/* 231 */
+/* 267 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>heart-hands</title><desc>Created with Sketch.</desc><defs></defs><g id=\"24x24\" stroke=\"none\" stroke-width=\"0\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"heart-hands\" sketch:type=\"MSArtboardGroup\" fill=\"#3E97BD\"><path d=\"M13.6590397,10.0536819 C13.3963198,10.3153596 13.0422399,10.4658921 12.6859201,10.4658921 C12.3724802,10.4658921 12.0820803,10.3496441 11.8686404,10.1388348 L8.64256175,6.92168119 L8.35040187,7.21270004 L9.46480141,8.32319608 L5.8528029,11.9230594 C5.74624294,12.0294208 5.66080297,12.1522068 5.596803,12.2877499 C5.49680304,12.4987186 5.45568306,12.7310553 5.47536305,12.9617974 C4.52176344,12.0016744 3.99840366,10.7830628 4.00000366,9.5287317 C4.00160366,8.3298935 4.48080346,7.19484025 5.3491231,6.33454069 C6.21696275,5.47440059 7.36896227,5 8.59328177,5 C9.31696147,5 10.0062412,5.16201378 10.6430409,5.47918446 C10.9022408,5.60675437 11.1548807,5.76382482 11.3929606,5.94848226 L11.5062406,6.03682442 L13.7460796,8.26770317 C14.2137595,8.73716043 14.1759995,9.53829945 13.6590397,10.0536819 Z M11.1137607,9.96693434 L7.50208222,13.5667977 C7.33312229,13.7335953 7.10480238,13.8268808 6.86384248,13.8268808 C6.60608259,13.8268808 6.36000269,13.7238681 6.17296276,13.5374566 C5.98592284,13.3512045 5.88272288,13.107546 5.88272288,12.848898 C5.88272288,12.6069936 5.97424285,12.3811948 6.14352278,12.2128026 L9.75520129,8.61293923 L11.1137607,9.96693434 Z M19.9999971,9.5287317 C20.0014371,10.7913549 19.4715173,12.0163449 18.5065577,12.9796572 C17.9323179,13.550373 17.2708782,14.2095905 16.5947185,14.8834786 L12.6924801,18.7399169 C12.5235201,18.9083091 12.2969602,19 12.0540803,19 C11.7947204,19 11.5486406,18.8969873 11.3632006,18.7104163 C11.1811207,18.5287887 11.0793607,18.2902329 11.0744007,18.0382824 C11.0694407,17.7914346 11.1612807,17.5590979 11.3337606,17.3856028 L15.1275191,13.6028362 L14.7734392,13.2494675 L10.9793608,17.0327126 C10.8102409,17.1995102 10.5822409,17.2924768 10.340961,17.2924768 C10.0833612,17.2924768 9.83728126,17.1894641 9.64992133,17.0033715 C9.46304141,16.8168005 9.35968145,16.573142 9.35968145,16.3148129 C9.35968145,16.0725896 9.45152141,15.8467908 9.62048134,15.6783985 L13.4143998,11.8953129 L13.0110399,11.4931488 L9.21504151,15.2743209 C9.04608158,15.4428726 8.81952167,15.534404 8.57680177,15.534404 C8.31760188,15.534404 8.07120198,15.4313913 7.88576206,15.2452987 C7.70368213,15.0635116 7.60192218,14.8247964 7.59696218,14.5730053 C7.59024218,14.3261575 7.68384214,14.0936614 7.85616207,13.9201663 L11.4680006,10.3206219 L11.5779205,10.4301726 C11.8700804,10.7197563 12.2638403,10.8784213 12.6856001,10.8784213 C13.1468799,10.8784213 13.6081597,10.6837178 13.9510396,10.3453386 C14.6271993,9.66810183 14.6663993,8.6067202 14.0363195,7.97875733 L12.2772803,6.2251495 C13.1303999,5.43373768 14.2363194,5.00015946 15.406719,5.00015946 C16.6291185,5.00015946 17.781278,5.47456005 18.6508776,6.33485962 C19.5191973,7.19484025 19.9985571,8.3298935 19.9999971,9.5287317 Z\" id=\"Shape\" sketch:type=\"MSShapeGroup\"></path></g></g></svg>"
 
 /***/ },
-/* 232 */
+/* 268 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>heartstrings</title><desc>Created with Sketch.</desc><defs></defs><g id=\"24x24\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"heartstrings\" sketch:type=\"MSArtboardGroup\" fill=\"#3E97BD\"><path d=\"M16.6060606,5.10879954 C15.8681663,4.93869631 15.0883554,4.96229963 14.3434343,5.22038751 L14.3434343,17.0353348 C14.6577308,16.8023573 15.0213717,16.5329652 15.4478114,16.2152964 C15.8204019,15.9379935 16.2129947,15.6407392 16.6060606,15.3225646 L16.6060606,5.10879954 Z M17.7373737,5.53904365 C19.1267504,6.29384838 20.1616162,7.78499304 20.1616162,9.65126453 C20.1616162,11.5139343 19.0654663,13.0601973 17.7373737,14.3329281 L17.7373737,5.53904365 Z M13.2121212,5.82518598 C12.802986,6.13179954 12.4204802,6.52908707 12.0808081,7.0256518 C11.6967774,6.4642395 11.2579949,6.0297272 10.7878788,5.7097731 L10.7878788,17.7807794 C11.3686314,18.2147948 11.7121024,18.48151 12.0808081,18.8409091 C12.4161988,18.5139841 12.7241945,18.2551206 13.2121212,17.8815267 L13.2121212,5.82518598 Z M9.65656566,5.16871882 C8.90608523,4.944374 8.12617907,4.95250562 7.39393939,5.15248456 L7.39393939,15.1720071 C7.84264214,15.5438349 8.29269759,15.8906308 8.71380471,16.2152964 C9.06856458,16.4887315 9.38026407,16.7259389 9.65656566,16.934507 L9.65656566,5.16871882 Z M6.26262626,5.63723411 C4.95537089,6.42181554 4,7.87634451 4,9.68277189 C4,11.4634338 5.01270537,12.9308579 6.26262626,14.1593024 L6.26262626,5.63723411 Z\" id=\"Imported-Layers\" sketch:type=\"MSShapeGroup\"></path></g></g></svg>"
 
 /***/ },
-/* 233 */
+/* 269 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>info</title><desc>Created with Sketch.</desc><defs></defs><g id=\"24x24\" stroke=\"none\" stroke-width=\"0\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"info\" sketch:type=\"MSArtboardGroup\" fill=\"#3E97BD\"><g id=\"Info-:-Glyph\" sketch:type=\"MSLayerGroup\" transform=\"translate(4.000000, 4.000000)\"><path d=\"M8,16 C12.418278,16 16,12.418278 16,8 C16,3.581722 12.418278,0 8,0 C3.581722,0 0,3.581722 0,8 C0,12.418278 3.581722,16 8,16 Z M8.86489391,3 C9.14751015,3 9.38567914,3.09800255 9.57940802,3.29401059 C9.7731369,3.49001863 9.86999989,3.72704806 9.86999989,4.00510598 C9.86999989,4.2831639 9.77199733,4.52019332 9.57598929,4.71620136 C9.37998125,4.9122094 9.14295183,5.01021195 8.86489391,5.01021195 C8.59139432,5.01021195 8.35664402,4.9122094 8.16063598,4.71620136 C7.96462794,4.52019332 7.86662539,4.2831639 7.86662539,4.00510598 C7.86662539,3.72704806 7.96348837,3.49001863 8.15721725,3.29401059 C8.35094613,3.09800255 8.58683599,3 8.86489391,3 Z M9.28881616,6.14522959 L7.88713775,11.0066605 C7.8096462,11.2847185 7.77090101,11.4670488 7.77090101,11.553657 C7.77090101,11.6037986 7.79141317,11.6505207 7.83243811,11.6938248 C7.87346305,11.7371289 7.9167665,11.7587807 7.96234977,11.7587807 C8.03984132,11.7587807 8.11733171,11.7245937 8.19482326,11.6562188 C8.39994795,11.4875607 8.64609389,11.1821574 8.93326846,10.7399998 L9.16574196,10.8767489 C8.47743465,12.0755888 7.74583421,12.6749997 6.9709187,12.6749997 C6.67462747,12.6749997 6.43873761,12.5918115 6.26324204,12.4254326 C6.08774647,12.2590537 6,12.0482342 6,11.7929679 C6,11.6243099 6.03874519,11.4100717 6.11623675,11.1502471 L7.06664308,7.88194332 C7.15780961,7.56741879 7.20339219,7.33038936 7.20339219,7.17084793 C7.20339219,7.07056475 7.16008874,6.98167871 7.07348053,6.90418716 C6.98687233,6.82669561 6.86835762,6.78795042 6.71793284,6.78795042 C6.64955794,6.78795042 6.5675093,6.79022955 6.47178444,6.79478787 L6.56067136,6.52128965 L8.87856882,6.14522959 L9.28881616,6.14522959 Z\" id=\"Oval-5\" sketch:type=\"MSShapeGroup\"></path></g></g></g></svg>"
 
 /***/ },
-/* 234 */
+/* 270 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 48 48\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>twitter</title><desc>Created with Sketch.</desc><defs></defs><g id=\"48x48\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"twitter\" sketch:type=\"MSArtboardGroup\" fill=\"#3E97BD\"><path d=\"M40,14.0778295 C38.8226051,14.5998704 37.5573064,14.9526956 36.2292695,15.1113792 C37.5848129,14.2990035 38.6257288,13.0126835 39.1159296,11.4800295 C37.8474706,12.2321382 36.4424156,12.7784029 34.9469988,13.0728335 C33.7493544,11.7971626 32.0431325,11 30.1548996,11 C26.5290757,11 23.5895095,13.9388058 23.5895095,17.5636022 C23.5895095,18.0780365 23.6476828,18.5790132 23.7595816,19.0593938 C18.3032298,18.7856763 13.4657156,16.1725463 10.2276748,12.2014781 C9.66256264,13.170899 9.33880537,14.2984184 9.33880537,15.5013008 C9.33880537,17.7784569 10.4979407,19.7875127 12.2595267,20.9645329 C11.183262,20.9304792 10.1710231,20.6352294 9.28578222,20.1436146 C9.28531402,20.170998 9.28531402,20.1984985 9.28531402,20.226116 C9.28531402,23.4063409 11.5483375,26.0592588 14.5516954,26.6621628 C14.0007462,26.8121866 13.4207689,26.8923476 12.8219467,26.8923476 C12.3989319,26.8923476 11.9876221,26.8512724 11.5868466,26.7746221 C12.4222247,29.3823691 14.8467757,31.2800187 17.719624,31.3330303 C15.4727532,33.0934116 12.6419255,34.1427594 9.56611434,34.1427594 C9.03623395,34.1427594 8.51361059,34.1117482 8,34.0511302 C10.9053879,35.9134388 14.3563408,37 18.0638648,37 C30.1395662,37 36.7429972,26.9983707 36.7429972,18.3247216 C36.7429972,18.040121 36.7366765,17.7570417 36.7240353,17.4756006 C38.0066572,16.5501805 39.1197922,15.3941074 40,14.0778295\" id=\"Twitter-:-Logo\" sketch:type=\"MSShapeGroup\"></path></g></g></svg>"
 
 /***/ },
-/* 235 */
+/* 271 */
+/***/ function(module, exports) {
+
+	module.exports = "<svg viewBox=\"0 0 17 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><title>Warning : Glyph</title><desc>Created with Sketch.</desc><defs></defs><g id=\"Mocks\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\"><g id=\"Heartstrings-Medium-14\" transform=\"translate(-50.000000, -365.000000)\" fill=\"#D0011B\"><g id=\"Widget\" transform=\"translate(11.000000, 186.000000)\"><g id=\"Credit-Card-:-Field\" transform=\"translate(24.000000, 163.000000)\"><path d=\"M24.2099917,16.7320929 C23.6921208,15.7538924 22.8502863,15.7580479 22.3346155,16.7320929 L15.2099918,30.1897157 C14.692121,31.1679162 15.1649265,31.9609044 16.267393,31.9609044 L30.277214,31.9609045 C31.3790714,31.9609045 31.850286,31.1637607 31.3346152,30.1897158 L24.2099917,16.7320929 Z M23.2723037,29.960904 C23.8245885,29.960904 24.2723037,29.5131888 24.2723037,28.960904 C24.2723037,28.4086193 23.8245885,27.960904 23.2723037,27.960904 C22.720019,27.960904 22.2723037,28.4086193 22.2723037,28.960904 C22.2723037,29.5131888 22.720019,29.960904 23.2723037,29.960904 Z M22.2723037,21.9977213 C22.2723037,21.446695 22.7161685,21 23.2723037,21 C23.8245885,21 24.2723037,21.4480366 24.2723037,21.9977213 L24.2723037,25.9631827 C24.2723037,26.514209 23.8284389,26.960904 23.2723037,26.960904 C22.720019,26.960904 22.2723037,26.5128674 22.2723037,25.9631827 L22.2723037,21.9977213 Z\" id=\"Warning-:-Glyph\"></path></g></g></g></g></svg>"
+
+/***/ },
+/* 272 */
 /***/ function(module, exports) {
 
 	module.exports = "<svg viewBox=\"0 0 351 226\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\"><title>Group</title><desc>Created with Sketch.</desc><defs></defs><g id=\"Explorations\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\"><g id=\"Heartstrings-Donation-Flow---CNN---01\" sketch:type=\"MSArtboardGroup\" transform=\"translate(-12.000000, -256.000000)\"><g id=\"Group\" sketch:type=\"MSLayerGroup\" transform=\"translate(12.000000, 256.000000)\"><g id=\"Oval\" sketch:type=\"MSShapeGroup\"><g><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7678085\" cy=\"224.990652\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9367905\" cy=\"222.159522\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7678085\" cy=\"222.159522\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9367905\" cy=\"219.32074\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9367905\" cy=\"216.493436\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7678085\" cy=\"216.493436\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1249269\" cy=\"213.67761\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"213.67761\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"213.67761\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.594996\" cy=\"213.67761\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"210.850306\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"210.850306\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"208.011525\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"208.011525\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.594996\" cy=\"208.011525\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"205.184221\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"205.184221\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.594996\" cy=\"205.184221\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.448999\" cy=\"205.184221\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"202.353091\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"202.353091\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.594996\" cy=\"202.353091\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.45283\" cy=\"202.353091\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.272355\" cy=\"202.353091\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.118697\" cy=\"202.353091\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"199.529613\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"199.529613\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.594996\" cy=\"199.529613\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.45283\" cy=\"199.529613\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.272355\" cy=\"199.529613\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.118697\" cy=\"199.529613\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"196.687005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.594996\" cy=\"196.687005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.45283\" cy=\"196.687005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.272355\" cy=\"196.687005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.118697\" cy=\"196.687005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.938222\" cy=\"196.687005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"193.859701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"193.859701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.594996\" cy=\"193.859701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.45283\" cy=\"193.859701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.272355\" cy=\"193.859701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.118697\" cy=\"193.859701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.938222\" cy=\"193.859701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.796056\" cy=\"193.859701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7678085\" cy=\"191.059178\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.583503\" cy=\"191.059178\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.441337\" cy=\"191.059178\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.260863\" cy=\"191.059178\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.107204\" cy=\"191.059178\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.926729\" cy=\"191.059178\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.784564\" cy=\"191.059178\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.604089\" cy=\"191.059178\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7678085\" cy=\"188.2357\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.583503\" cy=\"188.2357\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.441337\" cy=\"188.2357\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.260863\" cy=\"188.2357\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.107204\" cy=\"188.2357\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.926729\" cy=\"188.2357\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.784564\" cy=\"188.2357\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.604089\" cy=\"188.2357\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7678085\" cy=\"185.393093\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.583503\" cy=\"185.393093\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.441337\" cy=\"185.393093\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.260863\" cy=\"185.393093\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.107204\" cy=\"185.393093\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.926729\" cy=\"185.393093\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.784564\" cy=\"185.393093\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.604089\" cy=\"185.393093\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7678085\" cy=\"182.569615\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.583503\" cy=\"182.569615\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.441337\" cy=\"182.569615\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.260863\" cy=\"182.569615\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.107204\" cy=\"182.569615\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.926729\" cy=\"182.569615\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.784564\" cy=\"182.569615\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.604089\" cy=\"182.569615\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.435107\" cy=\"182.569615\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.250801\" cy=\"182.569615\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.108636\" cy=\"182.569615\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7678085\" cy=\"179.738485\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.587334\" cy=\"179.738485\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.445168\" cy=\"179.738485\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.264693\" cy=\"179.738485\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.107204\" cy=\"179.738485\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.926729\" cy=\"179.738485\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.784564\" cy=\"179.738485\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.604089\" cy=\"179.738485\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.435107\" cy=\"179.738485\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.254632\" cy=\"179.738485\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.112466\" cy=\"179.738485\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1172651\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9367905\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7678085\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.587334\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.445168\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.264693\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.107204\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.926729\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.784564\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.604089\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.435107\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.254632\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.112466\" cy=\"176.911181\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1172651\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9367905\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7678085\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.587334\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.445168\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.264693\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.107204\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.926729\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.784564\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.604089\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.435107\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.254632\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.112466\" cy=\"174.072399\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.259431\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1172651\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9367905\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7678085\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.587334\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.445168\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.264693\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.107204\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.926729\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.784564\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.604089\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.435107\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.254632\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.112466\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.931992\" cy=\"171.245095\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2670927\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1249269\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.594996\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.45283\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill=\"#FFFFFF\" cx=\"106.272355\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.114866\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.934391\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.792225\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.611751\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.442769\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.262294\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.120128\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.935823\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.770672\" cy=\"168.429269\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4475674\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2670927\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1249269\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.594996\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.45283\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.272355\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.114866\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.934391\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.792225\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.611751\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.442769\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.262294\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.120128\" cy=\"165.601965\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4475674\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2670927\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1249269\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.594996\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.45283\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.272355\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.114866\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.934391\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.792225\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.611751\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.442769\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.258927\" cy=\"162.759358\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2670927\" cy=\"159.93588\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1249269\" cy=\"159.93588\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"159.93588\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7754702\" cy=\"159.93588\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.594996\" cy=\"159.93588\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.45283\" cy=\"159.93588\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.272355\" cy=\"159.93588\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.114866\" cy=\"159.93588\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.934391\" cy=\"159.93588\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.792225\" cy=\"159.93588\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1287577\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7793011\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.598826\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.45283\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.272355\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.118697\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.938222\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.796056\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.257495\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.934855\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.443232\" cy=\"157.100924\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4475674\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2709236\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1287577\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7793011\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.598826\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.45283\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.272355\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"154.441801\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.257495\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.115329\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.934855\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.765873\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.585398\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.443232\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.262758\" cy=\"154.277446\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6203802\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1287577\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7793011\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.598826\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.45283\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"151.595459\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"154.441801\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.257495\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.115329\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.934855\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.765873\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.585398\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.443232\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.262758\" cy=\"151.438664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8008549\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6203802\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9444522\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.272355\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"148.775934\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"151.595459\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"154.441801\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.257495\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.115329\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.934855\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.765873\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.585398\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.443232\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.262758\" cy=\"148.61136\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.2924773\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1234953\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9430207\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8008549\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"148.779765\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"151.59929\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"154.441801\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.257495\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.11916\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.938686\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.769704\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.589229\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.447063\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill=\"#FFFFFF\" cx=\"174.266589\" cy=\"145.79936\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.7955924\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6151178\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.472952\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.2924773\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1234953\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9430207\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9482831\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7793011\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.598826\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"151.59929\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"154.441801\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.257495\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.11916\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.938686\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.769704\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.589229\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.447063\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.266589\" cy=\"142.972056\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.7955924\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6151178\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.472952\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9430207\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4513982\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2709236\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"148.779765\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"151.59929\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"154.441801\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.257495\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.11916\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.938686\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.769704\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.589229\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.447063\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.266589\" cy=\"140.133274\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1335564\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9530818\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.7955924\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6151178\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"151.59929\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"154.441801\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.257495\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.11916\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.938686\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.769704\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.589229\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.447063\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.266589\" cy=\"137.309796\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2795532\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1373873\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9569127\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.7994233\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6189487\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4767828\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4513982\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"154.445632\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.265157\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.122991\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.938686\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.769704\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.589229\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.450894\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.266589\" cy=\"134.47484\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4600278\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2795532\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1373873\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9569127\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.7994233\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6189487\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4767828\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.2963082\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9468516\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6242111\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.265157\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.122991\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.938686\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.769704\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.589229\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.450894\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.266589\" cy=\"131.651362\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4600278\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2795532\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1373873\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9569127\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.7994233\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6189487\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4767828\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.2963082\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1273262\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9468516\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8046857\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6242111\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.265157\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.122991\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.938686\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.769704\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.589229\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.450894\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.266589\" cy=\"128.812581\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4600278\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2795532\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1373873\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9569127\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.7994233\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6189487\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4767828\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.2963082\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1273262\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9468516\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8046857\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6242111\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4513982\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.122991\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.938686\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.769704\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.589229\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.450894\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.266589\" cy=\"125.985277\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8133153\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6328407\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4638587\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.283384\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1412182\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9607436\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8070851\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6266104\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4844446\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.30397\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1311571\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9506825\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8123475\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.628042\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.45906\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2785854\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.458556\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.27425\" cy=\"123.165625\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8133153\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6328407\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4638587\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.283384\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1412182\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9607436\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8070851\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6266104\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4844446\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.30397\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1311571\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9506825\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8123475\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.628042\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.45906\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2785854\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.268988\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.126822\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.946347\" cy=\"120.338321\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.959312\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8133153\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6328407\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4638587\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.283384\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1412182\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9607436\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8070851\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6266104\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4844446\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.30397\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1311571\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9506825\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8123475\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.628042\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.45906\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2785854\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1364195\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.268988\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.126822\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.946347\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.777365\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.27425\" cy=\"117.499539\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.959312\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8133153\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6328407\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4638587\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.283384\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1412182\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9607436\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8070851\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6266104\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4844446\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.30397\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1311571\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9506825\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8123475\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.628042\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.45906\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2785854\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1364195\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9559449\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.268988\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.126822\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.946347\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.777365\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.59306\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.458556\" cy=\"114.676061\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.959312\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8171462\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6366715\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4676896\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2872149\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1450491\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9645744\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8070851\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6266104\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4844446\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.30397\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.134988\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9545133\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8123475\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6318729\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4628909\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2824162\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1402504\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9597757\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7907937\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.610319\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.468153\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.781196\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.600722\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.458556\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.27425\" cy=\"111.844931\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.959312\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8171462\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6366715\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4676896\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2872149\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1450491\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9645744\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8070851\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6266104\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4844446\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.30397\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.134988\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9545133\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8123475\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6318729\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4628909\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2824162\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1402504\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9597757\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7907937\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.610319\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.949715\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.950178\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.781196\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.600722\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.458556\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.27425\" cy=\"109.017627\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8171462\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6366715\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4676896\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2872149\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1450491\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9645744\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8070851\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6266104\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4844446\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.30397\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.134988\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9545133\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8123475\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6318729\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4628909\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2824162\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1402504\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9597757\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7907937\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.130189\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.949715\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.781196\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.600722\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.458556\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.27425\" cy=\"106.178846\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1397867\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.959312\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8171462\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6366715\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4676896\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2872149\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1450491\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9645744\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8070851\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6266104\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4844446\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.30397\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.134988\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9545133\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8123475\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6318729\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4628909\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2824162\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1402504\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9597757\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.7907937\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.610319\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.468153\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.287679\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.272819\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.950178\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"168.600722\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.458556\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.27425\" cy=\"103.351542\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1551102\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9746355\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8286388\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6481642\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4791822\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2987076\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill=\"#FFFFFF\" cx=\"58.1565417\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9760671\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8224086\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.641934\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4997681\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3154626\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1464806\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.966006\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.827671\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6433655\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2939089\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.151743\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9712684\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8022864\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.621812\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.479646\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.299171\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.145513\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.284311\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.142146\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.961671\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"165.792689\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.470049\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.289574\" cy=\"100.82648\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"4.32505998\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.3202613\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1551102\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9746355\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8286388\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6481642\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4791822\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2987076\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1565417\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9760671\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8224086\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.641934\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4997681\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3154626\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1464806\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.966006\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.827671\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6433655\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2939089\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.151743\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9712684\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8022864\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.621812\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.479646\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.299171\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.145513\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"157.284311\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.142146\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.961671\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.289574\" cy=\"98.0030019\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"7.15990886\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"9.97560336\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.3202613\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1551102\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9746355\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8286388\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6481642\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4791822\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2987076\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1565417\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9760671\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8224086\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.641934\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4997681\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3154626\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1464806\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.966006\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.151743\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9712684\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8022864\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.621812\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.479646\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.299171\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.142146\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.961671\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.289574\" cy=\"95.1603945\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8372684\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"15.6529629\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"32.6429018\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"35.5045668\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.3202613\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1551102\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9746355\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8286388\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6481642\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4791822\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.2987076\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1565417\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9760671\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8224086\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.641934\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4997681\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3154626\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.151743\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9712684\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8022864\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.621812\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.479646\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"160.142146\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"162.961671\" cy=\"92.3369164\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"7.15990886\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8372684\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"32.6467326\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"35.5045668\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.3240922\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1551102\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9746355\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8324697\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6481642\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4830131\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3025384\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1603726\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9760671\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8224086\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.641934\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4997681\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3154626\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2977397\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1555739\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9750993\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.483477\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.473879\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.289574\" cy=\"89.5057866\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"4.32889086\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"7.15990886\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"9.97943424\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8372684\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"15.6529629\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"18.4993044\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"24.1766639\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"26.9961893\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"29.8272073\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"32.6467326\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"35.5045668\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.3240922\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1551102\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9746355\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8324697\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6481642\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4830131\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3025384\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1603726\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9760671\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8224086\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.641934\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4997681\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3154626\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1555739\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9750993\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.473416\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.292941\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.473879\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.289574\" cy=\"86.6784826\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"4.32889086\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"7.15990886\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"9.97943424\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8372684\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"15.6529629\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"18.4993044\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"21.3188298\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"24.1766639\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"26.9961893\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"29.8272073\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"32.6467326\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"35.5045668\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.3240922\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1551102\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9746355\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8324697\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6481642\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4830131\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3025384\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1603726\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9760671\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8224086\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.641934\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4997681\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3154626\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.2977397\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1555739\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.625643\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.638567\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.473416\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.292941\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"171.473879\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.289574\" cy=\"83.8397011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"7.15990886\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"9.97943424\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8372684\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"15.6529629\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"18.4993044\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"21.3188298\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"24.1766639\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"26.9961893\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"29.8272073\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"32.6467326\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"35.5045668\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.3240922\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1551102\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9746355\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8324697\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6481642\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4830131\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3025384\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1603726\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9760671\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8224086\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.641934\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.4997681\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3154626\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1503115\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4782144\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8061173\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.625643\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.638567\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.473416\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.292941\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"174.289574\" cy=\"81.0123971\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"9.98709599\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8449301\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill=\"#FFFFFF\" cx=\"15.6606246\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"18.5069661\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"21.3264915\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"24.1843257\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"27.003851\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"29.834869\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"32.6543944\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"35.5122285\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.327923\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1627719\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9784664\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8401314\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6558259\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4906748\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3102002\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1680343\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9837288\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8300703\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6495957\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.5074299\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3231243\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1579732\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9736677\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8353327\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6510272\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3054015\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1632356\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9789301\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8099481\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.633304\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.830534\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.646229\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.481077\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.296772\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"145.952578\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"148.810412\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"151.629937\" cy=\"78.1927449\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"1.51702724\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"4.33272174\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"7.16757062\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"9.98709599\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8449301\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"15.6606246\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"18.5069661\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"21.3264915\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"24.1843257\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"27.003851\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"29.834869\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"32.6543944\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"35.5122285\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.327923\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1627719\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9784664\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8401314\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6558259\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4906748\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3102002\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1680343\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9837288\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8300703\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6495957\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.5074299\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3231243\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1579732\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9736677\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8353327\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1632356\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9789301\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8099481\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.491139\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.830534\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.646229\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.481077\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.296772\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.974131\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.136883\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"145.952578\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"148.810412\" cy=\"75.3692667\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"7.16757062\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"9.98326511\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8449301\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"15.6606246\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"18.5069661\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"21.3264915\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"24.1804948\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"27.003851\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"29.834869\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"32.6543944\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"35.5122285\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.327923\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1627719\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9784664\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8401314\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6558259\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4906748\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3102002\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1680343\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9837288\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8300703\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6495957\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.5074299\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3231243\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1579732\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9736677\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8353327\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6510272\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9789301\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8099481\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.633304\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.491139\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.830534\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.646229\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.481077\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.296772\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.974131\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"72.5266594\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"4.33272174\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"7.16757062\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"9.98326511\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8449301\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"15.6606246\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"18.5069661\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"21.3264915\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"24.1804948\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"27.003851\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"29.834869\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"32.6543944\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"35.5122285\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.327923\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1627719\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9784664\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8401314\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6558259\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9837288\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8300703\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.5074299\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3231243\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1579732\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9736677\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8353327\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6510272\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3054015\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9789301\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8099481\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.633304\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.830534\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.646229\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.481077\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.296772\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.974131\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.624675\" cy=\"69.6993554\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"7.16757062\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"9.98709599\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8449301\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"15.6644555\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"18.510797\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"21.3264915\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"24.1843257\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"27.003851\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"29.8386999\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"38.3317539\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"41.1666028\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9822973\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8401314\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3102002\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1680343\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8339012\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.5074299\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3269552\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1579732\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9774986\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6548581\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1632356\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9789301\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.813779\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.650059\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.481077\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.628506\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.302034\" cy=\"66.8720514\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"7.16757062\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"9.98709599\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8449301\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"15.6644555\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"18.510797\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"21.3264915\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"24.1843257\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4906748\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3102002\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1680343\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9875597\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8339012\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6495957\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3269552\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1579732\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6548581\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4858761\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3054015\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1632356\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9789301\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.813779\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.9727\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.830534\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.650059\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.481077\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.628506\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.302034\" cy=\"64.0447475\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"12.8449301\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"15.6644555\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6596568\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4906748\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3102002\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1680343\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9875597\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3269552\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8353327\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6548581\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4858761\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3054015\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1632356\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9789301\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.830534\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.650059\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.481077\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.628506\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.136883\" cy=\"61.205966\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9822973\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8401314\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6596568\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4906748\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3102002\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1680343\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9875597\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.5074299\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3269552\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9774986\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8353327\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6548581\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4858761\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3054015\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1632356\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.9727\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.830534\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.650059\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.481077\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.628506\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.302034\" cy=\"58.378662\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9822973\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8439623\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4945057\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3102002\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1718652\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9875597\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6534266\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.5112607\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3269552\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1618041\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9774986\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6548581\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.489707\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3054015\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.9727\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.834365\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.650059\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.484908\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.628506\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"55.5666614\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9822973\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8439623\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6596568\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.5112607\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3269552\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1618041\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8391636\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6548581\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.9727\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.834365\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.650059\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.484908\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.628506\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.305865\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.136883\" cy=\"52.7393575\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"43.9822973\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8439623\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3102002\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.9727\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.834365\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.650059\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.484908\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.628506\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.305865\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.136883\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"145.960239\" cy=\"49.9005759\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4945057\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3102002\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1718652\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9875597\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.5112607\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1618041\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9774986\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8391636\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6548581\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.489707\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.157005\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.9727\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.834365\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.650059\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.484908\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.628506\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.305865\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.136883\" cy=\"47.0770978\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"52.4945057\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3140311\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1718652\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"60.9913906\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6534266\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.5112607\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1618041\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.637135\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.157005\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.976531\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.834365\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.65389\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.484908\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.166099\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.981793\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.812811\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.632337\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.490171\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.305865\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.140714\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"145.960239\" cy=\"44.2421422\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"46.8439623\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6634877\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1718652\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3307861\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1618041\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8391636\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.658689\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.489707\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3092324\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8176099\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.637135\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.494969\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.314495\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.157005\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.976531\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.834365\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.65389\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.484908\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.166099\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.981793\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.812811\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.632337\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.490171\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.305865\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.140714\" cy=\"41.418664\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"49.6634877\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8391636\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.658689\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.637135\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.494969\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.314495\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.157005\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.976531\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.834365\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.65389\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill=\"#FFFFFF\" cx=\"120.484908\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.166099\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.981793\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.812811\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.632337\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.490171\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.305865\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.140714\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"145.960239\" cy=\"38.5760567\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"55.3140311\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"58.1718652\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6534266\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8391636\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.658689\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.489707\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3092324\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9865919\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8176099\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.637135\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.494969\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.314495\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.157005\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.976531\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.834365\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.65389\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.484908\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.166099\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.981793\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.812811\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.632337\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.490171\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.305865\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.140714\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"145.960239\" cy=\"35.7487527\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8453938\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"66.6610883\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"69.5189225\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1694659\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9889912\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8468254\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6625199\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4973688\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3168941\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9904228\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8252716\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.640966\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.502631\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.318326\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.164667\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.984193\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.842027\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.661552\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.496401\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.312095\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.16993\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.985624\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.820473\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.639998\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.494002\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.313527\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.144545\" cy=\"32.9329263\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"63.8453938\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1694659\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9889912\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4973688\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3168941\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1747283\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8252716\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.640966\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.502631\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.318326\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.164667\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.984193\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.842027\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.661552\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.496401\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.312095\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.16993\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.985624\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.820473\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.639998\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.494002\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.313527\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.144545\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"145.967901\" cy=\"30.1094482\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1694659\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9889912\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6625199\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4973688\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3168941\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1747283\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.502631\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.318326\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.164667\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.984193\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.842027\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.661552\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.496401\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.312095\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.16993\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.985624\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.820473\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.639998\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.494002\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.313527\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.144545\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"145.967901\" cy=\"27.2668408\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3384479\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1694659\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9889912\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6625199\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4973688\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3168941\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1747283\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9904228\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.640966\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.502631\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.318326\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.164667\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.984193\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.842027\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.661552\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.496401\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.312095\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.16993\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.985624\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.820473\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.639998\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.494002\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.313527\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.144545\" cy=\"24.4395368\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"72.3384479\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1732967\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3168941\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1785591\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9942536\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.644797\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.502631\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.322157\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.168498\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.984193\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.845858\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.661552\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.496401\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.312095\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.16993\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.985624\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.820473\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.639998\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.497832\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.317358\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.148376\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"145.967901\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"148.825735\" cy=\"21.6122329\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"75.1732967\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6663507\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4973688\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3168941\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1785591\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9942536\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8252716\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.502631\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.322157\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.168498\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.984193\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.845858\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.661552\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.496401\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.312095\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.16993\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.985624\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.820473\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.639998\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.497832\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.317358\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"145.967901\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"148.825735\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"151.64143\" cy=\"18.7849289\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9889912\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8468254\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6663507\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4973688\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3168941\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1785591\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9942536\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8252716\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.644797\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.322157\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.168498\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.984193\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.845858\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.661552\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.496401\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.312095\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.16993\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.985624\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.820473\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.639998\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.497832\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.317358\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"145.967901\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"148.825735\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"151.64143\" cy=\"15.9423215\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"77.9889912\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"80.8468254\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"83.6663507\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.4973688\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3168941\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1785591\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.9942536\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8252716\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"106.322157\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"109.168498\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.984193\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"114.845858\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.661552\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.312095\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.16993\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.985624\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.820473\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.148376\" cy=\"13.1188434\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3054015\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1670665\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.982761\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8176099\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.633304\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.494969\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"111.976531\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"117.650059\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.632337\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.305865\" cy=\"10.3183204\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"86.489707\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"89.3054015\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1670665\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.982761\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"97.8176099\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"100.633304\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"103.494969\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"126.158437\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.632337\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.305865\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"143.136883\" cy=\"7.49101646\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"92.1670665\" cy=\"4.65223494\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"94.982761\" cy=\"4.65223494\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"120.484908\" cy=\"4.65223494\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"123.304434\" cy=\"4.65223494\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"4.65223494\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"4.65223494\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.632337\" cy=\"4.65223494\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"4.65223494\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"140.305865\" cy=\"4.65223494\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"128.977962\" cy=\"1.82493098\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"131.80898\" cy=\"1.82493098\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"134.632337\" cy=\"1.82493098\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"137.48634\" cy=\"1.82493098\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"329.765711\" cy=\"210.869435\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"332.581406\" cy=\"210.869435\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.929431\" cy=\"208.026828\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"332.581406\" cy=\"208.026828\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.109906\" cy=\"205.199524\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.929431\" cy=\"205.199524\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"338.247273\" cy=\"205.199524\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.252072\" cy=\"202.37222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"338.247273\" cy=\"202.37222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.252072\" cy=\"199.544916\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.113737\" cy=\"199.544916\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.929431\" cy=\"199.544916\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.76428\" cy=\"199.544916\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"335.431578\" cy=\"199.544916\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.291852\" cy=\"196.706134\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.942396\" cy=\"196.706134\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.769079\" cy=\"196.706134\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.584773\" cy=\"196.706134\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.262133\" cy=\"196.706134\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.605359\" cy=\"196.706134\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.436377\" cy=\"196.706134\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.252072\" cy=\"196.706134\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.113737\" cy=\"196.706134\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.929431\" cy=\"196.706134\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.76428\" cy=\"196.706134\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.291852\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.119039\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.942396\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.80023\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.584773\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.442607\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.262133\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.108474\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.785834\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.605359\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.436377\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.252072\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.113737\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.929431\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.76428\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"315.579974\" cy=\"193.878831\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.28036\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.111378\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.930903\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.788737\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.608263\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.757586\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.573281\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.434946\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.25064\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.100812\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.916507\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.774341\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.593866\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.428715\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.24441\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.102244\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.917938\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.752787\" cy=\"191.078308\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.460834\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.28036\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.111378\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.930903\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.788737\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.608263\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.926568\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.757586\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.573281\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.434946\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.25064\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.100812\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.916507\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.774341\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.593866\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.428715\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.24441\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.102244\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.917938\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.752787\" cy=\"188.254829\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.460834\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.28036\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.111378\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.930903\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.788737\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.608263\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.450773\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.778676\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.757586\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.573281\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.434946\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.25064\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.100812\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.916507\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.774341\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.593866\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.428715\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.24441\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.102244\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.917938\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.752787\" cy=\"185.412222\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.603\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.460834\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.28036\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.111378\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.930903\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.788737\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.608263\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.450773\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.778676\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.757586\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.573281\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.434946\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.25064\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.100812\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.916507\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.774341\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.593866\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.428715\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.24441\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.102244\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.917938\" cy=\"182.584918\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.606831\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.464665\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.28419\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.115208\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.934734\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.792568\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.608263\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.450773\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.782507\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.602032\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.434946\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.254471\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.100812\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.920338\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.778172\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.593866\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.428715\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.24441\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.102244\" cy=\"179.753788\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.783475\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.606831\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.464665\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.28419\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.115208\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.934734\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.792568\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.608263\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.450773\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.274129\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.131964\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.602032\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.254471\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.100812\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.920338\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.778172\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.593866\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.24441\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.102244\" cy=\"176.93031\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.603\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.464665\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill=\"#FFFFFF\" cx=\"185.28419\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.115208\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.934734\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.792568\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.608263\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.450773\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.274129\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.131964\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.602032\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.920338\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.778172\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.593866\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.24441\" cy=\"174.087703\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.603\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.464665\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.28419\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.115208\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.934734\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.792568\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.608263\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.450773\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.274129\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.131964\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.434946\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.254471\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.917938\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.756618\" cy=\"171.264225\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.614493\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.472327\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.288021\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.119039\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.938565\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.796399\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.615924\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.458435\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.281791\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.25687\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.114704\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.93423\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.436377\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.252072\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.113737\" cy=\"168.444572\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.794967\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.614493\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.472327\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.288021\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.119039\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.938565\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.796399\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.615924\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.458435\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.281791\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.441176\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.442607\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.782003\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.597697\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.436377\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.252072\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.113737\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.76428\" cy=\"165.621094\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.794967\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.614493\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.472327\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.288021\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.119039\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.938565\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.796399\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.615924\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.458435\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.281791\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.135794\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.606327\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.441176\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.114704\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.93423\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.769079\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.442607\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.782003\" cy=\"162.778487\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.794967\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.614493\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.472327\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.288021\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.119039\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.938565\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.796399\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.615924\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.458435\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.281791\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.135794\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.95532\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.606327\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.441176\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.114704\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.93423\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.769079\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.442607\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.258302\" cy=\"159.951183\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.794967\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.614493\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.472327\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.291852\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.12287\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.946226\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.80023\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.619755\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.462266\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.281791\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.139625\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.959151\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.790169\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.932798\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.790632\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.606327\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.769079\" cy=\"157.120053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.794967\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.614493\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill=\"#FFFFFF\" cx=\"182.472327\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.291852\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.12287\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.946226\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.80023\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.619755\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.462266\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.281791\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.139625\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.959151\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.790169\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.609694\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.781539\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.606327\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.446438\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.262133\" cy=\"154.292749\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.794967\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.614493\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.472327\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.291852\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.12287\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.946226\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.80023\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.619755\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.462266\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.281791\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.139625\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.959151\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.790169\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.609694\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.939028\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.790632\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.260701\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.588604\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.262133\" cy=\"151.453968\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.794967\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.614493\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.472327\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.291852\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.12287\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.946226\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.80023\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.619755\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.462266\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.281791\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.139625\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.123334\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.939028\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.790632\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.606327\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.441176\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.260701\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.446438\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.262133\" cy=\"148.63049\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.798798\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.618324\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.476158\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.291852\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.12287\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.946226\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.80023\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.619755\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.462266\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.285622\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.959151\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.790169\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.609694\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.467528\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.123334\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.939028\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.932798\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.790632\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.606327\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.441176\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.260701\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.446438\" cy=\"145.818489\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.798798\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.618324\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.476158\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.291852\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.12287\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.946226\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.80023\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.619755\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.462266\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.285622\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.959151\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.790169\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.609694\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.467528\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.283223\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.123334\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.939028\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.789201\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.608726\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.932798\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.790632\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.606327\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.441176\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.118535\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.446438\" cy=\"142.995011\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.798798\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.618324\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.476158\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.291852\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.12287\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.946226\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.80023\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.619755\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.462266\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.143456\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.959151\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.790169\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.609694\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.467528\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.283223\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.118072\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.445974\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.123334\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.939028\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.789201\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.608726\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.46656\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.113273\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.932798\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.790632\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.606327\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.441176\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.118535\" cy=\"140.152403\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.798798\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.618324\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.476158\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.291852\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.12287\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.946226\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.80023\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.619755\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.462266\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.143456\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.959151\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.790169\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.609694\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.467528\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.283223\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.445974\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.2655\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.123334\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.939028\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.789201\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.608726\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.46656\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.282255\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.113273\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.932798\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.790632\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.606327\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.441176\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.260701\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.118535\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.938061\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.769079\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.446438\" cy=\"137.3251\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.798798\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.618324\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.476158\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.295683\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.12287\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.946226\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.804061\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.623586\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.285622\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.143456\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.962982\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.794\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.613525\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.121902\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.941428\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.799262\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.614956\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.445974\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.2655\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.123334\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.94669\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.789201\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.608726\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.46656\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.286086\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.113273\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.936629\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.794463\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.613989\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.445007\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.264532\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.122366\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.938061\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.77291\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.588604\" cy=\"134.49397\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.798798\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.618324\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.476158\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.295683\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.12287\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.946226\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.804061\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.623586\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.466097\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.285622\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.143456\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.962982\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.794\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.47519\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.290884\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.121902\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.941428\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.799262\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.614956\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.445974\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.2655\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.123334\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.94669\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.789201\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.608726\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.46656\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.286086\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.113273\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.936629\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.794463\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.613989\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.445007\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.264532\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.122366\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.938061\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.77291\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.588604\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.450269\" cy=\"131.666666\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.798798\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.618324\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.295683\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.12287\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.466097\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.285622\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.143456\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.962982\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.794\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.613525\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.47519\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.290884\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.121902\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.941428\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.799262\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.614956\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.445974\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.2655\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.123334\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.94669\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.789201\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.608726\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.46656\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.286086\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.113273\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.936629\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.794463\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.613989\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.445007\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.264532\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.122366\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.938061\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.77291\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.588604\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.450269\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.93183\" cy=\"128.827884\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.285622\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.143456\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.962982\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.794\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.613525\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.47519\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.290884\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.121902\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.941428\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.799262\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.614956\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.445974\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.2655\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.123334\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.94669\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.789201\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.608726\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.46656\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.286086\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.113273\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.936629\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.794463\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.613989\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.445007\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.264532\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.122366\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.938061\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.77291\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.588604\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.785834\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.605359\" cy=\"126.004406\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.625985\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.134363\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.627417\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.297115\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.151118\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.970643\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.801661\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.621187\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.298546\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.125733\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.945259\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.806924\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.622618\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.453636\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.273162\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.130996\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.950521\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.796863\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.616388\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.474222\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.289917\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.124765\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.944291\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.802125\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.617819\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.448838\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.268363\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.130028\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.945722\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.77674\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.596266\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.457931\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.116136\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.613021\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.44787\" cy=\"123.184754\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.134363\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.811722\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.627417\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.469928\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.297115\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.151118\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.970643\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.801661\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.298546\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.125733\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.945259\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.806924\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.622618\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.453636\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.273162\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.130996\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.950521\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.796863\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.616388\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.474222\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.289917\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.124765\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.944291\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.802125\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.617819\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.448838\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.268363\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.130028\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.945722\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.77674\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.596266\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.116136\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.267395\" cy=\"120.35745\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.625985\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.303345\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.134363\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.953888\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.811722\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.627417\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.469928\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.151118\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.970643\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.801661\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.621187\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.298546\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.125733\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.945259\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.806924\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.622618\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.453636\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.273162\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.130996\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.950521\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.796863\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.616388\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.474222\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.289917\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.124765\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.944291\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.802125\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.617819\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.448838\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.268363\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.130028\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.945722\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.77674\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.596266\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.457931\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.273625\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.116136\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.267395\" cy=\"117.518668\" rx=\"0.927072201\" ry=\"0.925855967\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.80646\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.483819\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.303345\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.134363\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.953888\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.970643\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.801661\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.479021\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.298546\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.125733\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.945259\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.806924\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.622618\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.453636\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.273162\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.130996\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.950521\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.796863\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.616388\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.474222\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.289917\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.124765\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.944291\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.802125\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.617819\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.448838\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.268363\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.130028\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.945722\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.77674\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.596266\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.457931\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.273625\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.116136\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.939492\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.797326\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.267395\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.125229\" cy=\"114.691364\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.810291\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.629816\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.48765\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.303345\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.134363\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.953888\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.811722\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.473758\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.151118\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.970643\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.801661\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.482852\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.298546\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.129564\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.95292\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.810755\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.626449\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.457467\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.276992\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.134827\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.954352\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.796863\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.616388\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.474222\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.293747\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.124765\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.948122\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.802125\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.62165\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.452668\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.272194\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.130028\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.949553\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.780571\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.600097\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.457931\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.273625\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.119967\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.939492\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.797326\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.613021\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.267395\" cy=\"111.860235\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.810291\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.629816\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.48765\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.303345\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.134363\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.953888\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.811722\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.631248\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.473758\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.297115\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.151118\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.970643\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.801661\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.621187\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.298546\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.129564\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.95292\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.810755\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.626449\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.457467\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.276992\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.134827\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.954352\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.796863\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.616388\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.474222\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.293747\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.124765\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.948122\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.802125\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.62165\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.452668\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.272194\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.130028\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.949553\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.780571\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.600097\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.457931\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.273625\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.119967\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.939492\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.797326\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.613021\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.267395\" cy=\"109.036756\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.810291\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.629816\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.48765\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.303345\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.134363\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.953888\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.811722\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.631248\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.473758\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.297115\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.151118\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.970643\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.801661\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.621187\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.482852\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.298546\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.129564\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.95292\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.810755\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.626449\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.457467\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.276992\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.134827\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.954352\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.796863\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.616388\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.474222\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.293747\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.124765\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.948122\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.802125\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.62165\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.452668\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.272194\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.130028\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill=\"#FFFFFF\" cx=\"275.949553\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.780571\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.600097\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.457931\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.273625\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.119967\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.939492\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.797326\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.613021\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.44787\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.125229\" cy=\"106.194149\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.810291\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.629816\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.48765\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.303345\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.134363\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.953888\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.811722\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.631248\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.473758\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.297115\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.151118\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.970643\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.801661\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.621187\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.482852\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.298546\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.129564\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.95292\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.810755\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.626449\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.457467\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.276992\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.134827\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.954352\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.796863\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.616388\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.474222\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.293747\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.124765\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.948122\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.802125\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.62165\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.452668\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.272194\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.130028\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.949553\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.780571\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.600097\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.457931\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.273625\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.119967\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.939492\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.797326\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.613021\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.44787\" cy=\"103.366845\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.821783\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.637478\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.495312\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.318668\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.145856\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.969212\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.827046\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.64274\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.485251\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.312438\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.166441\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.985967\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.816985\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.63651\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.494344\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.310039\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.141057\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.960582\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.822247\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.637942\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.46896\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.292316\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.15015\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.965845\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.812186\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.631711\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.489546\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.30524\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.140089\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.959614\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.817449\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.633143\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.464161\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.283686\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.141521\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.961046\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.788233\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.61542\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.473254\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.288949\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.131459\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.954816\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.81265\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.628344\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.463193\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.282719\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.464625\" cy=\"100.845609\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.495312\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.318668\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.145856\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.969212\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.827046\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.64274\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.485251\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.312438\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.166441\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.985967\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.816985\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.63651\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.494344\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.310039\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.141057\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.960582\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.822247\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.637942\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill=\"#FFFFFF\" cx=\"233.46896\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.292316\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.15015\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.965845\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.812186\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.631711\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.489546\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.30524\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.140089\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.959614\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.817449\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.633143\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.464161\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.283686\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.141521\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.961046\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.788233\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.61542\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.473254\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.288949\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.131459\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.954816\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.81265\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.628344\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.463193\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.464625\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"321.28415\" cy=\"98.0183053\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.821783\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.637478\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.145856\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.969212\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.827046\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.64274\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.485251\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.312438\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.166441\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.985967\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.816985\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.63651\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.494344\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.310039\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.141057\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.960582\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.822247\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.637942\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.46896\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.292316\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.15015\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.965845\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.812186\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.631711\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.489546\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.30524\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.140089\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.959614\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.817449\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.633143\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.464161\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.283686\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.141521\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.961046\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.788233\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.61542\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.473254\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.288949\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.131459\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.954816\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.81265\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.628344\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.464625\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"321.28415\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"324.111337\" cy=\"95.1756979\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.637478\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.969212\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.827046\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.64274\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.485251\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.312438\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.166441\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.985967\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.816985\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.63651\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.494344\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.310039\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.141057\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.960582\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.822247\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.637942\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.46896\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.292316\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.15015\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.965845\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.812186\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.631711\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.489546\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.30524\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.140089\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.959614\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.817449\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.633143\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.464161\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.283686\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.141521\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.961046\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.788233\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.61542\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.473254\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.288949\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.131459\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.954816\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.81265\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.628344\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.463193\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"321.28415\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"324.111337\" cy=\"92.3522198\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.821783\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.64514\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.502974\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.149686\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.969212\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.827046\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.646571\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.489082\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.312438\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.166441\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.985967\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.816985\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.640341\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.494344\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.31387\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.144888\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.968244\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.826078\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.641773\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.472791\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.292316\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.15015\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.965845\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.812186\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.631711\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.489546\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.309071\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.140089\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.959614\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.817449\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.636974\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.464161\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.291348\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.145351\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.964877\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.795895\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.61542\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.473254\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.288949\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.131459\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.954816\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.81265\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.628344\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.463193\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.282719\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.960078\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"315.610621\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"324.118999\" cy=\"89.52109\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.821783\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.64514\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.502974\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.149686\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.827046\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.646571\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.489082\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.312438\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.166441\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.985967\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.816985\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.640341\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.494344\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.31387\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.144888\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.968244\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.826078\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.641773\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.472791\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.292316\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.15015\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.965845\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.812186\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.631711\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.489546\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.309071\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.140089\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.959614\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.817449\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.636974\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.464161\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.291348\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.145351\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.964877\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.795895\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.61542\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.473254\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.288949\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.131459\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.954816\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.81265\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.628344\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.463193\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.282719\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.140553\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.960078\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.787265\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"315.610621\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"324.118999\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"326.938524\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"329.796358\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"332.612053\" cy=\"86.693786\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.821783\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.64514\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.502974\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.149686\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.969212\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.827046\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.646571\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.489082\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.312438\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.166441\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.985967\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.816985\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.640341\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.494344\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.31387\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.144888\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.968244\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.826078\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.641773\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.472791\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.292316\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.15015\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.965845\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.812186\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.631711\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.489546\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.309071\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.140089\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.959614\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.817449\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.636974\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.464161\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.291348\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.145351\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.964877\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.795895\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.61542\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.473254\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.288949\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.131459\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.954816\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.81265\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.628344\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.463193\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.282719\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.140553\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.960078\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.787265\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"315.610621\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.468456\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"321.28415\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"324.118999\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"326.938524\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"329.796358\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"332.612053\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"335.454564\" cy=\"83.8550045\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.821783\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.64514\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.502974\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.149686\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.969212\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.827046\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.646571\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.489082\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.312438\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.166441\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.985967\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.816985\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.640341\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.494344\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.31387\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.144888\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.968244\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.826078\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.641773\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.472791\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.292316\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.15015\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.965845\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.812186\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.631711\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.489546\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.309071\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.140089\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.959614\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.817449\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.636974\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.464161\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.291348\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.145351\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.964877\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.795895\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.61542\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.473254\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.288949\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.131459\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.954816\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.81265\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.628344\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.463193\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.282719\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.140553\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.960078\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.787265\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"315.610621\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.468456\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"321.28415\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"324.118999\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"326.938524\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"329.796358\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"332.612053\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"335.454564\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"338.27792\" cy=\"81.0277005\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.829445\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.648971\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.510636\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.32633\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.976874\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.834708\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.654233\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.496744\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.316269\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.174103\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.993629\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.824647\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.648003\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.502006\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.321531\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.152549\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.972075\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.829909\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.649434\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.476621\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.296147\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.157812\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.977337\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.819848\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.639373\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.497207\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.316733\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.14392\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.82511\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.644636\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.295179\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.153013\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.968708\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.799726\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.619251\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.477085\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.296611\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.139121\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.962477\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.820312\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.636006\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.467024\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.29038\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.148214\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.963909\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.798758\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"315.618283\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.476117\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"321.291812\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"324.12283\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"326.942355\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"329.800189\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"332.619715\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"335.462225\" cy=\"78.2118741\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.648971\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.510636\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.32633\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.976874\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.834708\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.654233\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"207.993629\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.824647\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.648003\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.502006\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.321531\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.152549\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.972075\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.829909\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.649434\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.476621\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.296147\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.157812\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.977337\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.819848\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.639373\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.497207\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.316733\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.14392\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.82511\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.644636\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.295179\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.153013\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.968708\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.799726\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.619251\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.477085\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.296611\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.139121\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.962477\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.820312\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.636006\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.467024\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.29038\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.148214\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.963909\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.798758\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"315.618283\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.476117\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"321.291812\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"324.12283\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"326.942355\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"329.800189\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"332.619715\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"335.462225\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"338.285582\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"341.139585\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"343.95911\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"346.790128\" cy=\"75.3845701\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.648971\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.506805\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.32633\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.153517\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.976874\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.834708\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.650402\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.496744\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.316269\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"205.174103\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"213.648003\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.502006\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.321531\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.152549\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.972075\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.829909\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.649434\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.476621\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.296147\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.157812\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.977337\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.819848\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.639373\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.497207\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.316733\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.14392\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.82511\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.644636\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.295179\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.153013\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.968708\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.799726\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.619251\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.477085\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.296611\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.139121\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.962477\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.820312\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.636006\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.467024\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.29038\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.148214\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.963909\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.798758\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"315.618283\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.476117\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"321.291812\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"324.12283\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"326.942355\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"329.800189\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"332.619715\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"335.462225\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"338.285582\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"341.139585\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"343.95911\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"346.790128\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"349.613485\" cy=\"72.5457886\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.506805\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.32633\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.153517\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.976874\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.834708\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.650402\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.496744\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.316269\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"210.824647\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"216.502006\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.321531\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.152549\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.972075\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.829909\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.649434\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.476621\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.296147\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.157812\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.977337\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.819848\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.639373\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.497207\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.316733\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.14392\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.82511\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.644636\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.295179\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.153013\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.968708\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.799726\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.619251\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.477085\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.296611\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.139121\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.962477\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.820312\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.636006\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.467024\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.29038\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.148214\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.963909\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.798758\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"315.618283\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.476117\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"321.291812\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"324.12283\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"326.942355\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"329.800189\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"332.619715\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"335.462225\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"338.285582\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"341.139585\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"343.95911\" cy=\"69.7184847\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.510636\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.330161\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.161179\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.980704\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.838539\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"196.654233\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"199.500575\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"202.316269\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.975906\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.83374\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.480452\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.303809\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.161643\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.977337\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.819848\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.643204\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.501038\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.316733\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.147751\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.82511\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.644636\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.29901\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.153013\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.972539\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.803557\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.626913\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.480916\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.300441\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.142952\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.966308\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.824142\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.639837\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.470855\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.29038\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.148214\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill=\"#FFFFFF\" cx=\"309.963909\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.798758\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"315.618283\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.476117\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"321.295643\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"324.126661\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"326.946186\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"329.80402\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"332.619715\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"335.462225\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"338.285582\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"341.143416\" cy=\"66.8873548\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.161179\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.980704\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"193.838539\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.480452\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.303809\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.161643\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.977337\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.819848\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.643204\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.501038\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.316733\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.147751\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.82511\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.644636\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill=\"#FFFFFF\" cx=\"270.29901\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.153013\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.972539\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.803557\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.626913\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.480916\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.300441\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.142952\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.966308\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.824142\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.639837\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.470855\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.29038\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.148214\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.963909\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.798758\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"315.618283\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.476117\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"321.295643\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"332.619715\" cy=\"64.0600509\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.980704\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.325362\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.649434\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.480452\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.303809\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.161643\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.977337\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.819848\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.643204\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.501038\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.316733\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.147751\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.82511\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.644636\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.29901\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.153013\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.972539\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.803557\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.626913\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.480916\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.300441\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.142952\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"292.966308\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"295.824142\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"298.639837\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"301.470855\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.29038\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.148214\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.963909\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"312.798758\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"318.476117\" cy=\"61.2212694\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.325362\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.480452\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.303809\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"239.161643\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"241.977337\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.643204\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.501038\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.316733\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.147751\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.82511\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.644636\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.29901\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.153013\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.972539\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.803557\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.626913\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.480916\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.300441\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.142952\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.29038\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"307.148214\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"309.963909\" cy=\"58.3939654\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.325362\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.484283\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"236.303809\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"244.823679\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"247.643204\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.501038\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.320564\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.151582\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.828941\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.648467\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.29901\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.156844\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.972539\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.803557\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"281.626913\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"284.480916\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.300441\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"290.146783\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"304.294211\" cy=\"55.5857907\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"219.325362\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.501038\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.320564\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.151582\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.828941\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.648467\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.29901\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.156844\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"278.803557\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"287.300441\" cy=\"52.7584867\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.152549\" cy=\"49.9197052\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"250.501038\" cy=\"49.9197052\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.320564\" cy=\"49.9197052\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.151582\" cy=\"49.9197052\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"49.9197052\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.828941\" cy=\"49.9197052\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.648467\" cy=\"49.9197052\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"49.9197052\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.29901\" cy=\"49.9197052\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.156844\" cy=\"49.9197052\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"222.152549\" cy=\"47.0924012\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.975906\" cy=\"47.0924012\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"253.320564\" cy=\"47.0924012\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"256.151582\" cy=\"47.0924012\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.967276\" cy=\"47.0924012\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.828941\" cy=\"47.0924012\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.648467\" cy=\"47.0924012\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.475654\" cy=\"47.0924012\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.29901\" cy=\"47.0924012\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.156844\" cy=\"47.0924012\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.972539\" cy=\"47.0924012\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"224.975906\" cy=\"44.2612714\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"227.837571\" cy=\"44.2612714\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.653265\" cy=\"44.2612714\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.974938\" cy=\"44.2612714\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.832772\" cy=\"44.2612714\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.648467\" cy=\"44.2612714\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.479485\" cy=\"44.2612714\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.29901\" cy=\"44.2612714\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.156844\" cy=\"44.2612714\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"275.976369\" cy=\"44.2612714\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.510636\" cy=\"41.4339675\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"230.653265\" cy=\"41.4339675\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"233.484283\" cy=\"41.4339675\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"258.974938\" cy=\"41.4339675\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"261.832772\" cy=\"41.4339675\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"264.648467\" cy=\"41.4339675\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.479485\" cy=\"41.4339675\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"270.29901\" cy=\"41.4339675\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"273.156844\" cy=\"41.4339675\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.510636\" cy=\"38.5951859\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"267.479485\" cy=\"38.5951859\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.652801\" cy=\"35.767882\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.510636\" cy=\"35.767882\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.660463\" cy=\"32.9520556\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.522128\" cy=\"32.9520556\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.660463\" cy=\"30.1247516\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.522128\" cy=\"30.1247516\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.337823\" cy=\"30.1247516\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.168841\" cy=\"30.1247516\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"176.844769\" cy=\"27.2821442\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"179.660463\" cy=\"27.2821442\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"182.522128\" cy=\"27.2821442\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.168841\" cy=\"27.2821442\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.988366\" cy=\"27.2821442\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.337823\" cy=\"24.4586661\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.168841\" cy=\"24.4586661\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"190.988366\" cy=\"24.4586661\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"185.341654\" cy=\"21.6275363\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse><ellipse fill-opacity=\"0.2\" fill=\"#000000\" cx=\"188.168841\" cy=\"21.6275363\" rx=\"0.930903078\" ry=\"0.929681818\"></ellipse></g></g></g></g></g></svg>"
 
 /***/ },
-/* 236 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25575,13 +29978,120 @@
 	
 	var _expect2 = _interopRequireDefault(_expect);
 	
-	var _payment = __webpack_require__(237);
+	var _react = __webpack_require__(32);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactAddonsTestUtils = __webpack_require__(62);
+	
+	var _reactAddonsTestUtils2 = _interopRequireDefault(_reactAddonsTestUtils);
+	
+	var _reactDom = __webpack_require__(197);
+	
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+	
+	var _CreditCardSecurityCodeInput = __webpack_require__(240);
+	
+	var _CreditCardSecurityCodeInput2 = _interopRequireDefault(_CreditCardSecurityCodeInput);
+	
+	var _CreditCardInputStates = __webpack_require__(30);
+	
+	var cardStates = _interopRequireWildcard(_CreditCardInputStates);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	// const DELETE_KEY_CODE = 46
+	
+	function setup(propOverrides) {
+		var props = Object.assign({
+			style: '',
+			placeholder: 'hi',
+			className: 'there',
+			securityCode: {
+				status: cardStates.VALID,
+				values: '',
+				cursorPosition: 2
+			},
+			onChange: _expect2.default.createSpy(),
+			onFocus: _expect2.default.createSpy()
+		}, propOverrides);
+	
+		var renderer = _reactAddonsTestUtils2.default.createRenderer();
+		renderer.render(_react2.default.createElement(_CreditCardSecurityCodeInput2.default, props));
+		var output = renderer.getRenderOutput();
+		var instance = renderer.getMountedInstance();
+	
+		return {
+			props: props,
+			output: output,
+			renderer: renderer,
+			instance: instance
+		};
+	}
+	
+	describe('CreditCardSecurityCodeInput', function () {
+		it('should render an input field', function () {
+			var _setup = setup();
+	
+			var output = _setup.output;
+	
+	
+			(0, _expect2.default)(output.type).toBe('input');
+			(0, _expect2.default)(output.props.className).toBe('SecurityCode');
+		});
+	
+		describe('Formatting a Security Code', function () {
+			it('should return a blank string when given an undefined input', function () {
+				var _setup2 = setup();
+	
+				var instance = _setup2.instance;
+	
+				(0, _expect2.default)(instance.format(undefined)).toBe('');
+			});
+		});
+	
+		describe('Unformatting a Security Code', function () {
+			it('should only accept numbers', function () {
+				var _setup3 = setup();
+	
+				var instance = _setup3.instance;
+	
+				(0, _expect2.default)(instance.unformat('abcde')).toBe('');
+			});
+	
+			it('should accept a maximum of 4 digits', function () {
+				var _setup4 = setup();
+	
+				var instance = _setup4.instance;
+	
+				(0, _expect2.default)(instance.unformat('12345').length).toBe(4);
+			});
+		});
+	});
+
+/***/ },
+/* 274 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _expect = __webpack_require__(2);
+	
+	var _expect2 = _interopRequireDefault(_expect);
+	
+	var _payment = __webpack_require__(275);
 	
 	var _payment2 = _interopRequireDefault(_payment);
 	
 	var _ActionTypes = __webpack_require__(29);
 	
 	var types = _interopRequireWildcard(_ActionTypes);
+	
+	var _CreditCardInputStates = __webpack_require__(30);
+	
+	var cardStates = _interopRequireWildcard(_CreditCardInputStates);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -25591,13 +30101,24 @@
 		it('should return the initial state', function () {
 			(0, _expect2.default)((0, _payment2.default)(undefined, {})).toEqual({
 				email: '',
-				cardNumber: '',
-				expirationMonth: '',
-				expirationYear: '',
-				securityCode: '',
-				cardNumberCursorPosition: null,
-				expirationDateCursorPosition: null,
-				securityCodeCursorPosition: null,
+				cardNumber: {
+					status: '',
+					value: '',
+					cursorPosition: null
+				},
+				expirationDate: {
+					status: '',
+					values: {
+						month: '',
+						year: ''
+					},
+					cursorPosition: null
+				},
+				securityCode: {
+					status: '',
+					value: '',
+					cursorPosition: null
+				},
 				currentField: 'CreditCardNumber'
 			});
 		});
@@ -25605,70 +30126,129 @@
 		it('should handle SET_CREDIT_CARD_NUMBER', function () {
 			(0, _expect2.default)((0, _payment2.default)([], {
 				type: types.SET_CREDIT_CARD_NUMBER,
+				status: cardStates.VALID,
 				cardNumber: '123456789012345',
 				cardNumberCursorPosition: 2
 			})).toEqual({
-				cardNumber: '123456789012345',
-				cardNumberCursorPosition: 2
+				cardNumber: {
+					status: cardStates.VALID,
+					value: '123456789012345',
+					cursorPosition: 2
+				}
+			});
+	
+			(0, _expect2.default)((0, _payment2.default)([], {
+				type: types.SET_CREDIT_CARD_NUMBER,
+				status: cardStates.INVALID,
+				cardNumber: '1234',
+				cardNumberCursorPosition: 4
+			})).toEqual({
+				cardNumber: {
+					status: cardStates.INVALID,
+					value: '1234',
+					cursorPosition: 4
+				}
 			});
 		});
 	
 		it('should handle SET_CREDIT_CARD_EXPIRATION_DATE', function () {
 			(0, _expect2.default)((0, _payment2.default)([], {
 				type: types.SET_CREDIT_CARD_EXPIRATION_DATE,
+				status: cardStates.VALID,
 				expirationDate: '12/20',
 				expirationDateCursorPosition: 2
 			})).toEqual({
-				expirationMonth: '12',
-				expirationYear: '2020',
-				expirationDateCursorPosition: 2
+				expirationDate: {
+					status: cardStates.VALID,
+					values: {
+						month: '12',
+						year: '2020'
+					},
+					cursorPosition: 2
+				}
 			});
 	
-			(0, _expect2.default)();
+			(0, _expect2.default)((0, _payment2.default)([], {
+				type: types.SET_CREDIT_CARD_EXPIRATION_DATE,
+				status: cardStates.INVALID,
+				expirationDate: '',
+				expirationDateCursorPosition: 2
+			})).toEqual({
+				expirationDate: {
+					status: cardStates.INVALID,
+					values: {
+						month: '',
+						year: ''
+					},
+					cursorPosition: 2
+				}
+			});
 		});
 	
 		it('should handle SET_CREDIT_CARD_EXPIRATION_DATE without a year', function () {
 			(0, _expect2.default)((0, _payment2.default)([], {
 				type: types.SET_CREDIT_CARD_EXPIRATION_DATE,
+				status: cardStates.INVALID,
 				expirationDate: '12/',
 				expirationDateCursorPosition: 2
 			})).toEqual({
-				expirationMonth: '12',
-				expirationYear: '',
-				expirationDateCursorPosition: 2
+				expirationDate: {
+					status: cardStates.INVALID,
+					values: {
+						month: '12',
+						year: ''
+					},
+					cursorPosition: 2
+				}
 			});
 		});
 	
 		it('should handle SET_CREDIT_CARD_EXPIRATION_DATE with an invalid month', function () {
 			(0, _expect2.default)((0, _payment2.default)([], {
 				type: types.SET_CREDIT_CARD_EXPIRATION_DATE,
+				status: cardStates.INVALID,
 				expirationDate: '16/',
 				expirationDateCursorPosition: 2
 			})).toEqual({
-				expirationMonth: '12',
-				expirationYear: '',
-				expirationDateCursorPosition: 2
+				expirationDate: {
+					status: cardStates.INVALID,
+					values: {
+						month: '12',
+						year: ''
+					},
+					cursorPosition: 2
+				}
 			});
 	
 			(0, _expect2.default)((0, _payment2.default)([], {
 				type: types.SET_CREDIT_CARD_EXPIRATION_DATE,
+				status: cardStates.INVALID,
 				expirationDate: '43/16',
 				expirationDateCursorPosition: 2
 			})).toEqual({
-				expirationMonth: '12',
-				expirationYear: '2016',
-				expirationDateCursorPosition: 2
+				expirationDate: {
+					status: cardStates.INVALID,
+					values: {
+						month: '12',
+						year: '2016'
+					},
+					cursorPosition: 2
+				}
 			});
 		});
 	
 		it('should handle SET_CREDIT_CARD_SECURITY_CODE', function () {
 			(0, _expect2.default)((0, _payment2.default)([], {
 				type: types.SET_CREDIT_CARD_SECURITY_CODE,
+				status: cardStates.VALID,
 				securityCode: '1234',
 				securityCodeCursorPosition: 2
 			})).toEqual({
-				securityCode: '1234',
-				securityCodeCursorPosition: 2
+				securityCode: {
+					status: cardStates.VALID,
+					value: '1234',
+					cursorPosition: 2
+				}
 			});
 		});
 	
@@ -25698,7 +30278,7 @@
 	});
 
 /***/ },
-/* 237 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25717,13 +30297,24 @@
 	
 	var initialState = {
 		email: '',
-		cardNumber: '',
-		expirationMonth: '',
-		expirationYear: '',
-		securityCode: '',
-		cardNumberCursorPosition: null,
-		expirationDateCursorPosition: null,
-		securityCodeCursorPosition: null,
+		cardNumber: {
+			status: '',
+			value: '',
+			cursorPosition: null
+		},
+		expirationDate: {
+			status: '',
+			values: {
+				month: '',
+				year: ''
+			},
+			cursorPosition: null
+		},
+		securityCode: {
+			status: '',
+			value: '',
+			cursorPosition: null
+		},
 		currentField: 'CreditCardNumber'
 	};
 	
@@ -25742,8 +30333,11 @@
 			case types.SET_CREDIT_CARD_NUMBER:
 	
 				return Object.assign({}, state, {
-					cardNumber: action.cardNumber,
-					cardNumberCursorPosition: action.cardNumberCursorPosition
+					cardNumber: {
+						status: action.status,
+						value: action.cardNumber,
+						cursorPosition: action.cardNumberCursorPosition
+					}
 				});
 	
 			case types.SET_CREDIT_CARD_EXPIRATION_DATE:
@@ -25765,19 +30359,29 @@
 				// TODO update so this can go higher than 2099
 				if (expirationYear) {
 					expirationYear = '20' + expirationYear;
+				} else {
+					expirationYear = '';
 				}
 	
 				return Object.assign({}, state, {
-					expirationMonth: expirationMonth,
-					expirationYear: expirationYear,
-					expirationDateCursorPosition: action.expirationDateCursorPosition
+					expirationDate: {
+						status: action.status,
+						values: {
+							month: expirationMonth,
+							year: expirationYear
+						},
+						cursorPosition: action.expirationDateCursorPosition
+					}
 				});
 	
 			case types.SET_CREDIT_CARD_SECURITY_CODE:
 	
 				return Object.assign({}, state, {
-					securityCode: action.securityCode,
-					securityCodeCursorPosition: action.securityCodeCursorPosition
+					securityCode: {
+						status: action.status,
+						value: action.securityCode,
+						cursorPosition: action.securityCodeCursorPosition
+					}
 				});
 	
 			case types.DID_START_EDITING_CREDIT_CARD_NUMBER:

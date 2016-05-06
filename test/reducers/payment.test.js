@@ -1,6 +1,7 @@
 import expect from 'expect'
 import reducer from '../../reducers/payment'
 import * as types from '../../constants/ActionTypes'
+import * as cardStates from '../../constants/CreditCardInputStates'
 
 describe('Payment Reducer', function() {
 	it('should return the initial state', function() {
@@ -14,8 +15,8 @@ describe('Payment Reducer', function() {
 				expirationDate: {
 					status: '',
 					values: {
-						expirationMonth: '',
-						expirationYear: '',
+						month: '',
+						year: '',
 					},
 					cursorPosition: null
 				},
@@ -23,7 +24,7 @@ describe('Payment Reducer', function() {
 					status: '',
 					value: '',
 					cursorPosition: null
-				}
+				},
 				currentField: 'CreditCardNumber'
 		})
 	})
@@ -31,70 +32,133 @@ describe('Payment Reducer', function() {
 	it('should handle SET_CREDIT_CARD_NUMBER', function() {
 		expect( reducer( [], {
 			type: types.SET_CREDIT_CARD_NUMBER,
+			status: cardStates.VALID,
 			cardNumber: '123456789012345',
 			cardNumberCursorPosition: 2
 		})).toEqual({
-			cardNumber: '123456789012345',
-			cardNumberCursorPosition: 2
+			cardNumber: {
+				status: cardStates.VALID,
+				value: '123456789012345',
+				cursorPosition: 2
+			}
 		})
+
+		expect( reducer( [], {
+			type: types.SET_CREDIT_CARD_NUMBER,
+			status: cardStates.INVALID,
+			cardNumber: '1234',
+			cardNumberCursorPosition: 4
+		})).toEqual({
+			cardNumber: {
+				status: cardStates.INVALID,
+				value: '1234',
+				cursorPosition: 4
+			}
+		})
+
+
 	})
 
 	it('should handle SET_CREDIT_CARD_EXPIRATION_DATE', function() {
 		expect( reducer( [], {
 			type: types.SET_CREDIT_CARD_EXPIRATION_DATE,
+			status: cardStates.VALID,
 			expirationDate: '12/20',
 			expirationDateCursorPosition: 2
 		})).toEqual({
-			expirationMonth: '12',
-			expirationYear: '2020',
-			expirationDateCursorPosition: 2
+			expirationDate: {
+				status: cardStates.VALID,
+				values: {
+					month: '12',
+					year: '2020',
+				},
+				cursorPosition: 2
+			}
 		})
 
-		expect()
+		expect( reducer( [], {
+			type: types.SET_CREDIT_CARD_EXPIRATION_DATE,
+			status: cardStates.INVALID,
+			expirationDate: '',
+			expirationDateCursorPosition: 2
+		})).toEqual({
+			expirationDate: {
+				status: cardStates.INVALID,
+				values: {
+					month: '',
+					year: '',
+				},
+				cursorPosition: 2
+			}
+		})
+
+		
 	})
 
 	it('should handle SET_CREDIT_CARD_EXPIRATION_DATE without a year', function() {
 		expect( reducer( [], {
 			type: types.SET_CREDIT_CARD_EXPIRATION_DATE,
+			status: cardStates.INVALID,
 			expirationDate: '12/',
 			expirationDateCursorPosition: 2
 		})).toEqual({
-			expirationMonth: '12',
-			expirationYear: '',
-			expirationDateCursorPosition: 2
+			expirationDate: {
+				status: cardStates.INVALID,
+				values: {
+					month: '12',
+					year: ''
+				},
+				cursorPosition: 2
+			}
 		})
 	})
 
 	it('should handle SET_CREDIT_CARD_EXPIRATION_DATE with an invalid month', function() {
 		expect( reducer( [], {
 			type: types.SET_CREDIT_CARD_EXPIRATION_DATE,
+			status: cardStates.INVALID,
 			expirationDate: '16/',
 			expirationDateCursorPosition: 2
 		})).toEqual({
-			expirationMonth: '12',
-			expirationYear: '',
-			expirationDateCursorPosition: 2
+			expirationDate: {
+				status: cardStates.INVALID,
+				values: {
+					month: '12',
+					year: ''
+				},
+				cursorPosition: 2
+			}
 		})
 
 		expect( reducer( [], {
 			type: types.SET_CREDIT_CARD_EXPIRATION_DATE,
+			status: cardStates.INVALID,
 			expirationDate: '43/16',
 			expirationDateCursorPosition: 2
 		})).toEqual({
-			expirationMonth: '12',
-			expirationYear: '2016',
-			expirationDateCursorPosition: 2
+			expirationDate: {
+				status: cardStates.INVALID,
+				values: {
+					month: '12',
+					year: '2016'
+				},
+				cursorPosition: 2
+			}
 		})
 	})
 
 	it('should handle SET_CREDIT_CARD_SECURITY_CODE', function() {
 		expect( reducer( [], {
 			type: types.SET_CREDIT_CARD_SECURITY_CODE,
+			status: cardStates.VALID,
 			securityCode: '1234',
 			securityCodeCursorPosition: 2
 		})).toEqual({
-			securityCode: '1234',
-			securityCodeCursorPosition: 2
+			securityCode: {
+				status: cardStates.VALID,
+				value: '1234',
+				cursorPosition: 2
+			}
 		})
 	})
 

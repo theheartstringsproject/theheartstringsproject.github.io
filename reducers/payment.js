@@ -2,13 +2,24 @@ import * as types from '../constants/ActionTypes'
 
 let initialState = {
 	email: '',
-	cardNumber: '',
-	expirationMonth: '',
-	expirationYear: '',
-	securityCode: '',
-	cardNumberCursorPosition: null,
-	expirationDateCursorPosition: null,
-	securityCodeCursorPosition: null,
+	cardNumber: {
+		status: '',
+		value: '',
+		cursorPosition: null
+	},
+	expirationDate: {
+		status: '',
+		values: {
+			month: '',
+			year: '',
+		},
+		cursorPosition: null
+	},
+	securityCode: {
+		status: '',
+		value: '',
+		cursorPosition: null
+	},
 	currentField: 'CreditCardNumber'
 }
 
@@ -24,8 +35,11 @@ const payment = (state = initialState, action) => {
 		case types.SET_CREDIT_CARD_NUMBER:
 
 			return Object.assign({}, state, {
-				cardNumber: action.cardNumber,
-				cardNumberCursorPosition: action.cardNumberCursorPosition
+				cardNumber: {
+					status: action.status,
+					value: action.cardNumber,
+					cursorPosition: action.cardNumberCursorPosition
+				}
 			})
 
 		case types.SET_CREDIT_CARD_EXPIRATION_DATE:
@@ -40,19 +54,29 @@ const payment = (state = initialState, action) => {
 			// TODO update so this can go higher than 2099
 			if ( expirationYear ) {
 				expirationYear = '20' + expirationYear
+			} else {
+				expirationYear = ''
 			}
 
 			return Object.assign({}, state, {
-				expirationMonth: expirationMonth,
-				expirationYear: expirationYear,
-				expirationDateCursorPosition: action.expirationDateCursorPosition
+				expirationDate: {
+					status: action.status,
+					values: {
+						month: expirationMonth,
+						year: expirationYear,
+					},
+					cursorPosition: action.expirationDateCursorPosition
+				},
 			})
 
 		case types.SET_CREDIT_CARD_SECURITY_CODE:
 
 			return Object.assign({}, state, {
-				securityCode: action.securityCode,
-				securityCodeCursorPosition: action.securityCodeCursorPosition
+				securityCode: {
+					status: action.status,
+					value: action.securityCode,
+					cursorPosition: action.securityCodeCursorPosition
+				}
 			})
 
 		case types.DID_START_EDITING_CREDIT_CARD_NUMBER:

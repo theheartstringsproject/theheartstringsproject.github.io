@@ -1,43 +1,50 @@
 import expect from 'expect'
 import * as actions from '../../actions/'
 import * as types from '../../constants/ActionTypes'
+import * as cardStates from '../../constants/CreditCardInputStates'
 
 describe('Actions', function() {
 
 	it('should create an action for setting credit card number', function() {
 		const 	cardNumber = '1234567891098876',
-				cardNumberCursorPosition = '3'
+				cardNumberCursorPosition = '3',
+				status = cardStates.VALID
 		const expectedAction = {
 			type: 'SET_CREDIT_CARD_NUMBER',
+			status,
 			cardNumber,
 			cardNumberCursorPosition
 		}
 
-		expect( actions.setCreditCardNumber( cardNumber, cardNumberCursorPosition ) ).toEqual( expectedAction )
+		expect( actions.setCreditCardNumber( cardNumber, status, cardNumberCursorPosition ) ).toEqual( expectedAction )
 	})
 
 	it('should create an action for setting credit card expiration date', function() {
-		const 	expirationDate = '1220',
-				expirationDateCursorPosition = '3'
+		const 	expirationDate = '12/20',
+				expirationDateCursorPosition = '3',
+				status = cardStates.VALID
 		const expectedAction = {
 			type: 'SET_CREDIT_CARD_EXPIRATION_DATE',
+			status,
 			expirationDate,
 			expirationDateCursorPosition
 		}
 
-		expect( actions.setCreditCardExpirationDate( expirationDate, expirationDateCursorPosition ) ).toEqual( expectedAction )
+		expect( actions.setCreditCardExpirationDate( expirationDate, status, expirationDateCursorPosition ) ).toEqual( expectedAction )
 	})
 
 	it('should create an action for setting credit card security code', function() {
 		const 	securityCode = '1220',
-				securityCodeCursorPosition = '3'
+				securityCodeCursorPosition = '3',
+				status = cardStates.VALID
 		const expectedAction = {
 			type: 'SET_CREDIT_CARD_SECURITY_CODE',
+			status,
 			securityCode,
 			securityCodeCursorPosition
 		}
 
-		expect( actions.setCreditCardSecurityCode( securityCode, securityCodeCursorPosition ) ).toEqual( expectedAction )
+		expect( actions.setCreditCardSecurityCode( securityCode, status, securityCodeCursorPosition ) ).toEqual( expectedAction )
 	})
 
 	it('should create an action for beginning to edit the credit card number', function() {
