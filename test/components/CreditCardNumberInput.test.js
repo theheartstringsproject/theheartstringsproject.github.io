@@ -40,7 +40,15 @@ describe('CreditCardNumberInput', function() {
 		const { output } = setup()
 
 		expect( output.type ).toBe('input')
-		expect( output.props.className ).toBe('CardNumber')
+		expect( output.props.className ).toBe('CardNumber ')
+	})
+
+	it('should render an input field with an error when the number is invalid', function() {
+		const { output } = setup({
+			cardNumber: { status: cardStates.INVALID }
+		})
+		expect( output.type ).toBe('input')
+		expect( output.props.className.includes('Error') ).toBe( true )
 	})
 
 	describe('Formatting a Number', function() {
@@ -75,6 +83,106 @@ describe('CreditCardNumberInput', function() {
 		it('should only accept numbers', function() {
 			const { instance } = setup()
 			expect( instance.unformat('abcde') ).toBe('')
+		})
+	})
+
+	describe('Getting State', function() {
+
+		// afterEach(function() {
+		// 	delete Stripe
+		// })
+
+		it('should return BLANK when field is undefined', function() {
+			const { instance } = setup()
+			expect( instance.getState() ).toEqual( cardStates.BLANK )
+		})
+
+		it('should return BLANK when the number is blank', function() {
+			const { instance } = setup()
+			instance.field = { value: function() { return '' } }
+			expect( instance.getState() ).toEqual( cardStates.BLANK )
+		})
+
+		it('should return INCOMPLETE when an amex number is less than the required character count', function() {
+			const { instance } = setup()
+			instance.field = {
+				cardType: function() { return 'amex' },
+				value: function() { return '3725000000' }
+			}
+			expect( instance.getState() ).toEqual( cardStates.INCOMPLETE )
+		})
+
+		it('should return INCOMPLETE when a non-amex number is less than the required character count', function() {
+			const { instance } = setup()
+			instance.field = {
+				cardType: function() { return 'visa' },
+				value: function() { return '424242424242' }
+			}
+			expect( instance.getState() ).toEqual( cardStates.INCOMPLETE )
+		})
+
+		it('should return INVALID when an amex number is the right character count but not valid', function() {
+			const { instance } = setup()
+			global.Stripe = {
+				card: {
+					validateCardNumber: function() {
+						return false
+					}	
+				}
+			}
+			instance.field = {
+				cardType: function() { return 'amex' },
+				value: function() { return '372500000000000' }
+			}
+			expect( instance.getState() ).toEqual( cardStates.INVALID )
+		})
+
+		it('should return INVALID when a non-amex number is the right character count but not valid', function() {
+			const { instance } = setup()
+			global.Stripe = {
+				card: {
+					validateCardNumber: function() {
+						return false
+					}	
+				}
+			}
+			instance.field = {
+				cardType: function() { return 'visa' },
+				value: function() { return '4242111111111111' }
+			}
+			expect( instance.getState() ).toEqual( cardStates.INVALID )
+		})
+
+		it('should return VALID when an amex card is the right character count and valid', function() {
+			const { instance } = setup()
+			global.Stripe = {
+				card: {
+					validateCardNumber: function() {
+						return true
+					}	
+				}
+			}
+			instance.field = {
+				cardType: function() { return 'amex' },
+				value: function() { return '378282246310005' }
+			}
+			expect( instance.getState() ).toEqual( cardStates.VALID )
+		})
+
+		it('should return VALID when a non-amex card is the right character count and valid', function() {
+			const { instance } = setup()
+			global.Stripe = {
+				card: {
+					validateCardNumber: function() {
+						return true
+					}	
+				}
+			}
+			instance.field = {
+				cardType: function() { return 'visa' },
+				value: function() { return '4242424242424242' }
+			}
+			expect( instance.getState() ).toEqual( cardStates.VALID )
 		})
 	})
 

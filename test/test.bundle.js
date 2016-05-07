@@ -145,6 +145,12 @@
 	
 			(0, _expect2.default)(actions.didStartEditingCreditCardSecurityCode()).toEqual(expectedAction);
 		});
+	
+		it('should create an action for ending credit card number editing', function () {
+			var expectAction = {
+				type: types.DID_FINISH_EDITING_CREDIT_CARD_NUMBER
+			};
+		});
 	});
 
 /***/ },
@@ -2282,7 +2288,7 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.didStartEditingCreditCardSecurityCode = exports.didStartEditingCreditCardExpirationDate = exports.didStartEditingCreditCardNumber = exports.setCreditCardSecurityCode = exports.setCreditCardExpirationDate = exports.setCreditCardNumber = exports.setEmail = exports.confirmContribution = exports.chooseContributionAmount = exports.jumpToPage = exports.recedePage = exports.advancePage = undefined;
+	exports.didFinishEditingCreditCardNumber = exports.didStartEditingCreditCardSecurityCode = exports.didStartEditingCreditCardExpirationDate = exports.didStartEditingCreditCardNumber = exports.setCreditCardSecurityCode = exports.setCreditCardExpirationDate = exports.setCreditCardNumber = exports.setEmail = exports.confirmContribution = exports.chooseContributionAmount = exports.jumpToPage = exports.recedePage = exports.advancePage = undefined;
 	
 	var _ActionTypes = __webpack_require__(29);
 	
@@ -2373,6 +2379,12 @@
 			type: types.DID_START_EDITING_CREDIT_CARD_SECURITY_CODE
 		};
 	};
+	
+	var didFinishEditingCreditCardNumber = exports.didFinishEditingCreditCardNumber = function didFinishEditingCreditCardNumber() {
+		return {
+			type: types.DID_FINISH_EDITING_CREDIT_CARD_NUMBER
+		};
+	};
 
 /***/ },
 /* 29 */
@@ -2402,6 +2414,8 @@
 	var DID_START_EDITING_CREDIT_CARD_NUMBER = exports.DID_START_EDITING_CREDIT_CARD_NUMBER = 'DID_START_EDITING_CREDIT_CARD_NUMBER';
 	var DID_START_EDITING_CREDIT_CARD_EXPIRATION_DATE = exports.DID_START_EDITING_CREDIT_CARD_EXPIRATION_DATE = 'DID_START_EDITING_CREDIT_CARD_EXPIRATION_DATE';
 	var DID_START_EDITING_CREDIT_CARD_SECURITY_CODE = exports.DID_START_EDITING_CREDIT_CARD_SECURITY_CODE = 'DID_START_EDITING_CREDIT_CARD_SECURITY CODE';
+	
+	var DID_FINISH_EDITING_CREDIT_CARD_NUMBER = exports.DID_FINISH_EDITING_CREDIT_CARD_NUMBER = 'DID_FINISH_EDITING_CREDIT_CARD_NUMBER';
 
 /***/ },
 /* 30 */
@@ -2491,22 +2505,40 @@
 	
 	
 			(0, _expect2.default)(output.type).toBe('input');
-			(0, _expect2.default)(output.props.className).toBe('ExpirationDate');
+			(0, _expect2.default)(output.props.className).toBe('ExpirationDate ');
+		});
+	
+		it('should render an input field with an error when the date is invalid', function () {
+			var _setup2 = setup({
+				expirationDate: {
+					status: cardStates.INVALID,
+					values: {
+						month: '',
+						year: ''
+					},
+					cursorPosition: 2
+				}
+			});
+	
+			var output = _setup2.output;
+	
+			(0, _expect2.default)(output.type).toBe('input');
+			(0, _expect2.default)(output.props.className.includes('Error')).toBe(true);
 		});
 	
 		describe('Formatting an Expiration Date', function () {
 			it('should return a blank string when given an undefined input', function () {
-				var _setup2 = setup();
+				var _setup3 = setup();
 	
-				var instance = _setup2.instance;
+				var instance = _setup3.instance;
 	
 				(0, _expect2.default)(instance.format(undefined, undefined)).toBe('');
 			});
 	
 			it('should return a blank string if only a year is provided', function () {
-				var _setup3 = setup();
+				var _setup4 = setup();
 	
-				var instance = _setup3.instance;
+				var instance = _setup4.instance;
 	
 				(0, _expect2.default)(instance.format(undefined, '2016')).toBe('');
 			});
@@ -2517,9 +2549,9 @@
 			// })
 	
 			it('should add a slash between the month and year', function () {
-				var _setup4 = setup();
+				var _setup5 = setup();
 	
-				var instance = _setup4.instance;
+				var instance = _setup5.instance;
 	
 				(0, _expect2.default)(instance.format('12')).toBe('12/');
 				(0, _expect2.default)(instance.format('12', '2016')).toBe('12/16');
@@ -2528,17 +2560,17 @@
 	
 		describe('Unformatting an Expiration Date', function () {
 			it('should return a blank string when given an undefined input', function () {
-				var _setup5 = setup();
+				var _setup6 = setup();
 	
-				var instance = _setup5.instance;
+				var instance = _setup6.instance;
 	
 				(0, _expect2.default)(instance.unformat(undefined, undefined)).toBe('');
 			});
 	
 			it('should only accept numbers', function () {
-				var _setup6 = setup();
+				var _setup7 = setup();
 	
-				var instance = _setup6.instance;
+				var instance = _setup7.instance;
 	
 				(0, _expect2.default)(instance.unformat('abcd')).toBe('');
 			});
@@ -2555,9 +2587,9 @@
 			// })
 	
 			it('should accept a maximum of 4 digits', function () {
-				var _setup7 = setup();
+				var _setup8 = setup();
 	
-				var instance = _setup7.instance;
+				var instance = _setup8.instance;
 	
 				(0, _expect2.default)(instance.unformat('12345').replace(/\D/g, '').length).toBe(4); // Remove the added slash before counting
 			});
@@ -2568,7 +2600,7 @@
 			// })
 	
 			it('should remove the digit before the slash when the user deletes the slash character and there is no year', function () {
-				var _setup8 = setup({
+				var _setup9 = setup({
 					expirationDate: {
 						values: {
 							month: '12',
@@ -2577,7 +2609,7 @@
 					}
 				});
 	
-				var instance = _setup8.instance;
+				var instance = _setup9.instance;
 	
 				// The function should know that if
 				// 1) the input value matches the expirationDate prop
@@ -2589,7 +2621,7 @@
 			});
 	
 			it('should remove the digit before the slash when the user deletes the slash character and there is a year', function () {
-				var _setup9 = setup({
+				var _setup10 = setup({
 					expirationDate: {
 						values: {
 							month: '12',
@@ -2598,10 +2630,74 @@
 					}
 				});
 	
-				var instance = _setup9.instance;
+				var instance = _setup10.instance;
 	
 	
 				(0, _expect2.default)(instance.unformat('1220', 2)).toBe('1/20');
+			});
+		});
+	
+		describe('Getting State', function () {
+	
+			// afterEach(function() {
+			// 	delete Stripe
+			// })
+	
+			it('should return BLANK when field is undefined', function () {
+				var _setup11 = setup();
+	
+				var instance = _setup11.instance;
+	
+				(0, _expect2.default)(instance.getState()).toEqual(cardStates.BLANK);
+			});
+	
+			it('should return BLANK when the number is blank', function () {
+				var _setup12 = setup();
+	
+				var instance = _setup12.instance;
+	
+				(0, _expect2.default)(instance.getState('')).toEqual(cardStates.BLANK);
+			});
+	
+			it('should return INCOMPLETE when less than 4 digits', function () {
+				var _setup13 = setup();
+	
+				var instance = _setup13.instance;
+	
+				(0, _expect2.default)(instance.getState('12/4')).toEqual(cardStates.INCOMPLETE);
+				(0, _expect2.default)(instance.getState('1/4')).toEqual(cardStates.INCOMPLETE);
+				(0, _expect2.default)(instance.getState('1/')).toEqual(cardStates.INCOMPLETE);
+				(0, _expect2.default)(instance.getState('11/')).toEqual(cardStates.INCOMPLETE);
+			});
+	
+			it('should return INVALID when Stripe does not approve', function () {
+				var _setup14 = setup();
+	
+				var instance = _setup14.instance;
+	
+				global.Stripe = {
+					card: {
+						validateExpiry: function validateExpiry() {
+							return false;
+						}
+					}
+				};
+				(0, _expect2.default)(instance.getState('14/40')).toEqual(cardStates.INVALID);
+			});
+	
+			it('should return VALID when Stripe approves', function () {
+				var _setup15 = setup();
+	
+				var instance = _setup15.instance;
+	
+				global.Stripe = {
+					card: {
+						validateExpiry: function validateExpiry() {
+							return true;
+						}
+					}
+				};
+				(0, _expect2.default)(instance.getState('12/20')).toEqual(cardStates.VALID);
 			});
 		});
 	});
@@ -22949,6 +23045,8 @@
 		value: true
 	});
 	
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+	
 	var _react = __webpack_require__(32);
 	
 	var _react2 = _interopRequireDefault(_react);
@@ -22961,9 +23059,15 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
+	var _CreditCardInputStates = __webpack_require__(30);
+	
+	var cardStates = _interopRequireWildcard(_CreditCardInputStates);
+	
 	__webpack_require__(200);
 	
 	__webpack_require__(204);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -23034,16 +23138,34 @@
 			return newString;
 		},
 	
-		isDoneEditing: function isDoneEditing() {
-			var done = false;
+		getState: function getState() {
+			var value = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
 	
-			// if ( this.field) {
-			// 	done =  this.field.cardType() === 'amex' ?
-			// 			this.field.value().length === 15 :
-			// 			this.field.value().length === 16
-			// }
 	
-			return done;
+			// Check whether the number is blank
+			if (value === '') return cardStates.BLANK;
+	
+			// Split the date into month and year
+	
+			var _value$split = value.split('/');
+	
+			var _value$split2 = _slicedToArray(_value$split, 2);
+	
+			var expirationMonth = _value$split2[0];
+			var expirationYear = _value$split2[1];
+	
+			// Check that both components are present
+	
+			if (!expirationMonth || !expirationYear) return cardStates.INCOMPLETE;
+	
+			// Check that we have enough characters
+			if (value.length < 5) return cardStates.INCOMPLETE;
+	
+			// Check whether the date is valid
+			if (Stripe.card.validateExpiry(expirationMonth, expirationYear)) return cardStates.VALID;
+	
+			// Otherwise return invalid
+			return cardStates.INVALID;
 		},
 	
 		getField: function getField() {
@@ -23053,18 +23175,19 @@
 		render: function render() {
 			var _this = this;
 	
+			var errorClass = this.props.expirationDate.status === cardStates.INVALID ? 'Error' : '';
 			return _react2.default.createElement('input', {
 				value: this.format(this.props.expirationDate.values.month, this.props.expirationDate.values.year),
 				style: this.props.style,
 				placeholder: 'MM/YY',
-				className: 'ExpirationDate',
+				className: 'ExpirationDate ' + errorClass,
 				onChange: function onChange(e) {
 					e.preventDefault();
-					_this.props.onChange(_this.unformat(e.target.value.trim(), e.target.selectionStart), e.target.selectionStart);
+					var newValue = _this.unformat(e.target.value.trim(), e.target.selectionStart);
+					_this.props.onChange(newValue, _this.getState(newValue), e.target.selectionStart);
 	
-					if (_this.isDoneEditing()) {
-						// TODO check whether card is valid
-						// this.props.onDidFinishEditing()
+					if (_this.getState(newValue) === cardStates.VALID) {
+						_this.props.onShouldMoveToSecurityCodeField();
 					}
 				},
 				onFocus: function onFocus(e) {
@@ -25142,7 +25265,7 @@
 	
 	
 	// module
-	exports.push([module.id, "/* Fonts */\n\n/* Colors */\n\n/* Spacing */\n\n/* Sizing */\n\n/* Animation */\n\n.Input {\n\tbackground: #ffffff;\n\tborder: 1px solid #ffffff;\n\tborder-radius: 3px;\n\tbox-sizing: border-box;\n\n\tdisplay: -webkit-box;\n\n\tdisplay: -webkit-flex;\n\n\tdisplay: -ms-flexbox;\n\n\tdisplay: flex;\n\t-webkit-box-align: center;\n\t-webkit-align-items: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n\t-webkit-box-flex: 0;\n\t-webkit-flex-grow: 0;\n\t    -ms-flex-positive: 0;\n\t        flex-grow: 0;\n\twidth: 100%;\n\n}\n\n.Input input {\n\t-webkit-appearance: none;\n\t-moz-appearance: none;\n\tappearance: none;\n\tborder: none;\n\toutline: none;\n\tbackground: none;\n\tfont-family: \"Avenir\",helvetica,sans-serif;\n\twidth: 100%;\n\theight: 48px;\n\tfont-size: 1rem;\n\tfont-weight: 300;\n\tcolor: #555555\n\n}\n\n.Input input:focus, .Input input:active {\n\tborder: none;\n\toutline: none;\n\n}\n\n/* Position the icon on the left side of the input */\n\n.Input i {\n\theight: 48px;\n\twidth: 48px;\n\tdisplay: -webkit-box;\n\tdisplay: -webkit-flex;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-flex-shrink: 0;\n\t-ms-flex-negative: 0;\n\tflex-shrink: 0;\n\t-webkit-flex-basis: 48px;\n\t-ms-flex-preferred-size: 48px;\n\tflex-basis: 48px;\n\t-webkit-box-align: center;\n\t-webkit-align-items: center;\n\t-ms-flex-align: center;\n\talign-items: center;\n\t-webkit-box-pack: center;\n\t-webkit-justify-content: center;\n\t-ms-flex-pack: center;\n\tjustify-content: center;\n\n}\n\n.Input i svg {\n\theight: 24px;\n\n}\n\n.Input i svg path {\n\tstroke: #555555;\n\n}", ""]);
+	exports.push([module.id, "/* Fonts */\n\n/* Colors */\n\n/* Spacing */\n\n/* Sizing */\n\n/* Animation */\n\n.Input {\n\tbackground: #ffffff;\n\tborder: 1px solid #ffffff;\n\tborder-radius: 3px;\n\tbox-sizing: border-box;\n\n\tdisplay: -webkit-box;\n\n\tdisplay: -webkit-flex;\n\n\tdisplay: -ms-flexbox;\n\n\tdisplay: flex;\n\t-webkit-box-align: center;\n\t-webkit-align-items: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n\t-webkit-box-flex: 0;\n\t-webkit-flex-grow: 0;\n\t    -ms-flex-positive: 0;\n\t        flex-grow: 0;\n\twidth: 100%;\n}\n\n.Input input {\n\t-webkit-appearance: none;\n\t-moz-appearance: none;\n\tappearance: none;\n\tborder: none;\n\toutline: none;\n\tbackground: none;\n\tfont-family: \"Avenir\",helvetica,sans-serif;\n\twidth: 100%;\n\theight: 48px;\n\tfont-size: 1rem;\n\tfont-weight: 300;\n\tcolor: #555555\n}\n\n.Input input:focus, .Input input:active {\n\tborder: none;\n\toutline: none;\n}\n\n/* Position the icon on the left side of the input */\n\n.Input i {\n\theight: 48px;\n\twidth: 48px;\n\tdisplay: -webkit-box;\n\tdisplay: -webkit-flex;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-flex-shrink: 0;\n\t-ms-flex-negative: 0;\n\tflex-shrink: 0;\n\t-webkit-flex-basis: 48px;\n\t-ms-flex-preferred-size: 48px;\n\tflex-basis: 48px;\n\t-webkit-box-align: center;\n\t-webkit-align-items: center;\n\t-ms-flex-align: center;\n\talign-items: center;\n\t-webkit-box-pack: center;\n\t-webkit-justify-content: center;\n\t-ms-flex-pack: center;\n\tjustify-content: center;\n}\n\n.Input i svg {\n\theight: 24px;\n}\n\n.Input i svg path {\n\tstroke: #555555;\n}\n\n.Input.Error input.Error {\n\tcolor: #D0021B;\n\t-webkit-animation: shake 0.5s linear;\n\tanimation: shake 0.5s linear;\n}\n\n.Input.Error i svg path {\n\tstroke: transparent;\n\tfill: #D0021B;\n}\n\n@-webkit-keyframes shake {\n    8%, 41% { -webkit-transform: translateX(-10px); transform: translateX(-10px); }\n    25%, 58% { -webkit-transform: translateX(10px); transform: translateX(10px); }\n    75% { -webkit-transform: translateX(-5px); transform: translateX(-5px); }\n    92% { -webkit-transform: translateX(5px); transform: translateX(5px); }\n    0%, 100% { -webkit-transform: translateX(0); transform: translateX(0); }\n}\n\n@keyframes shake {\n    8%, 41% { -webkit-transform: translateX(-10px); transform: translateX(-10px); }\n    25%, 58% { -webkit-transform: translateX(10px); transform: translateX(10px); }\n    75% { -webkit-transform: translateX(-5px); transform: translateX(-5px); }\n    92% { -webkit-transform: translateX(5px); transform: translateX(5px); }\n    0%, 100% { -webkit-transform: translateX(0); transform: translateX(0); }\n}", ""]);
 	
 	// exports
 
@@ -25565,30 +25688,41 @@
 	
 	
 			(0, _expect2.default)(output.type).toBe('input');
-			(0, _expect2.default)(output.props.className).toBe('CardNumber');
+			(0, _expect2.default)(output.props.className).toBe('CardNumber ');
+		});
+	
+		it('should render an input field with an error when the number is invalid', function () {
+			var _setup2 = setup({
+				cardNumber: { status: cardStates.INVALID }
+			});
+	
+			var output = _setup2.output;
+	
+			(0, _expect2.default)(output.type).toBe('input');
+			(0, _expect2.default)(output.props.className.includes('Error')).toBe(true);
 		});
 	
 		describe('Formatting a Number', function () {
 			it('should return a blank string when given an undefined input', function () {
-				var _setup2 = setup();
+				var _setup3 = setup();
 	
-				var instance = _setup2.instance;
+				var instance = _setup3.instance;
 	
 				(0, _expect2.default)(instance.format(undefined)).toBe('');
 			});
 	
 			it('should add a space after the 4th character in a credit card number', function () {
-				var _setup3 = setup();
+				var _setup4 = setup();
 	
-				var instance = _setup3.instance;
+				var instance = _setup4.instance;
 	
 				(0, _expect2.default)(instance.format('12345')).toBe('1234 5');
 			});
 	
 			it('should add a space after the 11th characters in a credit card number', function () {
-				var _setup4 = setup();
+				var _setup5 = setup();
 	
-				var instance = _setup4.instance;
+				var instance = _setup5.instance;
 	
 				(0, _expect2.default)(instance.format('123456789109876')).toBe('1234 567891 09876');
 			});
@@ -25596,43 +25730,193 @@
 	
 		describe('Unformatting a Number', function () {
 			it('return a blank string when given an undefined input', function () {
-				var _setup5 = setup();
+				var _setup6 = setup();
 	
-				var instance = _setup5.instance;
+				var instance = _setup6.instance;
 	
 				(0, _expect2.default)(instance.unformat(undefined)).toBe('');
 			});
 	
 			it('should remove the spaces we previously added', function () {
-				var _setup6 = setup();
+				var _setup7 = setup();
 	
-				var instance = _setup6.instance;
+				var instance = _setup7.instance;
 	
 				(0, _expect2.default)(instance.unformat('1234 567891 09876')).toBe('123456789109876');
 			});
 	
 			it('should only accept numbers', function () {
-				var _setup7 = setup();
+				var _setup8 = setup();
 	
-				var instance = _setup7.instance;
+				var instance = _setup8.instance;
 	
 				(0, _expect2.default)(instance.unformat('abcde')).toBe('');
 			});
 		});
 	
+		describe('Getting State', function () {
+	
+			// afterEach(function() {
+			// 	delete Stripe
+			// })
+	
+			it('should return BLANK when field is undefined', function () {
+				var _setup9 = setup();
+	
+				var instance = _setup9.instance;
+	
+				(0, _expect2.default)(instance.getState()).toEqual(cardStates.BLANK);
+			});
+	
+			it('should return BLANK when the number is blank', function () {
+				var _setup10 = setup();
+	
+				var instance = _setup10.instance;
+	
+				instance.field = { value: function value() {
+						return '';
+					} };
+				(0, _expect2.default)(instance.getState()).toEqual(cardStates.BLANK);
+			});
+	
+			it('should return INCOMPLETE when an amex number is less than the required character count', function () {
+				var _setup11 = setup();
+	
+				var instance = _setup11.instance;
+	
+				instance.field = {
+					cardType: function cardType() {
+						return 'amex';
+					},
+					value: function value() {
+						return '3725000000';
+					}
+				};
+				(0, _expect2.default)(instance.getState()).toEqual(cardStates.INCOMPLETE);
+			});
+	
+			it('should return INCOMPLETE when a non-amex number is less than the required character count', function () {
+				var _setup12 = setup();
+	
+				var instance = _setup12.instance;
+	
+				instance.field = {
+					cardType: function cardType() {
+						return 'visa';
+					},
+					value: function value() {
+						return '424242424242';
+					}
+				};
+				(0, _expect2.default)(instance.getState()).toEqual(cardStates.INCOMPLETE);
+			});
+	
+			it('should return INVALID when an amex number is the right character count but not valid', function () {
+				var _setup13 = setup();
+	
+				var instance = _setup13.instance;
+	
+				global.Stripe = {
+					card: {
+						validateCardNumber: function validateCardNumber() {
+							return false;
+						}
+					}
+				};
+				instance.field = {
+					cardType: function cardType() {
+						return 'amex';
+					},
+					value: function value() {
+						return '372500000000000';
+					}
+				};
+				(0, _expect2.default)(instance.getState()).toEqual(cardStates.INVALID);
+			});
+	
+			it('should return INVALID when a non-amex number is the right character count but not valid', function () {
+				var _setup14 = setup();
+	
+				var instance = _setup14.instance;
+	
+				global.Stripe = {
+					card: {
+						validateCardNumber: function validateCardNumber() {
+							return false;
+						}
+					}
+				};
+				instance.field = {
+					cardType: function cardType() {
+						return 'visa';
+					},
+					value: function value() {
+						return '4242111111111111';
+					}
+				};
+				(0, _expect2.default)(instance.getState()).toEqual(cardStates.INVALID);
+			});
+	
+			it('should return VALID when an amex card is the right character count and valid', function () {
+				var _setup15 = setup();
+	
+				var instance = _setup15.instance;
+	
+				global.Stripe = {
+					card: {
+						validateCardNumber: function validateCardNumber() {
+							return true;
+						}
+					}
+				};
+				instance.field = {
+					cardType: function cardType() {
+						return 'amex';
+					},
+					value: function value() {
+						return '378282246310005';
+					}
+				};
+				(0, _expect2.default)(instance.getState()).toEqual(cardStates.VALID);
+			});
+	
+			it('should return VALID when a non-amex card is the right character count and valid', function () {
+				var _setup16 = setup();
+	
+				var instance = _setup16.instance;
+	
+				global.Stripe = {
+					card: {
+						validateCardNumber: function validateCardNumber() {
+							return true;
+						}
+					}
+				};
+				instance.field = {
+					cardType: function cardType() {
+						return 'visa';
+					},
+					value: function value() {
+						return '4242424242424242';
+					}
+				};
+				(0, _expect2.default)(instance.getState()).toEqual(cardStates.VALID);
+			});
+		});
+	
 		describe('Knowing When Editing is Finished', function () {
 			it('should return false if the field has not been defined', function () {
-				var _setup8 = setup();
+				var _setup17 = setup();
 	
-				var instance = _setup8.instance;
+				var instance = _setup17.instance;
 	
 				(0, _expect2.default)(instance.isDoneEditing()).toBe(false);
 			});
 	
 			it('should return false if cardtype is not amex and there are less than 16 digits', function () {
-				var _setup9 = setup();
+				var _setup18 = setup();
 	
-				var instance = _setup9.instance;
+				var instance = _setup18.instance;
 	
 				instance.field = {
 					cardType: function cardType() {
@@ -25646,9 +25930,9 @@
 			});
 	
 			it('should return false if cardtype is amex and there are less than 15 digits', function () {
-				var _setup10 = setup();
+				var _setup19 = setup();
 	
-				var instance = _setup10.instance;
+				var instance = _setup19.instance;
 	
 				instance.field = {
 					cardType: function cardType() {
@@ -25662,9 +25946,9 @@
 			});
 	
 			it('should return true if cardtype is not amex and there are 16 digits', function () {
-				var _setup11 = setup();
+				var _setup20 = setup();
 	
-				var instance = _setup11.instance;
+				var instance = _setup20.instance;
 	
 				instance.field = {
 					cardType: function cardType() {
@@ -25678,9 +25962,9 @@
 			});
 	
 			it('should return true if cardtype is amex and there are 15 digits', function () {
-				var _setup12 = setup();
+				var _setup21 = setup();
 	
-				var instance = _setup12.instance;
+				var instance = _setup21.instance;
 	
 				instance.field = {
 					cardType: function cardType() {
@@ -25717,9 +26001,15 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
+	var _CreditCardInputStates = __webpack_require__(30);
+	
+	var cardStates = _interopRequireWildcard(_CreditCardInputStates);
+	
 	__webpack_require__(200);
 	
 	__webpack_require__(204);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -25733,6 +26023,9 @@
 			this.field = new _fieldKit2.default.CardTextField(_reactDom2.default.findDOMNode(this));
 			this.field.setValue(this.props.cardNumber.value);
 			this.field.setCardMaskStrategy(_fieldKit2.default.CardTextField.CardMaskStrategy.DoneEditing);
+			this.field.setDelegate({
+				textDidChange: this.onChange
+			});
 		},
 	
 		format: function format() {
@@ -25766,6 +26059,25 @@
 			return newString;
 		},
 	
+		getState: function getState() {
+	
+			var number = this.field ? this.field.value() : '';
+	
+			// Check whether the number is blank
+			if (number === '') return cardStates.BLANK;
+	
+			// Check whether the number is the right character count
+			if (number.length < 15) return cardStates.INCOMPLETE;
+	
+			if (this.field.cardType() !== 'amex' && number.length < 16) return cardStates.INCOMPLETE;
+	
+			// Check whether the number is valid
+			if (Stripe.card.validateCardNumber(number)) return cardStates.VALID;
+	
+			// Otherwise return invalid
+			return cardStates.INVALID;
+		},
+	
 		isDoneEditing: function isDoneEditing() {
 			var done = false;
 	
@@ -25780,23 +26092,37 @@
 			return this.field;
 		},
 	
+		onChange: function onChange(field) {
+			console.log(_reactDom2.default.findDOMNode(this).selectionStart);
+			this.props.onChange(this.field.value(), this.getState(), _reactDom2.default.findDOMNode(this).selectionStart);
+	
+			if (this.isDoneEditing() && this.getState() === cardStates.VALID) {
+				this.props.onShouldMoveToExpirationDateField();
+				// this.props.onDidFinishEditing()
+			}
+		},
+	
 		render: function render() {
 			var _this = this;
 	
+			var errorClass = this.props.cardNumber.status === cardStates.INVALID ? 'Error' : '';
 			return _react2.default.createElement('input', {
 				style: this.props.style,
 				placeholder: 'Card Number',
-				className: 'CardNumber',
-				onChange: function onChange(e) {
-					e.preventDefault();
-					_this.props.onChange(_this.unformat(e.target.value.trim()), e.target.selectionStart);
+				className: 'CardNumber ' + errorClass
+				// onChange={e => {
+				// 	e.preventDefault()
+				// 	this.props.onChange(
+				// 		this.field.value(),
+				// 		this.getState(),
+				// 		e.target.selectionStart
+				// 	)
 	
-					if (_this.isDoneEditing()) {
-						// TODO check whether card is valid
-						// this.props.onDidFinishEditing()
-					}
-				},
-				onFocus: function onFocus(e) {
+				// 	if ( this.isDoneEditing() && this.getState() === cardStates.VALID ) {
+				// 		this.props.onDidFinishEditing()
+				// 	}
+				// }}
+				, onFocus: function onFocus(e) {
 					_this.props.onFocus();
 				}
 			});
@@ -25832,6 +26158,12 @@
 	
 	var _CreditCardPaymentInput2 = _interopRequireDefault(_CreditCardPaymentInput);
 	
+	var _CreditCardInputStates = __webpack_require__(30);
+	
+	var cardStates = _interopRequireWildcard(_CreditCardInputStates);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	// const DELETE_KEY_CODE = 46
@@ -25841,10 +26173,24 @@
 			icon: 'back',
 			placeholder: 'hi',
 			payment: {
-				cardNumber: '1234567891098876',
-				expirationMonth: '12',
-				expirationYear: '20',
-				securityCode: '1234',
+				cardNumber: {
+					status: '',
+					value: '1234567891098876',
+					cursorPosition: null
+				},
+				expirationDate: {
+					status: '',
+					values: {
+						month: '12',
+						year: '2020'
+					},
+					cursorPosition: null
+				},
+				securityCode: {
+					status: '',
+					value: '1234',
+					cursorPosition: null
+				},
 				currentField: 'CreditCardNumber'
 			},
 			onCreditCardChange: _expect2.default.createSpy(),
@@ -25879,7 +26225,7 @@
 			// let [ cardNumberInput, expirationDateInput, securityCodeInput ] = fields.props.children
 	
 			(0, _expect2.default)(output.type).toBe('div');
-			(0, _expect2.default)(output.props.className).toBe('Input CreditCardPaymentInput CreditCardNumber');
+			(0, _expect2.default)(output.props.className).toBe('Input CreditCardPaymentInput CreditCardNumber ');
 	
 			// Can't test types of children because they're wrapped in <Motion> object
 			// expect( cardNumberInput.type ).toBe('input')
@@ -25892,12 +26238,51 @@
 			// expect( securityCodeInput.props.className ).toBe('SecurityCode')
 		});
 	
+		it('should render in error when credit card number is invalid', function () {
+			var _setup2 = setup({ payment: {
+					cardNumber: { status: cardStates.INVALID },
+					expirationDate: { status: cardStates.VALID },
+					securityCode: { status: cardStates.VALID }
+				} });
+	
+			var output = _setup2.output;
+	
+	
+			(0, _expect2.default)(output.props.className.includes('Error')).toBe(true);
+		});
+	
+		it('should render in error when credit card number is invalid', function () {
+			var _setup3 = setup({ payment: {
+					cardNumber: { status: cardStates.VALID },
+					expirationDate: { status: cardStates.INVALID },
+					securityCode: { status: cardStates.VALID }
+				} });
+	
+			var output = _setup3.output;
+	
+	
+			(0, _expect2.default)(output.props.className.includes('Error')).toBe(true);
+		});
+	
+		it('should render in error when credit card number is invalid', function () {
+			var _setup4 = setup({ payment: {
+					cardNumber: { status: cardStates.VALID },
+					expirationDate: { status: cardStates.VALID },
+					securityCode: { status: cardStates.INVALID }
+				} });
+	
+			var output = _setup4.output;
+	
+	
+			(0, _expect2.default)(output.props.className.includes('Error')).toBe(true);
+		});
+	
 		describe('Transitioning Between Fields', function () {
 			describe('Getting Field Styles', function () {
 				it('should return default styles if the field variables have not been initialized', function () {
-					var _setup2 = setup();
+					var _setup5 = setup();
 	
-					var instance = _setup2.instance;
+					var instance = _setup5.instance;
 	
 					(0, _expect2.default)(instance.getFieldStyles()).toEqual({
 						cardNumberFieldWidth: 200,
@@ -25907,9 +26292,9 @@
 				});
 	
 				it('should return default styles if the currentField is CreditCardNumber', function () {
-					var _setup3 = setup();
+					var _setup6 = setup();
 	
-					var instance = _setup3.instance;
+					var instance = _setup6.instance;
 	
 					(0, _expect2.default)(instance.getFieldStyles()).toEqual({
 						cardNumberFieldWidth: 200,
@@ -25919,35 +26304,32 @@
 				});
 	
 				it('should return a cardNumberFieldWidth equal to length of the numbers in the field', function () {
-					var _setup4 = setup({
-						payment: { currentField: 'CreditCardExpirationDate' }
-					});
+					var _setup7 = setup();
 	
-					var instance = _setup4.instance;
+					var instance = _setup7.instance;
 	
+					instance.props.payment.currentField = 'CreditCardExpirationDate';
 					instance.cardNumberGhost = { scrollWidth: 100 };
 					(0, _expect2.default)(instance.getFieldStyles().cardNumberFieldWidth).toBe(100);
 				});
 	
 				it('should return a cardNumberFieldLeftPosition equal to the negative difference between the size of the field and the size of the last 4 digits', function () {
-					var _setup5 = setup({
-						payment: { currentField: 'CreditCardExpirationDate' }
-					});
+					var _setup8 = setup();
 	
-					var instance = _setup5.instance;
+					var instance = _setup8.instance;
 	
+					instance.props.payment.currentField = 'CreditCardExpirationDate';
 					instance.cardNumberGhost = { scrollWidth: 100 };
 					instance.abbreviatedCardNumberGhost = { scrollWidth: 50 };
 					(0, _expect2.default)(instance.getFieldStyles().cardNumberFieldLeftPosition).toBe(-50 + 16);
 				});
 	
 				it('should return a otherFieldsWidth equal to half the remaining space in the field', function () {
-					var _setup6 = setup({
-						payment: { currentField: 'CreditCardExpirationDate' }
-					});
+					var _setup9 = setup();
 	
-					var instance = _setup6.instance;
+					var instance = _setup9.instance;
 	
+					instance.props.payment.currentField = 'CreditCardExpirationDate';
 					instance.fields = { scrollWidth: 200 };
 					instance.abbreviatedCardNumberGhost = { scrollWidth: 50 };
 					(0, _expect2.default)(instance.getFieldStyles().otherFieldsWidth).toBe(75 - 16);
@@ -25994,17 +26376,43 @@
 	
 	var _DonationCreditCardSecurityCodeInput2 = _interopRequireDefault(_DonationCreditCardSecurityCodeInput);
 	
+	var _CreditCardInputStates = __webpack_require__(30);
+	
+	var cardStates = _interopRequireWildcard(_CreditCardInputStates);
+	
 	__webpack_require__(200);
 	
 	__webpack_require__(204);
 	
 	var _reactMotion = __webpack_require__(241);
 	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var ERROR_ICON = 'warning';
 	
 	var CreditCardPaymentInput = _react2.default.createClass({
 		displayName: 'CreditCardPaymentInput',
 	
+	
+		componentDidMount: function componentDidMount() {
+	
+			// Focus on the correct field
+			// switch ( this.props.payment.currentField ) {
+			// 	case 'CreditCardNumber':
+			// 		ReactDOM.findDOMNode( this.cardNumberInput ).focus()
+			// 		break
+			// 	case 'CreditCardExpirationDate':
+			// 		ReactDOM.findDOMNode( this.expirationDateInput ).focus()
+			// 		break
+			// 	case 'CreditCardSecurityCode':
+			// 		ReactDOM.findDOMNode( this.securityCodeInput ).focus()
+			// 		break
+			// 	default:
+			// 		ReactDOM.findDOMNode( this.cardNumberInput ).focus()
+			// }
+		},
 	
 		getFieldStyles: function getFieldStyles() {
 			var currentField = this.props.payment.currentField;
@@ -26072,10 +26480,19 @@
 				cardNumberFieldLeftPosition: (0, _reactMotion.spring)(cardNumberFieldLeftPosition)
 			};
 	
+			// Check whether we should render in an error state
+			var icon = this.props.icon,
+			    errorClass = '';
+			if (this.props.payment.cardNumber.status === cardStates.INVALID || this.props.payment.expirationDate.status === cardStates.INVALID || this.props.payment.securityCode.status === cardStates.INVALID) {
+	
+				icon = ERROR_ICON;
+				errorClass = 'Error';
+			}
+	
 			return _react2.default.createElement(
 				'div',
-				{ className: 'Input CreditCardPaymentInput ' + this.props.payment.currentField },
-				_react2.default.createElement(_svgInlineReact2.default, { src: __webpack_require__(255)("./" + this.props.icon + '.svg') }),
+				{ className: 'Input CreditCardPaymentInput ' + this.props.payment.currentField + ' ' + errorClass },
+				_react2.default.createElement(_svgInlineReact2.default, { src: __webpack_require__(255)("./" + icon + '.svg') }),
 				_react2.default.createElement(
 					'div',
 					{ className: 'fields-container' },
@@ -26087,8 +26504,8 @@
 								'div',
 								{ className: 'fields',
 									key: 'fields',
-									ref: function ref(_ref5) {
-										return _this.fields = _ref5;
+									ref: function ref(_ref6) {
+										return _this.fields = _ref6;
 									}
 								},
 								_react2.default.createElement(
@@ -26115,22 +26532,30 @@
 									cardNumber: _this.props.payment.cardNumber,
 									ref: function ref(_ref3) {
 										return _this.cardNumberInput = _ref3;
+									},
+									onShouldMoveToExpirationDateField: function onShouldMoveToExpirationDateField() {
+										return _reactDom2.default.findDOMNode(_this.expirationDateInput).focus();
 									}
 								}),
 								_react2.default.createElement(_DonationCreditCardExpirationDateInput2.default, {
-									expirationMonth: _this.props.payment.expirationMonth,
-									expirationYear: _this.props.payment.expirationYear,
+									expirationDate: _this.props.payment.expirationDate,
 									style: {
 										width: interpolatedStyle.otherFieldsWidth + 'px'
 									},
 									ref: function ref(_ref4) {
 										return _this.expirationDateInput = _ref4;
+									},
+									onShouldMoveToSecurityCodeField: function onShouldMoveToSecurityCodeField() {
+										return _reactDom2.default.findDOMNode(_this.securityCodeInput).focus();
 									}
 								}),
 								_react2.default.createElement(_DonationCreditCardSecurityCodeInput2.default, {
 									securityCode: _this.props.payment.securityCode,
 									style: {
 										width: interpolatedStyle.otherFieldsWidth + 'px'
+									},
+									ref: function ref(_ref5) {
+										return _this.securityCodeInput = _ref5;
 									}
 								})
 							);
@@ -26346,18 +26771,18 @@
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
 		return {
-			onChange: function onChange(value, cursorPosition) {
-				dispatch(actions.setCreditCardNumber(value, cardStates.VALID, cursorPosition));
+			onChange: function onChange(value, state, cursorPosition) {
+				dispatch(actions.setCreditCardNumber(value, state, cursorPosition));
 			},
 			onFocus: function onFocus() {
 				dispatch(actions.didStartEditingCreditCardNumber());
+			},
+			onDidFinishEditing: function onDidFinishEditing() {
+				dispatch(actions.didFinishEditingCreditCardNumber());
 			}
 		};
 	};
 	
-	// onDidFinishEditing: () => {
-	// 	dispatch( actions.didFinishEditingCreditCardNumber() )
-	// }
 	var DonationCreditCardNumberInput = (0, _reactRedux.connect)(null, mapDispatchToProps, null, { withRef: true })(_CreditCardNumberInput2.default);
 	
 	exports.default = DonationCreditCardNumberInput;
@@ -28154,18 +28579,18 @@
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
 		return {
-			onChange: function onChange(value, cursorPosition) {
-				dispatch(actions.setCreditCardExpirationDate(value, cardStates.VALID, cursorPosition));
+			onChange: function onChange(value, state, cursorPosition) {
+				dispatch(actions.setCreditCardExpirationDate(value, state, cursorPosition));
 			},
 			onFocus: function onFocus() {
 				dispatch(actions.didStartEditingCreditCardExpirationDate());
+			},
+			onDidFinishEditing: function onDidFinishEditing() {
+				dispatch(actions.didFinishEditingCreditCardExpirationDate());
 			}
 		};
 	};
 	
-	// onDidFinishEditing: () => {
-	// 	dispatch( actions.didFinishEditingCreditCardExpirationDate() )
-	// }
 	var DonationCreditCardExpirationDateInput = (0, _reactRedux.connect)(null, mapDispatchToProps, null, { withRef: true })(_CreditCardExpirationDateInput2.default);
 	
 	exports.default = DonationCreditCardExpirationDateInput;
@@ -28238,9 +28663,15 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
+	var _CreditCardInputStates = __webpack_require__(30);
+	
+	var cardStates = _interopRequireWildcard(_CreditCardInputStates);
+	
 	__webpack_require__(200);
 	
 	__webpack_require__(204);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -28284,6 +28715,23 @@
 			return done;
 		},
 	
+		getState: function getState() {
+			var value = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+	
+	
+			// Check whether the number is blank
+			if (value === '') return cardStates.BLANK;
+	
+			// Check that we have enough characters
+			if (value.length < 3) return cardStates.INCOMPLETE;
+	
+			// Check whether the date is valid
+			if (Stripe.card.validateCVC(value)) return cardStates.VALID;
+	
+			// Otherwise return invalid
+			return cardStates.INVALID;
+		},
+	
 		getField: function getField() {
 			return this.field;
 		},
@@ -28291,11 +28739,12 @@
 		render: function render() {
 			var _this = this;
 	
+			var errorClass = this.props.securityCode.status === cardStates.INVALID ? 'Error' : '';
 			return _react2.default.createElement('input', {
 				value: this.format(this.props.securityCode.value),
 				style: this.props.style,
 				placeholder: 'CVV',
-				className: 'SecurityCode',
+				className: 'SecurityCode ' + errorClass,
 				onChange: function onChange(e) {
 					e.preventDefault();
 					_this.props.onChange(_this.unformat(e.target.value.trim(), e.target.selectionStart), e.target.selectionStart);
@@ -29960,7 +30409,7 @@
 /* 271 */
 /***/ function(module, exports) {
 
-	module.exports = "<svg viewBox=\"0 0 17 16\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><title>Warning : Glyph</title><desc>Created with Sketch.</desc><defs></defs><g id=\"Mocks\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\"><g id=\"Heartstrings-Medium-14\" transform=\"translate(-50.000000, -365.000000)\" fill=\"#D0011B\"><g id=\"Widget\" transform=\"translate(11.000000, 186.000000)\"><g id=\"Credit-Card-:-Field\" transform=\"translate(24.000000, 163.000000)\"><path d=\"M24.2099917,16.7320929 C23.6921208,15.7538924 22.8502863,15.7580479 22.3346155,16.7320929 L15.2099918,30.1897157 C14.692121,31.1679162 15.1649265,31.9609044 16.267393,31.9609044 L30.277214,31.9609045 C31.3790714,31.9609045 31.850286,31.1637607 31.3346152,30.1897158 L24.2099917,16.7320929 Z M23.2723037,29.960904 C23.8245885,29.960904 24.2723037,29.5131888 24.2723037,28.960904 C24.2723037,28.4086193 23.8245885,27.960904 23.2723037,27.960904 C22.720019,27.960904 22.2723037,28.4086193 22.2723037,28.960904 C22.2723037,29.5131888 22.720019,29.960904 23.2723037,29.960904 Z M22.2723037,21.9977213 C22.2723037,21.446695 22.7161685,21 23.2723037,21 C23.8245885,21 24.2723037,21.4480366 24.2723037,21.9977213 L24.2723037,25.9631827 C24.2723037,26.514209 23.8284389,26.960904 23.2723037,26.960904 C22.720019,26.960904 22.2723037,26.5128674 22.2723037,25.9631827 L22.2723037,21.9977213 Z\" id=\"Warning-:-Glyph\"></path></g></g></g></g></svg>"
+	module.exports = "<svg viewBox=\"0 0 24 24\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><title>ID</title><desc>Created with Sketch.</desc><defs></defs><g id=\"24x24\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\"><g id=\"ID\" fill=\"#3E97BD\"><path d=\"M12.937688,4.77118882 C12.4198171,3.79298831 11.5779826,3.7971439 11.0623118,4.77118881 L3.93768809,18.2288117 C3.41981725,19.2070122 3.89262276,20.0000004 4.99508923,20.0000004 L19.0049103,20.0000005 C20.1067677,20.0000005 20.5779823,19.2028567 20.0623115,18.2288118 L12.937688,4.77118882 Z M12,18 C12.5522847,18 13,17.5522847 13,17 C13,16.4477153 12.5522847,16 12,16 C11.4477153,16 11,16.4477153 11,17 C11,17.5522847 11.4477153,18 12,18 Z M11,10.0368173 C11,9.485791 11.4438648,9.03909595 12,9.03909595 C12.5522847,9.03909595 13,9.48713258 13,10.0368173 L13,14.0022787 C13,14.553305 12.5561352,15 12,15 C11.4477153,15 11,14.5519634 11,14.0022787 L11,10.0368173 Z\" id=\"Warning-:-Glyph\"></path></g></g></svg>"
 
 /***/ },
 /* 272 */
@@ -30039,14 +30488,29 @@
 	
 	
 			(0, _expect2.default)(output.type).toBe('input');
-			(0, _expect2.default)(output.props.className).toBe('SecurityCode');
+			(0, _expect2.default)(output.props.className).toBe('SecurityCode ');
+		});
+	
+		it('should render an input field with an error when the date is invalid', function () {
+			var _setup2 = setup({
+				securityCode: {
+					status: cardStates.INVALID,
+					value: '',
+					cursorPosition: 2
+				}
+			});
+	
+			var output = _setup2.output;
+	
+			(0, _expect2.default)(output.type).toBe('input');
+			(0, _expect2.default)(output.props.className.includes('Error')).toBe(true);
 		});
 	
 		describe('Formatting a Security Code', function () {
 			it('should return a blank string when given an undefined input', function () {
-				var _setup2 = setup();
+				var _setup3 = setup();
 	
-				var instance = _setup2.instance;
+				var instance = _setup3.instance;
 	
 				(0, _expect2.default)(instance.format(undefined)).toBe('');
 			});
@@ -30054,19 +30518,81 @@
 	
 		describe('Unformatting a Security Code', function () {
 			it('should only accept numbers', function () {
-				var _setup3 = setup();
+				var _setup4 = setup();
 	
-				var instance = _setup3.instance;
+				var instance = _setup4.instance;
 	
 				(0, _expect2.default)(instance.unformat('abcde')).toBe('');
 			});
 	
 			it('should accept a maximum of 4 digits', function () {
-				var _setup4 = setup();
+				var _setup5 = setup();
 	
-				var instance = _setup4.instance;
+				var instance = _setup5.instance;
 	
 				(0, _expect2.default)(instance.unformat('12345').length).toBe(4);
+			});
+		});
+	
+		describe('Getting State', function () {
+	
+			// afterEach(function() {
+			// 	delete Stripe
+			// })
+	
+			it('should return BLANK when field is undefined', function () {
+				var _setup6 = setup();
+	
+				var instance = _setup6.instance;
+	
+				(0, _expect2.default)(instance.getState()).toEqual(cardStates.BLANK);
+			});
+	
+			it('should return BLANK when the number is blank', function () {
+				var _setup7 = setup();
+	
+				var instance = _setup7.instance;
+	
+				(0, _expect2.default)(instance.getState('')).toEqual(cardStates.BLANK);
+			});
+	
+			it('should return INCOMPLETE when less than 3 digits', function () {
+				var _setup8 = setup();
+	
+				var instance = _setup8.instance;
+	
+				(0, _expect2.default)(instance.getState('12')).toEqual(cardStates.INCOMPLETE);
+			});
+	
+			it('should return INVALID when Stripe does not approve', function () {
+				var _setup9 = setup();
+	
+				var instance = _setup9.instance;
+	
+				global.Stripe = {
+					card: {
+						validateCVC: function validateCVC() {
+							return false;
+						}
+					}
+				};
+				(0, _expect2.default)(instance.getState('invalid')).toEqual(cardStates.INVALID);
+			});
+	
+			it('should return VALID when Stripe approves', function () {
+				var _setup10 = setup();
+	
+				var instance = _setup10.instance;
+	
+				global.Stripe = {
+					card: {
+						validateCVC: function validateCVC() {
+							return true;
+						}
+					}
+				};
+				(0, _expect2.default)(instance.getState('123')).toEqual(cardStates.VALID);
+				(0, _expect2.default)(instance.getState('1234')).toEqual(cardStates.VALID);
 			});
 		});
 	});
@@ -30275,6 +30801,14 @@
 				currentField: 'CreditCardSecurityCode'
 			});
 		});
+	
+		it('should handle DID_FINISH_EDITING_CREDIT_CARD_NUMBER', function () {
+			(0, _expect2.default)((0, _payment2.default)([], {
+				type: types.DID_FINISH_EDITING_CREDIT_CARD_NUMBER
+			})).toEqual({
+				currentField: 'CreditCardExpirationDate'
+			});
+		});
 	});
 
 /***/ },
@@ -30400,6 +30934,12 @@
 	
 				return Object.assign({}, state, {
 					currentField: 'CreditCardSecurityCode'
+				});
+	
+			case types.DID_FINISH_EDITING_CREDIT_CARD_NUMBER:
+	
+				return Object.assign({}, state, {
+					currentField: 'CreditCardExpirationDate'
 				});
 	
 			default:

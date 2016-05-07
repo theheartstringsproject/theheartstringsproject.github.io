@@ -43,7 +43,22 @@ describe('CreditCardExpirationDateInput', function() {
 		const { output } = setup()
 
 		expect( output.type ).toBe('input')
-		expect( output.props.className ).toBe('ExpirationDate')
+		expect( output.props.className ).toBe('ExpirationDate ')
+	})
+
+	it('should render an input field with an error when the date is invalid', function() {
+		const { output } = setup({
+			expirationDate: {
+				status: cardStates.INVALID,
+				values: {
+					month: '',
+					year: ''
+				},
+				cursorPosition: 2
+			}
+		})
+		expect( output.type ).toBe('input')
+		expect( output.props.className.includes('Error') ).toBe( true )
 	})
 
 	describe('Formatting an Expiration Date', function() {
@@ -133,6 +148,55 @@ describe('CreditCardExpirationDateInput', function() {
 			})
 
 			expect( instance.unformat( '1220', 2 ) ).toBe( '1/20' )
+		})
+	})
+
+	describe('Getting State', function() {
+
+		// afterEach(function() {
+		// 	delete Stripe
+		// })
+
+		it('should return BLANK when field is undefined', function() {
+			const { instance } = setup()
+			expect( instance.getState() ).toEqual( cardStates.BLANK )
+		})
+
+		it('should return BLANK when the number is blank', function() {
+			const { instance } = setup()
+			expect( instance.getState( '' ) ).toEqual( cardStates.BLANK )
+		})
+
+		it('should return INCOMPLETE when less than 4 digits', function() {
+			const { instance } = setup()
+			expect( instance.getState( '12/4' ) ).toEqual( cardStates.INCOMPLETE )
+			expect( instance.getState( '1/4' ) ).toEqual( cardStates.INCOMPLETE )
+			expect( instance.getState( '1/' ) ).toEqual( cardStates.INCOMPLETE )
+			expect( instance.getState( '11/' ) ).toEqual( cardStates.INCOMPLETE )
+		})
+
+		it('should return INVALID when Stripe does not approve', function() {
+			const { instance } = setup()
+			global.Stripe = {
+				card: {
+					validateExpiry: function() {
+						return false
+					}	
+				}
+			}
+			expect( instance.getState( '14/40' ) ).toEqual( cardStates.INVALID )
+		})
+
+		it('should return VALID when Stripe approves', function() {
+			const { instance } = setup()
+			global.Stripe = {
+				card: {
+					validateExpiry: function() {
+						return true
+					}	
+				}
+			}
+			expect( instance.getState( '12/20' ) ).toEqual( cardStates.VALID )
 		})
 	})
 })

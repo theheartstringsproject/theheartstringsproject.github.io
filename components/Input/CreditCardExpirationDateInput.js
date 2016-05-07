@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import FieldKit from 'field-kit';
 import ReactDOM from 'react-dom'
+import * as cardStates from '../../constants/CreditCardInputStates'
 import './input.css'
 import './credit-card-payment-input.css'
 
@@ -65,16 +66,29 @@ const CreditCardExpirationDateInput = React.createClass({
 		return newString
 	},
 
-	isDoneEditing: function() {
-		let done = false
+	getState: function( value = '' ) {
 
-		// if ( this.field) {
-		// 	done =  this.field.cardType() === 'amex' ?
-		// 			this.field.value().length === 15 :
-		// 			this.field.value().length === 16
-		// }
+		// Check whether the number is blank
+		if ( value === '' )
+			return cardStates.BLANK
 
-		return done
+		// Split the date into month and year
+		let [ expirationMonth, expirationYear ] = value.split('/')
+
+		// Check that both components are present
+		if ( !expirationMonth || !expirationYear )
+			return cardStates.INCOMPLETE
+
+		// Check that we have enough characters
+		if ( value.length < 5 )
+			return cardStates.INCOMPLETE
+
+		// Check whether the date is valid
+		if ( Stripe.card.validateExpiry( expirationMonth, expirationYear ) )
+			return cardStates.VALID
+
+		// Otherwise return invalid
+		return cardStates.INVALID
 	},
 
 	getField: function() {
@@ -82,22 +96,24 @@ const CreditCardExpirationDateInput = React.createClass({
 	},
 
 	render: function() {
+		let errorClass = this.props.expirationDate.status === cardStates.INVALID ? 'Error' : ''
 		return(
 			<input
 				value={this.format( this.props.expirationDate.values.month, this.props.expirationDate.values.year )}
 				style={this.props.style}
 				placeholder="MM/YY"
-				className="ExpirationDate"
+				className={`ExpirationDate ${errorClass}`}
 				onChange={e => {
 					e.preventDefault()
+					let newValue = this.unformat( e.target.value.trim(), e.target.selectionStart )
 					this.props.onChange(
-						this.unformat( e.target.value.trim(), e.target.selectionStart ),
+						newValue,
+						this.getState( newValue ),
 						e.target.selectionStart
 					)
 
-					if ( this.isDoneEditing() ) {
-						// TODO check whether card is valid
-						// this.props.onDidFinishEditing()
+					if ( this.getState( newValue ) === cardStates.VALID ) {
+						this.props.onShouldMoveToSecurityCodeField()
 					}
 				}}
 				onFocus={e => {

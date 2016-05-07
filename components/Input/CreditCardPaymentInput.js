@@ -5,11 +5,32 @@ import InlineSVG from 'svg-inline-react'
 import DonationCreditCardNumberInput from '../../containers/DonationCreditCardNumberInput'
 import DonationCreditCardExpirationDateInput from '../../containers/DonationCreditCardExpirationDateInput'
 import DonationCreditCardSecurityCodeInput from '../../containers/DonationCreditCardSecurityCodeInput'
+import * as cardStates from '../../constants/CreditCardInputStates'
 import './input.css'
 import './credit-card-payment-input.css'
 import { spring, Motion } from 'react-motion'
 
+const ERROR_ICON = 'warning'
+
 const CreditCardPaymentInput = React.createClass({
+
+	componentDidMount: function() {
+
+		// Focus on the correct field
+		// switch ( this.props.payment.currentField ) {
+		// 	case 'CreditCardNumber':
+		// 		ReactDOM.findDOMNode( this.cardNumberInput ).focus()
+		// 		break
+		// 	case 'CreditCardExpirationDate':
+		// 		ReactDOM.findDOMNode( this.expirationDateInput ).focus()
+		// 		break
+		// 	case 'CreditCardSecurityCode':
+		// 		ReactDOM.findDOMNode( this.securityCodeInput ).focus()
+		// 		break
+		// 	default:
+		// 		ReactDOM.findDOMNode( this.cardNumberInput ).focus()
+		// }
+	},
 
 	getFieldStyles: function() {
 		let currentField = this.props.payment.currentField
@@ -70,9 +91,21 @@ const CreditCardPaymentInput = React.createClass({
 			cardNumberFieldLeftPosition: spring( cardNumberFieldLeftPosition )
 		}
 
+		// Check whether we should render in an error state
+		let icon = this.props.icon,
+			errorClass = ''
+		if ( this.props.payment.cardNumber.status === cardStates.INVALID ||
+			 this.props.payment.expirationDate.status === cardStates.INVALID ||
+			 this.props.payment.securityCode.status === cardStates.INVALID )
+		{
+
+			icon = ERROR_ICON
+			errorClass = 'Error'
+		}
+
 		return (
-			<div className={`Input CreditCardPaymentInput ${this.props.payment.currentField}`}>
-				<InlineSVG src={require(`svg-inline!../../icons/${this.props.icon}.svg`)} />
+			<div className={`Input CreditCardPaymentInput ${this.props.payment.currentField} ${errorClass}`}>
+				<InlineSVG src={require(`svg-inline!../../icons/${icon}.svg`)} />
 				<div className="fields-container">
 					<Motion style={style}>
 					{interpolatedStyle => {
@@ -96,6 +129,7 @@ const CreditCardPaymentInput = React.createClass({
 									}}
 									cardNumber={this.props.payment.cardNumber}
 									ref={(ref) => this.cardNumberInput = ref}
+									onShouldMoveToExpirationDateField={() => ReactDOM.findDOMNode( this.expirationDateInput ).focus()}
 								/>
 								<DonationCreditCardExpirationDateInput
 									expirationDate={this.props.payment.expirationDate}
@@ -103,12 +137,14 @@ const CreditCardPaymentInput = React.createClass({
 										width: interpolatedStyle.otherFieldsWidth + 'px'
 									}}
 									ref={(ref) => this.expirationDateInput = ref}
+									onShouldMoveToSecurityCodeField={() => ReactDOM.findDOMNode( this.securityCodeInput ).focus()}
 								/>
 								<DonationCreditCardSecurityCodeInput
-										securityCode={this.props.payment.securityCode}
-										style={{
-											width: interpolatedStyle.otherFieldsWidth + 'px'
-										}}
+									securityCode={this.props.payment.securityCode}
+									style={{
+										width: interpolatedStyle.otherFieldsWidth + 'px'
+									}}
+									ref={(ref) => this.securityCodeInput = ref}
 								/>
 							</div>
 						)

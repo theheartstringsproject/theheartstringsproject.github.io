@@ -40,7 +40,19 @@ describe('CreditCardSecurityCodeInput', function() {
 		const { output } = setup()
 
 		expect( output.type ).toBe('input')
-		expect( output.props.className ).toBe('SecurityCode')
+		expect( output.props.className ).toBe('SecurityCode ')
+	})
+
+	it('should render an input field with an error when the date is invalid', function() {
+		const { output } = setup({
+			securityCode: {
+				status: cardStates.INVALID,
+				value: '',
+				cursorPosition: 2
+			}
+		})
+		expect( output.type ).toBe('input')
+		expect( output.props.className.includes('Error') ).toBe( true )
 	})
 
 	describe('Formatting a Security Code', function() {
@@ -60,6 +72,53 @@ describe('CreditCardSecurityCodeInput', function() {
 		it('should accept a maximum of 4 digits', function() {
 			const { instance } = setup()
 			expect( instance.unformat('12345').length ).toBe( 4 )
+		})
+	})
+
+	describe('Getting State', function() {
+
+		// afterEach(function() {
+		// 	delete Stripe
+		// })
+
+		it('should return BLANK when field is undefined', function() {
+			const { instance } = setup()
+			expect( instance.getState() ).toEqual( cardStates.BLANK )
+		})
+
+		it('should return BLANK when the number is blank', function() {
+			const { instance } = setup()
+			expect( instance.getState( '' ) ).toEqual( cardStates.BLANK )
+		})
+
+		it('should return INCOMPLETE when less than 3 digits', function() {
+			const { instance } = setup()
+			expect( instance.getState( '12' ) ).toEqual( cardStates.INCOMPLETE )
+		})
+
+		it('should return INVALID when Stripe does not approve', function() {
+			const { instance } = setup()
+			global.Stripe = {
+				card: {
+					validateCVC: function() {
+						return false
+					}	
+				}
+			}
+			expect( instance.getState( 'invalid' ) ).toEqual( cardStates.INVALID )
+		})
+
+		it('should return VALID when Stripe approves', function() {
+			const { instance } = setup()
+			global.Stripe = {
+				card: {
+					validateCVC: function() {
+						return true
+					}	
+				}
+			}
+			expect( instance.getState( '123' ) ).toEqual( cardStates.VALID )
+			expect( instance.getState( '1234' ) ).toEqual( cardStates.VALID )
 		})
 	})
 })

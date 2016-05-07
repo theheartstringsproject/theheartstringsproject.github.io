@@ -50,5 +50,27 @@
 			stroke: $text-color-dark;
 		}
 	}
+}
 
+.Input.Error {
+
+	input.Error {
+		color: $text-color-error;
+		animation: shake 0.5s linear;
+	}
+
+	i svg {
+		path {
+			stroke: transparent;
+			fill: $text-color-error;
+		}
+	}
+}
+
+@keyframes shake {
+    8%, 41% { transform: translateX(-10px); }
+    25%, 58% { transform: translateX(10px); }
+    75% { transform: translateX(-5px); }
+    92% { transform: translateX(5px); }
+    0%, 100% { transform: translateX(0); }
 }

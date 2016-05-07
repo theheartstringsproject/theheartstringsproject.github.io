@@ -70,4 +70,10 @@ describe('Actions', function() {
 
 		expect( actions.didStartEditingCreditCardSecurityCode() ).toEqual( expectedAction )
 	})
+
+	it('should create an action for ending credit card number editing', function() {
+		const expectAction = {
+			type: types.DID_FINISH_EDITING_CREDIT_CARD_NUMBER
+		}
+	})
 })

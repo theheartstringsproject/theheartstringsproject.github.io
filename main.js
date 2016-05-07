@@ -6,6 +6,9 @@ import campaign from './reducers'
 import Campaign from './containers/Campaign'
 import parseUri from './vendor/parse-uri'
 
+// Set up Stripe
+Stripe.setPublishableKey('pk_test_poxqEYDrVEjtlxvcwfVdlJ9q');
+
 const charity = decodeURI( parseUri( window.location ).queryKey['charity'] )
 const reason = decodeURI( parseUri( window.location ).queryKey['reason'] )
 

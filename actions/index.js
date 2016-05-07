@@ -83,3 +83,9 @@ export const didStartEditingCreditCardSecurityCode = () => {
 		type: types.DID_START_EDITING_CREDIT_CARD_SECURITY_CODE
 	}
 }
+
+export const didFinishEditingCreditCardNumber = () => {
+	return {
+		type: types.DID_FINISH_EDITING_CREDIT_CARD_NUMBER
+	}
+}

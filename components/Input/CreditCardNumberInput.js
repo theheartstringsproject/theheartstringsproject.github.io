@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import FieldKit from 'field-kit';
 import ReactDOM from 'react-dom'
+import * as cardStates from '../../constants/CreditCardInputStates'
 import './input.css'
 import './credit-card-payment-input.css'
 
@@ -14,6 +15,9 @@ const CreditCardNumberInput = React.createClass({
 		this.field.setCardMaskStrategy(
 			FieldKit.CardTextField.CardMaskStrategy.DoneEditing
 		);
+		this.field.setDelegate({
+			textDidChange: this.onChange
+		})
 	},
 
 	format: function( cardNumber = '' ) {
@@ -44,6 +48,30 @@ const CreditCardNumberInput = React.createClass({
 		return newString
 	},
 
+	getState: function() {
+
+		let number = this.field ? this.field.value() : ''
+
+		// Check whether the number is blank
+		if ( number === '' )
+			return cardStates.BLANK
+
+		// Check whether the number is the right character count
+		if ( number.length < 15 )
+			return cardStates.INCOMPLETE
+
+		if ( this.field.cardType() !== 'amex' && number.length < 16 )
+			return cardStates.INCOMPLETE
+
+		// Check whether the number is valid
+		if ( Stripe.card.validateCardNumber( number ) )
+			return cardStates.VALID
+
+		// Otherwise return invalid
+		return cardStates.INVALID
+
+	},
+
 	isDoneEditing: function() {
 		let done = false
 
@@ -60,24 +88,39 @@ const CreditCardNumberInput = React.createClass({
 		return this.field
 	},
 
+	onChange: function( field ) {
+		console.log( ReactDOM.findDOMNode( this ).selectionStart )
+		this.props.onChange(
+			this.field.value(),
+			this.getState(),
+			ReactDOM.findDOMNode( this ).selectionStart
+		)
+
+		if ( this.isDoneEditing() && this.getState() === cardStates.VALID ) {
+			this.props.onShouldMoveToExpirationDateField()
+			// this.props.onDidFinishEditing()
+		}
+	},
+
 	render: function() {
+		let errorClass = this.props.cardNumber.status === cardStates.INVALID ? 'Error' : ''
 		return(
 			<input
 				style={this.props.style}
 				placeholder="Card Number"
-				className="CardNumber"
-				onChange={e => {
-					e.preventDefault()
-					this.props.onChange(
-						this.unformat( e.target.value.trim() ),
-						e.target.selectionStart
-					)
+				className={`CardNumber ${errorClass}`}
+				// onChange={e => {
+				// 	e.preventDefault()
+				// 	this.props.onChange(
+				// 		this.field.value(),
+				// 		this.getState(),
+				// 		e.target.selectionStart
+				// 	)
 
-					if ( this.isDoneEditing() ) {
-						// TODO check whether card is valid
-						// this.props.onDidFinishEditing()
-					}
-				}}
+				// 	if ( this.isDoneEditing() && this.getState() === cardStates.VALID ) {
+				// 		this.props.onDidFinishEditing()
+				// 	}
+				// }}
 				onFocus={e => {
 					this.props.onFocus()
 				}}

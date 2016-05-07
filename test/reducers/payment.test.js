@@ -185,4 +185,12 @@ describe('Payment Reducer', function() {
 			currentField: 'CreditCardSecurityCode'
 		})
 	})
+
+	it('should handle DID_FINISH_EDITING_CREDIT_CARD_NUMBER', function() {
+		expect( reducer( [], {
+			type: types.DID_FINISH_EDITING_CREDIT_CARD_NUMBER
+		})).toEqual({
+			currentField: 'CreditCardExpirationDate'
+		})
+	})
 })

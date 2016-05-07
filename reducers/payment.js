@@ -97,6 +97,12 @@ const payment = (state = initialState, action) => {
 				currentField: 'CreditCardSecurityCode'
 			})
 
+		case types.DID_FINISH_EDITING_CREDIT_CARD_NUMBER:
+
+			return Object.assign({}, state, {
+				currentField: 'CreditCardExpirationDate'
+			})
+
 		default:
 			return state
 	}
