@@ -39,11 +39,12 @@ export const setEmail = ( email ) => {
 	}
 }
 
-export const setCreditCardNumber = ( cardNumber, status, cardNumberCursorPosition ) => {
+export const setCreditCardNumber = ( cardNumber, formattedCardNumber, status, cardNumberCursorPosition ) => {
 	return {
 		type: types.SET_CREDIT_CARD_NUMBER,
 		status,
 		cardNumber,
+		formattedCardNumber,
 		cardNumberCursorPosition
 	}
 }

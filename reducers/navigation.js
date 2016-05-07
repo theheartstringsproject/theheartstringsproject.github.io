@@ -1,6 +1,6 @@
 let initialState = {
-	currentPage: 3,
-	previousPage: 2
+	currentPage: 0,
+	previousPage: 0
 }
 
 const navigation = (state = initialState, action) => {

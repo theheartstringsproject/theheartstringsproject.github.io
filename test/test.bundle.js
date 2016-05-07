@@ -34,7 +34,7 @@
 /******/ 	__webpack_require__.c = installedModules;
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
+/******/ 	__webpack_require__.p = "test/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -82,16 +82,18 @@
 	
 		it('should create an action for setting credit card number', function () {
 			var cardNumber = '1234567891098876',
+			    formattedCardNumber = '•••• •••• •••• 8876',
 			    cardNumberCursorPosition = '3',
 			    status = cardStates.VALID;
 			var expectedAction = {
 				type: 'SET_CREDIT_CARD_NUMBER',
 				status: status,
 				cardNumber: cardNumber,
+				formattedCardNumber: formattedCardNumber,
 				cardNumberCursorPosition: cardNumberCursorPosition
 			};
 	
-			(0, _expect2.default)(actions.setCreditCardNumber(cardNumber, status, cardNumberCursorPosition)).toEqual(expectedAction);
+			(0, _expect2.default)(actions.setCreditCardNumber(cardNumber, formattedCardNumber, status, cardNumberCursorPosition)).toEqual(expectedAction);
 		});
 	
 		it('should create an action for setting credit card expiration date', function () {
@@ -2335,11 +2337,12 @@
 		};
 	};
 	
-	var setCreditCardNumber = exports.setCreditCardNumber = function setCreditCardNumber(cardNumber, status, cardNumberCursorPosition) {
+	var setCreditCardNumber = exports.setCreditCardNumber = function setCreditCardNumber(cardNumber, formattedCardNumber, status, cardNumberCursorPosition) {
 		return {
 			type: types.SET_CREDIT_CARD_NUMBER,
 			status: status,
 			cardNumber: cardNumber,
+			formattedCardNumber: formattedCardNumber,
 			cardNumberCursorPosition: cardNumberCursorPosition
 		};
 	};
@@ -26094,7 +26097,7 @@
 	
 		onChange: function onChange(field) {
 			console.log(_reactDom2.default.findDOMNode(this).selectionStart);
-			this.props.onChange(this.field.value(), this.getState(), _reactDom2.default.findDOMNode(this).selectionStart);
+			this.props.onChange(this.field.value(), this.field.cardMask(), this.getState(), _reactDom2.default.findDOMNode(this).selectionStart);
 	
 			if (this.isDoneEditing() && this.getState() === cardStates.VALID) {
 				this.props.onShouldMoveToExpirationDateField();
@@ -26771,8 +26774,8 @@
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
 		return {
-			onChange: function onChange(value, state, cursorPosition) {
-				dispatch(actions.setCreditCardNumber(value, state, cursorPosition));
+			onChange: function onChange(value, formattedValue, state, cursorPosition) {
+				dispatch(actions.setCreditCardNumber(value, formattedValue, state, cursorPosition));
 			},
 			onFocus: function onFocus() {
 				dispatch(actions.didStartEditingCreditCardNumber());
@@ -30630,6 +30633,7 @@
 				cardNumber: {
 					status: '',
 					value: '',
+					formattedValue: '',
 					cursorPosition: null
 				},
 				expirationDate: {
@@ -30653,12 +30657,14 @@
 			(0, _expect2.default)((0, _payment2.default)([], {
 				type: types.SET_CREDIT_CARD_NUMBER,
 				status: cardStates.VALID,
-				cardNumber: '123456789012345',
+				cardNumber: '1234567890123456',
+				formattedCardNumber: '•••• •••• •••• 3456',
 				cardNumberCursorPosition: 2
 			})).toEqual({
 				cardNumber: {
 					status: cardStates.VALID,
-					value: '123456789012345',
+					value: '1234567890123456',
+					formattedValue: '•••• •••• •••• 3456',
 					cursorPosition: 2
 				}
 			});
@@ -30667,11 +30673,13 @@
 				type: types.SET_CREDIT_CARD_NUMBER,
 				status: cardStates.INVALID,
 				cardNumber: '1234',
+				formattedCardNumber: '1234',
 				cardNumberCursorPosition: 4
 			})).toEqual({
 				cardNumber: {
 					status: cardStates.INVALID,
 					value: '1234',
+					formattedValue: '1234',
 					cursorPosition: 4
 				}
 			});
@@ -30834,6 +30842,7 @@
 		cardNumber: {
 			status: '',
 			value: '',
+			formattedValue: '',
 			cursorPosition: null
 		},
 		expirationDate: {
@@ -30870,6 +30879,7 @@
 					cardNumber: {
 						status: action.status,
 						value: action.cardNumber,
+						formattedValue: action.formattedCardNumber,
 						cursorPosition: action.cardNumberCursorPosition
 					}
 				});

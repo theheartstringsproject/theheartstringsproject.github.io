@@ -10,6 +10,7 @@ describe('Payment Reducer', function() {
 				cardNumber: {
 					status: '',
 					value: '',
+					formattedValue: '',
 					cursorPosition: null
 				},
 				expirationDate: {
@@ -33,12 +34,14 @@ describe('Payment Reducer', function() {
 		expect( reducer( [], {
 			type: types.SET_CREDIT_CARD_NUMBER,
 			status: cardStates.VALID,
-			cardNumber: '123456789012345',
+			cardNumber: '1234567890123456',
+			formattedCardNumber: '•••• •••• •••• 3456',
 			cardNumberCursorPosition: 2
 		})).toEqual({
 			cardNumber: {
 				status: cardStates.VALID,
-				value: '123456789012345',
+				value: '1234567890123456',
+				formattedValue: '•••• •••• •••• 3456',
 				cursorPosition: 2
 			}
 		})
@@ -47,11 +50,13 @@ describe('Payment Reducer', function() {
 			type: types.SET_CREDIT_CARD_NUMBER,
 			status: cardStates.INVALID,
 			cardNumber: '1234',
+			formattedCardNumber: '1234',
 			cardNumberCursorPosition: 4
 		})).toEqual({
 			cardNumber: {
 				status: cardStates.INVALID,
 				value: '1234',
+				formattedValue: '1234',
 				cursorPosition: 4
 			}
 		})

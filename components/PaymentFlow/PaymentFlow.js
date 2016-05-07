@@ -45,7 +45,7 @@ const PaymentFlow = React.createClass ({
 			case 'PaymentPage':
 				return <PaymentPage charityName={charityName} amount={amount} payment={this.props.payment} key={key}/>
 			case 'ConfirmationPage':
-				return <ConfirmationPage charityName={charityName} amount={amount} email={email} cardNumber={cardNumber} cardCursorPosition={cardCursorPosition} key={key}/>
+				return <ConfirmationPage charityName={charityName} amount={amount} email={email} cardNumber={cardNumber.formattedValue} cardCursorPosition={cardCursorPosition} key={key}/>
 			case 'LoadingPage':
 				return <LoadingPage key={key}/>
 			default: /* TODO Update to return error page */

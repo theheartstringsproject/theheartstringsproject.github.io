@@ -6,6 +6,7 @@ module.exports = {
 	entry: glob.sync("./test/**/*.test.js"),
 	output: {
 		path: "test/",
+		publicPath: "test/",
 		filename: "test.bundle.js"
 	},
 	module: {

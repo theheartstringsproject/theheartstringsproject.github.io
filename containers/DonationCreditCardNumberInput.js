@@ -5,8 +5,8 @@ import * as cardStates from '../constants/CreditCardInputStates'
 
 const mapDispatchToProps = (dispatch, ownProps) => {
 	return {
-		onChange: ( value, state, cursorPosition ) => {
-			dispatch( actions.setCreditCardNumber( value, state, cursorPosition ))
+		onChange: ( value, formattedValue, state, cursorPosition ) => {
+			dispatch( actions.setCreditCardNumber( value, formattedValue, state, cursorPosition ))
 		},
 		onFocus: () => {
 			dispatch( actions.didStartEditingCreditCardNumber() )

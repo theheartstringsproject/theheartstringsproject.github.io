@@ -92,6 +92,7 @@ const CreditCardNumberInput = React.createClass({
 		console.log( ReactDOM.findDOMNode( this ).selectionStart )
 		this.props.onChange(
 			this.field.value(),
+			this.field.cardMask(),
 			this.getState(),
 			ReactDOM.findDOMNode( this ).selectionStart
 		)

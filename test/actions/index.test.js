@@ -7,16 +7,18 @@ describe('Actions', function() {
 
 	it('should create an action for setting credit card number', function() {
 		const 	cardNumber = '1234567891098876',
+				formattedCardNumber = '•••• •••• •••• 8876',
 				cardNumberCursorPosition = '3',
 				status = cardStates.VALID
 		const expectedAction = {
 			type: 'SET_CREDIT_CARD_NUMBER',
 			status,
 			cardNumber,
+			formattedCardNumber,
 			cardNumberCursorPosition
 		}
 
-		expect( actions.setCreditCardNumber( cardNumber, status, cardNumberCursorPosition ) ).toEqual( expectedAction )
+		expect( actions.setCreditCardNumber( cardNumber, formattedCardNumber, status, cardNumberCursorPosition ) ).toEqual( expectedAction )
 	})
 
 	it('should create an action for setting credit card expiration date', function() {

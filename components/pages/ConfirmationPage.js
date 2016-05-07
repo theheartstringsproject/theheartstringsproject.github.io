@@ -37,7 +37,7 @@ const ConfirmationPage = React.createClass({
 				<div className='donation-info'>
 					<span className='header'>From</span>
 					<span className='email'>{this.props.email}</span>
-					<span className='card-number'>{formatCardNumber(this.props.cardNumber)}</span>
+					<span className='card-number'>{this.props.cardNumber}</span>
 				</div>
 				<ConfirmContributionButton text={`Confirm $${this.props.amount} Donation`} type='primary' />
 				<div className='Footer'>

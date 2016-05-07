@@ -5,6 +5,7 @@ let initialState = {
 	cardNumber: {
 		status: '',
 		value: '',
+		formattedValue: '',
 		cursorPosition: null
 	},
 	expirationDate: {
@@ -38,6 +39,7 @@ const payment = (state = initialState, action) => {
 				cardNumber: {
 					status: action.status,
 					value: action.cardNumber,
+					formattedValue: action.formattedCardNumber,
 					cursorPosition: action.cardNumberCursorPosition
 				}
 			})

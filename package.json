@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "webpack --config webpack.test.config.js && mocha test/setup.js",
-    "test:watch": "npm test -- --watch",
-    "start": "webpack-dev-server --colors --progress -d"
+    "test": "mocha test/setup.js --require source-map-support/register",
+    "test:watch": "webpack --config webpack.test.config.js --watch && mocha test/setup.js --require source-map-support/register",
+    "start": "webpack-dev-server --colors --progress -d",
+    "start:test": "webpack --config webpack.test.config.js --watch"
   },
   "author": "",
   "license": "ISC",
