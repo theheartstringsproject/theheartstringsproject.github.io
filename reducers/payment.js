@@ -1,7 +1,12 @@
 import * as types from '../constants/ActionTypes'
+import * as cardStates from '../constants/CreditCardInputStates'
 
 let initialState = {
-	email: '',
+	email: {
+		status: '',
+		value: '',
+		hasAttemptedValidation: false
+	},
 	cardNumber: {
 		status: '',
 		value: '',
@@ -30,7 +35,11 @@ const payment = (state = initialState, action) => {
 		case types.SET_EMAIL:
 			
 			return Object.assign({}, state, {
-				email: action.email
+				email: {
+					status: action.status,
+					value: action.email,
+					hasAttemptedValidation: state.email.hasAttemptedValidation
+				}
 			})
 
 		case types.SET_CREDIT_CARD_NUMBER:
@@ -103,6 +112,33 @@ const payment = (state = initialState, action) => {
 
 			return Object.assign({}, state, {
 				currentField: 'CreditCardExpirationDate'
+			})
+
+		case types.SET_EDITING_CREDIT_CARD_EXPIRATION_DATE:
+
+			return Object.assign({}, state, {
+				currentField: 'CreditCardExpirationDate'
+			})
+
+		case types.HAS_ATTEMPTED_EMAIL_VALIDATION:
+
+			// Generate a more aggressive state
+			// so that the first render after settings
+			// this validation attempt will reflect
+			// the more aggressive error settings
+			let newStatus = state.email.status
+			if ( state.email.status === cardStates.BLANK ||
+				 state.email.status === cardStates.INCOMPLETE )
+			{
+				newStatus = cardStates.INVALID
+			} 			
+
+			return Object.assign({}, state, {
+				email: {
+					status: newStatus,
+					value: state.email.value,
+					hasAttemptedValidation: true
+				}
 			})
 
 		default:

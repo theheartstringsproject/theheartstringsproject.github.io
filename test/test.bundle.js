@@ -49,7 +49,9 @@
 	__webpack_require__(206);
 	__webpack_require__(208);
 	__webpack_require__(273);
-	module.exports = __webpack_require__(274);
+	__webpack_require__(274);
+	__webpack_require__(276);
+	module.exports = __webpack_require__(290);
 
 
 /***/ },
@@ -79,6 +81,18 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	describe('Actions', function () {
+	
+		it('should create an action for setting email', function () {
+			var email = 'jeremy@lubin.com',
+			    status = cardStates.VALID;
+			var expectedAction = {
+				type: 'SET_EMAIL',
+				status: status,
+				email: email
+			};
+	
+			(0, _expect2.default)(actions.setEmail(email, status)).toEqual(expectedAction);
+		});
 	
 		it('should create an action for setting credit card number', function () {
 			var cardNumber = '1234567891098876',
@@ -152,6 +166,14 @@
 			var expectAction = {
 				type: types.DID_FINISH_EDITING_CREDIT_CARD_NUMBER
 			};
+		});
+	
+		it('should create an action for having attempted email validation', function () {
+			var expectedAction = {
+				type: types.HAS_ATTEMPTED_EMAIL_VALIDATION
+			};
+	
+			(0, _expect2.default)(actions.hasAttemptedEmailValidation()).toEqual(expectedAction);
 		});
 	});
 
@@ -2290,7 +2312,7 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.didFinishEditingCreditCardNumber = exports.didStartEditingCreditCardSecurityCode = exports.didStartEditingCreditCardExpirationDate = exports.didStartEditingCreditCardNumber = exports.setCreditCardSecurityCode = exports.setCreditCardExpirationDate = exports.setCreditCardNumber = exports.setEmail = exports.confirmContribution = exports.chooseContributionAmount = exports.jumpToPage = exports.recedePage = exports.advancePage = undefined;
+	exports.hasAttemptedEmailValidation = exports.setEditingCreditCardExpirationDate = exports.didFinishEditingCreditCardNumber = exports.didStartEditingCreditCardSecurityCode = exports.didStartEditingCreditCardExpirationDate = exports.didStartEditingCreditCardNumber = exports.setCreditCardSecurityCode = exports.setCreditCardExpirationDate = exports.setCreditCardNumber = exports.setEmail = exports.confirmContribution = exports.chooseContributionAmount = exports.jumpToPage = exports.recedePage = exports.advancePage = undefined;
 	
 	var _ActionTypes = __webpack_require__(29);
 	
@@ -2330,9 +2352,10 @@
 		};
 	};
 	
-	var setEmail = exports.setEmail = function setEmail(email) {
+	var setEmail = exports.setEmail = function setEmail(email, status) {
 		return {
 			type: types.SET_EMAIL,
+			status: status,
 			email: email
 		};
 	};
@@ -2388,6 +2411,18 @@
 			type: types.DID_FINISH_EDITING_CREDIT_CARD_NUMBER
 		};
 	};
+	
+	var setEditingCreditCardExpirationDate = exports.setEditingCreditCardExpirationDate = function setEditingCreditCardExpirationDate() {
+		return {
+			type: types.SET_EDITING_CREDIT_CARD_EXPIRATION_DATE
+		};
+	};
+	
+	var hasAttemptedEmailValidation = exports.hasAttemptedEmailValidation = function hasAttemptedEmailValidation() {
+		return {
+			type: types.HAS_ATTEMPTED_EMAIL_VALIDATION
+		};
+	};
 
 /***/ },
 /* 29 */
@@ -2419,6 +2454,10 @@
 	var DID_START_EDITING_CREDIT_CARD_SECURITY_CODE = exports.DID_START_EDITING_CREDIT_CARD_SECURITY_CODE = 'DID_START_EDITING_CREDIT_CARD_SECURITY CODE';
 	
 	var DID_FINISH_EDITING_CREDIT_CARD_NUMBER = exports.DID_FINISH_EDITING_CREDIT_CARD_NUMBER = 'DID_FINISH_EDITING_CREDIT_CARD_NUMBER';
+	
+	var SET_EDITING_CREDIT_CARD_EXPIRATION_DATE = exports.SET_EDITING_CREDIT_CARD_EXPIRATION_DATE = 'SET_EDITING_CREDIT_CARD_EXPIRATION_DATE';
+	
+	var HAS_ATTEMPTED_EMAIL_VALIDATION = exports.HAS_ATTEMPTED_EMAIL_VALIDATION = 'HAS_ATTEMPTED_EMAIL_VALIDATION';
 
 /***/ },
 /* 30 */
@@ -23207,7 +23246,7 @@
 /* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var require;var require;"use strict";var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj;};(function(f){if(( false?"undefined":_typeof(exports))==="object"&&typeof module!=="undefined"){module.exports=f();}else if(true){!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (f), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));}else {var g;if(typeof window!=="undefined"){g=window;}else if(typeof global!=="undefined"){g=global;}else if(typeof self!=="undefined"){g=self;}else {g=this;}g.FieldKit=f();}})(function(){var define,module,exports;return function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return require(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f;}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e);},l,l.exports,e,t,n,r);}return n[o].exports;}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++){s(r[o]);}return s;}({1:[function(_dereq_,module,exports){ // shim for using process in browser
+	var require;var require;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;"use strict";var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj;};(function(f){if(( false?"undefined":_typeof(exports))==="object"&&typeof module!=="undefined"){module.exports=f();}else if(true){!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (f), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));}else {var g;if(typeof window!=="undefined"){g=window;}else if(typeof global!=="undefined"){g=global;}else if(typeof self!=="undefined"){g=self;}else {g=this;}g.FieldKit=f();}})(function(){var define,module,exports;return function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return require(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f;}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e);},l,l.exports,e,t,n,r);}return n[o].exports;}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++){s(r[o]);}return s;}({1:[function(_dereq_,module,exports){ // shim for using process in browser
 	var process=module.exports={};var queue=[];var draining=false;var currentQueue;var queueIndex=-1;function cleanUpNextTick(){draining=false;if(currentQueue.length){queue=currentQueue.concat(queue);}else {queueIndex=-1;}if(queue.length){drainQueue();}}function drainQueue(){if(draining){return;}var timeout=setTimeout(cleanUpNextTick);draining=true;var len=queue.length;while(len){currentQueue=queue;queue=[];while(++queueIndex<len){if(currentQueue){currentQueue[queueIndex].run();}}queueIndex=-1;len=queue.length;}currentQueue=null;draining=false;clearTimeout(timeout);}process.nextTick=function(fun){var args=new Array(arguments.length-1);if(arguments.length>1){for(var i=1;i<arguments.length;i++){args[i-1]=arguments[i];}}queue.push(new Item(fun,args));if(queue.length===1&&!draining){setTimeout(drainQueue,0);}}; // v8 likes predictible objects
 	function Item(fun,array){this.fun=fun;this.array=array;}Item.prototype.run=function(){this.fun.apply(null,this.array);};process.title='browser';process.browser=true;process.env={};process.argv=[];process.version=''; // empty string to avoid regexp issues
 	process.versions={};function noop(){}process.on=noop;process.addListener=noop;process.once=noop;process.off=noop;process.removeListener=noop;process.removeAllListeners=noop;process.emit=noop;process.binding=function(name){throw new Error('process.binding is not supported');};process.cwd=function(){return '/';};process.chdir=function(dir){throw new Error('process.chdir is not supported');};process.umask=function(){return 0;};},{}],2:[function(_dereq_,module,exports){(function(process){(function(global,factory){if(typeof define==='function'&&define.amd){define('InputSim',['exports'],factory);}else if(typeof exports!=='undefined'){factory(exports);}else {var mod={exports:{}};factory(mod.exports);global.InputSim=mod.exports;}})(this,function(exports){ /*! jshint esnext:true, undef:true, unused:true */ /** @private */'use strict';Object.defineProperty(exports,'__esModule',{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if('value' in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}var A=65; /** @private */var Y=89; /** @private */var Z=90; /** @private */var ZERO=48; /** @private */var NINE=57; /** @private */var LEFT=37; /** @private */var RIGHT=39; /** @private */var UP=38; /** @private */var DOWN=40; /** @private */var BACKSPACE=8; /** @private */var DELETE=46; /** @private */var TAB=9; /** @private */var ENTER=13; /**
@@ -30606,11 +30645,845 @@
 
 	'use strict';
 	
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+	
 	var _expect = __webpack_require__(2);
 	
 	var _expect2 = _interopRequireDefault(_expect);
 	
-	var _payment = __webpack_require__(275);
+	var _react = __webpack_require__(32);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactAddonsTestUtils = __webpack_require__(62);
+	
+	var _reactAddonsTestUtils2 = _interopRequireDefault(_reactAddonsTestUtils);
+	
+	var _reactDom = __webpack_require__(197);
+	
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+	
+	var _EmailInput = __webpack_require__(275);
+	
+	var _EmailInput2 = _interopRequireDefault(_EmailInput);
+	
+	var _CreditCardInputStates = __webpack_require__(30);
+	
+	var cardStates = _interopRequireWildcard(_CreditCardInputStates);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function setup(propOverrides) {
+		var props = Object.assign({
+			icon: 'email',
+			placeholder: 'hi',
+			className: 'there',
+			email: {
+				status: cardStates.VALID,
+				value: 'jeremy@lubin.com',
+				hasAttemptedValidation: false
+			},
+			onChange: _expect2.default.createSpy(),
+			onFocus: _expect2.default.createSpy()
+		}, propOverrides);
+	
+		var renderer = _reactAddonsTestUtils2.default.createRenderer();
+		renderer.render(_react2.default.createElement(_EmailInput2.default, props));
+		var output = renderer.getRenderOutput();
+		var instance = renderer.getMountedInstance();
+	
+		return {
+			props: props,
+			output: output,
+			renderer: renderer,
+			instance: instance
+		};
+	}
+	
+	describe('Input', function () {
+		it('should render an input field', function () {
+			var _setup = setup();
+	
+			var output = _setup.output;
+	
+			var _output$props$childre = _slicedToArray(output.props.children, 2);
+	
+			var svg = _output$props$childre[0];
+			var input = _output$props$childre[1];
+	
+	
+			(0, _expect2.default)(output.type).toBe('div');
+			(0, _expect2.default)(output.props.className).toBe('Input EmailInput ');
+	
+			// expect( svg.type ).toBe('svg')
+			(0, _expect2.default)(input.type).toBe('input');
+		});
+	
+		it('should render an input field with an error when the value is invalid', function () {
+			var _setup2 = setup({
+				email: { status: cardStates.INVALID, hasAttemptedValidation: true }
+			});
+	
+			var output = _setup2.output;
+	
+			(0, _expect2.default)(output.props.className.includes('Error')).toBe(true);
+		});
+	
+		describe('Validating an Email Address', function () {
+			it('should not reject invald emails when no validation attempt has been made', function () {
+				var _setup3 = setup();
+	
+				var instance = _setup3.instance;
+	
+				(0, _expect2.default)(instance.getState('')).toBe(cardStates.BLANK);
+				(0, _expect2.default)(instance.getState('je')).toBe(cardStates.INCOMPLETE);
+				(0, _expect2.default)(instance.getState('jeremy@')).toBe(cardStates.INCOMPLETE);
+				(0, _expect2.default)(instance.getState('jeremy@lubin')).toBe(cardStates.INCOMPLETE);
+			});
+	
+			it('should reject invald emails when a validation attempt has been made', function () {
+				var _setup4 = setup({
+					email: { hasAttemptedValidation: true }
+				});
+	
+				var instance = _setup4.instance;
+	
+				(0, _expect2.default)(instance.getState('')).toBe(cardStates.INVALID);
+				(0, _expect2.default)(instance.getState('je')).toBe(cardStates.INVALID);
+				(0, _expect2.default)(instance.getState('jeremy@')).toBe(cardStates.INVALID);
+				(0, _expect2.default)(instance.getState('jeremy@lubin')).toBe(cardStates.INVALID);
+			});
+	
+			it('should accept valid emails', function () {
+				var _setup5 = setup();
+	
+				var instance = _setup5.instance;
+	
+				(0, _expect2.default)(instance.getState('jeremy@lubin.com')).toBe(cardStates.VALID);
+				(0, _expect2.default)(instance.getState('jeremy+test@lubin.com')).toBe(cardStates.VALID);
+			});
+		});
+	});
+
+/***/ },
+/* 275 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _react = __webpack_require__(32);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactDom = __webpack_require__(197);
+	
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+	
+	var _svgInlineReact = __webpack_require__(210);
+	
+	var _svgInlineReact2 = _interopRequireDefault(_svgInlineReact);
+	
+	var _Icons = __webpack_require__(292);
+	
+	var Icons = _interopRequireWildcard(_Icons);
+	
+	var _CreditCardInputStates = __webpack_require__(30);
+	
+	var cardStates = _interopRequireWildcard(_CreditCardInputStates);
+	
+	__webpack_require__(200);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	// const Input = (props) => (
+	var Input = _react2.default.createClass({
+		displayName: 'Input',
+	
+	
+		getState: function getState() {
+			var value = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+	
+			var valid = /\S+@\S+\.\S+/.test(value);
+	
+			// If we've already attempted a validation
+			// be aggressive about error states
+			if (this.props.email.hasAttemptedValidation) {
+				if (!valid) return cardStates.INVALID;
+			} else {
+				if (value === '') return cardStates.BLANK;
+				if (!valid) return cardStates.INCOMPLETE;
+			}
+	
+			return cardStates.VALID;
+		},
+	
+		render: function render() {
+			var _this = this;
+	
+			// Check whether we should render in an error state
+			var icon = this.props.icon,
+			    errorClass = '';
+			if (this.getState(this.props.email.value) === cardStates.INVALID) {
+				icon = Icons.ERROR_ICON;
+				errorClass = 'Error';
+			}
+	
+			return _react2.default.createElement(
+				'div',
+				{ className: 'Input EmailInput ' + errorClass },
+				_react2.default.createElement(_svgInlineReact2.default, { src: __webpack_require__(255)("./" + icon + '.svg') }),
+				_react2.default.createElement('input', { placeholder: this.props.placeholder,
+					className: '' + errorClass,
+					value: this.props.email.value,
+					onChange: function onChange(e) {
+						e.preventDefault();
+						var email = e.target.value.trim();
+						_this.props.onChange(email, _this.getState(email));
+					}
+				})
+			);
+		}
+	});
+	
+	exports.default = Input;
+
+/***/ },
+/* 276 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+	
+	var _expect = __webpack_require__(2);
+	
+	var _expect2 = _interopRequireDefault(_expect);
+	
+	var _react = __webpack_require__(32);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactAddonsTestUtils = __webpack_require__(62);
+	
+	var _reactAddonsTestUtils2 = _interopRequireDefault(_reactAddonsTestUtils);
+	
+	var _reactDom = __webpack_require__(197);
+	
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+	
+	var _PaymentPage = __webpack_require__(277);
+	
+	var _PaymentPage2 = _interopRequireDefault(_PaymentPage);
+	
+	var _CreditCardPaymentInput = __webpack_require__(209);
+	
+	var _CreditCardPaymentInput2 = _interopRequireDefault(_CreditCardPaymentInput);
+	
+	var _Checkbox = __webpack_require__(285);
+	
+	var _Checkbox2 = _interopRequireDefault(_Checkbox);
+	
+	var _Button = __webpack_require__(279);
+	
+	var _Button2 = _interopRequireDefault(_Button);
+	
+	var _CreditCardInputStates = __webpack_require__(30);
+	
+	var cardStates = _interopRequireWildcard(_CreditCardInputStates);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function setup(propOverrides) {
+		var props = Object.assign({
+			charityName: '',
+			amount: 'hi',
+			payment: {
+				cardNumber: {
+					status: '',
+					value: '1234567891098876',
+					cursorPosition: null
+				},
+				expirationDate: {
+					status: '',
+					values: {
+						month: '12',
+						year: '2020'
+					},
+					cursorPosition: null
+				},
+				securityCode: {
+					status: '',
+					value: '1234',
+					cursorPosition: null
+				},
+				currentField: 'CreditCardNumber'
+			},
+			key: ''
+		}, propOverrides);
+	
+		var renderer = _reactAddonsTestUtils2.default.createRenderer();
+		renderer.render(_react2.default.createElement(_PaymentPage2.default, props));
+		var output = renderer.getRenderOutput();
+		var instance = renderer.getMountedInstance();
+	
+		return {
+			props: props,
+			output: output,
+			renderer: renderer,
+			instance: instance
+		};
+	}
+	
+	describe('PaymentPage', function () {
+		it('should render the correct components', function () {
+			var _setup = setup();
+	
+			var output = _setup.output;
+	
+			var _output$props$childre = _slicedToArray(output.props.children, 3);
+	
+			var input = _output$props$childre[0];
+			var checkbox = _output$props$childre[1];
+			var button = _output$props$childre[2];
+	
+	
+			(0, _expect2.default)(output.type).toBe('div');
+			(0, _expect2.default)(output.props.className).toBe('Page payment-page');
+	
+			(0, _expect2.default)(input.type.WrappedComponent).toBe(_CreditCardPaymentInput2.default);
+			(0, _expect2.default)(checkbox.type).toBe(_Checkbox2.default);
+			(0, _expect2.default)(button.type.WrappedComponent).toBe(_Button2.default);
+		});
+	
+		describe('Checking for Valid Payment', function () {
+			it('should return false if the credit card number is not VALID', function () {
+				var _setup2 = setup({ payment: {
+						cardNumber: {
+							status: cardStates.INVALID
+						},
+						expirationDate: {
+							status: cardStates.VALID
+						},
+						securityCode: {
+							status: cardStates.VALID
+						}
+					} });
+	
+				var instance = _setup2.instance;
+	
+	
+				(0, _expect2.default)(instance.isPageValid()).toBe(false);
+			});
+	
+			it('should return false if the expiration date is not VALID', function () {
+				var _setup3 = setup({ payment: {
+						cardNumber: {
+							status: cardStates.VALID
+						},
+						expirationDate: {
+							status: cardStates.BLANK
+						},
+						securityCode: {
+							status: cardStates.VALID
+						}
+					} });
+	
+				var instance = _setup3.instance;
+	
+	
+				(0, _expect2.default)(instance.isPageValid()).toBe(false);
+			});
+	
+			it('should return false if the security code is not VALID', function () {
+				var _setup4 = setup({ payment: {
+						cardNumber: {
+							status: cardStates.VALID
+						},
+						expirationDate: {
+							status: cardStates.VALID
+						},
+						securityCode: {
+							status: cardStates.INCOMPLETE
+						}
+					} });
+	
+				var instance = _setup4.instance;
+	
+	
+				(0, _expect2.default)(instance.isPageValid()).toBe(false);
+			});
+	
+			it('should return true if all three are VALID', function () {
+				var _setup5 = setup({ payment: {
+						cardNumber: {
+							status: cardStates.VALID
+						},
+						expirationDate: {
+							status: cardStates.VALID
+						},
+						securityCode: {
+							status: cardStates.VALID
+						}
+					} });
+	
+				var instance = _setup5.instance;
+	
+	
+				(0, _expect2.default)(instance.isPageValid()).toBe(true);
+			});
+		});
+	});
+
+/***/ },
+/* 277 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _react = __webpack_require__(32);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _svgInlineReact = __webpack_require__(210);
+	
+	var _svgInlineReact2 = _interopRequireDefault(_svgInlineReact);
+	
+	var _Link = __webpack_require__(278);
+	
+	var _Link2 = _interopRequireDefault(_Link);
+	
+	var _Button = __webpack_require__(279);
+	
+	var _Button2 = _interopRequireDefault(_Button);
+	
+	var _BackButton = __webpack_require__(282);
+	
+	var _BackButton2 = _interopRequireDefault(_BackButton);
+	
+	var _NextButton = __webpack_require__(283);
+	
+	var _NextButton2 = _interopRequireDefault(_NextButton);
+	
+	var _PaymentInput = __webpack_require__(284);
+	
+	var _PaymentInput2 = _interopRequireDefault(_PaymentInput);
+	
+	var _Checkbox = __webpack_require__(285);
+	
+	var _Checkbox2 = _interopRequireDefault(_Checkbox);
+	
+	var _CreditCardInputStates = __webpack_require__(30);
+	
+	var cardStates = _interopRequireWildcard(_CreditCardInputStates);
+	
+	__webpack_require__(288);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var PaymentPage = _react2.default.createClass({
+		displayName: 'PaymentPage',
+	
+	
+		isPageValid: function isPageValid() {
+	
+			// Return true only if all three fields are VALID
+			if (this.props.payment.cardNumber.status === cardStates.VALID && this.props.payment.expirationDate.status === cardStates.VALID && this.props.payment.securityCode.status === cardStates.VALID) {
+				return true;
+			}
+	
+			return false;
+		},
+	
+		render: function render() {
+			return _react2.default.createElement(
+				'div',
+				{ className: 'Page payment-page', style: this.props.style },
+				_react2.default.createElement(_PaymentInput2.default, { icon: 'credit-card', payment: this.props.payment }),
+				_react2.default.createElement(_Checkbox2.default, { name: 'remember-card', label: 'Remember my payment info on this device for future donations.' /*checked={this.props.savePaymentInfo}*/ }),
+				_react2.default.createElement(_NextButton2.default, { text: 'Next', type: 'secondary next-page-button', icon: 'forward', iconPosition: 'right', disabled: !this.isPageValid() })
+			);
+		}
+	});
+	
+	exports.default = PaymentPage;
+
+/***/ },
+/* 278 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _react = __webpack_require__(32);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var Link = function Link(props) {
+		return _react2.default.createElement(
+			'a',
+			{ className: 'Link',
+				href: '#',
+				onClick: function onClick(e) {
+					e.preventDefault();
+				}
+			},
+			props.text
+		);
+	};
+	
+	exports.default = Link;
+
+/***/ },
+/* 279 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _react = __webpack_require__(32);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _svgInlineReact = __webpack_require__(210);
+	
+	var _svgInlineReact2 = _interopRequireDefault(_svgInlineReact);
+	
+	__webpack_require__(280);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var Button = function Button(props) {
+		var icon = null;
+		if (props.icon) icon = _react2.default.createElement(_svgInlineReact2.default, { src: __webpack_require__(255)("./" + props.icon + '.svg') });
+	
+		return _react2.default.createElement(
+			'button',
+			{ className: 'button ' + props.type + (props.icon ? ' icon ' : '') + (props.iconPosition ? ' ' + props.iconPosition : ''),
+				onClick: function onClick(e) {
+					e.preventDefault();
+					props.onClick();
+				},
+				disabled: props.disabled ? 'disabled' : ''
+			},
+			icon,
+			props.text
+		);
+	};
+	
+	Button.propTypes = {
+		onClick: _react.PropTypes.func,
+		type: _react.PropTypes.string,
+		text: _react.PropTypes.string,
+		icon: _react.PropTypes.string,
+		iconPosition: _react.PropTypes.string,
+		disabled: _react.PropTypes.bool
+	};
+	
+	exports.default = Button;
+
+/***/ },
+/* 280 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+	
+	// load the styles
+	var content = __webpack_require__(281);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(203)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js?-url!./../../node_modules/postcss-loader/index.js!./button.css", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js?-url!./../../node_modules/postcss-loader/index.js!./button.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 281 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(202)();
+	// imports
+	
+	
+	// module
+	exports.push([module.id, "/* Fonts */\n/* Colors */\n/* Spacing */\n/* Sizing */\n/* Animation */\n\nbutton {\n\t/* Reset browser defaults */\n\t-webkit-appearance: none;\n\t   -moz-appearance: none;\n\t        appearance: none;\n\toutline: none;\n\tbackground: none;\n\tborder: none;\n\tfont-family: \"Avenir\",helvetica,sans-serif;\n\n\t-webkit-tap-highlight-color: rgba(0,0,0,0);\n\t\n\tborder: 1px solid #ffffff;\n\tpadding: 0 24px;\n\n\tfont-size: .75rem;\n\tline-height: 1.375em;\n\ttext-transform: uppercase;\n\tletter-spacing: 1px;\n\tfont-weight: 500;\n\n\tcursor: pointer;\n\t\n\tposition: relative;\n\n\n\t/* Set disabled state */\n\n\t/* Default size */\n\theight: 48px;\n\tborder-radius: calc(48px / 2);\n\tbox-sizing: border-box;\n\n}\n\n/*  Because Safari doesn't currently support displaying buttons as flex containers,\n\t\twe can add the flex container functionality to React's inner span isntead */\n\nbutton>span, button i {\n\tdisplay: -webkit-box;\n\tdisplay: -webkit-flex;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-align: center;\n\t-webkit-align-items: center;\n\t-ms-flex-align: center;\n\talign-items: center;\n\t-webkit-box-pack: center;\n\t-webkit-justify-content: center;\n\t-ms-flex-pack: center;\n\tjustify-content: center;\n\n}\n\n/* Style an optional icon */\n\nbutton i {\n\tposition: absolute;\n\tleft: 24px;\n\ttop: calc(48px / 4);\n\theight: calc(48px / 2);\n\n}\n\n/* Darken button on highlight */\n\nbutton svg {\n\theight: calc(48px / 2);\n\n}\n\nbutton:focus, button:active {\n\t-webkit-appearance: none;\n\t-moz-appearance: none;\n\tappearance: none;\n\toutline: none;\n\t-webkit-tap-highlight-color: transparent;\n\n}\n\nbutton[disabled] {\n\topacity: 0.3;\n\tcursor: default;\n\t/* Don't do anything on hover, focus or active */\n\n}\n\nbutton[disabled]:focus, button[disabled]:hover, button[disabled]:active {\n\tbackground: none;\n\n}\n\nbutton:focus, button:hover {\n\tbackground-image: -webkit-linear-gradient(45deg, rgba(0,0,0,0.04), rgba(0,0,0,0.04));\n\tbackground-image: linear-gradient(45deg, rgba(0,0,0,0.04), rgba(0,0,0,0.04));\n\n}\n\nbutton:active {\n\tbackground-image: -webkit-linear-gradient(45deg, rgba(0,0,0,0.08), rgba(0,0,0,0.08));\n\tbackground-image: linear-gradient(45deg, rgba(0,0,0,0.08), rgba(0,0,0,0.08));\n\n}\n\nbutton.circle {\n\twidth: 48px;\n\tpadding: 0;\n\n}\n\nbutton.circle i {\n\tposition: relative;\n\tleft: auto;\n\ttop: auto;\n\n}\n\nbutton.icon:not(.circle) {\n\tpadding: 0 calc(24px * 2 + 48px / 2);\n\n}\n\nbutton.icon.right i {\n\tleft: auto;\n\tright: 24px;\n\n}\n\nbutton.primary {\n\tbackground-color: #ffffff;\n\tcolor: #00AB6B;\n\n}\n\n/* Style an optional icon */\n\nbutton.primary path {\n\tstroke: #00AB6B;\n\tfill: #00AB6B;\n\n}\n\nbutton.secondary {\n\tcolor: #ffffff;\n\n}\n\n/* Style an optional icon */\n\nbutton.secondary path {\n\tstroke: #ffffff;\n\tfill: #ffffff;\n\n}\n\nbutton.tertiary {\n\tcolor: #ffffff;\n\tborder: none;\n\n}\n\n/* Style an optional icon */\n\nbutton.tertiary path {\n\tstroke: #ffffff;\n\tfill: #ffffff;\n\n}\n\nbutton.quaternary {\n\tcolor: rgba(255, 255, 255, 0.7);\n\tfont-size: .75rem;\n\tline-height: 1.375em;\n\tborder: none;\n\ttext-transform: none;\n\tletter-spacing: 0px;\n\n}\n\n/* Style an optional icon */\n\nbutton.quaternary path {\n\tstroke: rgba(255, 255, 255, 0.7);\n\tfill: rgba(255, 255, 255, 0.7);\n\n}\n\nbutton.large {\n\theight: 72px;\n\tborder-radius: calc(72px / 2);\n\n}\n\n/* Style an optional icon */\n\nbutton.large i {\n\tposition: absolute;\n\tleft: 24px;\n\ttop: calc(72px / 4);\n\theight: calc(72px / 2);\n\n}\n\nbutton.large svg {\n\theight: calc(72px / 2);\n\n}\n\nbutton.large.circle {\n\twidth: 72px;\n\tfont-size: 24px;\n\tfont-weight: 100;\n\n}\n\nbutton.large.circle i {\n\tposition: relative;\n\tleft: auto;\n\ttop: auto;\n\n}\n\nbutton.large.icon:not(.circle) {\n\tpadding: 0 calc(24px * 2 + 72px / 2);\n\n}\n\nbutton.small {\n\theight: 32px;\n\tborder-radius: calc(32px / 2);\n\n}\n\n/* Style an optional icon */\n\nbutton.small svg {\n\theight: calc(32px / 2);\n\n}\n\nbutton.small i {\n\tposition: absolute;\n\tleft: 24px;\n\ttop: calc(32px / 4);\n\theight: calc(32px / 2);\n\n}\n\nbutton.small.circle {\n\twidth: 32px;\n\n}\n\nbutton.small.circle i {\n\tposition: relative;\n\tleft: auto;\n\ttop: auto;\n\n}", ""]);
+	
+	// exports
+
+
+/***/ },
+/* 282 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _reactRedux = __webpack_require__(212);
+	
+	var _actions = __webpack_require__(28);
+	
+	var _Button = __webpack_require__(279);
+	
+	var _Button2 = _interopRequireDefault(_Button);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+		return {
+			onClick: function onClick() {
+				dispatch((0, _actions.recedePage)());
+			}
+		};
+	};
+	
+	var BackButton = (0, _reactRedux.connect)(null, mapDispatchToProps)(_Button2.default);
+	
+	exports.default = BackButton;
+
+/***/ },
+/* 283 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _reactRedux = __webpack_require__(212);
+	
+	var _actions = __webpack_require__(28);
+	
+	var _Button = __webpack_require__(279);
+	
+	var _Button2 = _interopRequireDefault(_Button);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+		return {
+			onClick: function onClick() {
+				dispatch((0, _actions.advancePage)());
+			}
+		};
+	};
+	
+	var NextButton = (0, _reactRedux.connect)(null, mapDispatchToProps)(_Button2.default);
+	
+	exports.default = NextButton;
+
+/***/ },
+/* 284 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _reactRedux = __webpack_require__(212);
+	
+	var _actions = __webpack_require__(28);
+	
+	var actions = _interopRequireWildcard(_actions);
+	
+	var _CreditCardPaymentInput = __webpack_require__(209);
+	
+	var _CreditCardPaymentInput2 = _interopRequireDefault(_CreditCardPaymentInput);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+		return {
+			onCardNumberChange: function onCardNumberChange(value, cursorPosition) {
+				dispatch(actions.setCreditCardNumber(value, cursorPosition));
+			},
+			onExpirationDateChange: function onExpirationDateChange(value, cursorPosition) {
+				dispatch(actions.setCreditCardExpirationDate(value, cursorPosition));
+			},
+			onSecurityCodeChange: function onSecurityCodeChange(value, cursorPosition) {
+				dispatch(actions.setCreditCardSecurityCode(value, cursorPosition));
+			},
+			onCardNumberFocus: function onCardNumberFocus() {
+				dispatch(actions.didStartEditingCreditCardNumber());
+			},
+			onExpirationDateFocus: function onExpirationDateFocus() {
+				dispatch(actions.didStartEditingCreditCardExpirationDate());
+			},
+			onSecurityCodeFocus: function onSecurityCodeFocus() {
+				dispatch(actions.didStartEditingCreditCardSecurityCode());
+			}
+		};
+	};
+	
+	var PaymentInput = (0, _reactRedux.connect)(null, mapDispatchToProps)(_CreditCardPaymentInput2.default);
+	
+	exports.default = PaymentInput;
+
+/***/ },
+/* 285 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	
+	var _react = __webpack_require__(32);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	__webpack_require__(286);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var Checkbox = function Checkbox(props) {
+		return _react2.default.createElement(
+			'div',
+			{ className: 'Checkbox' },
+			_react2.default.createElement('input', { type: 'checkbox', id: props.name, checked: props.checked, defaultChecked: 'true' }),
+			_react2.default.createElement(
+				'label',
+				{ htmlFor: props.name },
+				props.label
+			)
+		);
+	};
+	
+	exports.default = Checkbox;
+
+/***/ },
+/* 286 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+	
+	// load the styles
+	var content = __webpack_require__(287);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(203)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js?-url!./../../node_modules/postcss-loader/index.js!./checkbox.css", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js?-url!./../../node_modules/postcss-loader/index.js!./checkbox.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 287 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(202)();
+	// imports
+	
+	
+	// module
+	exports.push([module.id, "/* Fonts */\n\n/* Colors */\n\n/* Spacing */\n\n/* Sizing */\n\n/* Animation */\n\n.Checkbox {\n\n\tcursor: pointer;\n\n\t/* Add some spacing on each side */\n\tmargin: calc(24px / 2) calc(24px);\n}\n\n/* Hide the default checkbox */\n\n.Checkbox [type=\"checkbox\"] {\n\n\tdisplay: none;\n}\n\n.Checkbox label {\n\n\tdisplay: -webkit-box;\n\n\tdisplay: -webkit-flex;\n\n\tdisplay: -ms-flexbox;\n\n\tdisplay: flex;\n\n\t-webkit-box-align: center;\n\n\t-webkit-align-items: center;\n\n\t-ms-flex-align: center;\n\n\talign-items: center;\n\n\ttext-align: left;\n\n\tcolor: rgba(255, 255, 255, 0.7);\n\n\tfont-size: .75rem;\n\n\tline-height: 1.375em;\n}\n\n/* Add the icon */\n\n.Checkbox label:before {\n\n\tcontent: '';\n\n\tdisplay: inline-block;\n\n\theight: 24px;\n\n\twidth: 24px;\n\n\t-webkit-flex-shrink: 0;\n\n\t-ms-flex-negative: 0;\n\n\tflex-shrink: 0;\n\n\tbackground: url(../../icons/circle-thin.svg);\n\n\tmargin-right: calc(24px / 2);\n}\n\n.Checkbox [type=\"checkbox\"]:checked + label:before {\n\n\tbackground: url(../../icons/circle-check.svg);\n}\n\n\n\n", ""]);
+	
+	// exports
+
+
+/***/ },
+/* 288 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+	
+	// load the styles
+	var content = __webpack_require__(289);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(203)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js?-url!./../../node_modules/postcss-loader/index.js!./payment-page.css", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js?-url!./../../node_modules/postcss-loader/index.js!./payment-page.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 289 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(202)();
+	// imports
+	
+	
+	// module
+	exports.push([module.id, "/* Fonts */\n\n/* Colors */\n\n/* Spacing */\n\n/* Sizing */\n\n/* Animation */\n\n.payment-page .Input {\n\n    margin-top: 24px;\n}\n\n.payment-page .next-page-button {\n\n    margin-top: 24px;\n}", ""]);
+	
+	// exports
+
+
+/***/ },
+/* 290 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _expect = __webpack_require__(2);
+	
+	var _expect2 = _interopRequireDefault(_expect);
+	
+	var _payment = __webpack_require__(291);
 	
 	var _payment2 = _interopRequireDefault(_payment);
 	
@@ -30626,31 +31499,51 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	var initialState = {
+		email: {
+			status: '',
+			value: '',
+			hasAttemptedValidation: false
+		},
+		cardNumber: {
+			status: '',
+			value: '',
+			formattedValue: '',
+			cursorPosition: null
+		},
+		expirationDate: {
+			status: '',
+			values: {
+				month: '',
+				year: ''
+			},
+			cursorPosition: null
+		},
+		securityCode: {
+			status: '',
+			value: '',
+			cursorPosition: null
+		},
+		currentField: 'CreditCardNumber'
+	};
+	
 	describe('Payment Reducer', function () {
 		it('should return the initial state', function () {
-			(0, _expect2.default)((0, _payment2.default)(undefined, {})).toEqual({
-				email: '',
-				cardNumber: {
-					status: '',
-					value: '',
-					formattedValue: '',
-					cursorPosition: null
-				},
-				expirationDate: {
-					status: '',
-					values: {
-						month: '',
-						year: ''
-					},
-					cursorPosition: null
-				},
-				securityCode: {
-					status: '',
-					value: '',
-					cursorPosition: null
-				},
-				currentField: 'CreditCardNumber'
-			});
+			(0, _expect2.default)((0, _payment2.default)(undefined, {})).toEqual(initialState);
+		});
+	
+		it('should handle SET_EMAIL', function () {
+			(0, _expect2.default)((0, _payment2.default)(initialState, {
+				type: types.SET_EMAIL,
+				status: cardStates.VALID,
+				email: 'jeremy@lubin.com'
+			})).toEqual(Object.assign({}, initialState, {
+				email: {
+					status: cardStates.VALID,
+					value: 'jeremy@lubin.com',
+					hasAttemptedValidation: false
+				}
+			}));
 		});
 	
 		it('should handle SET_CREDIT_CARD_NUMBER', function () {
@@ -30817,10 +31710,37 @@
 				currentField: 'CreditCardExpirationDate'
 			});
 		});
+	
+		it('should handle SET_EDITING_CREDIT_CARD_EXPIRATION_DATE', function () {
+			(0, _expect2.default)((0, _payment2.default)([], {
+				type: types.SET_EDITING_CREDIT_CARD_EXPIRATION_DATE
+			})).toEqual({
+				currentField: 'CreditCardExpirationDate'
+			});
+		});
+	
+		it('should handle HAS_ATTEMPTED_EMAIL_VALIDATION', function () {
+			var newState = Object.assign({}, initialState, {
+				email: {
+					status: cardStates.INCOMPLETE,
+					value: '',
+					hasAttemptedValidation: false
+				}
+			});
+			(0, _expect2.default)((0, _payment2.default)(newState, {
+				type: types.HAS_ATTEMPTED_EMAIL_VALIDATION
+			})).toEqual(Object.assign({}, newState, {
+				email: {
+					status: cardStates.INVALID,
+					value: '',
+					hasAttemptedValidation: true
+				}
+			}));
+		});
 	});
 
 /***/ },
-/* 275 */
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30835,10 +31755,18 @@
 	
 	var types = _interopRequireWildcard(_ActionTypes);
 	
+	var _CreditCardInputStates = __webpack_require__(30);
+	
+	var cardStates = _interopRequireWildcard(_CreditCardInputStates);
+	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	var initialState = {
-		email: '',
+		email: {
+			status: '',
+			value: '',
+			hasAttemptedValidation: false
+		},
 		cardNumber: {
 			status: '',
 			value: '',
@@ -30870,7 +31798,11 @@
 			case types.SET_EMAIL:
 	
 				return Object.assign({}, state, {
-					email: action.email
+					email: {
+						status: action.status,
+						value: action.email,
+						hasAttemptedValidation: state.email.hasAttemptedValidation
+					}
 				});
 	
 			case types.SET_CREDIT_CARD_NUMBER:
@@ -30952,12 +31884,48 @@
 					currentField: 'CreditCardExpirationDate'
 				});
 	
+			case types.SET_EDITING_CREDIT_CARD_EXPIRATION_DATE:
+	
+				return Object.assign({}, state, {
+					currentField: 'CreditCardExpirationDate'
+				});
+	
+			case types.HAS_ATTEMPTED_EMAIL_VALIDATION:
+	
+				// Generate a more aggressive state
+				// so that the first render after settings
+				// this validation attempt will reflect
+				// the more aggressive error settings
+				var newStatus = state.email.status;
+				if (state.email.status === cardStates.BLANK || state.email.status === cardStates.INCOMPLETE) {
+					newStatus = cardStates.INVALID;
+				}
+	
+				return Object.assign({}, state, {
+					email: {
+						status: newStatus,
+						value: state.email.value,
+						hasAttemptedValidation: true
+					}
+				});
+	
 			default:
 				return state;
 		}
 	};
 	
 	exports.default = payment;
+
+/***/ },
+/* 292 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var ERROR_ICON = exports.ERROR_ICON = 'warning';
 
 /***/ }
 /******/ ]);

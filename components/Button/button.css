@@ -30,6 +30,16 @@ button {
 	
 	position: relative;
 
+
+	/* Set disabled state */
+	&[disabled] {
+		opacity: 0.3;
+		cursor: default;
+
+		/* Don't do anything on hover, focus or active */
+		&:focus, &:hover, &:active { background: none }
+	}
+
 	/*  Because Safari doesn't currently support displaying buttons as flex containers,
 		we can add the flex container functionality to React's inner span isntead */
 	&>span, i {

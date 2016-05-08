@@ -5,6 +5,18 @@ import * as cardStates from '../../constants/CreditCardInputStates'
 
 describe('Actions', function() {
 
+	it('should create an action for setting email', function() {
+		const 	email = 'jeremy@lubin.com',
+				status = cardStates.VALID
+		const 	expectedAction = {
+			type: 'SET_EMAIL',
+			status,
+			email
+		}
+
+		expect( actions.setEmail( email, status ) ).toEqual( expectedAction )
+	})
+
 	it('should create an action for setting credit card number', function() {
 		const 	cardNumber = '1234567891098876',
 				formattedCardNumber = '•••• •••• •••• 8876',
@@ -77,5 +89,13 @@ describe('Actions', function() {
 		const expectAction = {
 			type: types.DID_FINISH_EDITING_CREDIT_CARD_NUMBER
 		}
+	})
+
+	it('should create an action for having attempted email validation', function() {
+		const expectedAction = {
+			type: types.HAS_ATTEMPTED_EMAIL_VALIDATION
+		}
+
+		expect( actions.hasAttemptedEmailValidation() ).toEqual( expectedAction )
 	})
 })

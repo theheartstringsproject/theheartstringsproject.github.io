@@ -3,31 +3,51 @@ import reducer from '../../reducers/payment'
 import * as types from '../../constants/ActionTypes'
 import * as cardStates from '../../constants/CreditCardInputStates'
 
+const initialState = {
+	email: {
+		status: '',
+		value: '',
+		hasAttemptedValidation: false
+	},
+	cardNumber: {
+		status: '',
+		value: '',
+		formattedValue: '',
+		cursorPosition: null
+	},
+	expirationDate: {
+		status: '',
+		values: {
+			month: '',
+			year: '',
+		},
+		cursorPosition: null
+	},
+	securityCode: {
+		status: '',
+		value: '',
+		cursorPosition: null
+	},
+	currentField: 'CreditCardNumber'
+}
+
 describe('Payment Reducer', function() {
 	it('should return the initial state', function() {
-		expect( reducer( undefined, {} ) ).toEqual({
-				email: '',
-				cardNumber: {
-					status: '',
-					value: '',
-					formattedValue: '',
-					cursorPosition: null
-				},
-				expirationDate: {
-					status: '',
-					values: {
-						month: '',
-						year: '',
-					},
-					cursorPosition: null
-				},
-				securityCode: {
-					status: '',
-					value: '',
-					cursorPosition: null
-				},
-				currentField: 'CreditCardNumber'
-		})
+		expect( reducer( undefined, {} ) ).toEqual( initialState )
+	})
+
+	it('should handle SET_EMAIL', function() {
+		expect( reducer( initialState, {
+			type: types.SET_EMAIL,
+			status: cardStates.VALID,
+			email: 'jeremy@lubin.com'
+		})).toEqual(Object.assign({}, initialState, {
+			email: {
+				status: cardStates.VALID,
+				value: 'jeremy@lubin.com',
+				hasAttemptedValidation: false
+			}
+		}))
 	})
 
 	it('should handle SET_CREDIT_CARD_NUMBER', function() {
@@ -197,5 +217,32 @@ describe('Payment Reducer', function() {
 		})).toEqual({
 			currentField: 'CreditCardExpirationDate'
 		})
+	})
+
+	it('should handle SET_EDITING_CREDIT_CARD_EXPIRATION_DATE', function() {
+		expect( reducer( [], {
+			type: types.SET_EDITING_CREDIT_CARD_EXPIRATION_DATE
+		})).toEqual({
+			currentField: 'CreditCardExpirationDate'
+		})
+	})
+
+	it('should handle HAS_ATTEMPTED_EMAIL_VALIDATION', function() {
+		let newState = Object.assign({}, initialState, {
+			email: {
+				status: cardStates.INCOMPLETE,
+				value: '',
+				hasAttemptedValidation: false
+			}
+		})
+		expect( reducer( newState, {
+			type: types.HAS_ATTEMPTED_EMAIL_VALIDATION
+		})).toEqual(Object.assign({}, newState, {
+			email: {
+				status: cardStates.INVALID,
+				value: '',
+				hasAttemptedValidation: true
+			}
+		}))
 	})
 })

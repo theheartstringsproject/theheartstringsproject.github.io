@@ -32,10 +32,11 @@ export const confirmContribution = () => {
 	}
 }
 
-export const setEmail = ( email ) => {
+export const setEmail = ( email, status ) => {
 	return {
 		type: types.SET_EMAIL,
-		email: email
+		status,
+		email
 	}
 }
 
@@ -88,5 +89,17 @@ export const didStartEditingCreditCardSecurityCode = () => {
 export const didFinishEditingCreditCardNumber = () => {
 	return {
 		type: types.DID_FINISH_EDITING_CREDIT_CARD_NUMBER
+	}
+}
+
+export const setEditingCreditCardExpirationDate = () => {
+	return {
+		type: types.SET_EDITING_CREDIT_CARD_EXPIRATION_DATE
+	}
+}
+
+export const hasAttemptedEmailValidation = () => {
+	return {
+		type: types.HAS_ATTEMPTED_EMAIL_VALIDATION
 	}
 }

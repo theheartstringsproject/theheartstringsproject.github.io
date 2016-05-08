@@ -15,6 +15,7 @@ const Button = (props) => {
 				e.preventDefault()
 				props.onClick()
 			}}
+			disabled={props.disabled ? 'disabled' : ''}
 		>
 			{icon}
 			{props.text}
@@ -27,7 +28,8 @@ Button.propTypes = {
   type: PropTypes.string,
   text: PropTypes.string,
   icon: PropTypes.string,
-  iconPosition: PropTypes.string
+  iconPosition: PropTypes.string,
+  disabled: PropTypes.bool
 }
 
 export default Button
