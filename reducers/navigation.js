@@ -20,7 +20,7 @@ const navigation = (state = initialState, action) => {
 		case 'RECEDE_PAGE':
 
 			// If we're already on the first page, do nothing
-			if ( state == 0 )
+			if ( state.currentPage == 0 )
 				return state
 
 			return {

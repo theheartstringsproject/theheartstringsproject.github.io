@@ -98,4 +98,36 @@ describe('Actions', function() {
 
 		expect( actions.hasAttemptedEmailValidation() ).toEqual( expectedAction )
 	})
+
+	it('should create an action for fetching a payment token', function() {
+
+	})
+
+	it('should create an action for requesting a payment token', function() {
+		const expectedAction = {
+			type: types.REQUEST_PAYMENT_TOKEN
+		}
+
+		expect( actions.requestPaymentToken() ).toEqual( expectedAction )
+	})
+
+	it('should create an action for a failed payment token request', function() {
+		const error = {}
+		const expectedAction = {
+			type: types.PAYMENT_TOKEN_REQUEST_FAILED,
+			error
+		}
+
+		expect( actions.paymentTokenRequestFailed( error ) ).toEqual( expectedAction )
+	})
+
+	it('should create an action for a successful payment token request', function() {
+		const response = {}
+		const expectedAction = {
+			type: types.PAYMENT_TOKEN_RECEIVED,
+			response
+		}
+
+		expect( actions.paymentTokenReceived( response ) ).toEqual( expectedAction )
+	})
 })

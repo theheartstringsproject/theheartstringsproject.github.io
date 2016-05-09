@@ -1,10 +1,11 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
 import campaign from './reducers'
 import Campaign from './containers/Campaign'
 import parseUri from './vendor/parse-uri'
+import thunkMiddleware from 'redux-thunk'
 
 // Set up Stripe
 Stripe.setPublishableKey('pk_test_poxqEYDrVEjtlxvcwfVdlJ9q');
@@ -27,7 +28,7 @@ let store = createStore(campaign, {
 		'LoadingPage',
 		'ThanksPage'
 	]
-})
+}, applyMiddleware( thunkMiddleware ))
 
 render(
 	<Provider store={store}>

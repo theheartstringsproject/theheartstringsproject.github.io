@@ -245,4 +245,12 @@ describe('Payment Reducer', function() {
 			}
 		}))
 	})
+
+	// it('should handle REQUEST_PAYMENT_TOKEN', function() {
+	// 	epxect( reducer( [], {
+	// 		type: types.REQUEST_PAYMENT_TOKEN
+	// 	})).toEqual({
+			
+	// 	})
+	// })
 })

@@ -50,8 +50,9 @@
 	__webpack_require__(208);
 	__webpack_require__(273);
 	__webpack_require__(274);
-	__webpack_require__(276);
-	module.exports = __webpack_require__(290);
+	__webpack_require__(277);
+	__webpack_require__(291);
+	module.exports = __webpack_require__(293);
 
 
 /***/ },
@@ -174,6 +175,36 @@
 			};
 	
 			(0, _expect2.default)(actions.hasAttemptedEmailValidation()).toEqual(expectedAction);
+		});
+	
+		it('should create an action for fetching a payment token', function () {});
+	
+		it('should create an action for requesting a payment token', function () {
+			var expectedAction = {
+				type: types.REQUEST_PAYMENT_TOKEN
+			};
+	
+			(0, _expect2.default)(actions.requestPaymentToken()).toEqual(expectedAction);
+		});
+	
+		it('should create an action for a failed payment token request', function () {
+			var error = {};
+			var expectedAction = {
+				type: types.PAYMENT_TOKEN_REQUEST_FAILED,
+				error: error
+			};
+	
+			(0, _expect2.default)(actions.paymentTokenRequestFailed(error)).toEqual(expectedAction);
+		});
+	
+		it('should create an action for a successful payment token request', function () {
+			var response = {};
+			var expectedAction = {
+				type: types.PAYMENT_TOKEN_RECEIVED,
+				response: response
+			};
+	
+			(0, _expect2.default)(actions.paymentTokenReceived(response)).toEqual(expectedAction);
 		});
 	});
 
@@ -2312,7 +2343,8 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.hasAttemptedEmailValidation = exports.setEditingCreditCardExpirationDate = exports.didFinishEditingCreditCardNumber = exports.didStartEditingCreditCardSecurityCode = exports.didStartEditingCreditCardExpirationDate = exports.didStartEditingCreditCardNumber = exports.setCreditCardSecurityCode = exports.setCreditCardExpirationDate = exports.setCreditCardNumber = exports.setEmail = exports.confirmContribution = exports.chooseContributionAmount = exports.jumpToPage = exports.recedePage = exports.advancePage = undefined;
+	exports.paymentTokenReceived = exports.paymentTokenRequestFailed = exports.requestPaymentToken = exports.hasAttemptedEmailValidation = exports.setEditingCreditCardExpirationDate = exports.didFinishEditingCreditCardNumber = exports.didStartEditingCreditCardSecurityCode = exports.didStartEditingCreditCardExpirationDate = exports.didStartEditingCreditCardNumber = exports.setCreditCardSecurityCode = exports.setCreditCardExpirationDate = exports.setCreditCardNumber = exports.setEmail = exports.confirmContribution = exports.chooseContributionAmount = exports.jumpToPage = exports.recedePage = exports.advancePage = undefined;
+	exports.fetchPaymentToken = fetchPaymentToken;
 	
 	var _ActionTypes = __webpack_require__(29);
 	
@@ -2324,7 +2356,8 @@
 		return {
 			type: types.ADVANCE_PAGE
 		};
-	};
+	}; // import fetch from 'isomorphic-fetch'
+	
 	
 	var recedePage = exports.recedePage = function recedePage() {
 		return {
@@ -2423,6 +2456,48 @@
 			type: types.HAS_ATTEMPTED_EMAIL_VALIDATION
 		};
 	};
+	
+	var requestPaymentToken = exports.requestPaymentToken = function requestPaymentToken() {
+		return {
+			type: types.REQUEST_PAYMENT_TOKEN
+		};
+	};
+	
+	var paymentTokenRequestFailed = exports.paymentTokenRequestFailed = function paymentTokenRequestFailed(error) {
+		return {
+			type: types.PAYMENT_TOKEN_REQUEST_FAILED,
+			error: error
+		};
+	};
+	
+	var paymentTokenReceived = exports.paymentTokenReceived = function paymentTokenReceived(response) {
+		return {
+			type: types.PAYMENT_TOKEN_RECEIVED,
+			response: response
+		};
+	};
+	
+	function fetchPaymentToken(payment) {
+		return function (dispatch) {
+			dispatch(requestPaymentToken());
+	
+			Stripe.card.createToken({
+				number: payment.cardNumber.value,
+				cvc: payment.securityCode.value,
+				exp_month: payment.expirationDate.values.month,
+				exp_year: payment.expirationDate.values.year
+			}, function (status, response) {
+				if (response.error) {
+					console.log(response.error);
+					dispatch(paymentTokenRequestFailed(response.error));
+				} else {
+					console.log(response);
+					dispatch(paymentTokenReceived(response));
+					dispatch(advancePage());
+				}
+			});
+		};
+	}
 
 /***/ },
 /* 29 */
@@ -2458,6 +2533,11 @@
 	var SET_EDITING_CREDIT_CARD_EXPIRATION_DATE = exports.SET_EDITING_CREDIT_CARD_EXPIRATION_DATE = 'SET_EDITING_CREDIT_CARD_EXPIRATION_DATE';
 	
 	var HAS_ATTEMPTED_EMAIL_VALIDATION = exports.HAS_ATTEMPTED_EMAIL_VALIDATION = 'HAS_ATTEMPTED_EMAIL_VALIDATION';
+	
+	// Tokenziation Actions
+	var REQUEST_PAYMENT_TOKEN = exports.REQUEST_PAYMENT_TOKEN = 'REQUEST_PAYMENT_TOKEN';
+	var PAYMENT_TOKEN_RECEIVED = exports.PAYMENT_TOKEN_RECEIVED = 'PAYMENT_TOKEN_RECEIVED';
+	var PAYMENT_TOKEN_REQUEST_FAILED = exports.PAYMENT_TOKEN_REQUEST_FAILED = 'PAYMENT_TOKEN_REQUEST_FAILED';
 
 /***/ },
 /* 30 */
@@ -23246,7 +23326,7 @@
 /* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var require;var require;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;"use strict";var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj;};(function(f){if(( false?"undefined":_typeof(exports))==="object"&&typeof module!=="undefined"){module.exports=f();}else if(true){!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (f), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));}else {var g;if(typeof window!=="undefined"){g=window;}else if(typeof global!=="undefined"){g=global;}else if(typeof self!=="undefined"){g=self;}else {g=this;}g.FieldKit=f();}})(function(){var define,module,exports;return function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return require(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f;}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e);},l,l.exports,e,t,n,r);}return n[o].exports;}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++){s(r[o]);}return s;}({1:[function(_dereq_,module,exports){ // shim for using process in browser
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var require;var require;"use strict";var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj;};(function(f){if(( false?"undefined":_typeof(exports))==="object"&&typeof module!=="undefined"){module.exports=f();}else if(true){!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (f), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));}else {var g;if(typeof window!=="undefined"){g=window;}else if(typeof global!=="undefined"){g=global;}else if(typeof self!=="undefined"){g=self;}else {g=this;}g.FieldKit=f();}})(function(){var define,module,exports;return function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return require(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f;}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e);},l,l.exports,e,t,n,r);}return n[o].exports;}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++){s(r[o]);}return s;}({1:[function(_dereq_,module,exports){ // shim for using process in browser
 	var process=module.exports={};var queue=[];var draining=false;var currentQueue;var queueIndex=-1;function cleanUpNextTick(){draining=false;if(currentQueue.length){queue=currentQueue.concat(queue);}else {queueIndex=-1;}if(queue.length){drainQueue();}}function drainQueue(){if(draining){return;}var timeout=setTimeout(cleanUpNextTick);draining=true;var len=queue.length;while(len){currentQueue=queue;queue=[];while(++queueIndex<len){if(currentQueue){currentQueue[queueIndex].run();}}queueIndex=-1;len=queue.length;}currentQueue=null;draining=false;clearTimeout(timeout);}process.nextTick=function(fun){var args=new Array(arguments.length-1);if(arguments.length>1){for(var i=1;i<arguments.length;i++){args[i-1]=arguments[i];}}queue.push(new Item(fun,args));if(queue.length===1&&!draining){setTimeout(drainQueue,0);}}; // v8 likes predictible objects
 	function Item(fun,array){this.fun=fun;this.array=array;}Item.prototype.run=function(){this.fun.apply(null,this.array);};process.title='browser';process.browser=true;process.env={};process.argv=[];process.version=''; // empty string to avoid regexp issues
 	process.versions={};function noop(){}process.on=noop;process.addListener=noop;process.once=noop;process.off=noop;process.removeListener=noop;process.removeAllListeners=noop;process.emit=noop;process.binding=function(name){throw new Error('process.binding is not supported');};process.cwd=function(){return '/';};process.chdir=function(dir){throw new Error('process.chdir is not supported');};process.umask=function(){return 0;};},{}],2:[function(_dereq_,module,exports){(function(process){(function(global,factory){if(typeof define==='function'&&define.amd){define('InputSim',['exports'],factory);}else if(typeof exports!=='undefined'){factory(exports);}else {var mod={exports:{}};factory(mod.exports);global.InputSim=mod.exports;}})(this,function(exports){ /*! jshint esnext:true, undef:true, unused:true */ /** @private */'use strict';Object.defineProperty(exports,'__esModule',{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if('value' in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}var A=65; /** @private */var Y=89; /** @private */var Z=90; /** @private */var ZERO=48; /** @private */var NINE=57; /** @private */var LEFT=37; /** @private */var RIGHT=39; /** @private */var UP=38; /** @private */var DOWN=40; /** @private */var BACKSPACE=8; /** @private */var DELETE=46; /** @private */var TAB=9; /** @private */var ENTER=13; /**
@@ -30789,7 +30869,7 @@
 	
 	var _svgInlineReact2 = _interopRequireDefault(_svgInlineReact);
 	
-	var _Icons = __webpack_require__(292);
+	var _Icons = __webpack_require__(276);
 	
 	var Icons = _interopRequireWildcard(_Icons);
 	
@@ -30857,6 +30937,17 @@
 
 /***/ },
 /* 276 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var ERROR_ICON = exports.ERROR_ICON = 'warning';
+
+/***/ },
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30879,7 +30970,7 @@
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _PaymentPage = __webpack_require__(277);
+	var _PaymentPage = __webpack_require__(278);
 	
 	var _PaymentPage2 = _interopRequireDefault(_PaymentPage);
 	
@@ -30887,11 +30978,11 @@
 	
 	var _CreditCardPaymentInput2 = _interopRequireDefault(_CreditCardPaymentInput);
 	
-	var _Checkbox = __webpack_require__(285);
+	var _Checkbox = __webpack_require__(286);
 	
 	var _Checkbox2 = _interopRequireDefault(_Checkbox);
 	
-	var _Button = __webpack_require__(279);
+	var _Button = __webpack_require__(280);
 	
 	var _Button2 = _interopRequireDefault(_Button);
 	
@@ -31045,7 +31136,7 @@
 	});
 
 /***/ },
-/* 277 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31062,27 +31153,27 @@
 	
 	var _svgInlineReact2 = _interopRequireDefault(_svgInlineReact);
 	
-	var _Link = __webpack_require__(278);
+	var _Link = __webpack_require__(279);
 	
 	var _Link2 = _interopRequireDefault(_Link);
 	
-	var _Button = __webpack_require__(279);
+	var _Button = __webpack_require__(280);
 	
 	var _Button2 = _interopRequireDefault(_Button);
 	
-	var _BackButton = __webpack_require__(282);
+	var _BackButton = __webpack_require__(283);
 	
 	var _BackButton2 = _interopRequireDefault(_BackButton);
 	
-	var _NextButton = __webpack_require__(283);
+	var _NextButton = __webpack_require__(284);
 	
 	var _NextButton2 = _interopRequireDefault(_NextButton);
 	
-	var _PaymentInput = __webpack_require__(284);
+	var _PaymentInput = __webpack_require__(285);
 	
 	var _PaymentInput2 = _interopRequireDefault(_PaymentInput);
 	
-	var _Checkbox = __webpack_require__(285);
+	var _Checkbox = __webpack_require__(286);
 	
 	var _Checkbox2 = _interopRequireDefault(_Checkbox);
 	
@@ -31090,7 +31181,7 @@
 	
 	var cardStates = _interopRequireWildcard(_CreditCardInputStates);
 	
-	__webpack_require__(288);
+	__webpack_require__(289);
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
@@ -31124,7 +31215,7 @@
 	exports.default = PaymentPage;
 
 /***/ },
-/* 278 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31155,7 +31246,7 @@
 	exports.default = Link;
 
 /***/ },
-/* 279 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31172,7 +31263,7 @@
 	
 	var _svgInlineReact2 = _interopRequireDefault(_svgInlineReact);
 	
-	__webpack_require__(280);
+	__webpack_require__(281);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -31206,13 +31297,13 @@
 	exports.default = Button;
 
 /***/ },
-/* 280 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(281);
+	var content = __webpack_require__(282);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(203)(content, {});
@@ -31232,7 +31323,7 @@
 	}
 
 /***/ },
-/* 281 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(202)();
@@ -31246,7 +31337,7 @@
 
 
 /***/ },
-/* 282 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31259,7 +31350,7 @@
 	
 	var _actions = __webpack_require__(28);
 	
-	var _Button = __webpack_require__(279);
+	var _Button = __webpack_require__(280);
 	
 	var _Button2 = _interopRequireDefault(_Button);
 	
@@ -31278,7 +31369,7 @@
 	exports.default = BackButton;
 
 /***/ },
-/* 283 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31291,7 +31382,7 @@
 	
 	var _actions = __webpack_require__(28);
 	
-	var _Button = __webpack_require__(279);
+	var _Button = __webpack_require__(280);
 	
 	var _Button2 = _interopRequireDefault(_Button);
 	
@@ -31310,7 +31401,7 @@
 	exports.default = NextButton;
 
 /***/ },
-/* 284 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31361,7 +31452,7 @@
 	exports.default = PaymentInput;
 
 /***/ },
-/* 285 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31374,7 +31465,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	__webpack_require__(286);
+	__webpack_require__(287);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -31394,13 +31485,13 @@
 	exports.default = Checkbox;
 
 /***/ },
-/* 286 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(287);
+	var content = __webpack_require__(288);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(203)(content, {});
@@ -31420,7 +31511,7 @@
 	}
 
 /***/ },
-/* 287 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(202)();
@@ -31434,13 +31525,13 @@
 
 
 /***/ },
-/* 288 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(289);
+	var content = __webpack_require__(290);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(203)(content, {});
@@ -31460,7 +31551,7 @@
 	}
 
 /***/ },
-/* 289 */
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(202)();
@@ -31474,7 +31565,7 @@
 
 
 /***/ },
-/* 290 */
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31483,7 +31574,149 @@
 	
 	var _expect2 = _interopRequireDefault(_expect);
 	
-	var _payment = __webpack_require__(291);
+	var _navigation = __webpack_require__(292);
+	
+	var _navigation2 = _interopRequireDefault(_navigation);
+	
+	var _ActionTypes = __webpack_require__(29);
+	
+	var types = _interopRequireWildcard(_ActionTypes);
+	
+	var _CreditCardInputStates = __webpack_require__(30);
+	
+	var cardStates = _interopRequireWildcard(_CreditCardInputStates);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var initialState = {
+		currentPage: 0,
+		previousPage: 0
+	};
+	
+	describe('Navigation Reducer', function () {
+		it('should return the initial state', function () {
+			(0, _expect2.default)((0, _navigation2.default)(undefined, {})).toEqual(initialState);
+		});
+	
+		it('should handle ADVANCE_PAGE', function () {
+			(0, _expect2.default)((0, _navigation2.default)(initialState, {
+				type: types.ADVANCE_PAGE
+			})).toEqual({
+				currentPage: 1,
+				previousPage: 0
+			});
+		});
+	
+		it('should handle RECEDE_PAGE', function () {
+			(0, _expect2.default)((0, _navigation2.default)(initialState, {
+				type: types.RECEDE_PAGE
+			})).toEqual({
+				currentPage: 0,
+				previousPage: 0
+			});
+	
+			(0, _expect2.default)((0, _navigation2.default)({
+				currentPage: 1,
+				previousPage: 0
+			}, {
+				type: types.RECEDE_PAGE
+			})).toEqual({
+				currentPage: 0,
+				previousPage: 1
+			});
+		});
+	
+		it('should handle JUMP_TO_PAGE', function () {
+			(0, _expect2.default)((0, _navigation2.default)(initialState, {
+				type: types.JUMP_TO_PAGE,
+				page: 3
+			})).toEqual({
+				currentPage: 3,
+				previousPage: 0
+			});
+		});
+	
+		// it('should handle REQUEST_PAYMENT_TOKEN', function() {
+		// 	epxect( reducer( [], {
+		// 		type: types.REQUEST_PAYMENT_TOKEN
+		// 	})).toEqual({
+	
+		// 	})
+		// })
+	});
+
+/***/ },
+/* 292 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	var initialState = {
+		currentPage: 0,
+		previousPage: 0
+	};
+	
+	var navigation = function navigation() {
+		var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+		var action = arguments[1];
+	
+	
+		switch (action.type) {
+			case 'ADVANCE_PAGE':
+	
+				// TODO: If we're already on the past page, do nothing
+				// if ( action.fromPage ==  )
+				// 	return state
+	
+				return {
+					currentPage: state.currentPage + 1,
+					previousPage: state.currentPage
+				};
+	
+			case 'RECEDE_PAGE':
+	
+				// If we're already on the first page, do nothing
+				if (state.currentPage == 0) return state;
+	
+				return {
+					currentPage: state.currentPage - 1,
+					previousPage: state.currentPage
+				};
+	
+			case 'JUMP_TO_PAGE':
+	
+				// If this is a valid page
+				// TODO check whether the page is past the last page
+				if (action.page < 0) return state;
+	
+				return {
+					currentPage: action.page,
+					previousPage: state.currentPage
+				};
+	
+			default:
+				return state;
+		}
+	};
+	
+	exports.default = navigation;
+
+/***/ },
+/* 293 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _expect = __webpack_require__(2);
+	
+	var _expect2 = _interopRequireDefault(_expect);
+	
+	var _payment = __webpack_require__(294);
 	
 	var _payment2 = _interopRequireDefault(_payment);
 	
@@ -31737,10 +31970,18 @@
 				}
 			}));
 		});
+	
+		// it('should handle REQUEST_PAYMENT_TOKEN', function() {
+		// 	epxect( reducer( [], {
+		// 		type: types.REQUEST_PAYMENT_TOKEN
+		// 	})).toEqual({
+	
+		// 	})
+		// })
 	});
 
 /***/ },
-/* 291 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31915,17 +32156,6 @@
 	};
 	
 	exports.default = payment;
-
-/***/ },
-/* 292 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var ERROR_ICON = exports.ERROR_ICON = 'warning';
 
 /***/ }
 /******/ ]);

@@ -6,38 +6,14 @@ import BackButton from '../../containers/BackButton'
 import ConfirmContributionButton from '../../containers/ConfirmContributionButton'
 import './confirmation-page.css'
 
-const formatCardNumber = ( cardNumber ) => {
-	let newString = '',
-		i = 0
-
-	if ( cardNumber.length <= 4 )
-		return cardNumber
-
-	for ( ; i < cardNumber.length - 4 ; i++ ) {
-		newString += '•'
-	}
-
-	newString += cardNumber.slice(-4)
-
-	if ( newString.length > 4 ) {
-		newString = [newString.slice(0, 4), ' ', newString.slice(4)].join('')
-	}
-
-	if ( newString.length > 11 ) {
-		newString = [newString.slice(0, 11), ' ', newString.slice(11)].join('')
-	}
-
-	return newString
-}
-
 const ConfirmationPage = React.createClass({
 	render: function() {
 		return (
 			<div className='Page confirmation-page' style={this.props.style}>
 				<div className='donation-info'>
 					<span className='header'>From</span>
-					<span className='email'>{this.props.email}</span>
-					<span className='card-number'>{this.props.cardNumber}</span>
+					<span className='email'>{this.props.payment.email.value}</span>
+					<span className='card-number'>{this.props.payment.cardNumber.formattedValue}</span>
 				</div>
 				<ConfirmContributionButton text={`Confirm $${this.props.amount} Donation`} type='primary' />
 				<div className='Footer'>

@@ -1,3 +1,4 @@
+// import fetch from 'isomorphic-fetch'
 import * as types from '../constants/ActionTypes'
 
 export const advancePage = () => {
@@ -101,5 +102,47 @@ export const setEditingCreditCardExpirationDate = () => {
 export const hasAttemptedEmailValidation = () => {
 	return {
 		type: types.HAS_ATTEMPTED_EMAIL_VALIDATION
+	}
+}
+
+export const requestPaymentToken = () => {
+	return {
+		type: types.REQUEST_PAYMENT_TOKEN
+	}
+}
+
+export const paymentTokenRequestFailed = ( error ) => {
+	return {
+		type: types.PAYMENT_TOKEN_REQUEST_FAILED,
+		error
+	}
+}
+
+export const paymentTokenReceived = ( response ) => {
+	return {
+		type: types.PAYMENT_TOKEN_RECEIVED,
+		response
+	}
+}
+
+export function fetchPaymentToken( payment ) {
+	return function( dispatch ) {
+		dispatch( requestPaymentToken() )
+
+		Stripe.card.createToken({
+			number: payment.cardNumber.value,
+			cvc: payment.securityCode.value,
+			exp_month: payment.expirationDate.values.month,
+			exp_year: payment.expirationDate.values.year
+		}, function( status, response ) {
+			if ( response.error ) {
+				console.log( response.error )
+				dispatch( paymentTokenRequestFailed( response.error ) )
+			} else {
+				console.log( response )
+				dispatch( paymentTokenReceived( response ) )
+				dispatch( advancePage() )
+			}
+		})
 	}
 }
