@@ -1,13 +1,13 @@
 import expect from 'expect'
 import * as actions from '../../actions/'
 import * as types from '../../constants/ActionTypes'
-import * as cardStates from '../../constants/CreditCardInputStates'
+import * as inputStates from '../../constants/InputStates'
 
 describe('Actions', function() {
 
 	it('should create an action for setting email', function() {
 		const 	email = 'jeremy@lubin.com',
-				status = cardStates.VALID
+				status = inputStates.VALID
 		const 	expectedAction = {
 			type: 'SET_EMAIL',
 			status,
@@ -21,7 +21,7 @@ describe('Actions', function() {
 		const 	cardNumber = '1234567891098876',
 				formattedCardNumber = '•••• •••• •••• 8876',
 				cardNumberCursorPosition = '3',
-				status = cardStates.VALID
+				status = inputStates.VALID
 		const expectedAction = {
 			type: 'SET_CREDIT_CARD_NUMBER',
 			status,
@@ -36,7 +36,7 @@ describe('Actions', function() {
 	it('should create an action for setting credit card expiration date', function() {
 		const 	expirationDate = '12/20',
 				expirationDateCursorPosition = '3',
-				status = cardStates.VALID
+				status = inputStates.VALID
 		const expectedAction = {
 			type: 'SET_CREDIT_CARD_EXPIRATION_DATE',
 			status,
@@ -50,7 +50,7 @@ describe('Actions', function() {
 	it('should create an action for setting credit card security code', function() {
 		const 	securityCode = '1220',
 				securityCodeCursorPosition = '3',
-				status = cardStates.VALID
+				status = inputStates.VALID
 		const expectedAction = {
 			type: 'SET_CREDIT_CARD_SECURITY_CODE',
 			status,

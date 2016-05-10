@@ -6,7 +6,8 @@ import PaymentPage from '../../components/pages/PaymentPage'
 import CreditCardPaymentInput from '../../components/Input/CreditCardPaymentInput'
 import Checkbox from '../../components/Checkbox/Checkbox'
 import Button from '../../components/Button/Button'
-import * as cardStates from '../../constants/CreditCardInputStates'
+import * as inputStates from '../../constants/InputStates'
+import * as paymentFormStates from '../../constants/PaymentFormStates'
 
 function setup( propOverrides ) {
 	const props = Object.assign({
@@ -31,7 +32,9 @@ function setup( propOverrides ) {
 				value: '1234',
 				cursorPosition: null
 			},
-			currentField: 'CreditCardNumber'
+			formStates: {
+				currentField: paymentFormStates.CARD_NUMBER		
+			}
 		},
 		key: '',
 	},  propOverrides)
@@ -67,13 +70,13 @@ describe('PaymentPage', function() {
 		it('should return false if the credit card number is not VALID', function() {
 			const { instance } = setup({ payment: {
 				cardNumber: {
-					status: cardStates.INVALID
+					status: inputStates.INVALID
 				},
 				expirationDate: {
-					status: cardStates.VALID
+					status: inputStates.VALID
 				},
 				securityCode: {
-					status: cardStates.VALID
+					status: inputStates.VALID
 				}
 			}})
 
@@ -83,13 +86,13 @@ describe('PaymentPage', function() {
 		it('should return false if the expiration date is not VALID', function() {
 			const { instance } = setup({ payment: {
 				cardNumber: {
-					status: cardStates.VALID
+					status: inputStates.VALID
 				},
 				expirationDate: {
-					status: cardStates.BLANK
+					status: inputStates.BLANK
 				},
 				securityCode: {
-					status: cardStates.VALID
+					status: inputStates.VALID
 				}
 			}})
 
@@ -99,13 +102,13 @@ describe('PaymentPage', function() {
 		it('should return false if the security code is not VALID', function() {
 			const { instance } = setup({ payment: {
 				cardNumber: {
-					status: cardStates.VALID
+					status: inputStates.VALID
 				},
 				expirationDate: {
-					status: cardStates.VALID
+					status: inputStates.VALID
 				},
 				securityCode: {
-					status: cardStates.INCOMPLETE
+					status: inputStates.INCOMPLETE
 				}
 			}})
 
@@ -115,13 +118,13 @@ describe('PaymentPage', function() {
 		it('should return true if all three are VALID', function() {
 			const { instance } = setup({ payment: {
 				cardNumber: {
-					status: cardStates.VALID
+					status: inputStates.VALID
 				},
 				expirationDate: {
-					status: cardStates.VALID
+					status: inputStates.VALID
 				},
 				securityCode: {
-					status: cardStates.VALID
+					status: inputStates.VALID
 				}
 			}})
 

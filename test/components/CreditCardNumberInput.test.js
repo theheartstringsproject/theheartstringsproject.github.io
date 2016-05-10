@@ -3,7 +3,7 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import ReactDOM from 'react-dom'
 import CreditCardNumberInput from '../../components/Input/CreditCardNumberInput'
-import * as cardStates from '../../constants/CreditCardInputStates'
+import * as inputStates from '../../constants/InputStates'
 
 // const DELETE_KEY_CODE = 46
 
@@ -13,7 +13,7 @@ function setup( propOverrides ) {
 		placeholder: 'hi',
 		className: 'there',
 		cardNumber: {
-			status: cardStates.VALID,
+			status: inputStates.VALID,
 			value: '4242424242424242',
 			cursorPosition: 2
 		},
@@ -45,7 +45,7 @@ describe('CreditCardNumberInput', function() {
 
 	it('should render an input field with an error when the number is invalid', function() {
 		const { output } = setup({
-			cardNumber: { status: cardStates.INVALID }
+			cardNumber: { status: inputStates.INVALID }
 		})
 		expect( output.type ).toBe('input')
 		expect( output.props.className.includes('Error') ).toBe( true )
@@ -94,13 +94,13 @@ describe('CreditCardNumberInput', function() {
 
 		it('should return BLANK when field is undefined', function() {
 			const { instance } = setup()
-			expect( instance.getState() ).toEqual( cardStates.BLANK )
+			expect( instance.getState() ).toEqual( inputStates.BLANK )
 		})
 
 		it('should return BLANK when the number is blank', function() {
 			const { instance } = setup()
 			instance.field = { value: function() { return '' } }
-			expect( instance.getState() ).toEqual( cardStates.BLANK )
+			expect( instance.getState() ).toEqual( inputStates.BLANK )
 		})
 
 		it('should return INCOMPLETE when an amex number is less than the required character count', function() {
@@ -109,7 +109,7 @@ describe('CreditCardNumberInput', function() {
 				cardType: function() { return 'amex' },
 				value: function() { return '3725000000' }
 			}
-			expect( instance.getState() ).toEqual( cardStates.INCOMPLETE )
+			expect( instance.getState() ).toEqual( inputStates.INCOMPLETE )
 		})
 
 		it('should return INCOMPLETE when a non-amex number is less than the required character count', function() {
@@ -118,7 +118,7 @@ describe('CreditCardNumberInput', function() {
 				cardType: function() { return 'visa' },
 				value: function() { return '424242424242' }
 			}
-			expect( instance.getState() ).toEqual( cardStates.INCOMPLETE )
+			expect( instance.getState() ).toEqual( inputStates.INCOMPLETE )
 		})
 
 		it('should return INVALID when an amex number is the right character count but not valid', function() {
@@ -134,7 +134,7 @@ describe('CreditCardNumberInput', function() {
 				cardType: function() { return 'amex' },
 				value: function() { return '372500000000000' }
 			}
-			expect( instance.getState() ).toEqual( cardStates.INVALID )
+			expect( instance.getState() ).toEqual( inputStates.INVALID )
 		})
 
 		it('should return INVALID when a non-amex number is the right character count but not valid', function() {
@@ -150,7 +150,7 @@ describe('CreditCardNumberInput', function() {
 				cardType: function() { return 'visa' },
 				value: function() { return '4242111111111111' }
 			}
-			expect( instance.getState() ).toEqual( cardStates.INVALID )
+			expect( instance.getState() ).toEqual( inputStates.INVALID )
 		})
 
 		it('should return VALID when an amex card is the right character count and valid', function() {
@@ -166,7 +166,7 @@ describe('CreditCardNumberInput', function() {
 				cardType: function() { return 'amex' },
 				value: function() { return '378282246310005' }
 			}
-			expect( instance.getState() ).toEqual( cardStates.VALID )
+			expect( instance.getState() ).toEqual( inputStates.VALID )
 		})
 
 		it('should return VALID when a non-amex card is the right character count and valid', function() {
@@ -182,7 +182,7 @@ describe('CreditCardNumberInput', function() {
 				cardType: function() { return 'visa' },
 				value: function() { return '4242424242424242' }
 			}
-			expect( instance.getState() ).toEqual( cardStates.VALID )
+			expect( instance.getState() ).toEqual( inputStates.VALID )
 		})
 	})
 

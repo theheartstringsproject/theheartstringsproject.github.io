@@ -6,7 +6,7 @@ import BackButton from '../../containers/BackButton'
 import SetEmailButton from '../../containers/SetEmailButton'
 import EmailInput from '../Input/EmailInput'
 import PaymentEmailInput from '../../containers/PaymentEmailInput'
-import * as cardStates from '../../constants/CreditCardInputStates'
+import * as inputStates from '../../constants/InputStates'
 import './email-page.css'
 
 const EmailPage = React.createClass({
@@ -14,7 +14,7 @@ const EmailPage = React.createClass({
 	isPageValid: function() {
 
 		// Enable the next button unless the field is invalid or blank
-		return this.props.email.status !== cardStates.INVALID && this.props.email.value !== ''
+		return this.props.email.status !== inputStates.INVALID && this.props.email.value !== ''
 	},
 
 	render: function() {

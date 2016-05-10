@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import FieldKit from 'field-kit';
 import ReactDOM from 'react-dom'
-import * as cardStates from '../../constants/CreditCardInputStates'
+import * as inputStates from '../../constants/InputStates'
 import './input.css'
 import './credit-card-payment-input.css'
 
@@ -54,21 +54,21 @@ const CreditCardNumberInput = React.createClass({
 
 		// Check whether the number is blank
 		if ( number === '' )
-			return cardStates.BLANK
+			return inputStates.BLANK
 
 		// Check whether the number is the right character count
 		if ( number.length < 15 )
-			return cardStates.INCOMPLETE
+			return inputStates.INCOMPLETE
 
 		if ( this.field.cardType() !== 'amex' && number.length < 16 )
-			return cardStates.INCOMPLETE
+			return inputStates.INCOMPLETE
 
 		// Check whether the number is valid
 		if ( Stripe.card.validateCardNumber( number ) )
-			return cardStates.VALID
+			return inputStates.VALID
 
 		// Otherwise return invalid
-		return cardStates.INVALID
+		return inputStates.INVALID
 
 	},
 
@@ -97,14 +97,14 @@ const CreditCardNumberInput = React.createClass({
 			ReactDOM.findDOMNode( this ).selectionStart
 		)
 
-		if ( this.isDoneEditing() && this.getState() === cardStates.VALID ) {
+		if ( this.isDoneEditing() && this.getState() === inputStates.VALID ) {
 			this.props.onShouldMoveToExpirationDateField()
 			// this.props.onDidFinishEditing()
 		}
 	},
 
 	render: function() {
-		let errorClass = this.props.cardNumber.status === cardStates.INVALID ? 'Error' : ''
+		let errorClass = this.props.cardNumber.status === inputStates.INVALID ? 'Error' : ''
 		return(
 			<input
 				style={this.props.style}
@@ -118,7 +118,7 @@ const CreditCardNumberInput = React.createClass({
 				// 		e.target.selectionStart
 				// 	)
 
-				// 	if ( this.isDoneEditing() && this.getState() === cardStates.VALID ) {
+				// 	if ( this.isDoneEditing() && this.getState() === inputStates.VALID ) {
 				// 		this.props.onDidFinishEditing()
 				// 	}
 				// }}

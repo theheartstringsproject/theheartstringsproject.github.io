@@ -5,7 +5,8 @@ import InlineSVG from 'svg-inline-react'
 import DonationCreditCardNumberInput from '../../containers/DonationCreditCardNumberInput'
 import DonationCreditCardExpirationDateInput from '../../containers/DonationCreditCardExpirationDateInput'
 import DonationCreditCardSecurityCodeInput from '../../containers/DonationCreditCardSecurityCodeInput'
-import * as cardStates from '../../constants/CreditCardInputStates'
+import * as inputStates from '../../constants/InputStates'
+import * as paymentFormStates from '../../constants/PaymentFormStates'
 import './input.css'
 import './credit-card-payment-input.css'
 import { spring, Motion } from 'react-motion'
@@ -17,14 +18,14 @@ const CreditCardPaymentInput = React.createClass({
 	componentDidMount: function() {
 
 		// Focus on the correct field
-		// switch ( this.props.payment.currentField ) {
-		// 	case 'CreditCardNumber':
+		// switch ( this.props.payment.formStatescurrentField ) {
+		// 	case paymentFormStates.CARD_NUMBER:
 		// 		ReactDOM.findDOMNode( this.cardNumberInput ).focus()
 		// 		break
-		// 	case 'CreditCardExpirationDate':
+		// 	case paymentFormStates.EXPIRATION_DATE:
 		// 		ReactDOM.findDOMNode( this.expirationDateInput ).focus()
 		// 		break
-		// 	case 'CreditCardSecurityCode':
+		// 	case paymentFormStates.SECURITY_CODE:
 		// 		ReactDOM.findDOMNode( this.securityCodeInput ).focus()
 		// 		break
 		// 	default:
@@ -33,7 +34,7 @@ const CreditCardPaymentInput = React.createClass({
 	},
 
 	getFieldStyles: function() {
-		let currentField = this.props.payment.currentField
+		let currentField = this.props.payment.formState.currentField
 
 		// Set default styles
 		let styles = {
@@ -44,7 +45,7 @@ const CreditCardPaymentInput = React.createClass({
 
 		// Only set styles different from default
 		// if we're not in credit card number mode
-		if ( currentField !== 'CreditCardNumber' ) {
+		if ( currentField !== paymentFormStates.CARD_NUMBER ) {
 			if ( this.cardNumberGhost ) {
 				styles.cardNumberFieldWidth = this.cardNumberGhost.scrollWidth
 			}
@@ -94,9 +95,9 @@ const CreditCardPaymentInput = React.createClass({
 		// Check whether we should render in an error state
 		let icon = this.props.icon,
 			errorClass = ''
-		if ( this.props.payment.cardNumber.status === cardStates.INVALID ||
-			 this.props.payment.expirationDate.status === cardStates.INVALID ||
-			 this.props.payment.securityCode.status === cardStates.INVALID )
+		if ( this.props.payment.cardNumber.status === inputStates.INVALID ||
+			 this.props.payment.expirationDate.status === inputStates.INVALID ||
+			 this.props.payment.securityCode.status === inputStates.INVALID )
 		{
 
 			icon = ERROR_ICON
@@ -104,7 +105,7 @@ const CreditCardPaymentInput = React.createClass({
 		}
 
 		return (
-			<div className={`Input CreditCardPaymentInput ${this.props.payment.currentField} ${errorClass}`}>
+			<div className={`Input CreditCardPaymentInput ${this.props.payment.formState.currentField} ${errorClass}`}>
 				<InlineSVG src={require(`svg-inline!../../icons/${icon}.svg`)} />
 				<div className="fields-container">
 					<Motion style={style}>

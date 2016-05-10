@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { advancePage, hasAttemptedEmailValidation } from '../actions'
 import Button from '../components/Button/Button'
-import * as cardStates from '../constants/CreditCardInputStates'
+import * as inputStates from '../constants/InputStates'
 
 const mapStateToProps = ( state ) => {
 	return {
@@ -14,7 +14,7 @@ const mapDispatchToProps = ( dispatch ) => {
 		onAdvanceAttempt: ( email ) => {
 
 			// Only advance if the field is valid
-			if ( email.status === cardStates.VALID ) {
+			if ( email.status === inputStates.VALID ) {
 				dispatch( advancePage() )
 			} else {
 				dispatch( hasAttemptedEmailValidation() )

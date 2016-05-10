@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import * as actions from '../actions'
 import CreditCardExpirationDateInput from '../components/Input/CreditCardExpirationDateInput'
-import * as cardStates from '../constants/CreditCardInputStates'
+import * as inputStates from '../constants/InputStates'
 
 const mapDispatchToProps = (dispatch, ownProps) => {
 	return {

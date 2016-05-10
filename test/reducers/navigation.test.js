@@ -1,7 +1,7 @@
 import expect from 'expect'
 import reducer from '../../reducers/navigation'
 import * as types from '../../constants/ActionTypes'
-import * as cardStates from '../../constants/CreditCardInputStates'
+import * as inputStates from '../../constants/InputStates'
 
 let initialState = {
 	currentPage: 0,

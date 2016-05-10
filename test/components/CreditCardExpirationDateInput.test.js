@@ -3,7 +3,7 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import ReactDOM from 'react-dom'
 import CreditCardExpirationDateInput from '../../components/Input/CreditCardExpirationDateInput'
-import * as cardStates from '../../constants/CreditCardInputStates'
+import * as inputStates from '../../constants/InputStates'
 
 // const DELETE_KEY_CODE = 46
 
@@ -13,7 +13,7 @@ function setup( propOverrides ) {
 		placeholder: 'hi',
 		className: 'there',
 		expirationDate: {
-			status: cardStates.VALID,
+			status: inputStates.VALID,
 			values: {
 				month: '',
 				year: ''
@@ -49,7 +49,7 @@ describe('CreditCardExpirationDateInput', function() {
 	it('should render an input field with an error when the date is invalid', function() {
 		const { output } = setup({
 			expirationDate: {
-				status: cardStates.INVALID,
+				status: inputStates.INVALID,
 				values: {
 					month: '',
 					year: ''
@@ -159,20 +159,20 @@ describe('CreditCardExpirationDateInput', function() {
 
 		it('should return BLANK when field is undefined', function() {
 			const { instance } = setup()
-			expect( instance.getState() ).toEqual( cardStates.BLANK )
+			expect( instance.getState() ).toEqual( inputStates.BLANK )
 		})
 
 		it('should return BLANK when the number is blank', function() {
 			const { instance } = setup()
-			expect( instance.getState( '' ) ).toEqual( cardStates.BLANK )
+			expect( instance.getState( '' ) ).toEqual( inputStates.BLANK )
 		})
 
 		it('should return INCOMPLETE when less than 4 digits', function() {
 			const { instance } = setup()
-			expect( instance.getState( '12/4' ) ).toEqual( cardStates.INCOMPLETE )
-			expect( instance.getState( '1/4' ) ).toEqual( cardStates.INCOMPLETE )
-			expect( instance.getState( '1/' ) ).toEqual( cardStates.INCOMPLETE )
-			expect( instance.getState( '11/' ) ).toEqual( cardStates.INCOMPLETE )
+			expect( instance.getState( '12/4' ) ).toEqual( inputStates.INCOMPLETE )
+			expect( instance.getState( '1/4' ) ).toEqual( inputStates.INCOMPLETE )
+			expect( instance.getState( '1/' ) ).toEqual( inputStates.INCOMPLETE )
+			expect( instance.getState( '11/' ) ).toEqual( inputStates.INCOMPLETE )
 		})
 
 		it('should return INVALID when Stripe does not approve', function() {
@@ -184,7 +184,7 @@ describe('CreditCardExpirationDateInput', function() {
 					}	
 				}
 			}
-			expect( instance.getState( '14/40' ) ).toEqual( cardStates.INVALID )
+			expect( instance.getState( '14/40' ) ).toEqual( inputStates.INVALID )
 		})
 
 		it('should return VALID when Stripe approves', function() {
@@ -196,7 +196,7 @@ describe('CreditCardExpirationDateInput', function() {
 					}	
 				}
 			}
-			expect( instance.getState( '12/20' ) ).toEqual( cardStates.VALID )
+			expect( instance.getState( '12/20' ) ).toEqual( inputStates.VALID )
 		})
 	})
 })

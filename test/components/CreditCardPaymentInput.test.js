@@ -3,7 +3,8 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import ReactDOM from 'react-dom'
 import CreditCardPaymentInput from '../../components/Input/CreditCardPaymentInput'
-import * as cardStates from '../../constants/CreditCardInputStates'
+import * as inputStates from '../../constants/InputStates'
+import * as paymentFormStates from '../../constants/PaymentFormStates'
 
 // const DELETE_KEY_CODE = 46
 
@@ -30,7 +31,10 @@ function setup( propOverrides ) {
 				value: '1234',
 				cursorPosition: null
 			},
-			currentField: 'CreditCardNumber'
+			formState: {
+				currentField: paymentFormStates.CARD_NUMBER		
+			}
+			
 		},
 		onCreditCardChange: expect.createSpy(),
 		onCreditCardFocus: expect.createSpy(),
@@ -63,7 +67,7 @@ describe('CreditCardPaymentInput', function() {
 		// let [ cardNumberInput, expirationDateInput, securityCodeInput ] = fields.props.children
 
 		expect( output.type ).toBe('div')
-		expect( output.props.className ).toBe('Input CreditCardPaymentInput CreditCardNumber ')
+		expect( output.props.className ).toBe(`Input CreditCardPaymentInput ${paymentFormStates.CARD_NUMBER} `)
 
 		// Can't test types of children because they're wrapped in <Motion> object
 		// expect( cardNumberInput.type ).toBe('input')
@@ -78,9 +82,10 @@ describe('CreditCardPaymentInput', function() {
 
 	it('should render in error when credit card number is invalid', function() {
 		const { output } = setup({ payment: {
-			cardNumber: { status: cardStates.INVALID },
-			expirationDate: { status: cardStates.VALID },
-			securityCode: { status: cardStates.VALID }
+			cardNumber: { status: inputStates.INVALID },
+			expirationDate: { status: inputStates.VALID },
+			securityCode: { status: inputStates.VALID },
+			formState: { currentField: paymentFormStates.CARD_NUMBER }
 		}})
 
 		expect( output.props.className.includes('Error') ).toBe( true )
@@ -88,9 +93,10 @@ describe('CreditCardPaymentInput', function() {
 
 	it('should render in error when credit card number is invalid', function() {
 		const { output } = setup({ payment: {
-			cardNumber: { status: cardStates.VALID },
-			expirationDate: { status: cardStates.INVALID },
-			securityCode: { status: cardStates.VALID }
+			cardNumber: { status: inputStates.VALID },
+			expirationDate: { status: inputStates.INVALID },
+			securityCode: { status: inputStates.VALID },
+			formState: { currentField: paymentFormStates.CARD_NUMBER }
 		}})
 
 		expect( output.props.className.includes('Error') ).toBe( true )
@@ -98,9 +104,10 @@ describe('CreditCardPaymentInput', function() {
 
 	it('should render in error when credit card number is invalid', function() {
 		const { output } = setup({ payment: {
-			cardNumber: { status: cardStates.VALID },
-			expirationDate: { status: cardStates.VALID },
-			securityCode: { status: cardStates.INVALID }
+			cardNumber: { status: inputStates.VALID },
+			expirationDate: { status: inputStates.VALID },
+			securityCode: { status: inputStates.INVALID },
+			formState: { currentField: paymentFormStates.CARD_NUMBER }
 		}})
 
 		expect( output.props.className.includes('Error') ).toBe( true )
@@ -128,14 +135,14 @@ describe('CreditCardPaymentInput', function() {
 
 			it('should return a cardNumberFieldWidth equal to length of the numbers in the field', function() {
 				const { instance } = setup()
-				instance.props.payment.currentField = 'CreditCardExpirationDate'
+				instance.props.payment.formState.currentField = paymentFormStates.EXPIRATION_DATE
 				instance.cardNumberGhost = { scrollWidth: 100 }
 				expect( instance.getFieldStyles().cardNumberFieldWidth ).toBe( 100 )
 			})
 
 			it('should return a cardNumberFieldLeftPosition equal to the negative difference between the size of the field and the size of the last 4 digits', function() {
 				const { instance } = setup()
-				instance.props.payment.currentField = 'CreditCardExpirationDate'
+				instance.props.payment.formState.currentField = paymentFormStates.EXPIRATION_DATE
 				instance.cardNumberGhost = { scrollWidth: 100 }
 				instance.abbreviatedCardNumberGhost = { scrollWidth: 50 }
 				expect( instance.getFieldStyles().cardNumberFieldLeftPosition ).toBe( -50 + 16 )
@@ -143,7 +150,7 @@ describe('CreditCardPaymentInput', function() {
 
 			it('should return a otherFieldsWidth equal to half the remaining space in the field', function() {
 				const { instance } = setup()
-				instance.props.payment.currentField = 'CreditCardExpirationDate'
+				instance.props.payment.formState.currentField = paymentFormStates.EXPIRATION_DATE
 				instance.fields = { scrollWidth: 200 }
 				instance.abbreviatedCardNumberGhost = { scrollWidth: 50 }
 				expect( instance.getFieldStyles().otherFieldsWidth ).toBe( 75 - 16 )

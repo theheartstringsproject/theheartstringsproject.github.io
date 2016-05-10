@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import FieldKit from 'field-kit';
 import ReactDOM from 'react-dom'
-import * as cardStates from '../../constants/CreditCardInputStates'
+import * as inputStates from '../../constants/InputStates'
 import './input.css'
 import './credit-card-payment-input.css'
 
@@ -44,18 +44,18 @@ const CreditCardSecurityCodeInput = React.createClass({
 
 		// Check whether the number is blank
 		if ( value === '' )
-			return cardStates.BLANK
+			return inputStates.BLANK
 
 		// Check that we have enough characters
 		if ( value.length < 3 )
-			return cardStates.INCOMPLETE
+			return inputStates.INCOMPLETE
 
 		// Check whether the date is valid
 		if ( Stripe.card.validateCVC( value ) )
-			return cardStates.VALID
+			return inputStates.VALID
 
 		// Otherwise return invalid
-		return cardStates.INVALID
+		return inputStates.INVALID
 	},
 
 	getField: function() {
@@ -63,7 +63,7 @@ const CreditCardSecurityCodeInput = React.createClass({
 	},
 
 	render: function() {
-		let errorClass = this.props.securityCode.status === cardStates.INVALID ? 'Error' : ''
+		let errorClass = this.props.securityCode.status === inputStates.INVALID ? 'Error' : ''
 		return(
 			<input
 				value={this.format( this.props.securityCode.value )}

@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import InlineSVG from 'svg-inline-react'
 import * as Icons from '../../constants/Icons'
-import * as cardStates from '../../constants/CreditCardInputStates'
+import * as inputStates from '../../constants/InputStates'
 import './input.css'
 
 // const Input = (props) => (
@@ -14,13 +14,13 @@ const Input = React.createClass({
 		// If we've already attempted a validation
 		// be aggressive about error states
 		if ( this.props.email.hasAttemptedValidation ) {
-			if ( !valid ) return cardStates.INVALID
+			if ( !valid ) return inputStates.INVALID
 		} else {
-			if ( value === '' ) return cardStates.BLANK
-			if ( !valid ) return cardStates.INCOMPLETE
+			if ( value === '' ) return inputStates.BLANK
+			if ( !valid ) return inputStates.INCOMPLETE
 		}
 
-		return cardStates.VALID
+		return inputStates.VALID
 	},
 
 	render: function() {
@@ -28,7 +28,7 @@ const Input = React.createClass({
 		// Check whether we should render in an error state
 		let icon = this.props.icon,
 			errorClass = ''
-		if ( this.getState( this.props.email.value ) === cardStates.INVALID ) {
+		if ( this.getState( this.props.email.value ) === inputStates.INVALID ) {
 			icon = Icons.ERROR_ICON
 			errorClass = 'Error'
 		}

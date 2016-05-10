@@ -3,7 +3,7 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import ReactDOM from 'react-dom'
 import CreditCardSecurityCodeInput from '../../components/Input/CreditCardSecurityCodeInput'
-import * as cardStates from '../../constants/CreditCardInputStates'
+import * as inputStates from '../../constants/InputStates'
 
 // const DELETE_KEY_CODE = 46
 
@@ -13,7 +13,7 @@ function setup( propOverrides ) {
 		placeholder: 'hi',
 		className: 'there',
 		securityCode: {
-			status: cardStates.VALID,
+			status: inputStates.VALID,
 			values: '',
 			cursorPosition: 2
 		},
@@ -46,7 +46,7 @@ describe('CreditCardSecurityCodeInput', function() {
 	it('should render an input field with an error when the date is invalid', function() {
 		const { output } = setup({
 			securityCode: {
-				status: cardStates.INVALID,
+				status: inputStates.INVALID,
 				value: '',
 				cursorPosition: 2
 			}
@@ -83,17 +83,17 @@ describe('CreditCardSecurityCodeInput', function() {
 
 		it('should return BLANK when field is undefined', function() {
 			const { instance } = setup()
-			expect( instance.getState() ).toEqual( cardStates.BLANK )
+			expect( instance.getState() ).toEqual( inputStates.BLANK )
 		})
 
 		it('should return BLANK when the number is blank', function() {
 			const { instance } = setup()
-			expect( instance.getState( '' ) ).toEqual( cardStates.BLANK )
+			expect( instance.getState( '' ) ).toEqual( inputStates.BLANK )
 		})
 
 		it('should return INCOMPLETE when less than 3 digits', function() {
 			const { instance } = setup()
-			expect( instance.getState( '12' ) ).toEqual( cardStates.INCOMPLETE )
+			expect( instance.getState( '12' ) ).toEqual( inputStates.INCOMPLETE )
 		})
 
 		it('should return INVALID when Stripe does not approve', function() {
@@ -105,7 +105,7 @@ describe('CreditCardSecurityCodeInput', function() {
 					}	
 				}
 			}
-			expect( instance.getState( 'invalid' ) ).toEqual( cardStates.INVALID )
+			expect( instance.getState( 'invalid' ) ).toEqual( inputStates.INVALID )
 		})
 
 		it('should return VALID when Stripe approves', function() {
@@ -117,8 +117,8 @@ describe('CreditCardSecurityCodeInput', function() {
 					}	
 				}
 			}
-			expect( instance.getState( '123' ) ).toEqual( cardStates.VALID )
-			expect( instance.getState( '1234' ) ).toEqual( cardStates.VALID )
+			expect( instance.getState( '123' ) ).toEqual( inputStates.VALID )
+			expect( instance.getState( '1234' ) ).toEqual( inputStates.VALID )
 		})
 	})
 })
