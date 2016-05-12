@@ -96,8 +96,12 @@ const CreditCardPaymentInput = React.createClass({
 		let icon = this.props.icon,
 			errorClass = ''
 		if ( this.props.payment.cardNumber.status === inputStates.INVALID ||
+			 this.props.payment.cardNumber.status === inputStates.EXPIRED ||
+			 this.props.payment.cardNumber.status === inputStates.INCORRECT ||
+			 this.props.payment.cardNumber.status === inputStates.DECLINED ||
 			 this.props.payment.expirationDate.status === inputStates.INVALID ||
-			 this.props.payment.securityCode.status === inputStates.INVALID )
+			 this.props.payment.securityCode.status === inputStates.INVALID ||
+			 this.props.payment.securityCode.status === inputStates.INCORRECT )
 		{
 
 			icon = ERROR_ICON

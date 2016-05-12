@@ -2,7 +2,7 @@ import * as types from '../../constants/ActionTypes'
 import * as inputStates from '../../constants/InputStates'
 
 let initialState = {
-	status: '',
+	status: inputStates.EXPIRED,
 	value: '',
 	formattedValue: '',
 	cursorPosition: null
@@ -19,6 +19,30 @@ const cardNumber = (state = initialState, action) => {
 				value: action.cardNumber,
 				formattedValue: action.formattedCardNumber,
 				cursorPosition: action.cardNumberCursorPosition
+			})
+
+		case types.INVALID_CREDIT_CARD_NUMBER:
+
+			return Object.assign({}, state, {
+				status: inputStates.INVALID
+			})
+
+		case types.INCORRECT_CREDIT_CARD_NUMBER:
+
+			return Object.assign({}, state, {
+				status: inputStates.INCORRECT
+			})
+
+		case types.EXPIRED_CREDIT_CARD:
+
+			return Object.assign({}, state, {
+				status: inputStates.EXPIRED
+			})
+
+		case types.DECLINED_CREDIT_CARD:
+
+			return Object.assign({}, state, {
+				status: inputStates.DECLINED
 			})
 
 		default:

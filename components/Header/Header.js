@@ -172,10 +172,11 @@ const Header = React.createClass({
 		return {opacity: spring(0)}
 	},
 
-	render: function() {		
+	render: function() {	
+		let headerHeight = this.header ? this.header.offsetHeight : 0	
 		let style = {
 			opacity: this.props.pageName === 'LandingPage' ? spring(0) : spring(1),
-			y: this.props.pageName === 'LoadingPage' ? spring( ( CAMPAIGN_HEIGHT - this.header.offsetHeight ) / 2, {stiffness: 160, damping: 20}) : spring(0, {stiffness: 160, damping: 20})
+			y: this.props.pageName === 'LoadingPage' ? spring( ( CAMPAIGN_HEIGHT - headerHeight ) / 2, {stiffness: 160, damping: 20}) : spring(0, {stiffness: 160, damping: 20})
 		}
 
 		let donationIcons = this.getDonationIconKeys()

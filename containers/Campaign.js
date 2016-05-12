@@ -1,8 +1,9 @@
 import { connect } from 'react-redux'
 import { recedePage } from '../actions'
 import CampaignView from '../components/CampaignView/CampaignView'
+import { pages } from '../constants/Pages'
 
-const getCurrentPageName = ( pages, currentPage ) => {
+const getCurrentPageName = ( currentPage ) => {
 	return pages[ currentPage ]
 }
 
@@ -12,8 +13,8 @@ const getNavigationDirection = ( currentPage, previousPage ) => {
 
 const mapStateToProps = (state, ownProps) => {
 	return {
-		pageName: getCurrentPageName( state.pages, state.navigation.currentPage ),
-		previousPageName: getCurrentPageName( state.pages, state.navigation.previousPage ),
+		pageName: getCurrentPageName( state.navigation.currentPage ),
+		previousPageName: getCurrentPageName( state.navigation.previousPage ),
 		direction: getNavigationDirection( state.navigation.currentPage, state.navigation.previousPage ),
 		contribution: state.contribution,
 		payment: state.payment

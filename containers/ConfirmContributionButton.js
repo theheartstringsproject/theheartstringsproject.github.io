@@ -12,7 +12,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 	return {
 		onConfirmPaymentClick: ( payment ) => {
 			dispatch( fetchPaymentToken( payment ) )
-			dispatch( advancePage() )
 
 			// dispatch(confirmContribution())
 			// setTimeout( () => dispatch(advancePage() ), 2000)

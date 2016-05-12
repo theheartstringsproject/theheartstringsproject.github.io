@@ -1,3 +1,6 @@
+import * as types from '../constants/ActionTypes'
+import * as views from '../constants/Pages'
+
 let initialState = {
 	currentPage: 0,
 	previousPage: 0
@@ -31,12 +34,25 @@ const navigation = (state = initialState, action) => {
 		case 'JUMP_TO_PAGE':
 
 			// If this is a valid page
-			// TODO check whether the page is past the last page
-			if ( action.page < 0 )
+			if ( action.page < 0 || action.page === views.pages.length )
 				return state
 
 			return {
 				currentPage: action.page,
+				previousPage: state.currentPage
+			}
+
+		case types.DECLINED_CREDIT_CARD:
+
+			return {
+				currentPage: views.pages.indexOf( views.PAYMENT_PAGE ),
+				previousPage: state.currentPage
+			}
+
+		case types.REQUEST_PAYMENT_TOKEN:
+
+			return {
+				currentPage: views.pages.indexOf( views.LOADING_PAGE ),
 				previousPage: state.currentPage
 			}
 

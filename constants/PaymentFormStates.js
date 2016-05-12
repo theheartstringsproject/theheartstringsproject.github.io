@@ -1,3 +1,3 @@
-export const CARD_NUMBER = 'CARD_NUMBER'
-export const EXPIRATION_DATE = 'EXPIRATION_DATE'
-export const SECURITY_CODE = 'SECURITY_CODE'
+export const CARD_NUMBER = 'CreditCardNumber'
+export const EXPIRATION_DATE = 'CreditCardExpirationDate'
+export const SECURITY_CODE = 'CreditCardSecurityCode'

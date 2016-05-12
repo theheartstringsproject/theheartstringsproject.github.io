@@ -13,22 +13,22 @@ Stripe.setPublishableKey('pk_test_poxqEYDrVEjtlxvcwfVdlJ9q');
 const charity = decodeURI( parseUri( window.location ).queryKey['charity'] )
 const reason = decodeURI( parseUri( window.location ).queryKey['reason'] )
 
+const logger = store => next => action => {
+  console.group(action.type)
+  console.info('dispatching', action)
+  let result = next(action)
+  console.log('next state', store.getState())
+  console.groupEnd(action.type)
+  return result
+}
+
 let store = createStore(campaign, {
 	contribution: {
 		charityName: charity === "undefined" ? 'United States Association for UNHCR' : charity,
 		reason: reason === "undefined" ? 'Syrian refugees' : reason,
 		amount: 0
-	},
-	pages: [
-		'LandingPage',
-		'ContributionPage',
-		'EmailPage',
-		'PaymentPage',
-		'ConfirmationPage',
-		'LoadingPage',
-		'ThanksPage'
-	]
-}, applyMiddleware( thunkMiddleware ))
+	}
+}, applyMiddleware( thunkMiddleware, logger ))
 
 render(
 	<Provider store={store}>

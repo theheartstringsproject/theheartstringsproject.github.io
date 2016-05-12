@@ -2347,21 +2347,23 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.paymentTokenReceived = exports.paymentTokenRequestFailed = exports.requestPaymentToken = exports.hasAttemptedEmailValidation = exports.setEditingCreditCardExpirationDate = exports.didFinishEditingCreditCardNumber = exports.didStartEditingCreditCardSecurityCode = exports.didStartEditingCreditCardExpirationDate = exports.didStartEditingCreditCardNumber = exports.setCreditCardSecurityCode = exports.setCreditCardExpirationDate = exports.setCreditCardNumber = exports.setEmail = exports.confirmContribution = exports.chooseContributionAmount = exports.jumpToPage = exports.recedePage = exports.advancePage = undefined;
+	exports.paymentTokenRequestFailed = exports.paymentTokenReceived = exports.requestPaymentToken = exports.hasAttemptedEmailValidation = exports.setEditingCreditCardExpirationDate = exports.didFinishEditingCreditCardNumber = exports.didStartEditingCreditCardSecurityCode = exports.didStartEditingCreditCardExpirationDate = exports.didStartEditingCreditCardNumber = exports.setCreditCardSecurityCode = exports.setCreditCardExpirationDate = exports.setCreditCardNumber = exports.setEmail = exports.confirmContribution = exports.chooseContributionAmount = exports.jumpToPage = exports.recedePage = exports.advancePage = undefined;
 	exports.fetchPaymentToken = fetchPaymentToken;
 	
 	var _ActionTypes = __webpack_require__(29);
 	
 	var types = _interopRequireWildcard(_ActionTypes);
 	
+	var _StripeErrors = __webpack_require__(304);
+	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
+	// import fetch from 'isomorphic-fetch'
 	var advancePage = exports.advancePage = function advancePage() {
 		return {
 			type: types.ADVANCE_PAGE
 		};
-	}; // import fetch from 'isomorphic-fetch'
-	
+	};
 	
 	var recedePage = exports.recedePage = function recedePage() {
 		return {
@@ -2467,13 +2469,6 @@
 		};
 	};
 	
-	var paymentTokenRequestFailed = exports.paymentTokenRequestFailed = function paymentTokenRequestFailed(error) {
-		return {
-			type: types.PAYMENT_TOKEN_REQUEST_FAILED,
-			error: error
-		};
-	};
-	
 	var paymentTokenReceived = exports.paymentTokenReceived = function paymentTokenReceived(response) {
 		return {
 			type: types.PAYMENT_TOKEN_RECEIVED,
@@ -2481,25 +2476,80 @@
 		};
 	};
 	
+	var paymentTokenRequestFailed = exports.paymentTokenRequestFailed = function paymentTokenRequestFailed(error) {
+		var action = {
+			type: '',
+			error: error
+		};
+	
+		// Determine whether this is a card error that the user can fix
+		// or something that is out of the user's control
+		if (error.type === _StripeErrors.stripeErrorTypes.CARD_ERROR) {
+			switch (error.code) {
+	
+				case _StripeErrors.stripeErrorCodes.INVALID_NUMBER:
+					action.type = types.INVALID_CREDIT_CARD_NUMBER;
+					break;
+	
+				case _StripeErrors.stripeErrorCodes.INVALID_EXPIRY_MONTH:
+					action.type = types.INVALID_CREDIT_CARD_EXPIRATION_MONTH;
+					break;
+	
+				case _StripeErrors.stripeErrorCodes.INVALID_EXPIRY_YEAR:
+					action.type = types.INVALID_CREDIT_CARD_EXPIRATION_YEAR;
+					break;
+	
+				case _StripeErrors.stripeErrorCodes.INVALID_CVC:
+					action.type = types.INVALID_CREDIT_CARD_SECURITY_CODE;
+					break;
+	
+				case _StripeErrors.stripeErrorCodes.INCORRECT_NUMBER:
+					action.type = types.INCORRECT_CREDIT_CARD_NUMBER;
+					break;
+	
+				case _StripeErrors.stripeErrorCodes.INCORRECT_CVC:
+					action.type = types.INCORRECT_CREDIT_CARD_SECURITY_CODE;
+					break;
+	
+				case _StripeErrors.stripeErrorCodes.EXPIRED_CARD:
+					action.type = types.EXPIRED_CREDIT_CARD;
+					break;
+	
+				case _StripeErrors.stripeErrorCodes.CARD_DECLINED:
+					action.type = types.DECLINED_CREDIT_CARD;
+					break;
+	
+				default:
+					action.type = types.UNRECOVERABLE_ERROR;
+			}
+		} else {
+			action.type = types.UNRECOVERABLE_ERROR;
+		}
+	
+		return action;
+	};
+	
 	function fetchPaymentToken(payment) {
 		return function (dispatch) {
 			dispatch(requestPaymentToken());
 	
-			Stripe.card.createToken({
-				number: payment.cardNumber.value,
-				cvc: payment.securityCode.value,
-				exp_month: payment.expirationDate.values.month,
-				exp_year: payment.expirationDate.values.year
-			}, function (status, response) {
-				if (response.error) {
-					console.log(response.error);
-					dispatch(paymentTokenRequestFailed(response.error));
-				} else {
-					console.log(response);
-					dispatch(paymentTokenReceived(response));
-					dispatch(advancePage());
-				}
-			});
+			dispatch(paymentTokenRequestFailed({
+				type: "card_error", // Type of error
+				code: "card_declined" }));
+	
+			// Stripe.card.createToken({
+			// 	number: payment.cardNumber.value,
+			// 	cvc: payment.securityCode.value,
+			// 	exp_month: payment.expirationDate.values.month,
+			// 	exp_year: payment.expirationDate.values.year
+			// }, function( status, response ) {
+			// 	if ( response.error ) {
+			// 		dispatch( paymentTokenRequestFailed( response.error ) )
+			// 	} else {
+			// 		dispatch( paymentTokenReceived( response ) )
+			// 		dispatch( advancePage() )
+			// 	}
+			// })
 		};
 	}
 
@@ -2542,6 +2592,17 @@
 	var REQUEST_PAYMENT_TOKEN = exports.REQUEST_PAYMENT_TOKEN = 'REQUEST_PAYMENT_TOKEN';
 	var PAYMENT_TOKEN_RECEIVED = exports.PAYMENT_TOKEN_RECEIVED = 'PAYMENT_TOKEN_RECEIVED';
 	var PAYMENT_TOKEN_REQUEST_FAILED = exports.PAYMENT_TOKEN_REQUEST_FAILED = 'PAYMENT_TOKEN_REQUEST_FAILED';
+	
+	// Credit Card Error Types
+	var INVALID_CREDIT_CARD_NUMBER = exports.INVALID_CREDIT_CARD_NUMBER = 'INVALID_CREDIT_CARD_NUMBER';
+	var INVALID_CREDIT_CARD_EXPIRATION_MONTH = exports.INVALID_CREDIT_CARD_EXPIRATION_MONTH = 'INVALID_CREDIT_CARD_EXPIRATION_MONTH';
+	var INVALID_CREDIT_CARD_EXPIRATION_YEAR = exports.INVALID_CREDIT_CARD_EXPIRATION_YEAR = 'INVALID_CREDIT_CARD_EXPIRATION_YEAR';
+	var INVALID_CREDIT_CARD_SECURITY_CODE = exports.INVALID_CREDIT_CARD_SECURITY_CODE = 'INVALID_CREDIT_CARD_SECURITY_CODE';
+	var INCORRECT_CREDIT_CARD_NUMBER = exports.INCORRECT_CREDIT_CARD_NUMBER = 'INCORRECT_CREDIT_CARD_NUMBER';
+	var INCORRECT_CREDIT_CARD_SECURITY_CODE = exports.INCORRECT_CREDIT_CARD_SECURITY_CODE = 'INCORRECT_CREDIT_CARD_SECURITY_CODE';
+	var EXPIRED_CREDIT_CARD = exports.EXPIRED_CREDIT_CARD = 'EXPIRED_CREDIT_CARD';
+	var DECLINED_CREDIT_CARD = exports.DECLINED_CREDIT_CARD = 'DECLINED_CREDIT_CARD';
+	var UNRECOVERABLE_ERROR = exports.UNRECOVERABLE_ERROR = 'UNRECOVERABLE_ERROR';
 
 /***/ },
 /* 30 */
@@ -2556,6 +2617,9 @@
 	var INCOMPLETE = exports.INCOMPLETE = 'INCOMPLETE';
 	var VALID = exports.VALID = 'VALID';
 	var INVALID = exports.INVALID = 'INVALID';
+	var EXPIRED = exports.EXPIRED = 'EXPIRED';
+	var INCORRECT = exports.INCORRECT = 'INCORRECT';
+	var DECLINED = exports.DECLINED = 'DECLINED';
 
 /***/ },
 /* 31 */
@@ -26219,7 +26283,6 @@
 		},
 	
 		onChange: function onChange(field) {
-			console.log(_reactDom2.default.findDOMNode(this).selectionStart);
 			this.props.onChange(this.field.value(), this.field.cardMask(), this.getState(), _reactDom2.default.findDOMNode(this).selectionStart);
 	
 			if (this.isDoneEditing() && this.getState() === inputStates.VALID) {
@@ -26228,10 +26291,14 @@
 			}
 		},
 	
+		isInError: function isInError() {
+			return this.props.cardNumber.status === inputStates.INVALID || this.props.cardNumber.status === inputStates.EXPIRED || this.props.cardNumber.status === inputStates.INCORRECT || this.props.cardNumber.status === inputStates.DECLINED;
+		},
+	
 		render: function render() {
 			var _this = this;
 	
-			var errorClass = this.props.cardNumber.status === inputStates.INVALID ? 'Error' : '';
+			var errorClass = this.isInError() ? 'Error' : '';
 			return _react2.default.createElement('input', {
 				style: this.props.style,
 				placeholder: 'Card Number',
@@ -26623,7 +26690,7 @@
 			// Check whether we should render in an error state
 			var icon = this.props.icon,
 			    errorClass = '';
-			if (this.props.payment.cardNumber.status === inputStates.INVALID || this.props.payment.expirationDate.status === inputStates.INVALID || this.props.payment.securityCode.status === inputStates.INVALID) {
+			if (this.props.payment.cardNumber.status === inputStates.INVALID || this.props.payment.cardNumber.status === inputStates.EXPIRED || this.props.payment.cardNumber.status === inputStates.INCORRECT || this.props.payment.cardNumber.status === inputStates.DECLINED || this.props.payment.expirationDate.status === inputStates.INVALID || this.props.payment.securityCode.status === inputStates.INVALID || this.props.payment.securityCode.status === inputStates.INCORRECT) {
 	
 				icon = ERROR_ICON;
 				errorClass = 'Error';
@@ -28876,10 +28943,14 @@
 			return this.field;
 		},
 	
+		isInError: function isInError() {
+			return this.props.securityCode.status === inputStates.INVALID || this.props.securityCode.status === inputStates.INCORRECT;
+		},
+	
 		render: function render() {
 			var _this = this;
 	
-			var errorClass = this.props.securityCode.status === inputStates.INVALID ? 'Error' : '';
+			var errorClass = this.isInError() ? 'Error' : '';
 			return _react2.default.createElement('input', {
 				value: this.format(this.props.securityCode.value),
 				style: this.props.style,
@@ -28913,9 +28984,9 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	var CARD_NUMBER = exports.CARD_NUMBER = 'CARD_NUMBER';
-	var EXPIRATION_DATE = exports.EXPIRATION_DATE = 'EXPIRATION_DATE';
-	var SECURITY_CODE = exports.SECURITY_CODE = 'SECURITY_CODE';
+	var CARD_NUMBER = exports.CARD_NUMBER = 'CreditCardNumber';
+	var EXPIRATION_DATE = exports.EXPIRATION_DATE = 'CreditCardExpirationDate';
+	var SECURITY_CODE = exports.SECURITY_CODE = 'CreditCardSecurityCode';
 
 /***/ },
 /* 242 */
@@ -31686,13 +31757,24 @@
 
 /***/ },
 /* 293 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+	
+	var _ActionTypes = __webpack_require__(29);
+	
+	var types = _interopRequireWildcard(_ActionTypes);
+	
+	var _Pages = __webpack_require__(305);
+	
+	var views = _interopRequireWildcard(_Pages);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
 	var initialState = {
 		currentPage: 0,
 		previousPage: 0
@@ -31728,11 +31810,24 @@
 			case 'JUMP_TO_PAGE':
 	
 				// If this is a valid page
-				// TODO check whether the page is past the last page
-				if (action.page < 0) return state;
+				if (action.page < 0 || action.page === views.pages.length) return state;
 	
 				return {
 					currentPage: action.page,
+					previousPage: state.currentPage
+				};
+	
+			case types.DECLINED_CREDIT_CARD:
+	
+				return {
+					currentPage: views.pages.indexOf(views.PAYMENT_PAGE),
+					previousPage: state.currentPage
+				};
+	
+			case types.REQUEST_PAYMENT_TOKEN:
+	
+				return {
+					currentPage: views.pages.indexOf(views.LOADING_PAGE),
 					previousPage: state.currentPage
 				};
 	
@@ -31831,7 +31926,7 @@
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	var initialState = {
-		status: '',
+		status: inputStates.EXPIRED,
 		value: '',
 		formattedValue: '',
 		cursorPosition: null
@@ -31851,6 +31946,30 @@
 					value: action.cardNumber,
 					formattedValue: action.formattedCardNumber,
 					cursorPosition: action.cardNumberCursorPosition
+				});
+	
+			case types.INVALID_CREDIT_CARD_NUMBER:
+	
+				return Object.assign({}, state, {
+					status: inputStates.INVALID
+				});
+	
+			case types.INCORRECT_CREDIT_CARD_NUMBER:
+	
+				return Object.assign({}, state, {
+					status: inputStates.INCORRECT
+				});
+	
+			case types.EXPIRED_CREDIT_CARD:
+	
+				return Object.assign({}, state, {
+					status: inputStates.EXPIRED
+				});
+	
+			case types.DECLINED_CREDIT_CARD:
+	
+				return Object.assign({}, state, {
+					status: inputStates.DECLINED
 				});
 	
 			default:
@@ -32431,6 +32550,74 @@
 	};
 	
 	exports.default = securityCode;
+
+/***/ },
+/* 304 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	var stripeErrorTypes = exports.stripeErrorTypes = {
+		// Failure to connect to Stripe's API.
+		API_CONNECTION_ERROR: 'api_connection_error',
+		// API errors cover any other type of problem (e.g., a temporary problem with Stripe's servers) and are extremely uncommon.
+		API_ERROR: 'api_error',
+		// Failure to properly authenticate yourself in the request.
+		AUTHENTICATION_ERROR: 'authentication_error',
+		// Card errors are the most common type of error you should expect to handle. They result when the user enters a card that can't be charged for some reason.
+		CARD_ERROR: 'card_error',
+		// Invalid request errors arise when your request has invalid parameters.
+		INVALID_REQUEST_ERROR: 'invalid_request_error',
+		// Too many requests hit the API too quickly.
+		RATE_LIMIT_ERROR: 'rate_limit_error'
+	};
+	
+	var stripeErrorCodes = exports.stripeErrorCodes = {
+		// The card number is not a valid credit card number.
+		INVALID_NUMBER: 'invalid_number',
+		// The card's expiration month is invalid.
+		INVALID_EXPIRY_MONTH: 'invalid_expiry_month',
+		// The card's expiration year is invalid.
+		INVALID_EXPIRY_YEAR: 'invalid_expiry_year',
+		// The card's security code is invalid.
+		INVALID_CVC: 'invalid_cvc',
+		// The card number is incorrect.
+		INCORRECT_NUMBER: 'incorrect_number',
+		// The card has expired.
+		EXPIRED_CARD: 'expired_card',
+		// The card's security code is incorrect.
+		INCORRECT_CVC: 'incorrect_cvc',
+		// The card's zip code failed validation.
+		INCORRECT_ZIP: 'incorrect_zip',
+		// The card was declined.
+		CARD_DECLINED: 'card_declined',
+		// There is no card on a customer that is being charged.
+		MISSING: 'missing',
+		// An error occurred while processing the card.
+		PROCESSING_ERROR: 'processing_error'
+	};
+
+/***/ },
+/* 305 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	var LANDING_PAGE = exports.LANDING_PAGE = 'LandingPage';
+	var CONTRIBUTION_PAGE = exports.CONTRIBUTION_PAGE = 'ContributionPage';
+	var EMAIL_PAGE = exports.EMAIL_PAGE = 'EmailPage';
+	var PAYMENT_PAGE = exports.PAYMENT_PAGE = 'PaymentPage';
+	var CONFIRMATION_PAGE = exports.CONFIRMATION_PAGE = 'ConfirmationPage';
+	var LOADING_PAGE = exports.LOADING_PAGE = 'LoadingPage';
+	var THANKS_PAGE = exports.THANKS_PAGE = 'ThanksPage';
+	
+	var pages = exports.pages = ['LandingPage', 'ContributionPage', 'EmailPage', 'PaymentPage', 'ConfirmationPage', 'LoadingPage', 'ThanksPage'];
 
 /***/ }
 /******/ ]);

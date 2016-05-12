@@ -89,7 +89,6 @@ const CreditCardNumberInput = React.createClass({
 	},
 
 	onChange: function( field ) {
-		console.log( ReactDOM.findDOMNode( this ).selectionStart )
 		this.props.onChange(
 			this.field.value(),
 			this.field.cardMask(),
@@ -103,8 +102,15 @@ const CreditCardNumberInput = React.createClass({
 		}
 	},
 
+	isInError: function() {
+		return  this.props.cardNumber.status === inputStates.INVALID ||
+			 	this.props.cardNumber.status === inputStates.EXPIRED ||
+			 	this.props.cardNumber.status === inputStates.INCORRECT ||
+			 	this.props.cardNumber.status === inputStates.DECLINED
+	},
+
 	render: function() {
-		let errorClass = this.props.cardNumber.status === inputStates.INVALID ? 'Error' : ''
+		let errorClass = this.isInError() ? 'Error' : ''
 		return(
 			<input
 				style={this.props.style}

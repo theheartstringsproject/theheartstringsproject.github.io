@@ -1,5 +1,6 @@
 // import fetch from 'isomorphic-fetch'
 import * as types from '../constants/ActionTypes'
+import { stripeErrorTypes, stripeErrorCodes } from '../constants/StripeErrors'
 
 export const advancePage = () => {
 	return {
@@ -111,13 +112,6 @@ export const requestPaymentToken = () => {
 	}
 }
 
-export const paymentTokenRequestFailed = ( error ) => {
-	return {
-		type: types.PAYMENT_TOKEN_REQUEST_FAILED,
-		error
-	}
-}
-
 export const paymentTokenReceived = ( response ) => {
 	return {
 		type: types.PAYMENT_TOKEN_RECEIVED,
@@ -125,24 +119,80 @@ export const paymentTokenReceived = ( response ) => {
 	}
 }
 
+export const paymentTokenRequestFailed = ( error ) => {
+	let action = {
+		type: '',
+		error
+	}
+
+	// Determine whether this is a card error that the user can fix
+	// or something that is out of the user's control
+	if ( error.type === stripeErrorTypes.CARD_ERROR ) {
+		switch ( error.code ) {
+
+			case stripeErrorCodes.INVALID_NUMBER:
+				action.type = types.INVALID_CREDIT_CARD_NUMBER
+				break
+
+			case stripeErrorCodes.INVALID_EXPIRY_MONTH:
+				action.type = types.INVALID_CREDIT_CARD_EXPIRATION_MONTH
+				break
+
+			case stripeErrorCodes.INVALID_EXPIRY_YEAR:
+				action.type = types.INVALID_CREDIT_CARD_EXPIRATION_YEAR
+				break
+
+			case stripeErrorCodes.INVALID_CVC:
+				action.type = types.INVALID_CREDIT_CARD_SECURITY_CODE
+				break
+
+			case stripeErrorCodes.INCORRECT_NUMBER:
+				action.type = types.INCORRECT_CREDIT_CARD_NUMBER
+				break
+
+			case stripeErrorCodes.INCORRECT_CVC:
+				action.type = types.INCORRECT_CREDIT_CARD_SECURITY_CODE
+				break
+
+			case stripeErrorCodes.EXPIRED_CARD:
+				action.type = types.EXPIRED_CREDIT_CARD
+				break
+
+			case stripeErrorCodes.CARD_DECLINED:
+				action.type = types.DECLINED_CREDIT_CARD
+				break
+
+			default:
+				action.type = types.UNRECOVERABLE_ERROR
+		}
+	} else {
+		action.type = types.UNRECOVERABLE_ERROR
+	}
+
+	return action
+}
+
 export function fetchPaymentToken( payment ) {
 	return function( dispatch ) {
 		dispatch( requestPaymentToken() )
 
-		Stripe.card.createToken({
-			number: payment.cardNumber.value,
-			cvc: payment.securityCode.value,
-			exp_month: payment.expirationDate.values.month,
-			exp_year: payment.expirationDate.values.year
-		}, function( status, response ) {
-			if ( response.error ) {
-				console.log( response.error )
-				dispatch( paymentTokenRequestFailed( response.error ) )
-			} else {
-				console.log( response )
-				dispatch( paymentTokenReceived( response ) )
-				dispatch( advancePage() )
-			}
-		})
+		dispatch( paymentTokenRequestFailed( {
+			type: "card_error", // Type of error
+    		code: "card_declined", // Optional identifier of specific error
+		} ) )
+
+		// Stripe.card.createToken({
+		// 	number: payment.cardNumber.value,
+		// 	cvc: payment.securityCode.value,
+		// 	exp_month: payment.expirationDate.values.month,
+		// 	exp_year: payment.expirationDate.values.year
+		// }, function( status, response ) {
+		// 	if ( response.error ) {
+		// 		dispatch( paymentTokenRequestFailed( response.error ) )
+		// 	} else {
+		// 		dispatch( paymentTokenReceived( response ) )
+		// 		dispatch( advancePage() )
+		// 	}
+		// })
 	}
 }

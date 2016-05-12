@@ -62,8 +62,13 @@ const CreditCardSecurityCodeInput = React.createClass({
 		return this.field
 	},
 
+	isInError: function() {
+		return 	this.props.securityCode.status === inputStates.INVALID ||
+				this.props.securityCode.status === inputStates.INCORRECT
+	},
+
 	render: function() {
-		let errorClass = this.props.securityCode.status === inputStates.INVALID ? 'Error' : ''
+		let errorClass = this.isInError() ? 'Error' : ''
 		return(
 			<input
 				value={this.format( this.props.securityCode.value )}
