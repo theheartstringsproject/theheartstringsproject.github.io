@@ -34,10 +34,22 @@ const formState = (state = initialState, action) => {
 				currentField: paymentFormStates.EXPIRATION_DATE
 			})
 
+		case types.SET_EDITING_CREDIT_CARD_NUMBER:
+
+			return Object.assign({}, state, {
+				currentField: paymentFormStates.CARD_NUMBER
+			})
+
 		case types.SET_EDITING_CREDIT_CARD_EXPIRATION_DATE:
 
 			return Object.assign({}, state, {
 				currentField: paymentFormStates.EXPIRATION_DATE
+			})
+
+		case types.SET_EDITING_CREDIT_CARD_SECURITY_CODE:
+
+			return Object.assign({}, state, {
+				currentField: paymentFormStates.SECURITY_CODE
 			})
 
 		default:

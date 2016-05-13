@@ -42,4 +42,38 @@ describe('Credit Card Number Reducer', function() {
 			cursorPosition: 4
 		})
 	})
+
+	it('should handle INVALID_CREDIT_CARD_NUMBER', function() {
+		expect( reducer( [], {
+			type: types.INVALID_CREDIT_CARD_NUMBER
+		})).toEqual({
+			status: inputStates.INVALID
+		})
+	})
+
+	it('should handle INCORRECT_CREDIT_CARD_NUMBER', function() {
+		expect( reducer( [], {
+			type: types.INCORRECT_CREDIT_CARD_NUMBER
+		})).toEqual({
+			status: inputStates.INCORRECT
+		})
+	})
+
+	it('should handle EXPIRED_CREDIT_CARD', function() {
+		expect( reducer( [], {
+			type: types.EXPIRED_CREDIT_CARD
+		})).toEqual({
+			status: inputStates.EXPIRED
+		})
+	})
+
+	it('should handle DECLINED_CREDIT_CARD', function() {
+		expect( reducer( [], {
+			type: types.DECLINED_CREDIT_CARD
+		})).toEqual({
+			status: inputStates.DECLINED
+		})
+	})
+
+
 })

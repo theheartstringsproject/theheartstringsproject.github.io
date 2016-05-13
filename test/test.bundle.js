@@ -168,9 +168,27 @@
 		});
 	
 		it('should create an action for ending credit card number editing', function () {
-			var expectAction = {
+			var expectedAction = {
 				type: types.DID_FINISH_EDITING_CREDIT_CARD_NUMBER
 			};
+	
+			(0, _expect2.default)(actions.didFinishEditingCreditCardNumber()).toEqual(expectedAction);
+		});
+	
+		it('should create an action for setting editing to expiration date', function () {
+			var expectedAction = {
+				type: types.SET_EDITING_CREDIT_CARD_EXPIRATION_DATE
+			};
+	
+			(0, _expect2.default)(actions.setEditingCreditCardExpirationDate()).toEqual(expectedAction);
+		});
+	
+		it('should create an action for setting editing to security code', function () {
+			var expectedAction = {
+				type: types.SET_EDITING_CREDIT_CARD_SECURITY_CODE
+			};
+	
+			(0, _expect2.default)(actions.setEditingCreditCardSecurityCode()).toEqual(expectedAction);
 		});
 	
 		it('should create an action for having attempted email validation', function () {
@@ -181,7 +199,95 @@
 			(0, _expect2.default)(actions.hasAttemptedEmailValidation()).toEqual(expectedAction);
 		});
 	
-		it('should create an action for fetching a payment token', function () {});
+		it('should create an action for an invalid credit card number', function () {
+			var error = {};
+			var expectedAction = {
+				type: types.INVALID_CREDIT_CARD_NUMBER,
+				error: error
+			};
+	
+			(0, _expect2.default)(actions.invalidCreditCardNumber(error)).toEqual(expectedAction);
+		});
+	
+		it('should create an action for an invalid credit card expiration month', function () {
+			var error = {};
+			var expectedAction = {
+				type: types.INVALID_CREDIT_CARD_EXPIRATION_MONTH,
+				error: error
+			};
+	
+			(0, _expect2.default)(actions.invalidCreditCardExpirationMonth(error)).toEqual(expectedAction);
+		});
+	
+		it('should create an action for an invalid credit card expiration year', function () {
+			var error = {};
+			var expectedAction = {
+				type: types.INVALID_CREDIT_CARD_EXPIRATION_YEAR,
+				error: error
+			};
+	
+			(0, _expect2.default)(actions.invalidCreditCardExpirationYear(error)).toEqual(expectedAction);
+		});
+	
+		it('should create an action for an invalid credit card security code', function () {
+			var error = {};
+			var expectedAction = {
+				type: types.INVALID_CREDIT_CARD_SECURITY_CODE,
+				error: error
+			};
+	
+			(0, _expect2.default)(actions.invalidCreditCardSecurityCode(error)).toEqual(expectedAction);
+		});
+	
+		it('should create an action for an incorrect credit card number', function () {
+			var error = {};
+			var expectedAction = {
+				type: types.INCORRECT_CREDIT_CARD_NUMBER,
+				error: error
+			};
+	
+			(0, _expect2.default)(actions.incorrectCreditCardNumber(error)).toEqual(expectedAction);
+		});
+	
+		it('should create an action for an incorrect credit card security code', function () {
+			var error = {};
+			var expectedAction = {
+				type: types.INCORRECT_CREDIT_CARD_SECURITY_CODE,
+				error: error
+			};
+	
+			(0, _expect2.default)(actions.incorrectCreditCardSecurityCode(error)).toEqual(expectedAction);
+		});
+	
+		it('should create an action for an expired credit card', function () {
+			var error = {};
+			var expectedAction = {
+				type: types.EXPIRED_CREDIT_CARD,
+				error: error
+			};
+	
+			(0, _expect2.default)(actions.expiredCreditCard(error)).toEqual(expectedAction);
+		});
+	
+		it('should create an action for a declined credit card', function () {
+			var error = {};
+			var expectedAction = {
+				type: types.DECLINED_CREDIT_CARD,
+				error: error
+			};
+	
+			(0, _expect2.default)(actions.declinedCreditCard(error)).toEqual(expectedAction);
+		});
+	
+		it('should create an action for an unrecoverable error', function () {
+			var error = {};
+			var expectedAction = {
+				type: types.UNRECOVERABLE_ERROR,
+				error: error
+			};
+	
+			(0, _expect2.default)(actions.unrecoverableError(error)).toEqual(expectedAction);
+		});
 	
 		it('should create an action for requesting a payment token', function () {
 			var expectedAction = {
@@ -191,15 +297,15 @@
 			(0, _expect2.default)(actions.requestPaymentToken()).toEqual(expectedAction);
 		});
 	
-		it('should create an action for a failed payment token request', function () {
-			var error = {};
-			var expectedAction = {
-				type: types.PAYMENT_TOKEN_REQUEST_FAILED,
-				error: error
-			};
+		// it('should create an action for a failed payment token request', function() {
+		// 	const error = {}
+		// 	const expectedAction = {
+		// 		type: types.PAYMENT_TOKEN_REQUEST_FAILED,
+		// 		error
+		// 	}
 	
-			(0, _expect2.default)(actions.paymentTokenRequestFailed(error)).toEqual(expectedAction);
-		});
+		// 	expect( actions.paymentTokenRequestFailed( error ) ).toEqual( expectedAction )
+		// })
 	
 		it('should create an action for a successful payment token request', function () {
 			var response = {};
@@ -2347,7 +2453,7 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.paymentTokenRequestFailed = exports.paymentTokenReceived = exports.requestPaymentToken = exports.hasAttemptedEmailValidation = exports.setEditingCreditCardExpirationDate = exports.didFinishEditingCreditCardNumber = exports.didStartEditingCreditCardSecurityCode = exports.didStartEditingCreditCardExpirationDate = exports.didStartEditingCreditCardNumber = exports.setCreditCardSecurityCode = exports.setCreditCardExpirationDate = exports.setCreditCardNumber = exports.setEmail = exports.confirmContribution = exports.chooseContributionAmount = exports.jumpToPage = exports.recedePage = exports.advancePage = undefined;
+	exports.paymentTokenRequestFailed = exports.paymentTokenReceived = exports.requestPaymentToken = exports.unrecoverableError = exports.declinedCreditCard = exports.expiredCreditCard = exports.incorrectCreditCardSecurityCode = exports.incorrectCreditCardNumber = exports.invalidCreditCardSecurityCode = exports.invalidCreditCardExpirationYear = exports.invalidCreditCardExpirationMonth = exports.invalidCreditCardNumber = exports.hasAttemptedEmailValidation = exports.setEditingCreditCardSecurityCode = exports.setEditingCreditCardExpirationDate = exports.setEditingCreditCardNumber = exports.didFinishEditingCreditCardNumber = exports.didStartEditingCreditCardSecurityCode = exports.didStartEditingCreditCardExpirationDate = exports.didStartEditingCreditCardNumber = exports.setCreditCardSecurityCode = exports.setCreditCardExpirationDate = exports.setCreditCardNumber = exports.setEmail = exports.confirmContribution = exports.chooseContributionAmount = exports.jumpToPage = exports.recedePage = exports.advancePage = undefined;
 	exports.fetchPaymentToken = fetchPaymentToken;
 	
 	var _ActionTypes = __webpack_require__(29);
@@ -2356,14 +2462,18 @@
 	
 	var _StripeErrors = __webpack_require__(304);
 	
+	var _Pages = __webpack_require__(305);
+	
+	var views = _interopRequireWildcard(_Pages);
+	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
-	// import fetch from 'isomorphic-fetch'
 	var advancePage = exports.advancePage = function advancePage() {
 		return {
 			type: types.ADVANCE_PAGE
 		};
-	};
+	}; // import fetch from 'isomorphic-fetch'
+	
 	
 	var recedePage = exports.recedePage = function recedePage() {
 		return {
@@ -2451,15 +2561,90 @@
 		};
 	};
 	
+	var setEditingCreditCardNumber = exports.setEditingCreditCardNumber = function setEditingCreditCardNumber() {
+		return {
+			type: types.SET_EDITING_CREDIT_CARD_NUMBER
+		};
+	};
+	
 	var setEditingCreditCardExpirationDate = exports.setEditingCreditCardExpirationDate = function setEditingCreditCardExpirationDate() {
 		return {
 			type: types.SET_EDITING_CREDIT_CARD_EXPIRATION_DATE
 		};
 	};
 	
+	var setEditingCreditCardSecurityCode = exports.setEditingCreditCardSecurityCode = function setEditingCreditCardSecurityCode() {
+		return {
+			type: types.SET_EDITING_CREDIT_CARD_SECURITY_CODE
+		};
+	};
+	
 	var hasAttemptedEmailValidation = exports.hasAttemptedEmailValidation = function hasAttemptedEmailValidation() {
 		return {
 			type: types.HAS_ATTEMPTED_EMAIL_VALIDATION
+		};
+	};
+	
+	var invalidCreditCardNumber = exports.invalidCreditCardNumber = function invalidCreditCardNumber(error) {
+		return {
+			type: types.INVALID_CREDIT_CARD_NUMBER,
+			error: error
+		};
+	};
+	
+	var invalidCreditCardExpirationMonth = exports.invalidCreditCardExpirationMonth = function invalidCreditCardExpirationMonth(error) {
+		return {
+			type: types.INVALID_CREDIT_CARD_EXPIRATION_MONTH,
+			error: error
+		};
+	};
+	
+	var invalidCreditCardExpirationYear = exports.invalidCreditCardExpirationYear = function invalidCreditCardExpirationYear(error) {
+		return {
+			type: types.INVALID_CREDIT_CARD_EXPIRATION_YEAR,
+			error: error
+		};
+	};
+	
+	var invalidCreditCardSecurityCode = exports.invalidCreditCardSecurityCode = function invalidCreditCardSecurityCode(error) {
+		return {
+			type: types.INVALID_CREDIT_CARD_SECURITY_CODE,
+			error: error
+		};
+	};
+	
+	var incorrectCreditCardNumber = exports.incorrectCreditCardNumber = function incorrectCreditCardNumber(error) {
+		return {
+			type: types.INCORRECT_CREDIT_CARD_NUMBER,
+			error: error
+		};
+	};
+	
+	var incorrectCreditCardSecurityCode = exports.incorrectCreditCardSecurityCode = function incorrectCreditCardSecurityCode(error) {
+		return {
+			type: types.INCORRECT_CREDIT_CARD_SECURITY_CODE,
+			error: error
+		};
+	};
+	
+	var expiredCreditCard = exports.expiredCreditCard = function expiredCreditCard(error) {
+		return {
+			type: types.EXPIRED_CREDIT_CARD,
+			error: error
+		};
+	};
+	
+	var declinedCreditCard = exports.declinedCreditCard = function declinedCreditCard(error) {
+		return {
+			type: types.DECLINED_CREDIT_CARD,
+			error: error
+		};
+	};
+	
+	var unrecoverableError = exports.unrecoverableError = function unrecoverableError(error) {
+		return {
+			type: types.UNRECOVERABLE_ERROR,
+			error: error
 		};
 	};
 	
@@ -2477,79 +2662,107 @@
 	};
 	
 	var paymentTokenRequestFailed = exports.paymentTokenRequestFailed = function paymentTokenRequestFailed(error) {
-		var action = {
-			type: '',
-			error: error
-		};
+		return function (dispatch) {
 	
-		// Determine whether this is a card error that the user can fix
-		// or something that is out of the user's control
-		if (error.type === _StripeErrors.stripeErrorTypes.CARD_ERROR) {
-			switch (error.code) {
+			// Determine whether this is a card error that the user can fix
+			// or something that is out of the user's control
+			if (error.type === _StripeErrors.stripeErrorTypes.CARD_ERROR) {
 	
-				case _StripeErrors.stripeErrorCodes.INVALID_NUMBER:
-					action.type = types.INVALID_CREDIT_CARD_NUMBER;
-					break;
+				// Go back to the payment page for any of these errors
+				dispatch(jumpToPage(views.pages.indexOf(views.PAYMENT_PAGE)));
 	
-				case _StripeErrors.stripeErrorCodes.INVALID_EXPIRY_MONTH:
-					action.type = types.INVALID_CREDIT_CARD_EXPIRATION_MONTH;
-					break;
+				switch (error.code) {
 	
-				case _StripeErrors.stripeErrorCodes.INVALID_EXPIRY_YEAR:
-					action.type = types.INVALID_CREDIT_CARD_EXPIRATION_YEAR;
-					break;
+					case _StripeErrors.stripeErrorCodes.INVALID_NUMBER:
 	
-				case _StripeErrors.stripeErrorCodes.INVALID_CVC:
-					action.type = types.INVALID_CREDIT_CARD_SECURITY_CODE;
-					break;
+						// Reveal the card number field
+						dispatch(setEditingCreditCardNumber());
 	
-				case _StripeErrors.stripeErrorCodes.INCORRECT_NUMBER:
-					action.type = types.INCORRECT_CREDIT_CARD_NUMBER;
-					break;
+						return dispatch(invalidCreditCardNumber(error));
+						break;
 	
-				case _StripeErrors.stripeErrorCodes.INCORRECT_CVC:
-					action.type = types.INCORRECT_CREDIT_CARD_SECURITY_CODE;
-					break;
+					case _StripeErrors.stripeErrorCodes.INVALID_EXPIRY_MONTH:
 	
-				case _StripeErrors.stripeErrorCodes.EXPIRED_CARD:
-					action.type = types.EXPIRED_CREDIT_CARD;
-					break;
+						// Reveal the expiration date field
+						dispatch(setEditingCreditCardExpirationDate());
 	
-				case _StripeErrors.stripeErrorCodes.CARD_DECLINED:
-					action.type = types.DECLINED_CREDIT_CARD;
-					break;
+						return dispatch(invalidCreditCardExpirationMonth(error));
+						break;
 	
-				default:
-					action.type = types.UNRECOVERABLE_ERROR;
+					case _StripeErrors.stripeErrorCodes.INVALID_EXPIRY_YEAR:
+	
+						// Reveal the expiration date field
+						dispatch(setEditingCreditCardExpirationDate());
+	
+						return dispatch(invalidCreditCardExpirationYear(error));
+						break;
+	
+					case _StripeErrors.stripeErrorCodes.INVALID_CVC:
+	
+						// Reveal the security code field
+						dispatch(setEditingCreditCardSecurityCode());
+	
+						return dispatch(invalidCreditCardSecurityCode(error));
+						break;
+	
+					case _StripeErrors.stripeErrorCodes.INCORRECT_NUMBER:
+	
+						// Reveal the card number field
+						dispatch(setEditingCreditCardNumber());
+	
+						return dispatch(incorrectCreditCardNumber(error));
+						break;
+	
+					case _StripeErrors.stripeErrorCodes.INCORRECT_CVC:
+	
+						// Reveal the security code field
+						dispatch(setEditingCreditCardSecurityCode());
+	
+						return dispatch(incorrectCreditCardSecurityCode(error));
+						break;
+	
+					case _StripeErrors.stripeErrorCodes.EXPIRED_CARD:
+	
+						// Reveal the card number field
+						dispatch(setEditingCreditCardNumber());
+	
+						return dispatch(expiredCreditCard(error));
+						break;
+	
+					case _StripeErrors.stripeErrorCodes.CARD_DECLINED:
+	
+						// Reveal the card number field
+						dispatch(setEditingCreditCardNumber());
+	
+						return dispatch(declinedCreditCard(error));
+						break;
+	
+					default:
+						dispatch(unrecoverableError(error));
+				}
+			} else {
+				return dispatch(unrecoverableError(error));
 			}
-		} else {
-			action.type = types.UNRECOVERABLE_ERROR;
-		}
-	
-		return action;
+		};
 	};
 	
 	function fetchPaymentToken(payment) {
 		return function (dispatch) {
 			dispatch(requestPaymentToken());
 	
-			dispatch(paymentTokenRequestFailed({
-				type: "card_error", // Type of error
-				code: "card_declined" }));
-	
-			// Stripe.card.createToken({
-			// 	number: payment.cardNumber.value,
-			// 	cvc: payment.securityCode.value,
-			// 	exp_month: payment.expirationDate.values.month,
-			// 	exp_year: payment.expirationDate.values.year
-			// }, function( status, response ) {
-			// 	if ( response.error ) {
-			// 		dispatch( paymentTokenRequestFailed( response.error ) )
-			// 	} else {
-			// 		dispatch( paymentTokenReceived( response ) )
-			// 		dispatch( advancePage() )
-			// 	}
-			// })
+			Stripe.card.createToken({
+				number: payment.cardNumber.value,
+				cvc: payment.securityCode.value,
+				exp_month: payment.expirationDate.values.month,
+				exp_year: payment.expirationDate.values.year
+			}, function (status, response) {
+				if (response.error) {
+					dispatch(paymentTokenRequestFailed(response.error));
+				} else {
+					dispatch(paymentTokenReceived(response));
+					dispatch(advancePage());
+				}
+			});
 		};
 	}
 
@@ -2584,7 +2797,9 @@
 	
 	var DID_FINISH_EDITING_CREDIT_CARD_NUMBER = exports.DID_FINISH_EDITING_CREDIT_CARD_NUMBER = 'DID_FINISH_EDITING_CREDIT_CARD_NUMBER';
 	
+	var SET_EDITING_CREDIT_CARD_NUMBER = exports.SET_EDITING_CREDIT_CARD_NUMBER = 'SET_EDITING_CREDIT_CARD_NUMBER';
 	var SET_EDITING_CREDIT_CARD_EXPIRATION_DATE = exports.SET_EDITING_CREDIT_CARD_EXPIRATION_DATE = 'SET_EDITING_CREDIT_CARD_EXPIRATION_DATE';
+	var SET_EDITING_CREDIT_CARD_SECURITY_CODE = exports.SET_EDITING_CREDIT_CARD_SECURITY_CODE = 'SET_EDITING_CREDIT_CARD_SECURITY_CODE';
 	
 	var HAS_ATTEMPTED_EMAIL_VALIDATION = exports.HAS_ATTEMPTED_EMAIL_VALIDATION = 'HAS_ATTEMPTED_EMAIL_VALIDATION';
 	
@@ -31903,6 +32118,38 @@
 				cursorPosition: 4
 			});
 		});
+	
+		it('should handle INVALID_CREDIT_CARD_NUMBER', function () {
+			(0, _expect2.default)((0, _cardNumber2.default)([], {
+				type: types.INVALID_CREDIT_CARD_NUMBER
+			})).toEqual({
+				status: inputStates.INVALID
+			});
+		});
+	
+		it('should handle INCORRECT_CREDIT_CARD_NUMBER', function () {
+			(0, _expect2.default)((0, _cardNumber2.default)([], {
+				type: types.INCORRECT_CREDIT_CARD_NUMBER
+			})).toEqual({
+				status: inputStates.INCORRECT
+			});
+		});
+	
+		it('should handle EXPIRED_CREDIT_CARD', function () {
+			(0, _expect2.default)((0, _cardNumber2.default)([], {
+				type: types.EXPIRED_CREDIT_CARD
+			})).toEqual({
+				status: inputStates.EXPIRED
+			});
+		});
+	
+		it('should handle DECLINED_CREDIT_CARD', function () {
+			(0, _expect2.default)((0, _cardNumber2.default)([], {
+				type: types.DECLINED_CREDIT_CARD
+			})).toEqual({
+				status: inputStates.DECLINED
+			});
+		});
 	});
 
 /***/ },
@@ -31926,7 +32173,7 @@
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	var initialState = {
-		status: inputStates.EXPIRED,
+		status: '',
 		value: '',
 		formattedValue: '',
 		cursorPosition: null
@@ -32221,6 +32468,22 @@
 				cursorPosition: 2
 			});
 		});
+	
+		it('should handle INVALID_CREDIT_CARD_EXPIRATION_MONTH', function () {
+			(0, _expect2.default)((0, _expirationDate2.default)([], {
+				type: types.INVALID_CREDIT_CARD_EXPIRATION_MONTH
+			})).toEqual({
+				status: inputStates.INVALID
+			});
+		});
+	
+		it('should handle INVALID_CREDIT_CARD_EXPIRATION_YEAR', function () {
+			(0, _expect2.default)((0, _expirationDate2.default)([], {
+				type: types.INVALID_CREDIT_CARD_EXPIRATION_YEAR
+			})).toEqual({
+				status: inputStates.INVALID
+			});
+		});
 	});
 
 /***/ },
@@ -32291,6 +32554,18 @@
 						year: expirationYear
 					},
 					cursorPosition: action.expirationDateCursorPosition
+				});
+	
+			case types.INVALID_CREDIT_CARD_EXPIRATION_MONTH:
+	
+				return Object.assign({}, state, {
+					status: inputStates.INVALID
+				});
+	
+			case types.INVALID_CREDIT_CARD_EXPIRATION_YEAR:
+	
+				return Object.assign({}, state, {
+					status: inputStates.INVALID
 				});
 	
 			default:
@@ -32371,11 +32646,27 @@
 			});
 		});
 	
+		it('should handle SET_EDITING_CREDIT_CARD_NUMBER', function () {
+			(0, _expect2.default)((0, _formState2.default)([], {
+				type: types.SET_EDITING_CREDIT_CARD_NUMBER
+			})).toEqual({
+				currentField: paymentFormStates.CARD_NUMBER
+			});
+		});
+	
 		it('should handle SET_EDITING_CREDIT_CARD_EXPIRATION_DATE', function () {
 			(0, _expect2.default)((0, _formState2.default)([], {
 				type: types.SET_EDITING_CREDIT_CARD_EXPIRATION_DATE
 			})).toEqual({
 				currentField: paymentFormStates.EXPIRATION_DATE
+			});
+		});
+	
+		it('should handle SET_EDITING_CREDIT_CARD_SECURITY_CODE', function () {
+			(0, _expect2.default)((0, _formState2.default)([], {
+				type: types.SET_EDITING_CREDIT_CARD_SECURITY_CODE
+			})).toEqual({
+				currentField: paymentFormStates.SECURITY_CODE
 			});
 		});
 	});
@@ -32439,10 +32730,22 @@
 					currentField: paymentFormStates.EXPIRATION_DATE
 				});
 	
+			case types.SET_EDITING_CREDIT_CARD_NUMBER:
+	
+				return Object.assign({}, state, {
+					currentField: paymentFormStates.CARD_NUMBER
+				});
+	
 			case types.SET_EDITING_CREDIT_CARD_EXPIRATION_DATE:
 	
 				return Object.assign({}, state, {
 					currentField: paymentFormStates.EXPIRATION_DATE
+				});
+	
+			case types.SET_EDITING_CREDIT_CARD_SECURITY_CODE:
+	
+				return Object.assign({}, state, {
+					currentField: paymentFormStates.SECURITY_CODE
 				});
 	
 			default:
@@ -32501,6 +32804,22 @@
 				cursorPosition: 2
 			});
 		});
+	
+		it('should handle INVALID_CREDIT_CARD_SECURITY_CODE', function () {
+			(0, _expect2.default)((0, _securityCode2.default)([], {
+				type: types.INVALID_CREDIT_CARD_SECURITY_CODE
+			})).toEqual({
+				status: inputStates.INVALID
+			});
+		});
+	
+		it('should handle INCORRECT_CREDIT_CARD_SECURITY_CODE', function () {
+			(0, _expect2.default)((0, _securityCode2.default)([], {
+				type: types.INCORRECT_CREDIT_CARD_SECURITY_CODE
+			})).toEqual({
+				status: inputStates.INCORRECT
+			});
+		});
 	});
 
 /***/ },
@@ -32542,6 +32861,18 @@
 					status: action.status,
 					value: action.securityCode,
 					cursorPosition: action.securityCodeCursorPosition
+				});
+	
+			case types.INVALID_CREDIT_CARD_SECURITY_CODE:
+	
+				return Object.assign({}, state, {
+					status: inputStates.INVALID
+				});
+	
+			case types.INCORRECT_CREDIT_CARD_SECURITY_CODE:
+	
+				return Object.assign({}, state, {
+					status: inputStates.INCORRECT
 				});
 	
 			default:

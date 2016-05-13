@@ -39,6 +39,18 @@ const expirationDate = (state = initialState, action) => {
 				cursorPosition: action.expirationDateCursorPosition
 			})
 
+		case types.INVALID_CREDIT_CARD_EXPIRATION_MONTH:
+
+			return Object.assign({}, state, {
+				status: inputStates.INVALID
+			})
+
+		case types.INVALID_CREDIT_CARD_EXPIRATION_YEAR:
+
+			return Object.assign({}, state, {
+				status: inputStates.INVALID
+			})
+
 		default:
 			return state
 	}

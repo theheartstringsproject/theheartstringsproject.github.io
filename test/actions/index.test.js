@@ -86,9 +86,27 @@ describe('Actions', function() {
 	})
 
 	it('should create an action for ending credit card number editing', function() {
-		const expectAction = {
+		const expectedAction = {
 			type: types.DID_FINISH_EDITING_CREDIT_CARD_NUMBER
 		}
+
+		expect( actions.didFinishEditingCreditCardNumber() ).toEqual( expectedAction )
+	})
+
+	it('should create an action for setting editing to expiration date', function() {
+		const expectedAction = {
+			type: types.SET_EDITING_CREDIT_CARD_EXPIRATION_DATE
+		}
+
+		expect( actions.setEditingCreditCardExpirationDate() ).toEqual( expectedAction )
+	})
+
+	it('should create an action for setting editing to security code', function() {
+		const expectedAction = {
+			type: types.SET_EDITING_CREDIT_CARD_SECURITY_CODE
+		}
+
+		expect( actions.setEditingCreditCardSecurityCode() ).toEqual( expectedAction )
 	})
 
 	it('should create an action for having attempted email validation', function() {
@@ -99,8 +117,94 @@ describe('Actions', function() {
 		expect( actions.hasAttemptedEmailValidation() ).toEqual( expectedAction )
 	})
 
-	it('should create an action for fetching a payment token', function() {
+	it('should create an action for an invalid credit card number', function() {
+		const error = {}
+		const expectedAction = {
+			type: types.INVALID_CREDIT_CARD_NUMBER,
+			error
+		}
 
+		expect( actions.invalidCreditCardNumber( error ) ).toEqual( expectedAction )
+	})
+
+	it('should create an action for an invalid credit card expiration month', function() {
+		const error = {}
+		const expectedAction = {
+			type: types.INVALID_CREDIT_CARD_EXPIRATION_MONTH,
+			error
+		}
+
+		expect( actions.invalidCreditCardExpirationMonth( error ) ).toEqual( expectedAction )
+	})
+
+	it('should create an action for an invalid credit card expiration year', function() {
+		const error = {}
+		const expectedAction = {
+			type: types.INVALID_CREDIT_CARD_EXPIRATION_YEAR,
+			error
+		}
+
+		expect( actions.invalidCreditCardExpirationYear( error ) ).toEqual( expectedAction )
+	})
+
+	it('should create an action for an invalid credit card security code', function() {
+		const error = {}
+		const expectedAction = {
+			type: types.INVALID_CREDIT_CARD_SECURITY_CODE,
+			error
+		}
+
+		expect( actions.invalidCreditCardSecurityCode( error ) ).toEqual( expectedAction )
+	})
+
+	it('should create an action for an incorrect credit card number', function() {
+		const error = {}
+		const expectedAction = {
+			type: types.INCORRECT_CREDIT_CARD_NUMBER,
+			error
+		}
+
+		expect( actions.incorrectCreditCardNumber( error ) ).toEqual( expectedAction )
+	})
+
+	it('should create an action for an incorrect credit card security code', function() {
+		const error = {}
+		const expectedAction = {
+			type: types.INCORRECT_CREDIT_CARD_SECURITY_CODE,
+			error
+		}
+
+		expect( actions.incorrectCreditCardSecurityCode( error ) ).toEqual( expectedAction )
+	})
+
+	it('should create an action for an expired credit card', function() {
+		const error = {}
+		const expectedAction = {
+			type: types.EXPIRED_CREDIT_CARD,
+			error
+		}
+
+		expect( actions.expiredCreditCard( error ) ).toEqual( expectedAction )
+	})
+
+	it('should create an action for a declined credit card', function() {
+		const error = {}
+		const expectedAction = {
+			type: types.DECLINED_CREDIT_CARD,
+			error
+		}
+
+		expect( actions.declinedCreditCard( error ) ).toEqual( expectedAction )
+	})
+
+	it('should create an action for an unrecoverable error', function() {
+		const error = {}
+		const expectedAction = {
+			type: types.UNRECOVERABLE_ERROR,
+			error
+		}
+
+		expect( actions.unrecoverableError( error ) ).toEqual( expectedAction )
 	})
 
 	it('should create an action for requesting a payment token', function() {
@@ -111,15 +215,15 @@ describe('Actions', function() {
 		expect( actions.requestPaymentToken() ).toEqual( expectedAction )
 	})
 
-	it('should create an action for a failed payment token request', function() {
-		const error = {}
-		const expectedAction = {
-			type: types.PAYMENT_TOKEN_REQUEST_FAILED,
-			error
-		}
+	// it('should create an action for a failed payment token request', function() {
+	// 	const error = {}
+	// 	const expectedAction = {
+	// 		type: types.PAYMENT_TOKEN_REQUEST_FAILED,
+	// 		error
+	// 	}
 
-		expect( actions.paymentTokenRequestFailed( error ) ).toEqual( expectedAction )
-	})
+	// 	expect( actions.paymentTokenRequestFailed( error ) ).toEqual( expectedAction )
+	// })
 
 	it('should create an action for a successful payment token request', function() {
 		const response = {}

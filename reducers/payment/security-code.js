@@ -19,6 +19,18 @@ const securityCode = (state = initialState, action) => {
 				cursorPosition: action.securityCodeCursorPosition
 			})
 
+		case types.INVALID_CREDIT_CARD_SECURITY_CODE:
+
+			return Object.assign({}, state, {
+				status: inputStates.INVALID
+			})
+
+		case types.INCORRECT_CREDIT_CARD_SECURITY_CODE:
+
+			return Object.assign({}, state, {
+				status: inputStates.INCORRECT
+			})
+
 		default:
 			return state
 	}

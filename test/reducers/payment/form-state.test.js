@@ -45,12 +45,28 @@ describe('Payment Form State Reducer', function() {
 		})
 	})
 
+	it('should handle SET_EDITING_CREDIT_CARD_NUMBER', function() {
+		expect( reducer( [], {
+			type: types.SET_EDITING_CREDIT_CARD_NUMBER
+		})).toEqual({
+			currentField: paymentFormStates.CARD_NUMBER
+		})
+	})
+
 
 	it('should handle SET_EDITING_CREDIT_CARD_EXPIRATION_DATE', function() {
 		expect( reducer( [], {
 			type: types.SET_EDITING_CREDIT_CARD_EXPIRATION_DATE
 		})).toEqual({
 			currentField: paymentFormStates.EXPIRATION_DATE
+		})
+	})
+
+	it('should handle SET_EDITING_CREDIT_CARD_SECURITY_CODE', function() {
+		expect( reducer( [], {
+			type: types.SET_EDITING_CREDIT_CARD_SECURITY_CODE
+		})).toEqual({
+			currentField: paymentFormStates.SECURITY_CODE
 		})
 	})
 })

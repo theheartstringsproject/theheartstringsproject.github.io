@@ -92,4 +92,20 @@ describe('Credit Card Expiration Date Reducer', function() {
 			cursorPosition: 2
 		})
 	})
+
+	it('should handle INVALID_CREDIT_CARD_EXPIRATION_MONTH', function() {
+		expect( reducer( [], {
+			type: types.INVALID_CREDIT_CARD_EXPIRATION_MONTH
+		})).toEqual({
+			status: inputStates.INVALID
+		})
+	})
+
+	it('should handle INVALID_CREDIT_CARD_EXPIRATION_YEAR', function() {
+		expect( reducer( [], {
+			type: types.INVALID_CREDIT_CARD_EXPIRATION_YEAR
+		})).toEqual({
+			status: inputStates.INVALID
+		})
+	})
 })

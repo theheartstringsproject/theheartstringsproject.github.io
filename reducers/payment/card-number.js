@@ -2,7 +2,7 @@ import * as types from '../../constants/ActionTypes'
 import * as inputStates from '../../constants/InputStates'
 
 let initialState = {
-	status: inputStates.EXPIRED,
+	status: '',
 	value: '',
 	formattedValue: '',
 	cursorPosition: null

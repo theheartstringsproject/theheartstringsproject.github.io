@@ -1,6 +1,7 @@
 // import fetch from 'isomorphic-fetch'
 import * as types from '../constants/ActionTypes'
 import { stripeErrorTypes, stripeErrorCodes } from '../constants/StripeErrors'
+import * as views from '../constants/Pages'
 
 export const advancePage = () => {
 	return {
@@ -94,15 +95,90 @@ export const didFinishEditingCreditCardNumber = () => {
 	}
 }
 
+export const setEditingCreditCardNumber = () => {
+	return {
+		type: types.SET_EDITING_CREDIT_CARD_NUMBER
+	}
+}
+
 export const setEditingCreditCardExpirationDate = () => {
 	return {
 		type: types.SET_EDITING_CREDIT_CARD_EXPIRATION_DATE
 	}
 }
 
+export const setEditingCreditCardSecurityCode = () => {
+	return {
+		type: types.SET_EDITING_CREDIT_CARD_SECURITY_CODE
+	}
+}
+
 export const hasAttemptedEmailValidation = () => {
 	return {
 		type: types.HAS_ATTEMPTED_EMAIL_VALIDATION
+	}
+}
+
+export const invalidCreditCardNumber = ( error ) => {
+	return {
+		type: types.INVALID_CREDIT_CARD_NUMBER,
+		error
+	}
+}
+
+export const invalidCreditCardExpirationMonth = ( error ) => {
+	return {
+		type: types.INVALID_CREDIT_CARD_EXPIRATION_MONTH,
+		error
+	}
+}
+
+export const invalidCreditCardExpirationYear = ( error ) => {
+	return {
+		type: types.INVALID_CREDIT_CARD_EXPIRATION_YEAR,
+		error
+	}
+}
+
+export const invalidCreditCardSecurityCode = ( error ) => {
+	return {
+		type: types.INVALID_CREDIT_CARD_SECURITY_CODE,
+		error
+	}
+}
+
+export const incorrectCreditCardNumber = ( error ) => {
+	return {
+		type: types.INCORRECT_CREDIT_CARD_NUMBER,
+		error
+	}
+}
+
+export const incorrectCreditCardSecurityCode = ( error ) => {
+	return {
+		type: types.INCORRECT_CREDIT_CARD_SECURITY_CODE,
+		error
+	}
+}
+
+export const expiredCreditCard = ( error ) => {
+	return {
+		type: types.EXPIRED_CREDIT_CARD,
+		error
+	}
+}
+
+export const declinedCreditCard = ( error ) => {
+	return {
+		type: types.DECLINED_CREDIT_CARD,
+		error
+	}
+}
+
+export const unrecoverableError = ( error ) => {
+	return {
+		type: types.UNRECOVERABLE_ERROR,
+		error
 	}
 }
 
@@ -120,79 +196,107 @@ export const paymentTokenReceived = ( response ) => {
 }
 
 export const paymentTokenRequestFailed = ( error ) => {
-	let action = {
-		type: '',
-		error
-	}
+	return function ( dispatch ) {
 
-	// Determine whether this is a card error that the user can fix
-	// or something that is out of the user's control
-	if ( error.type === stripeErrorTypes.CARD_ERROR ) {
-		switch ( error.code ) {
+		// Determine whether this is a card error that the user can fix
+		// or something that is out of the user's control
+		if ( error.type === stripeErrorTypes.CARD_ERROR ) {
 
-			case stripeErrorCodes.INVALID_NUMBER:
-				action.type = types.INVALID_CREDIT_CARD_NUMBER
-				break
+			// Go back to the payment page for any of these errors
+			dispatch( jumpToPage( views.pages.indexOf( views.PAYMENT_PAGE ) ))
 
-			case stripeErrorCodes.INVALID_EXPIRY_MONTH:
-				action.type = types.INVALID_CREDIT_CARD_EXPIRATION_MONTH
-				break
+			switch ( error.code ) {
 
-			case stripeErrorCodes.INVALID_EXPIRY_YEAR:
-				action.type = types.INVALID_CREDIT_CARD_EXPIRATION_YEAR
-				break
+				case stripeErrorCodes.INVALID_NUMBER:
 
-			case stripeErrorCodes.INVALID_CVC:
-				action.type = types.INVALID_CREDIT_CARD_SECURITY_CODE
-				break
+					// Reveal the card number field
+					dispatch( setEditingCreditCardNumber() )
 
-			case stripeErrorCodes.INCORRECT_NUMBER:
-				action.type = types.INCORRECT_CREDIT_CARD_NUMBER
-				break
+					return dispatch( invalidCreditCardNumber( error ) )
+					break
 
-			case stripeErrorCodes.INCORRECT_CVC:
-				action.type = types.INCORRECT_CREDIT_CARD_SECURITY_CODE
-				break
+				case stripeErrorCodes.INVALID_EXPIRY_MONTH:
 
-			case stripeErrorCodes.EXPIRED_CARD:
-				action.type = types.EXPIRED_CREDIT_CARD
-				break
+					// Reveal the expiration date field
+					dispatch( setEditingCreditCardExpirationDate() )
 
-			case stripeErrorCodes.CARD_DECLINED:
-				action.type = types.DECLINED_CREDIT_CARD
-				break
+					return dispatch( invalidCreditCardExpirationMonth( error ) )
+					break
 
-			default:
-				action.type = types.UNRECOVERABLE_ERROR
+				case stripeErrorCodes.INVALID_EXPIRY_YEAR:
+
+					// Reveal the expiration date field
+					dispatch( setEditingCreditCardExpirationDate() )
+
+					return dispatch( invalidCreditCardExpirationYear( error ) )
+					break
+
+				case stripeErrorCodes.INVALID_CVC:
+
+					// Reveal the security code field
+					dispatch( setEditingCreditCardSecurityCode() )
+
+					return dispatch( invalidCreditCardSecurityCode( error ) )
+					break
+
+				case stripeErrorCodes.INCORRECT_NUMBER:
+
+					// Reveal the card number field
+					dispatch( setEditingCreditCardNumber() )
+
+					return dispatch( incorrectCreditCardNumber( error ) )
+					break
+
+				case stripeErrorCodes.INCORRECT_CVC:
+
+					// Reveal the security code field
+					dispatch( setEditingCreditCardSecurityCode() )
+
+					return dispatch( incorrectCreditCardSecurityCode( error ) )
+					break
+
+				case stripeErrorCodes.EXPIRED_CARD:
+
+					// Reveal the card number field
+					dispatch( setEditingCreditCardNumber() )
+
+					return dispatch( expiredCreditCard( error ) )
+					break
+
+				case stripeErrorCodes.CARD_DECLINED:
+
+					// Reveal the card number field
+					dispatch( setEditingCreditCardNumber() )
+
+					return dispatch( declinedCreditCard( error ) )
+					break
+
+				default:
+					dispatch( unrecoverableError( error ) )
+			}
+
+		} else {
+			return dispatch( unrecoverableError( error ) )
 		}
-	} else {
-		action.type = types.UNRECOVERABLE_ERROR
 	}
-
-	return action
 }
 
 export function fetchPaymentToken( payment ) {
 	return function( dispatch ) {
 		dispatch( requestPaymentToken() )
 
-		dispatch( paymentTokenRequestFailed( {
-			type: "card_error", // Type of error
-    		code: "card_declined", // Optional identifier of specific error
-		} ) )
-
-		// Stripe.card.createToken({
-		// 	number: payment.cardNumber.value,
-		// 	cvc: payment.securityCode.value,
-		// 	exp_month: payment.expirationDate.values.month,
-		// 	exp_year: payment.expirationDate.values.year
-		// }, function( status, response ) {
-		// 	if ( response.error ) {
-		// 		dispatch( paymentTokenRequestFailed( response.error ) )
-		// 	} else {
-		// 		dispatch( paymentTokenReceived( response ) )
-		// 		dispatch( advancePage() )
-		// 	}
-		// })
+		Stripe.card.createToken({
+			number: payment.cardNumber.value,
+			cvc: payment.securityCode.value,
+			exp_month: payment.expirationDate.values.month,
+			exp_year: payment.expirationDate.values.year
+		}, function( status, response ) {
+			if ( response.error ) {
+				dispatch( paymentTokenRequestFailed( response.error ) )
+			} else {
+				dispatch( paymentTokenReceived( response ) )
+				dispatch( advancePage() )
+			}
+		})
 	}
 }

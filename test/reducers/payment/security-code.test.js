@@ -26,4 +26,20 @@ describe('Credit Card Security Code Reducer', function() {
 			cursorPosition: 2
 		})
 	})
+
+	it('should handle INVALID_CREDIT_CARD_SECURITY_CODE', function() {
+		expect( reducer( [], {
+			type: types.INVALID_CREDIT_CARD_SECURITY_CODE
+		})).toEqual({
+			status: inputStates.INVALID
+		})
+	})
+
+	it('should handle INCORRECT_CREDIT_CARD_SECURITY_CODE', function() {
+		expect( reducer( [], {
+			type: types.INCORRECT_CREDIT_CARD_SECURITY_CODE
+		})).toEqual({
+			status: inputStates.INCORRECT
+		})
+	})
 })
