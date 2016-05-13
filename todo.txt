@@ -1,0 +1,5 @@
+- Error page and reducer from unknown error
+- Info page
+- Event logging
+- Credential saving
+- User agreement
