@@ -43,18 +43,26 @@ const CreditCardPaymentInput = React.createClass({
 			otherFieldsWidth: 2,
 		}
 
+		// It's possible that the card number ghosts are currently in the DOM,
+		// but haven't been rendered yet in the context of this component.
+		// As a result, we need to check whether they actually exist outside of REACT,
+		// and potentially use their sizes directly until the REACT ref is available.
+		let cardNumberGhostWidth = this.cardNumberGhost ? this.cardNumberGhost.scrollWidth : this.props.payment.formState.cardNumberGhostWidth
+		let abbreviatedCardNumberGhostWidth = this.abbreviatedCardNumberGhost ? this.abbreviatedCardNumberGhost.scrollWidth : this.props.payment.formState.abbreviatedCardNumberGhostWidth
+		let fieldsWidth = this.fields ? this.fields.scrollWidth : this.props.payment.formState.fieldsWidth
+		
 		// Only set styles different from default
 		// if we're not in credit card number mode
 		if ( currentField !== paymentFormStates.CARD_NUMBER ) {
-			if ( this.cardNumberGhost ) {
-				styles.cardNumberFieldWidth = this.cardNumberGhost.scrollWidth
+			if ( cardNumberGhostWidth ) {
+				styles.cardNumberFieldWidth = cardNumberGhostWidth
 			}
-			if ( this.fields && this.abbreviatedCardNumberGhost) {
-				styles.otherFieldsWidth = ( (this.fields.scrollWidth - this.abbreviatedCardNumberGhost.scrollWidth) / 2) - 16
+			if ( fieldsWidth && abbreviatedCardNumberGhostWidth ) {
+				styles.otherFieldsWidth = ( (fieldsWidth - abbreviatedCardNumberGhostWidth) / 2) - 16
 			}
 
-			if ( this.cardNumberGhost && this.abbreviatedCardNumberGhost) {
-				styles.cardNumberFieldLeftPosition = -(this.cardNumberGhost.scrollWidth - this.abbreviatedCardNumberGhost.scrollWidth) + 16 // Always add 8 because this trails the last character added by the user
+			if ( cardNumberGhostWidth && abbreviatedCardNumberGhostWidth ) {
+				styles.cardNumberFieldLeftPosition = -(cardNumberGhostWidth - abbreviatedCardNumberGhostWidth) + 16 // Always add 8 because this trails the last character added by the user
 			}
 		}
 			
@@ -73,14 +81,18 @@ const CreditCardPaymentInput = React.createClass({
 	},
 
 	getAbbreviatedCardNumber: function() {
-		let number = ''
+		// let number = ''
 
-		if ( this.cardNumberInput && this.cardNumberInput.getWrappedInstance().field ) {
-			let field = this.cardNumberInput.getWrappedInstance().field
-			number = field.cardType() === 'amex' ? field.value().slice( -5 ) : field.value().slice( -4 )
-		}
+		// if ( this.cardNumberInput && this.cardNumberInput.getWrappedInstance().field ) {
+		// 	let field = this.cardNumberInput.getWrappedInstance().field
+		// 	number = field.cardType() === 'amex' ? field.value().slice( -5 ) : field.value().slice( -4 )
+		// }
 
-		return number
+		// return number
+
+		return  this.props.payment.cardNumber.type === 'amex' ?
+				this.props.payment.cardNumber.value.slice( -5 ) :
+				this.props.payment.cardNumber.value.slice( -4 )
 	},
 
 	render: function() {
@@ -115,17 +127,17 @@ const CreditCardPaymentInput = React.createClass({
 					<Motion style={style}>
 					{interpolatedStyle => {
 						return (
-							<div    className="fields"
+							<div    className={paymentFormStates.FIELDS_CLASS}
 									key='fields'
 									ref={(ref) => this.fields = ref}
 							>
-								<div    className='AbbreviatedCardNumberGhost'
+								<div    className={paymentFormStates.ABBREVIATED_CARD_NUMBER_GHOST_CLASS}
 										ref={(ref) => this.abbreviatedCardNumberGhost = ref}>
 											{this.getAbbreviatedCardNumber()}
 								</div>
-								<div    className='CardNumberGhost'
+								<div    className={paymentFormStates.CARD_NUMBER_GHOST_CLASS}
 										ref={(ref) => this.cardNumberGhost = ref}>
-											{this.getCardNumber()}
+											{/*this.getCardNumber()*/ this.props.payment.cardNumber.value}
 								</div>
 								<DonationCreditCardNumberInput
 									style={{

@@ -5,8 +5,8 @@ import * as inputStates from '../constants/InputStates'
 
 const mapDispatchToProps = (dispatch, ownProps) => {
 	return {
-		onChange: ( value, formattedValue, state, cursorPosition ) => {
-			dispatch( actions.setCreditCardNumber( value, formattedValue, state, cursorPosition ))
+		onChange: ( value, type, formattedValue, state, cursorPosition, formState ) => {
+			dispatch( actions.setCreditCardNumber( value, type, formattedValue, state, cursorPosition, formState ))
 		},
 		onFocus: () => {
 			dispatch( actions.didStartEditingCreditCardNumber() )

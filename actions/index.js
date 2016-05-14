@@ -43,13 +43,15 @@ export const setEmail = ( email, status ) => {
 	}
 }
 
-export const setCreditCardNumber = ( cardNumber, formattedCardNumber, status, cardNumberCursorPosition ) => {
+export const setCreditCardNumber = ( cardNumber, cardType, formattedCardNumber, status, cardNumberCursorPosition, formState ) => {
 	return {
 		type: types.SET_CREDIT_CARD_NUMBER,
 		status,
 		cardNumber,
+		cardType,
 		formattedCardNumber,
-		cardNumberCursorPosition
+		cardNumberCursorPosition,
+		formState
 	}
 }
 
@@ -285,18 +287,23 @@ export function fetchPaymentToken( payment ) {
 	return function( dispatch ) {
 		dispatch( requestPaymentToken() )
 
-		Stripe.card.createToken({
-			number: payment.cardNumber.value,
-			cvc: payment.securityCode.value,
-			exp_month: payment.expirationDate.values.month,
-			exp_year: payment.expirationDate.values.year
-		}, function( status, response ) {
-			if ( response.error ) {
-				dispatch( paymentTokenRequestFailed( response.error ) )
-			} else {
-				dispatch( paymentTokenReceived( response ) )
-				dispatch( advancePage() )
-			}
-		})
+		return dispatch( paymentTokenRequestFailed( {
+			type: "card_error", // Type of error
+    		code: "invalid_number", // Optional identifier of specific error
+		} ) )
+
+		// Stripe.card.createToken({
+		// 	number: payment.cardNumber.value,
+		// 	cvc: payment.securityCode.value,
+		// 	exp_month: payment.expirationDate.values.month,
+		// 	exp_year: payment.expirationDate.values.year
+		// }, function( status, response ) {
+		// 	if ( response.error ) {
+		// 		dispatch( paymentTokenRequestFailed( response.error ) )
+		// 	} else {
+		// 		dispatch( paymentTokenReceived( response ) )
+		// 		dispatch( advancePage() )
+		// 	}
+		// })
 	}
 }

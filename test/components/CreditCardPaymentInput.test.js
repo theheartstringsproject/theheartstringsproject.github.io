@@ -113,6 +113,38 @@ describe('CreditCardPaymentInput', function() {
 		expect( output.props.className.includes('Error') ).toBe( true )
 	})
 
+	describe('Getting an Abbreviated Card Number', function() {
+		it('should get an abbreviated non-amex card number', function() {
+			const { instance } = setup({ payment: {
+				cardNumber: {
+					value: '424242424242424',
+					type: 'visa',
+					status: inputStates.VALID
+				},
+				expirationDate: { status: inputStates.VALID },
+				securityCode: { status: inputStates.INVALID },
+				formState: { currentField: paymentFormStates.CARD_NUMBER }
+			}})
+
+			expect( instance.getAbbreviatedCardNumber() ).toEqual('2424')
+		})
+
+		it('should get an abbreviated amex card number', function() {
+			const { instance } = setup({ payment: {
+				cardNumber: {
+					value: '4242424242424242',
+					type: 'amex',
+					status: inputStates.VALID
+				},
+				expirationDate: { status: inputStates.VALID },
+				securityCode: { status: inputStates.INVALID },
+				formState: { currentField: paymentFormStates.CARD_NUMBER }
+			}})
+
+			expect( instance.getAbbreviatedCardNumber() ).toEqual('24242')
+		})
+	})
+
 	describe('Transitioning Between Fields', function() {
 		describe('Getting Field Styles', function() {
 			it('should return default styles if the field variables have not been initialized', function() {

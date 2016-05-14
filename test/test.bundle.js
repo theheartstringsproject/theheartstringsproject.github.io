@@ -103,16 +103,20 @@
 			var cardNumber = '1234567891098876',
 			    formattedCardNumber = '•••• •••• •••• 8876',
 			    cardNumberCursorPosition = '3',
-			    status = inputStates.VALID;
+			    cardType = 'amex',
+			    status = inputStates.VALID,
+			    formState = {};
 			var expectedAction = {
 				type: 'SET_CREDIT_CARD_NUMBER',
 				status: status,
 				cardNumber: cardNumber,
+				cardType: cardType,
 				formattedCardNumber: formattedCardNumber,
-				cardNumberCursorPosition: cardNumberCursorPosition
+				cardNumberCursorPosition: cardNumberCursorPosition,
+				formState: formState
 			};
 	
-			(0, _expect2.default)(actions.setCreditCardNumber(cardNumber, formattedCardNumber, status, cardNumberCursorPosition)).toEqual(expectedAction);
+			(0, _expect2.default)(actions.setCreditCardNumber(cardNumber, cardType, formattedCardNumber, status, cardNumberCursorPosition, formState)).toEqual(expectedAction);
 		});
 	
 		it('should create an action for setting credit card expiration date', function () {
@@ -2509,13 +2513,15 @@
 		};
 	};
 	
-	var setCreditCardNumber = exports.setCreditCardNumber = function setCreditCardNumber(cardNumber, formattedCardNumber, status, cardNumberCursorPosition) {
+	var setCreditCardNumber = exports.setCreditCardNumber = function setCreditCardNumber(cardNumber, cardType, formattedCardNumber, status, cardNumberCursorPosition, formState) {
 		return {
 			type: types.SET_CREDIT_CARD_NUMBER,
 			status: status,
 			cardNumber: cardNumber,
+			cardType: cardType,
 			formattedCardNumber: formattedCardNumber,
-			cardNumberCursorPosition: cardNumberCursorPosition
+			cardNumberCursorPosition: cardNumberCursorPosition,
+			formState: formState
 		};
 	};
 	
@@ -2750,19 +2756,23 @@
 		return function (dispatch) {
 			dispatch(requestPaymentToken());
 	
-			Stripe.card.createToken({
-				number: payment.cardNumber.value,
-				cvc: payment.securityCode.value,
-				exp_month: payment.expirationDate.values.month,
-				exp_year: payment.expirationDate.values.year
-			}, function (status, response) {
-				if (response.error) {
-					dispatch(paymentTokenRequestFailed(response.error));
-				} else {
-					dispatch(paymentTokenReceived(response));
-					dispatch(advancePage());
-				}
-			});
+			return dispatch(paymentTokenRequestFailed({
+				type: "card_error", // Type of error
+				code: "invalid_number" }));
+	
+			// Stripe.card.createToken({
+			// 	number: payment.cardNumber.value,
+			// 	cvc: payment.securityCode.value,
+			// 	exp_month: payment.expirationDate.values.month,
+			// 	exp_year: payment.expirationDate.values.year
+			// }, function( status, response ) {
+			// 	if ( response.error ) {
+			// 		dispatch( paymentTokenRequestFailed( response.error ) )
+			// 	} else {
+			// 		dispatch( paymentTokenReceived( response ) )
+			// 		dispatch( advancePage() )
+			// 	}
+			// })
 		};
 	}
 
@@ -26017,7 +26027,7 @@
 	
 	
 	// module
-	exports.push([module.id, "/* Fonts */\n\n/* Colors */\n\n/* Spacing */\n\n/* Sizing */\n\n/* Animation */\n\n/* \tOuter container for fields\n\t\tthat prevents overflow outside\n\t\tof the field area */\n\n.CreditCardPaymentInput .fields-container {\n\n\toverflow: hidden;\n\n\tposition: relative;\n\n\twidth: 100%;\n}\n\n/*\tInner container for fields\n\t\tthat allows for natural field sizing */\n\n.CreditCardPaymentInput .fields {\n\n\twidth: 100%;\n\n\t// display: flex;\n}\n\n/*\tMake the card number field half the width of the inner container\n\t\tso that it shows exclusively in card number mode */\n\n.CreditCardPaymentInput .CardNumber {\n\n\t// flex: 2;\n\n\tposition: relative;\n\n\tmargin-right: calc( 24px / 2 );\n\n\twidth: calc( 100% - ( 24px ) );\n\n\tfloat: left;\n\n\tbox-sizing: border-box;\n\n\t// flex: 0 0 180;\n\n\t// width: 50%;\n}\n\n.CreditCardPaymentInput .ExpirationDate, .CreditCardPaymentInput .SecurityCode {\n\n\t// flex: 0 0;\n\n\twidth: 2px;\n\n\tfloat: left;\n\n\ttext-align: center;\n\n\tbox-sizing: border-box;\n}\n\n/* \tPosition a ghost card number field over the container\n\t\tin order to show a peak at the last 5 credit card digits\n\t\twhen not in credit card editing mode */\n\n.CreditCardPaymentInput .AbbreviatedCardNumberGhost, .CreditCardPaymentInput .CardNumberGhost {\n\n\tposition: absolute;\n\n\tleft: 0;\n\n\tdisplay: -webkit-box;\n\n\tdisplay: -webkit-flex;\n\n\tdisplay: -ms-flexbox;\n\n\tdisplay: flex;\n\n\t-webkit-box-align: center;\n\n\t-webkit-align-items: center;\n\n\t-ms-flex-align: center;\n\n\talign-items: center;\n\n\theight: 48px;\n\n\tfont-size: 1rem;\n\n\tfont-weight: 300;\n\n\tcolor: #555555;\n\n\t// visibility: hidden;\n\n\topacity: 0;\n}\n\n/* Style the combo field when the credit card portion is active */\n.CreditCardPaymentInput.CreditCardNumber {\n\t\n\t/*\tAnimate the credit card field into view\n\t\twhen in credit card mode */\n\t/*.fields {\n\t\ttransform: translateX(0%);\n\t\ttransition: transform $animation-duration ease-in-out;\n\t}*/\n}\n/*\tAnimate the other fields out of view */\n.CreditCardPaymentInput.CreditCardNumber .ExpirationDate, .CreditCardPaymentInput.CreditCardNumber .SecurityCode, .CreditCardPaymentInput.CreditCardNumber .AbbreviatedCardNumberGhost {\n\n\topacity: 0;\n\n\t-webkit-transform: scale(0.8);\n\n\ttransform: scale(0.8);\n\n\t-webkit-transition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n}\n/*\tShow the credit card field\n\t\twhen in credid card number mode */\n.CreditCardPaymentInput.CreditCardNumber .CardNumber {\n\n\topacity: 1;\n\n\t// transform: scale(0.8);\n\n\t-webkit-transition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n}\n\n/* Style the combo field when the credit card portion is active */\n.CreditCardPaymentInput.CreditCardExpirationDate, .CreditCardPaymentInput.CreditCardSecurityCode {\n\t\n\t/*\tAnimate the credit card field out of view\n\t\twhen not in credit card mode */\n\t/*.fields {\n\t\ttransform: translateX(-25%);\n\t\ttransition: transform $animation-duration ease-in-out;\n\t}*/\n\n\t/*\tHide the credit card field\n\t\twhen not in credid card number mode\n\t\tand expand the other fields */\n\t/*.CardNumber {\n\t\tflex: 0;\n\t}\n\n\t.ExpirationDate,\n\t.SecurityCode {\n\t\tflex: 1;\n\t}*/\n\n\t\n}\n/*\tAnimate the other fields into view */\n.CreditCardPaymentInput.CreditCardExpirationDate .ExpirationDate, .CreditCardPaymentInput.CreditCardExpirationDate .SecurityCode, .CreditCardPaymentInput.CreditCardExpirationDate .AbbreviatedCardNumberGhost, .CreditCardPaymentInput.CreditCardSecurityCode .ExpirationDate, .CreditCardPaymentInput.CreditCardSecurityCode .SecurityCode, .CreditCardPaymentInput.CreditCardSecurityCode .AbbreviatedCardNumberGhost {\n\n\topacity: 1;\n\n\t-webkit-transform: scale(1);\n\n\ttransform: scale(1);\n\n\t-webkit-transition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n}\n/*\tAnimate the credit card field out of view */\n.CreditCardPaymentInput.CreditCardExpirationDate .CardNumber, .CreditCardPaymentInput.CreditCardSecurityCode .CardNumber {\n\n\topacity: 0;\n\n\t// transform: scale(0.8);\n\n\t-webkit-transition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n}\n\n", ""]);
+	exports.push([module.id, "/* Fonts */\n\n/* Colors */\n\n/* Spacing */\n\n/* Sizing */\n\n/* Animation */\n\n/* \tOuter container for fields\n\t\tthat prevents overflow outside\n\t\tof the field area */\n\n.CreditCardPaymentInput .fields-container {\n\n\toverflow: hidden;\n\n\tposition: relative;\n\n\twidth: 100%;\n}\n\n/*\tInner container for fields\n\t\tthat allows for natural field sizing */\n\n.CreditCardPaymentInput .fields {\n\n\twidth: 100%;\n\n\t// display: flex;\n}\n\n/*\tMake the card number field half the width of the inner container\n\t\tso that it shows exclusively in card number mode */\n\n.CreditCardPaymentInput .CardNumber {\n\n\t// flex: 2;\n\n\tposition: relative;\n\n\tmargin-right: calc( 24px / 2 );\n\n\twidth: calc( 100% - ( 24px ) );\n\n\tfloat: left;\n\n\tbox-sizing: border-box;\n\n\t// flex: 0 0 180;\n\n\t// width: 50%;\n}\n\n.CreditCardPaymentInput .ExpirationDate, .CreditCardPaymentInput .SecurityCode {\n\n\t// flex: 0 0;\n\n\twidth: 2px;\n\n\tfloat: left;\n\n\ttext-align: center;\n\n\tbox-sizing: border-box;\n}\n\n/* \tPosition a ghost card number field over the container\n\t\tin order to show a peak at the last 5 credit card digits\n\t\twhen not in credit card editing mode */\n\n.CreditCardPaymentInput .AbbreviatedCardNumberGhost, .CreditCardPaymentInput .CardNumberGhost {\n\n\tposition: absolute;\n\n\tleft: 0;\n\n\tdisplay: -webkit-box;\n\n\tdisplay: -webkit-flex;\n\n\tdisplay: -ms-flexbox;\n\n\tdisplay: flex;\n\n\t-webkit-box-align: center;\n\n\t-webkit-align-items: center;\n\n\t-ms-flex-align: center;\n\n\talign-items: center;\n\n\theight: 48px;\n\n\tfont-size: 1rem;\n\n\tfont-weight: 300;\n\n\tcolor: #555555;\n\n\t// visibility: hidden;\n\n\topacity: 0;\n}\n\n/* Style the combo field when the credit card portion is active */\n.CreditCardPaymentInput.CreditCardNumber {\n\t\n\t/*\tAnimate the credit card field into view\n\t\twhen in credit card mode */\n\t/*.fields {\n\t\ttransform: translateX(0%);\n\t\ttransition: transform $animation-duration ease-in-out;\n\t}*/\n}\n/*\tAnimate the other fields out of view */\n.CreditCardPaymentInput.CreditCardNumber .ExpirationDate, .CreditCardPaymentInput.CreditCardNumber .SecurityCode, .CreditCardPaymentInput.CreditCardNumber .AbbreviatedCardNumberGhost {\n\n\topacity: 0;\n\n\t-webkit-transform: scale(0.8);\n\n\ttransform: scale(0.8);\n\n\t-webkit-transition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n}\n/*\tShow the credit card field\n\t\twhen in credid card number mode */\n.CreditCardPaymentInput.CreditCardNumber .CardNumber {\n\n\topacity: 1;\n\n\t// transform: scale(0.8);\n\n\t-webkit-transition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n}\n\n/* Style the combo field when the credit card portion is active */\n.CreditCardPaymentInput.CreditCardExpirationDate, .CreditCardPaymentInput.CreditCardSecurityCode {\n\t\n\t/*\tAnimate the credit card field out of view\n\t\twhen not in credit card mode */\n\t/*.fields {\n\t\ttransform: translateX(-25%);\n\t\ttransition: transform $animation-duration ease-in-out;\n\t}*/\n\n\t/*\tHide the credit card field\n\t\twhen not in credid card number mode\n\t\tand expand the other fields */\n\t/*.CardNumber {\n\t\tflex: 0;\n\t}\n\n\t.ExpirationDate,\n\t.SecurityCode {\n\t\tflex: 1;\n\t}*/\t\n}\n/*\tAnimate the other fields into view */\n.CreditCardPaymentInput.CreditCardExpirationDate .ExpirationDate, .CreditCardPaymentInput.CreditCardExpirationDate .SecurityCode, .CreditCardPaymentInput.CreditCardExpirationDate .AbbreviatedCardNumberGhost, .CreditCardPaymentInput.CreditCardSecurityCode .ExpirationDate, .CreditCardPaymentInput.CreditCardSecurityCode .SecurityCode, .CreditCardPaymentInput.CreditCardSecurityCode .AbbreviatedCardNumberGhost {\n\n\topacity: 1;\n\n\t-webkit-transform: scale(1);\n\n\ttransform: scale(1);\n\n\t-webkit-transition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n}\n/*\tAnimate the credit card field out of view */\n.CreditCardPaymentInput.CreditCardExpirationDate .CardNumber, .CreditCardPaymentInput.CreditCardSecurityCode .CardNumber {\n\n\topacity: 0;\n\n\t// transform: scale(0.8);\n\n\t-webkit-transition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out;\n\n\ttransition: transform 200ms ease-in-out, opacity 200ms ease-in-out, -webkit-transform 200ms ease-in-out;\n}\n\n/* Make the abbreviated card number red if there's an error */\n\n.CreditCardPaymentInput.Error .AbbreviatedCardNumberGhost {\n\n\tcolor: #D0021B\n}\n\n", ""]);
 	
 	// exports
 
@@ -26410,6 +26420,10 @@
 	
 	var inputStates = _interopRequireWildcard(_InputStates);
 	
+	var _PaymentFormStates = __webpack_require__(241);
+	
+	var paymentFormStates = _interopRequireWildcard(_PaymentFormStates);
+	
 	__webpack_require__(200);
 	
 	__webpack_require__(204);
@@ -26498,7 +26512,17 @@
 		},
 	
 		onChange: function onChange(field) {
-			this.props.onChange(this.field.value(), this.field.cardMask(), this.getState(), _reactDom2.default.findDOMNode(this).selectionStart);
+			this.props.onChange(this.field.value(), this.field.cardType(), this.field.cardMask(), this.getState(), _reactDom2.default.findDOMNode(this).selectionStart,
+	
+			// Also pass the widths of ghost elements on the payment page
+			// so that we can save them to state and render them appropriately
+			// the next time this page does a fresh render. Upon fresh render,
+			// these elements won't be present in the DOM yet to measure directly.
+			{
+				cardNumberGhostWidth: document.getElementsByClassName(paymentFormStates.CARD_NUMBER_GHOST_CLASS)[0].scrollWidth,
+				abbreviatedCardNumberGhostWidth: document.getElementsByClassName(paymentFormStates.ABBREVIATED_CARD_NUMBER_GHOST_CLASS)[0].scrollWidth,
+				fieldsWidth: document.getElementsByClassName(paymentFormStates.FIELDS_CLASS)[0].scrollWidth
+			});
 	
 			if (this.isDoneEditing() && this.getState() === inputStates.VALID) {
 				this.props.onShouldMoveToExpirationDateField();
@@ -26695,12 +26719,50 @@
 			(0, _expect2.default)(output.props.className.includes('Error')).toBe(true);
 		});
 	
+		describe('Getting an Abbreviated Card Number', function () {
+			it('should get an abbreviated non-amex card number', function () {
+				var _setup5 = setup({ payment: {
+						cardNumber: {
+							value: '424242424242424',
+							type: 'visa',
+							status: inputStates.VALID
+						},
+						expirationDate: { status: inputStates.VALID },
+						securityCode: { status: inputStates.INVALID },
+						formState: { currentField: paymentFormStates.CARD_NUMBER }
+					} });
+	
+				var instance = _setup5.instance;
+	
+	
+				(0, _expect2.default)(instance.getAbbreviatedCardNumber()).toEqual('2424');
+			});
+	
+			it('should get an abbreviated amex card number', function () {
+				var _setup6 = setup({ payment: {
+						cardNumber: {
+							value: '4242424242424242',
+							type: 'amex',
+							status: inputStates.VALID
+						},
+						expirationDate: { status: inputStates.VALID },
+						securityCode: { status: inputStates.INVALID },
+						formState: { currentField: paymentFormStates.CARD_NUMBER }
+					} });
+	
+				var instance = _setup6.instance;
+	
+	
+				(0, _expect2.default)(instance.getAbbreviatedCardNumber()).toEqual('24242');
+			});
+		});
+	
 		describe('Transitioning Between Fields', function () {
 			describe('Getting Field Styles', function () {
 				it('should return default styles if the field variables have not been initialized', function () {
-					var _setup5 = setup();
+					var _setup7 = setup();
 	
-					var instance = _setup5.instance;
+					var instance = _setup7.instance;
 	
 					(0, _expect2.default)(instance.getFieldStyles()).toEqual({
 						cardNumberFieldWidth: 200,
@@ -26710,9 +26772,9 @@
 				});
 	
 				it('should return default styles if the currentField is CreditCardNumber', function () {
-					var _setup6 = setup();
+					var _setup8 = setup();
 	
-					var instance = _setup6.instance;
+					var instance = _setup8.instance;
 	
 					(0, _expect2.default)(instance.getFieldStyles()).toEqual({
 						cardNumberFieldWidth: 200,
@@ -26722,9 +26784,9 @@
 				});
 	
 				it('should return a cardNumberFieldWidth equal to length of the numbers in the field', function () {
-					var _setup7 = setup();
+					var _setup9 = setup();
 	
-					var instance = _setup7.instance;
+					var instance = _setup9.instance;
 	
 					instance.props.payment.formState.currentField = paymentFormStates.EXPIRATION_DATE;
 					instance.cardNumberGhost = { scrollWidth: 100 };
@@ -26732,9 +26794,9 @@
 				});
 	
 				it('should return a cardNumberFieldLeftPosition equal to the negative difference between the size of the field and the size of the last 4 digits', function () {
-					var _setup8 = setup();
+					var _setup10 = setup();
 	
-					var instance = _setup8.instance;
+					var instance = _setup10.instance;
 	
 					instance.props.payment.formState.currentField = paymentFormStates.EXPIRATION_DATE;
 					instance.cardNumberGhost = { scrollWidth: 100 };
@@ -26743,9 +26805,9 @@
 				});
 	
 				it('should return a otherFieldsWidth equal to half the remaining space in the field', function () {
-					var _setup9 = setup();
+					var _setup11 = setup();
 	
-					var instance = _setup9.instance;
+					var instance = _setup11.instance;
 	
 					instance.props.payment.formState.currentField = paymentFormStates.EXPIRATION_DATE;
 					instance.fields = { scrollWidth: 200 };
@@ -26846,18 +26908,26 @@
 				otherFieldsWidth: 2
 			};
 	
+			// It's possible that the card number ghosts are currently in the DOM,
+			// but haven't been rendered yet in the context of this component.
+			// As a result, we need to check whether they actually exist outside of REACT,
+			// and potentially use their sizes directly until the REACT ref is available.
+			var cardNumberGhostWidth = this.cardNumberGhost ? this.cardNumberGhost.scrollWidth : this.props.payment.formState.cardNumberGhostWidth;
+			var abbreviatedCardNumberGhostWidth = this.abbreviatedCardNumberGhost ? this.abbreviatedCardNumberGhost.scrollWidth : this.props.payment.formState.abbreviatedCardNumberGhostWidth;
+			var fieldsWidth = this.fields ? this.fields.scrollWidth : this.props.payment.formState.fieldsWidth;
+	
 			// Only set styles different from default
 			// if we're not in credit card number mode
 			if (currentField !== paymentFormStates.CARD_NUMBER) {
-				if (this.cardNumberGhost) {
-					styles.cardNumberFieldWidth = this.cardNumberGhost.scrollWidth;
+				if (cardNumberGhostWidth) {
+					styles.cardNumberFieldWidth = cardNumberGhostWidth;
 				}
-				if (this.fields && this.abbreviatedCardNumberGhost) {
-					styles.otherFieldsWidth = (this.fields.scrollWidth - this.abbreviatedCardNumberGhost.scrollWidth) / 2 - 16;
+				if (fieldsWidth && abbreviatedCardNumberGhostWidth) {
+					styles.otherFieldsWidth = (fieldsWidth - abbreviatedCardNumberGhostWidth) / 2 - 16;
 				}
 	
-				if (this.cardNumberGhost && this.abbreviatedCardNumberGhost) {
-					styles.cardNumberFieldLeftPosition = -(this.cardNumberGhost.scrollWidth - this.abbreviatedCardNumberGhost.scrollWidth) + 16; // Always add 8 because this trails the last character added by the user
+				if (cardNumberGhostWidth && abbreviatedCardNumberGhostWidth) {
+					styles.cardNumberFieldLeftPosition = -(cardNumberGhostWidth - abbreviatedCardNumberGhostWidth) + 16; // Always add 8 because this trails the last character added by the user
 				}
 			}
 	
@@ -26875,14 +26945,16 @@
 		},
 	
 		getAbbreviatedCardNumber: function getAbbreviatedCardNumber() {
-			var number = '';
+			// let number = ''
 	
-			if (this.cardNumberInput && this.cardNumberInput.getWrappedInstance().field) {
-				var field = this.cardNumberInput.getWrappedInstance().field;
-				number = field.cardType() === 'amex' ? field.value().slice(-5) : field.value().slice(-4);
-			}
+			// if ( this.cardNumberInput && this.cardNumberInput.getWrappedInstance().field ) {
+			// 	let field = this.cardNumberInput.getWrappedInstance().field
+			// 	number = field.cardType() === 'amex' ? field.value().slice( -5 ) : field.value().slice( -4 )
+			// }
 	
-			return number;
+			// return number
+	
+			return this.props.payment.cardNumber.type === 'amex' ? this.props.payment.cardNumber.value.slice(-5) : this.props.payment.cardNumber.value.slice(-4);
 		},
 	
 		render: function render() {
@@ -26924,7 +26996,7 @@
 						function (interpolatedStyle) {
 							return _react2.default.createElement(
 								'div',
-								{ className: 'fields',
+								{ className: paymentFormStates.FIELDS_CLASS,
 									key: 'fields',
 									ref: function ref(_ref6) {
 										return _this.fields = _ref6;
@@ -26932,7 +27004,7 @@
 								},
 								_react2.default.createElement(
 									'div',
-									{ className: 'AbbreviatedCardNumberGhost',
+									{ className: paymentFormStates.ABBREVIATED_CARD_NUMBER_GHOST_CLASS,
 										ref: function ref(_ref) {
 											return _this.abbreviatedCardNumberGhost = _ref;
 										} },
@@ -26940,11 +27012,11 @@
 								),
 								_react2.default.createElement(
 									'div',
-									{ className: 'CardNumberGhost',
+									{ className: paymentFormStates.CARD_NUMBER_GHOST_CLASS,
 										ref: function ref(_ref2) {
 											return _this.cardNumberGhost = _ref2;
 										} },
-									_this.getCardNumber()
+									 /*this.getCardNumber()*/_this.props.payment.cardNumber.value
 								),
 								_react2.default.createElement(_DonationCreditCardNumberInput2.default, {
 									style: {
@@ -27193,8 +27265,8 @@
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
 		return {
-			onChange: function onChange(value, formattedValue, state, cursorPosition) {
-				dispatch(actions.setCreditCardNumber(value, formattedValue, state, cursorPosition));
+			onChange: function onChange(value, type, formattedValue, state, cursorPosition, formState) {
+				dispatch(actions.setCreditCardNumber(value, type, formattedValue, state, cursorPosition, formState));
 			},
 			onFocus: function onFocus() {
 				dispatch(actions.didStartEditingCreditCardNumber());
@@ -29202,6 +29274,11 @@
 	var CARD_NUMBER = exports.CARD_NUMBER = 'CreditCardNumber';
 	var EXPIRATION_DATE = exports.EXPIRATION_DATE = 'CreditCardExpirationDate';
 	var SECURITY_CODE = exports.SECURITY_CODE = 'CreditCardSecurityCode';
+	
+	// Ghost field classes
+	var ABBREVIATED_CARD_NUMBER_GHOST_CLASS = exports.ABBREVIATED_CARD_NUMBER_GHOST_CLASS = 'AbbreviatedCardNumberGhost';
+	var CARD_NUMBER_GHOST_CLASS = exports.CARD_NUMBER_GHOST_CLASS = 'CardNumberGhost';
+	var FIELDS_CLASS = exports.FIELDS_CLASS = 'fields';
 
 /***/ },
 /* 242 */
@@ -32082,6 +32159,7 @@
 	var initialState = {
 		status: '',
 		value: '',
+		type: '',
 		formattedValue: '',
 		cursorPosition: null
 	};
@@ -32097,10 +32175,12 @@
 				status: inputStates.VALID,
 				cardNumber: '1234567890123456',
 				formattedCardNumber: '•••• •••• •••• 3456',
+				cardType: 'amex',
 				cardNumberCursorPosition: 2
 			})).toEqual({
 				status: inputStates.VALID,
 				value: '1234567890123456',
+				type: 'amex',
 				formattedValue: '•••• •••• •••• 3456',
 				cursorPosition: 2
 			});
@@ -32110,10 +32190,12 @@
 				status: inputStates.INVALID,
 				cardNumber: '1234',
 				formattedCardNumber: '1234',
+				cardType: 'visa',
 				cardNumberCursorPosition: 4
 			})).toEqual({
 				status: inputStates.INVALID,
 				value: '1234',
+				type: 'visa',
 				formattedValue: '1234',
 				cursorPosition: 4
 			});
@@ -32175,6 +32257,7 @@
 	var initialState = {
 		status: '',
 		value: '',
+		type: '',
 		formattedValue: '',
 		cursorPosition: null
 	};
@@ -32191,6 +32274,7 @@
 				return Object.assign({}, state, {
 					status: action.status,
 					value: action.cardNumber,
+					type: action.cardType,
 					formattedValue: action.formattedCardNumber,
 					cursorPosition: action.cardNumberCursorPosition
 				});
@@ -32669,6 +32753,21 @@
 				currentField: paymentFormStates.SECURITY_CODE
 			});
 		});
+	
+		it('should handle SET_CREDIT_CARD_NUMBER in order to grab DOM sizes for various fields', function () {
+			(0, _expect2.default)((0, _formState2.default)([], {
+				type: types.SET_CREDIT_CARD_NUMBER,
+				formState: {
+					cardNumberGhostWidth: 0,
+					abbreviatedCardNumberGhostWidth: 0,
+					fieldsWidth: 277
+				}
+			})).toEqual({
+				cardNumberGhostWidth: 0,
+				abbreviatedCardNumberGhostWidth: 0,
+				fieldsWidth: 277
+			});
+		});
 	});
 
 /***/ },
@@ -32746,6 +32845,16 @@
 	
 				return Object.assign({}, state, {
 					currentField: paymentFormStates.SECURITY_CODE
+				});
+	
+			// Listen to payment set information in order to capture
+			// the size of the fields for rendering purposes
+			case types.SET_CREDIT_CARD_NUMBER:
+	
+				return Object.assign({}, state, {
+					cardNumberGhostWidth: action.formState.cardNumberGhostWidth,
+					abbreviatedCardNumberGhostWidth: action.formState.abbreviatedCardNumberGhostWidth,
+					fieldsWidth: action.formState.fieldsWidth
 				});
 	
 			default:

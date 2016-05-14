@@ -69,4 +69,19 @@ describe('Payment Form State Reducer', function() {
 			currentField: paymentFormStates.SECURITY_CODE
 		})
 	})
+
+	it('should handle SET_CREDIT_CARD_NUMBER in order to grab DOM sizes for various fields', function() {
+		expect( reducer( [], {
+			type: types.SET_CREDIT_CARD_NUMBER,
+			formState: {
+				cardNumberGhostWidth: 0,
+				abbreviatedCardNumberGhostWidth: 0,
+				fieldsWidth: 277
+			}
+		})).toEqual({
+			cardNumberGhostWidth: 0,
+			abbreviatedCardNumberGhostWidth: 0,
+			fieldsWidth: 277
+		})
+	})
 })

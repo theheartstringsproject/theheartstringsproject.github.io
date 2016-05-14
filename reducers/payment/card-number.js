@@ -4,6 +4,7 @@ import * as inputStates from '../../constants/InputStates'
 let initialState = {
 	status: '',
 	value: '',
+	type: '',
 	formattedValue: '',
 	cursorPosition: null
 }
@@ -17,6 +18,7 @@ const cardNumber = (state = initialState, action) => {
 			return Object.assign({}, state, {
 				status: action.status,
 				value: action.cardNumber,
+				type: action.cardType,
 				formattedValue: action.formattedCardNumber,
 				cursorPosition: action.cardNumberCursorPosition
 			})

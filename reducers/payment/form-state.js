@@ -52,6 +52,16 @@ const formState = (state = initialState, action) => {
 				currentField: paymentFormStates.SECURITY_CODE
 			})
 
+		// Listen to payment set information in order to capture
+		// the size of the fields for rendering purposes
+		case types.SET_CREDIT_CARD_NUMBER:
+
+			return Object.assign({}, state, {
+				cardNumberGhostWidth: action.formState.cardNumberGhostWidth,
+				abbreviatedCardNumberGhostWidth: action.formState.abbreviatedCardNumberGhostWidth,
+				fieldsWidth: action.formState.fieldsWidth
+			})
+
 		default:
 			return state
 	}

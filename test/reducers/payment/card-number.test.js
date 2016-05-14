@@ -6,6 +6,7 @@ import * as inputStates from '../../../constants/InputStates'
 const initialState = {
 	status: '',
 	value: '',
+	type: '',
 	formattedValue: '',
 	cursorPosition: null
 }
@@ -21,10 +22,12 @@ describe('Credit Card Number Reducer', function() {
 			status: inputStates.VALID,
 			cardNumber: '1234567890123456',
 			formattedCardNumber: '•••• •••• •••• 3456',
+			cardType: 'amex',
 			cardNumberCursorPosition: 2
 		})).toEqual({
 			status: inputStates.VALID,
 			value: '1234567890123456',
+			type: 'amex',
 			formattedValue: '•••• •••• •••• 3456',
 			cursorPosition: 2
 		})
@@ -34,10 +37,12 @@ describe('Credit Card Number Reducer', function() {
 			status: inputStates.INVALID,
 			cardNumber: '1234',
 			formattedCardNumber: '1234',
+			cardType: 'visa',
 			cardNumberCursorPosition: 4
 		})).toEqual({
 			status: inputStates.INVALID,
 			value: '1234',
+			type: 'visa',
 			formattedValue: '1234',
 			cursorPosition: 4
 		})

@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import FieldKit from 'field-kit';
 import ReactDOM from 'react-dom'
 import * as inputStates from '../../constants/InputStates'
+import * as paymentFormStates from '../../constants/PaymentFormStates'
 import './input.css'
 import './credit-card-payment-input.css'
 
@@ -91,9 +92,20 @@ const CreditCardNumberInput = React.createClass({
 	onChange: function( field ) {
 		this.props.onChange(
 			this.field.value(),
+			this.field.cardType(),
 			this.field.cardMask(),
 			this.getState(),
-			ReactDOM.findDOMNode( this ).selectionStart
+			ReactDOM.findDOMNode( this ).selectionStart,
+
+			// Also pass the widths of ghost elements on the payment page
+			// so that we can save them to state and render them appropriately
+			// the next time this page does a fresh render. Upon fresh render,
+			// these elements won't be present in the DOM yet to measure directly.
+			{
+				cardNumberGhostWidth: document.getElementsByClassName( paymentFormStates.CARD_NUMBER_GHOST_CLASS )[0].scrollWidth,
+				abbreviatedCardNumberGhostWidth: document.getElementsByClassName( paymentFormStates.ABBREVIATED_CARD_NUMBER_GHOST_CLASS )[0].scrollWidth,
+				fieldsWidth: document.getElementsByClassName( paymentFormStates.FIELDS_CLASS )[0].scrollWidth
+			}
 		)
 
 		if ( this.isDoneEditing() && this.getState() === inputStates.VALID ) {
