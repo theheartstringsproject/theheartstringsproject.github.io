@@ -45962,7 +45962,8 @@
 					{ className: 'charity-mission' },
 					this.props.charity.mission,
 					_react2.default.createElement('br', null),
-					_react2.default.createElement(_Link2.default, { text: 'Learn More' })
+					_react2.default.createElement(_Link2.default, { text: 'Learn More' }),
+					'.'
 				);
 			} else {
 				return _react2.default.createElement(
@@ -46040,7 +46041,7 @@
 
 
 	// module
-	exports.push([module.id, "/* Fonts */\n\n/* Colors */\n\n/* Spacing */\n\n/* Sizing */\n\n/* Animation */\n\n.Page.info-page .charity-mission {\n\n    /*margin-top: $space;\n\t\tmargin-bottom: calc( $space * 1.5 );*/\n}\n\n.Page.info-page hr {\n\n    border-color: rgba(255, 255, 255, 0.36);\n\n    border-top: none;\n\n    width: 100%;\n}\n\n.Page.info-page .heartstrings-disclaimer {\n\n    color: rgba(255, 255, 255, 0.7);\n\n    font-size: .75rem;\n\n    line-height: 1.375em;\n}\n\n.Page.info-page .Footer {\n\n    position: relative;\n\n    margin-top: calc( 24px * 2 );\n\n    margin-bottom: 24px;\n}", ""]);
+	exports.push([module.id, "/* Fonts */\n/* Colors */\n/* Spacing */\n/* Sizing */\n/* Animation */\n\n.Campaign .Page.info-page {\n\tdisplay: block;\n}\n\n.Campaign .Page.info-page .charity-mission {\n\t/* margin-top: $space; */\n\t/*margin-bottom: calc( $space * 1.5 );*/\n\tpadding-bottom: calc( 24px / 3 );\n}\n\n.Campaign .Page.info-page hr {\n\tborder-color: rgba(255, 255, 255, 0.36);\n\tborder-top: none;\n\twidth: 100%;\n}\n\n.Campaign .Page.info-page .heartstrings-disclaimer {\n\tcolor: rgba(255, 255, 255, 0.7);\n\tfont-size: .75rem;\n\tline-height: 1.375em;\n\tpadding-top: calc( 24px / 3 );\n}\n\n.Campaign .Page.info-page .Footer {\n\tposition: relative;\n\t/* margin-top: $space;\n\t\tmargin-bottom: $space; */\n\tbottom: auto;\n}", ""]);
 
 	// exports
 

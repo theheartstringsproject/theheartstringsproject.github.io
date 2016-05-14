@@ -12,7 +12,7 @@ const InfoPage = React.createClass({
 		if ( this.props.charity.mission ) {
 			return 	<p className='charity-mission'>
 						{this.props.charity.mission}<br />
-						<Link text='Learn More' />
+						<Link text='Learn More' />.
 					</p>
 		} else {
 			return 	<p className='charity-mission'>

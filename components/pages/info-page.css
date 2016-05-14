@@ -1,11 +1,13 @@
 @import '../variables.css';
 @import '../mixins.css';
 
-.Page.info-page {
+.Campaign .Page.info-page {
+	display: block;
 
 	.charity-mission {
-		/*margin-top: $space;
-		margin-bottom: calc( $space * 1.5 );*/
+		/* margin-top: $space; */
+		/*margin-bottom: calc( $space * 1.5 );*/
+		padding-bottom: calc( $space / 3 );
 	}
 
 	hr {
@@ -16,11 +18,13 @@
 
 	.heartstrings-disclaimer {
 		@mixin text-small;
+		padding-top: calc( $space / 3 );
 	}
 
 	.Footer {
 		position: relative;
-		margin-top: calc( $space * 2 );
-		margin-bottom: $space;
+		/* margin-top: $space;
+		margin-bottom: $space; */
+		bottom: auto;
 	}
 }
