@@ -13,9 +13,9 @@ const CreditCardNumberInput = React.createClass({
 		// Set up fieldkit formatting
 		this.field = new FieldKit.CardTextField( ReactDOM.findDOMNode( this ) );
 		this.field.setValue(this.props.cardNumber.value);
-		this.field.setCardMaskStrategy(
-			FieldKit.CardTextField.CardMaskStrategy.DoneEditing
-		);
+		// this.field.setCardMaskStrategy(
+		// 	FieldKit.CardTextField.CardMaskStrategy.DoneEditing
+		// );
 		this.field.setDelegate({
 			textDidChange: this.onChange
 		})

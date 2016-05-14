@@ -24475,7 +24475,9 @@
 			// Set up fieldkit formatting
 			this.field = new _index2.default.CardTextField(_reactDom2.default.findDOMNode(this));
 			this.field.setValue(this.props.cardNumber.value);
-			this.field.setCardMaskStrategy(_index2.default.CardTextField.CardMaskStrategy.DoneEditing);
+			// this.field.setCardMaskStrategy(
+			// 	FieldKit.CardTextField.CardMaskStrategy.DoneEditing
+			// );
 			this.field.setDelegate({
 				textDidChange: this.onChange
 			});
