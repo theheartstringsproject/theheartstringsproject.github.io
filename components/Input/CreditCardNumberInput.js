@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import FieldKit from 'field-kit';
+import FieldKit from 'field-kit/src/index.js';
 import ReactDOM from 'react-dom'
 import * as inputStates from '../../constants/InputStates'
 import * as paymentFormStates from '../../constants/PaymentFormStates'

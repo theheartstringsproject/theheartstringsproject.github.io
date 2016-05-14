@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react'
-import FieldKit from 'field-kit';
 import ReactDOM from 'react-dom'
 import * as inputStates from '../../constants/InputStates'
 import './input.css'
