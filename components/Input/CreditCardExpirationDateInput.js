@@ -98,6 +98,7 @@ const CreditCardExpirationDateInput = React.createClass({
 		let errorClass = this.props.expirationDate.status === inputStates.INVALID ? 'Error' : ''
 		return(
 			<input
+				inputmode='numeric'
 				value={this.format( this.props.expirationDate.values.month, this.props.expirationDate.values.year )}
 				style={this.props.style}
 				placeholder="MM/YY"

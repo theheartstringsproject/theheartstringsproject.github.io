@@ -37,6 +37,7 @@ const Input = React.createClass({
 			<div className={`Input EmailInput ${errorClass}`}>
 				<InlineSVG src={require(`svg-inline!../../icons/${icon}.svg`)} />
 				<input  placeholder={this.props.placeholder}
+						type='email'
 						className={`${errorClass}`}
 						value={this.props.email.value}
 						onChange={e => {

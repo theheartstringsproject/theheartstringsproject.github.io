@@ -23656,6 +23656,7 @@
 	
 			var errorClass = this.props.expirationDate.status === inputStates.INVALID ? 'Error' : '';
 			return _react2.default.createElement('input', {
+				inputmode: 'numeric',
 				value: this.format(this.props.expirationDate.values.month, this.props.expirationDate.values.year),
 				style: this.props.style,
 				placeholder: 'MM/YY',
@@ -24575,6 +24576,7 @@
 	
 			var errorClass = this.isInError() ? 'Error' : '';
 			return _react2.default.createElement('input', {
+				inputmode: 'numeric',
 				style: this.props.style,
 				placeholder: 'Card Number',
 				className: 'CardNumber ' + errorClass
@@ -36695,6 +36697,7 @@
 	
 			var errorClass = this.isInError() ? 'Error' : '';
 			return _react2.default.createElement('input', {
+				inputmode: 'numeric',
 				value: this.format(this.props.securityCode.value),
 				style: this.props.style,
 				placeholder: 'CVV',
@@ -38753,6 +38756,7 @@
 				{ className: 'Input EmailInput ' + errorClass },
 				_react2.default.createElement(_svgInlineReact2.default, { src: __webpack_require__(278)("./" + icon + '.svg') }),
 				_react2.default.createElement('input', { placeholder: this.props.placeholder,
+					type: 'email',
 					className: '' + errorClass,
 					value: this.props.email.value,
 					onChange: function onChange(e) {

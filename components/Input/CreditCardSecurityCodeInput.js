@@ -70,6 +70,7 @@ const CreditCardSecurityCodeInput = React.createClass({
 		let errorClass = this.isInError() ? 'Error' : ''
 		return(
 			<input
+				inputmode='numeric'
 				value={this.format( this.props.securityCode.value )}
 				style={this.props.style}
 				placeholder="CVV"
