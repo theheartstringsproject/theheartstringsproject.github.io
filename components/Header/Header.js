@@ -34,6 +34,8 @@ const Header = React.createClass({
 				return <p>Processing your donation...</p>
 			case 'ThanksPage':
 				return <p>Thanks! Share this article to help others make a difference</p>
+			case 'ErrorPage':
+				return <p>Unfortuntely we’re having trouble processing your donation.</p>
 			default:
 				return
 		}
@@ -67,6 +69,8 @@ const Header = React.createClass({
 				return [this.getDonationIcon(), this.getAmountIcon()]
 			case 'ThanksPage':
 				return [this.getThanksIcon()]
+			case 'ErrorPage':
+				return [this.getErrorIcon()]
 			default:
 				return []
 		}
@@ -88,6 +92,8 @@ const Header = React.createClass({
 				return ['donation-icon', 'donation-amount-icon']
 			case 'ThanksPage':
 				return ['thanks-icon']
+			case 'ErrorPage':
+				return ['error-icon']
 			default:
 				return []
 		}
@@ -101,6 +107,8 @@ const Header = React.createClass({
 				return this.getAmountIcon()
 			case 'thanks-icon':
 				return this.getThanksIcon()
+			case 'error-icon':
+				return this.getErrorIcon()
 			default:
 				return ''
 		}
@@ -136,6 +144,14 @@ const Header = React.createClass({
 		return (
 			<div className='thanks-icon' key='thanks-icon'>
 				<InlineSVG src={require(`svg-inline!../../icons/check-circle-large.svg`)} />
+			</div>
+		)
+	},
+
+	getErrorIcon: function() {
+		return (
+			<div className='error-icon' key='error-icon'>
+				<InlineSVG src={require(`svg-inline!../../icons/broken.svg`)} />
 			</div>
 		)
 	},

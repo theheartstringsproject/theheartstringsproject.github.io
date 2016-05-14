@@ -1,0 +1,14 @@
+@import '../variables.css';
+@import '../mixins.css';
+
+.error-page {
+
+	.Header p {
+		color: $text-color-light;
+	}
+
+	.error-message {
+		margin-top: $space;
+		margin-bottom: calc( $space * 1.5 );
+	}
+}

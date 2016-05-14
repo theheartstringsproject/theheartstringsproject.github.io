@@ -14,6 +14,7 @@ import PaymentPage from '../pages/PaymentPage'
 import ConfirmationPage from '../pages/ConfirmationPage'
 import LoadingPage from '../pages/LoadingPage'
 import ThanksPage from '../pages/ThanksPage'
+import ErrorPage from '../pages/ErrorPage'
 import './campaign.css'
 		
 const CampaignView = React.createClass ({
@@ -32,7 +33,9 @@ const CampaignView = React.createClass ({
 			case 'PaymentFlow':
 				return <PaymentFlow direction={this.props.direction} contribution={this.props.contribution} payment={this.props.payment} key={key} pageName={this.props.pageName} previousPageName={this.props.previousPageName}/>
 			case 'ThanksPage':
-				return <ThanksPage contribution={this.props.contribution} payment={this.props.payment} key={key} pageName={this.props.pageName} key={key} />
+				return <ThanksPage contribution={this.props.contribution} payment={this.props.payment} pageName={this.props.pageName} key={key} />
+			case 'ErrorPage':
+				return <ErrorPage pageName={this.props.pageName} key={key}/>
 			default: /* TODO Update to return error page */
 				return <LandingPage charityName={charityName} reason={reason} key={key}/>
 		}
@@ -58,7 +61,7 @@ const CampaignView = React.createClass ({
 	},
 
 	getKeyForPage: function( pageName ) {
-		if ( pageName === 'LandingPage' || pageName === 'ThanksPage' ) {
+		if ( pageName === 'LandingPage' || pageName === 'ThanksPage' || pageName === 'ErrorPage' ) {
 			return pageName
 		} else {
 			return 'PaymentFlow'

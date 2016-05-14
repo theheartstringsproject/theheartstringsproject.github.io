@@ -274,10 +274,18 @@ export const paymentTokenRequestFailed = ( error ) => {
 					break
 
 				default:
-					dispatch( unrecoverableError( error ) )
+
+					// Go back to the payment page for any of these errors
+					dispatch( jumpToPage( views.pages.indexOf( views.ERROR_PAGE ) ))
+
+					return dispatch( unrecoverableError( error ) )
 			}
 
 		} else {
+
+			// Go back to the payment page for any of these errors
+			dispatch( jumpToPage( views.pages.indexOf( views.ERROR_PAGE ) ))
+			
 			return dispatch( unrecoverableError( error ) )
 		}
 	}
@@ -287,23 +295,23 @@ export function fetchPaymentToken( payment ) {
 	return function( dispatch ) {
 		dispatch( requestPaymentToken() )
 
-		return dispatch( paymentTokenRequestFailed( {
-			type: "card_error", // Type of error
-    		code: "invalid_number", // Optional identifier of specific error
-		} ) )
+		// return dispatch( paymentTokenRequestFailed( {
+		// 	type: "card_error", // Type of error
+  //   		code: "invalid_number", // Optional identifier of specific error
+		// } ) )
 
-		// Stripe.card.createToken({
-		// 	number: payment.cardNumber.value,
-		// 	cvc: payment.securityCode.value,
-		// 	exp_month: payment.expirationDate.values.month,
-		// 	exp_year: payment.expirationDate.values.year
-		// }, function( status, response ) {
-		// 	if ( response.error ) {
-		// 		dispatch( paymentTokenRequestFailed( response.error ) )
-		// 	} else {
-		// 		dispatch( paymentTokenReceived( response ) )
-		// 		dispatch( advancePage() )
-		// 	}
-		// })
+		Stripe.card.createToken({
+			number: payment.cardNumber.value,
+			cvc: payment.securityCode.value,
+			exp_month: payment.expirationDate.values.month,
+			exp_year: payment.expirationDate.values.year
+		}, function( status, response ) {
+			if ( response.error ) {
+				dispatch( paymentTokenRequestFailed( response.error ) )
+			} else {
+				dispatch( paymentTokenReceived( response ) )
+				dispatch( advancePage() )
+			}
+		})
 	}
 }

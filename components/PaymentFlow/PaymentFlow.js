@@ -12,6 +12,7 @@ import PaymentPage from '../pages/PaymentPage'
 import ConfirmationPage from '../pages/ConfirmationPage'
 import LoadingPage from '../pages/LoadingPage'
 import ThanksPage from '../pages/ThanksPage'
+import ErrorPage from '../pages/ErrorPage'
 import './payment-flow.css'
 		
 const PaymentFlow = React.createClass ({
@@ -49,7 +50,7 @@ const PaymentFlow = React.createClass ({
 			case 'LoadingPage':
 				return <LoadingPage key={key}/>
 			default: /* TODO Update to return error page */
-				return <LoadingPage key={key}/>
+				return <ErrorPage key={key}/>
 		}
 	},
 
@@ -62,7 +63,11 @@ const PaymentFlow = React.createClass ({
 		const startingPosition = window.innerWidth
 
 		// Don't do any animation if we're transitioning out of the payment flow,
-		if ( this.props.pageName === 'LandingPage' || this.props.pageName === 'ThanksPage' ) {
+		if ( this.props.pageName === 'LandingPage' ||
+			 this.props.pageName === 'ThanksPage' ||
+			 this.props.pageName === 'ErrorPage'
+			)
+		{
 			return { x: 0 }
 		}
 
@@ -75,7 +80,11 @@ const PaymentFlow = React.createClass ({
 		// ReactDOM.findDOMNode(this.previousPage).className += " page-leave";
 
 		// Don't do any animation if we're transitioning out of the payment flow,
-		if ( this.props.pageName === 'LandingPage' || this.props.pageName === 'ThanksPage' ) {
+		if ( this.props.pageName === 'LandingPage' ||
+			 this.props.pageName === 'ThanksPage' ||
+			 this.props.pageName === 'ErrorPage'
+			)
+		{
 			return { x: 0 }
 		}
 
