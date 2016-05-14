@@ -1,7 +1,11 @@
+// Charity Actions
+export const SET_CHARITY = 'SET_CHARITY'
+
 // Navigation Actions
 export const ADVANCE_PAGE = 'ADVANCE_PAGE'
 export const RECEDE_PAGE = 'RECEDE_PAGE'
 export const JUMP_TO_PAGE = 'JUMP_TO_PAGE'
+export const JUMP_TO_PREVIOUS_PAGE = 'JUMP_TO_PREVIOUS_PAGE'
 
 // Payment Actions
 export const CHOOSE_CONTRIBUTION_AMOUNT = 'CHOOSE_CONTRIBUTION_AMOUNT'

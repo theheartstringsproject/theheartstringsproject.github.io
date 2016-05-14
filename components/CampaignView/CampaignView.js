@@ -20,8 +20,8 @@ import './campaign.css'
 const CampaignView = React.createClass ({
 
 	getPageComponentForKey: function( key ) {
-		let charityName = this.props.contribution.charityName
-		let reason = this.props.contribution.reason
+		let charityName = this.props.charity.formattedName
+		let reason = this.props.charity.reason
 		let amount = this.props.contribution.amount
 		let email = this.props.payment.email
 		let cardNumber = this.props.payment.cardNumber
@@ -31,7 +31,7 @@ const CampaignView = React.createClass ({
 			case 'LandingPage':
 				return <LandingPage charityName={charityName} reason={reason} key={key}/>
 			case 'PaymentFlow':
-				return <PaymentFlow direction={this.props.direction} contribution={this.props.contribution} payment={this.props.payment} key={key} pageName={this.props.pageName} previousPageName={this.props.previousPageName}/>
+				return <PaymentFlow direction={this.props.direction} charity={this.props.charity} contribution={this.props.contribution} payment={this.props.payment} key={key} pageName={this.props.pageName} previousPageName={this.props.previousPageName}/>
 			case 'ThanksPage':
 				return <ThanksPage contribution={this.props.contribution} payment={this.props.payment} pageName={this.props.pageName} key={key} />
 			case 'ErrorPage':
@@ -61,7 +61,11 @@ const CampaignView = React.createClass ({
 	},
 
 	getKeyForPage: function( pageName ) {
-		if ( pageName === 'LandingPage' || pageName === 'ThanksPage' || pageName === 'ErrorPage' ) {
+		if ( 	pageName === 'LandingPage' ||
+				pageName === 'ThanksPage' ||
+				pageName === 'ErrorPage'
+			)
+		{
 			return pageName
 		} else {
 			return 'PaymentFlow'

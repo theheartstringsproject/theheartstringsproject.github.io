@@ -1,13 +1,22 @@
 import React from 'react'
 import Link from '../Link'
-import Button from '../Button/Button'
+import InfoButton from '../../containers/InfoButton'
 import BackButton from '../../containers/BackButton'
+import BackFromInfoButton from '../../containers/BackFromInfoButton'
 import InlineSVG from 'svg-inline-react'
 // import DonationIcon from './DonationIcon'
 import { presets, spring, Motion, TransitionMotion } from 'react-motion'
 import './header.css'
 
-const pagesWithNavigation = [
+const pagesWithBack = [
+	'ContributionPage',
+	'EmailPage',
+	'PaymentPage',
+	'ConfirmationPage',
+	'InfoPage'
+]
+
+const pagesWithInfo = [
 	'ContributionPage',
 	'EmailPage',
 	'PaymentPage',
@@ -34,6 +43,8 @@ const Header = React.createClass({
 				return <p>Processing your donation...</p>
 			case 'ThanksPage':
 				return <p>Thanks! Share this article to help others make a difference</p>
+			case 'InfoPage':
+				return <p><Link text={this.props.charityName} /></p>
 			case 'ErrorPage':
 				return <p>Unfortuntely we’re having trouble processing your donation.</p>
 			default:
@@ -42,14 +53,16 @@ const Header = React.createClass({
 	},
 
 	getBackButton: function() {
-		if ( pagesWithNavigation.includes( this.props.pageName ) ) {
+		if ( this.props.pageName === 'InfoPage' ) {
+			return <BackFromInfoButton type='tertiary circle' icon='back' />
+		} else if ( pagesWithBack.includes( this.props.pageName ) ) {
 			return <BackButton type='tertiary circle' icon='back' />
 		}
 	},
 
 	getInfoButton: function() {
-		if ( pagesWithNavigation.includes( this.props.pageName ) ) {
-			return <Button type='tertiary circle' icon='info' />
+		if ( pagesWithInfo.includes( this.props.pageName ) ) {
+			return <InfoButton type='tertiary circle' icon='info' />
 		}
 	},
 
@@ -69,6 +82,8 @@ const Header = React.createClass({
 				return [this.getDonationIcon(), this.getAmountIcon()]
 			case 'ThanksPage':
 				return [this.getThanksIcon()]
+			case 'InfoPage':
+				return [this.getDonationIcon()]
 			case 'ErrorPage':
 				return [this.getErrorIcon()]
 			default:
@@ -92,6 +107,8 @@ const Header = React.createClass({
 				return ['donation-icon', 'donation-amount-icon']
 			case 'ThanksPage':
 				return ['thanks-icon']
+			case 'InfoPage':
+				return ['donation-icon']
 			case 'ErrorPage':
 				return ['error-icon']
 			default:

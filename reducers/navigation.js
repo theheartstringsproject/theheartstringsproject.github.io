@@ -42,6 +42,13 @@ const navigation = (state = initialState, action) => {
 				previousPage: state.currentPage
 			}
 
+		case 'JUMP_TO_PREVIOUS_PAGE':
+
+			return {
+				currentPage: state.previousPage,
+				previousPage: state.currentPage
+			}
+
 		case types.DECLINED_CREDIT_CARD:
 
 			return {

@@ -16,6 +16,7 @@ const mapStateToProps = (state, ownProps) => {
 		pageName: getCurrentPageName( state.navigation.currentPage ),
 		previousPageName: getCurrentPageName( state.navigation.previousPage ),
 		direction: getNavigationDirection( state.navigation.currentPage, state.navigation.previousPage ),
+		charity: state.charity,
 		contribution: state.contribution,
 		payment: state.payment
 	}

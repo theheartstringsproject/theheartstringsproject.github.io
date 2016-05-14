@@ -1,5 +1,6 @@
-- Error page and reducer from unknown error
 - Info page
+- Activate links throughout app
+- Credential saving & forget info button
 - Event logging
-- Credential saving
 - User agreement
+- Upsell on thanks page

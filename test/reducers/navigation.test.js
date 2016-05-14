@@ -51,6 +51,18 @@ describe('Navigation Reducer', function() {
 		})
 	})
 
+	it('should handle JUMP_TO_PREVIOUS_PAGE', function() {
+		expect( reducer( {
+			currentPage: 7,
+			previousPage: 2
+		}, {
+			type: types.JUMP_TO_PREVIOUS_PAGE
+		})).toEqual({
+			currentPage: 2,
+			previousPage: 7
+		})
+	})
+
 	// it('should handle REQUEST_PAYMENT_TOKEN', function() {
 	// 	epxect( reducer( [], {
 	// 		type: types.REQUEST_PAYMENT_TOKEN

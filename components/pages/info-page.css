@@ -1,0 +1,26 @@
+@import '../variables.css';
+@import '../mixins.css';
+
+.Page.info-page {
+
+	.charity-mission {
+		/*margin-top: $space;
+		margin-bottom: calc( $space * 1.5 );*/
+	}
+
+	hr {
+		border-color: $text-color-light-tertiary;
+		border-top: none;
+   		width: 100%;
+	}
+
+	.heartstrings-disclaimer {
+		@mixin text-small;
+	}
+
+	.Footer {
+		position: relative;
+		margin-top: calc( $space * 2 );
+		margin-bottom: $space;
+	}
+}

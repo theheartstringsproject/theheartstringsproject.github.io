@@ -154,5 +154,16 @@ body {
 		small {
 			margin: 0;
 		}
+
+		$footer-icon-size: 24px;
+		i {
+			margin-top: calc($space / 3);
+			height: $footer-icon-size;
+			width: $footer-icon-size;
+
+			path {
+				fill: $text-color-light;
+			}
+		}
 	}
 }

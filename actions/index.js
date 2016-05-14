@@ -22,6 +22,12 @@ export const jumpToPage = ( page ) => {
 	}	
 }
 
+export const jumpToPreviousPage = ( page ) => {
+	return {
+		type: types.JUMP_TO_PREVIOUS_PAGE
+	}
+}
+
 export const chooseContributionAmount = ( amount ) => {
 	return {
 		type: types.CHOOSE_CONTRIBUTION_AMOUNT,

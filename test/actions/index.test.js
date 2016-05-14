@@ -5,6 +5,38 @@ import * as inputStates from '../../constants/InputStates'
 
 describe('Actions', function() {
 
+	describe('Navigation Actions', function() {
+		it('should create an action for advanging a page', function() {
+			const expectedAction = {
+				type: types.ADVANCE_PAGE
+			}
+			expect( actions.advancePage() ).toEqual( expectedAction )
+		})
+
+		it('should create an action for receding a page', function() {
+			const expectedAction = {
+				type: types.RECEDE_PAGE
+			}
+			expect( actions.recedePage() ).toEqual( expectedAction )
+		})
+
+		it('should create an action for jumping to a page', function() {
+			const page = 7
+			const expectedAction = {
+				type: types.JUMP_TO_PAGE,
+				page
+			}
+			expect( actions.jumpToPage( page ) ).toEqual( expectedAction )
+		})
+
+		it('should create an action for jumping to the previous page', function() {
+			const expectedAction = {
+				type: types.JUMP_TO_PREVIOUS_PAGE
+			}
+			expect( actions.jumpToPreviousPage() ).toEqual( expectedAction )
+		})
+	})
+
 	it('should create an action for setting email', function() {
 		const 	email = 'jeremy@lubin.com',
 				status = inputStates.VALID

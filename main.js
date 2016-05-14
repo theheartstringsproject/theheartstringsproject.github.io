@@ -23,9 +23,15 @@ const logger = store => next => action => {
 }
 
 let store = createStore(campaign, {
-	contribution: {
-		charityName: charity === "undefined" ? 'United States Association for UNHCR' : charity,
+	charity: {
+		name: 'united states association for unhcr',
+		formattedName: charity === "undefined" ? 'United States Association for UNHCR' : charity,
 		reason: reason === "undefined" ? 'Syrian refugees' : reason,
+		mission: 'Over 36 million people, mostly women and children, have fled persecution and war. Help the UN Refugee Agency ensure that they receive life-saving humanitarian aid.',
+		charityURL: 'www.unrefugees.org',
+		orgHunterURL: 'http://www.orghunter.com/organization/521662800'
+	},
+	contribution: {
 		amount: 0
 	}
 }, applyMiddleware( thunkMiddleware, logger ))

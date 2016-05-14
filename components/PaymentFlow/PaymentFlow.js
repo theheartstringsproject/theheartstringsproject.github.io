@@ -11,6 +11,7 @@ import EmailPage from '../pages/EmailPage'
 import PaymentPage from '../pages/PaymentPage'
 import ConfirmationPage from '../pages/ConfirmationPage'
 import LoadingPage from '../pages/LoadingPage'
+import InfoPage from '../pages/InfoPage'
 import ThanksPage from '../pages/ThanksPage'
 import ErrorPage from '../pages/ErrorPage'
 import './payment-flow.css'
@@ -22,6 +23,7 @@ const PaymentFlow = React.createClass ({
 			 pageName === 'EmailPage' ||
 			 pageName === 'PaymentPage' ||
 			 pageName === 'ConfirmationPage' ||
+			 pageName === 'InfoPage' ||
 			 pageName === 'LoadingPage'
 			) {
 			return pageName
@@ -31,8 +33,8 @@ const PaymentFlow = React.createClass ({
 	},
 
 	getPageComponentForKey: function( key ) {
-		let charityName = this.props.contribution.charityName
-		let reason = this.props.contribution.reason
+		let charityName = this.props.charity.formattedName
+		let reason = this.props.charity.reason
 		let amount = this.props.contribution.amount
 		let email = this.props.payment.email
 		let cardNumber = this.props.payment.cardNumber
@@ -47,6 +49,8 @@ const PaymentFlow = React.createClass ({
 				return <PaymentPage charityName={charityName} amount={amount} payment={this.props.payment} key={key}/>
 			case 'ConfirmationPage':
 				return <ConfirmationPage charityName={charityName} amount={amount} payment={this.props.payment} key={key}/>
+			case 'InfoPage':
+				return <InfoPage charity={this.props.charity} contribution={this.props.contribution} pageName={this.props.pageName} key={key} />
 			case 'LoadingPage':
 				return <LoadingPage key={key}/>
 			default: /* TODO Update to return error page */
@@ -112,7 +116,7 @@ const PaymentFlow = React.createClass ({
 		
 		return (
 			<div className='Page PaymentFlow' style={this.props.style}>
-				<Header charityName={this.props.contribution.charityName} reason={this.props.contribution.reason} amount={this.props.contribution.amount} pageName={key} previousPageName={this.props.previousPageName} key='header'/>
+				<Header charityName={this.props.charity.formattedName} reason={this.props.charity.reason} amount={this.props.contribution.amount} pageName={key} previousPageName={this.props.previousPageName} key='header'/>
 				{/*<ReactCSSTransitionGroup transitionName={`${this.props.direction}-page`} transitionEnterTimeout={500} transitionLeaveTimeout={500}>*/}
 				<TransitionMotion
 					willEnter={this.pageWillEnter}

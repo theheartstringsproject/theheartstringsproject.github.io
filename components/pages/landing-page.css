@@ -21,15 +21,8 @@
 		flex-direction: column;
 	}
 
-	$size: 24px;
 	i {
 		margin-top: calc($space / 3);
-		height: $size;
-		width: $size;
-	}
-
-	path {
-		fill: $text-color-light;
 	}
 }
 
