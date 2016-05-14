@@ -35529,7 +35529,8 @@
 
 			var errorClass = this.isInError() ? 'Error' : '';
 			return _react2.default.createElement('input', {
-				inputmode: 'numeric',
+				inputMode: 'numeric',
+				pattern: '[0-9]*',
 				style: this.props.style,
 				placeholder: 'Card Number',
 				className: 'CardNumber ' + errorClass
@@ -45153,7 +45154,8 @@
 
 			var errorClass = this.props.expirationDate.status === inputStates.INVALID ? 'Error' : '';
 			return _react2.default.createElement('input', {
-				inputmode: 'numeric',
+				inputMode: 'numeric',
+				pattern: '[0-9]*',
 				value: this.format(this.props.expirationDate.values.month, this.props.expirationDate.values.year),
 				style: this.props.style,
 				placeholder: 'MM/YY',
@@ -45323,7 +45325,8 @@
 
 			var errorClass = this.isInError() ? 'Error' : '';
 			return _react2.default.createElement('input', {
-				inputmode: 'numeric',
+				inputMode: 'numeric',
+				pattern: '[0-9]*',
 				value: this.format(this.props.securityCode.value),
 				style: this.props.style,
 				placeholder: 'CVV',

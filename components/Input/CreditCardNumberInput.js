@@ -125,7 +125,8 @@ const CreditCardNumberInput = React.createClass({
 		let errorClass = this.isInError() ? 'Error' : ''
 		return(
 			<input
-				inputmode='numeric'
+				inputMode='numeric'
+				pattern="[0-9]*"
 				style={this.props.style}
 				placeholder="Card Number"
 				className={`CardNumber ${errorClass}`}
