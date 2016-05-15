@@ -10,7 +10,7 @@ const ThanksPage = React.createClass({
 	render: function() {
 		return (
 			<div className='Page thanks-page' style={this.props.style}>
-				<Header charityName={this.props.contribution.charityName} reason={this.props.contribution.reason} amount={this.props.contribution.amount} pageName={this.props.pageName} key='thanks-header'/>
+				<Header charity={this.props.charity} amount={this.props.contribution.amount} pageName={this.props.pageName} key='thanks-header'/>
 				<div className="share-buttons">
 					<Button type='primary circle share-button' icon='twitter'/>
 					<Button type='primary circle share-button' icon='facebook'/>

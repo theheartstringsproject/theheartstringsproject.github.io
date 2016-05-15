@@ -53,7 +53,7 @@ const PaymentFlow = React.createClass ({
 				return <InfoPage charity={this.props.charity} contribution={this.props.contribution} pageName={this.props.pageName} key={key} />
 			case 'LoadingPage':
 				return <LoadingPage key={key}/>
-			default: /* TODO Update to return error page */
+			default:
 				return <ErrorPage key={key}/>
 		}
 	},
@@ -116,7 +116,7 @@ const PaymentFlow = React.createClass ({
 		
 		return (
 			<div className='Page PaymentFlow' style={this.props.style}>
-				<Header charityName={this.props.charity.formattedName} reason={this.props.charity.reason} amount={this.props.contribution.amount} pageName={key} previousPageName={this.props.previousPageName} key='header'/>
+				<Header charity={this.props.charity} reason={this.props.charity.reason} amount={this.props.contribution.amount} pageName={key} previousPageName={this.props.previousPageName} key='header'/>
 				{/*<ReactCSSTransitionGroup transitionName={`${this.props.direction}-page`} transitionEnterTimeout={500} transitionLeaveTimeout={500}>*/}
 				<TransitionMotion
 					willEnter={this.pageWillEnter}

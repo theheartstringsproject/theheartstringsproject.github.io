@@ -29,15 +29,15 @@ const CampaignView = React.createClass ({
 
 		switch( key ) {
 			case 'LandingPage':
-				return <LandingPage charityName={charityName} reason={reason} key={key}/>
+				return <LandingPage charity={this.props.charity} key={key}/>
 			case 'PaymentFlow':
 				return <PaymentFlow direction={this.props.direction} charity={this.props.charity} contribution={this.props.contribution} payment={this.props.payment} key={key} pageName={this.props.pageName} previousPageName={this.props.previousPageName}/>
 			case 'ThanksPage':
-				return <ThanksPage contribution={this.props.contribution} payment={this.props.payment} pageName={this.props.pageName} key={key} />
+				return <ThanksPage charity={this.props.charity} contribution={this.props.contribution} payment={this.props.payment} pageName={this.props.pageName} key={key} />
 			case 'ErrorPage':
 				return <ErrorPage pageName={this.props.pageName} key={key}/>
 			default: /* TODO Update to return error page */
-				return <LandingPage charityName={charityName} reason={reason} key={key}/>
+				return <LandingPage charity={this.props.charity} key={key}/>
 		}
 
 		// switch( key ) {

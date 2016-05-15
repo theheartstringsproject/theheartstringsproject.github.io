@@ -99,7 +99,7 @@
 			formattedName: charity === "undefined" ? 'United States Association for UNHCR' : charity,
 			reason: reason === "undefined" ? 'Syrian refugees' : reason,
 			mission: 'Over 36 million people, mostly women and children, have fled persecution and war. Help the UN Refugee Agency ensure that they receive life-saving humanitarian aid.',
-			charityURL: 'www.unrefugees.org',
+			charityURL: 'http://www.unrefugees.org',
 			orgHunterURL: 'http://www.orghunter.com/organization/521662800'
 		},
 		contribution: {
@@ -23047,16 +23047,16 @@
 
 			switch (key) {
 				case 'LandingPage':
-					return _react2.default.createElement(_LandingPage2.default, { charityName: charityName, reason: reason, key: key });
+					return _react2.default.createElement(_LandingPage2.default, { charity: this.props.charity, key: key });
 				case 'PaymentFlow':
 					return _react2.default.createElement(_PaymentFlow2.default, { direction: this.props.direction, charity: this.props.charity, contribution: this.props.contribution, payment: this.props.payment, key: key, pageName: this.props.pageName, previousPageName: this.props.previousPageName });
 				case 'ThanksPage':
-					return _react2.default.createElement(_ThanksPage2.default, { contribution: this.props.contribution, payment: this.props.payment, pageName: this.props.pageName, key: key });
+					return _react2.default.createElement(_ThanksPage2.default, { charity: this.props.charity, contribution: this.props.contribution, payment: this.props.payment, pageName: this.props.pageName, key: key });
 				case 'ErrorPage':
 					return _react2.default.createElement(_ErrorPage2.default, { pageName: this.props.pageName, key: key });
 				default:
 					/* TODO Update to return error page */
-					return _react2.default.createElement(_LandingPage2.default, { charityName: charityName, reason: reason, key: key });
+					return _react2.default.createElement(_LandingPage2.default, { charity: this.props.charity, key: key });
 			}
 
 			// switch( key ) {
@@ -33463,6 +33463,9 @@
 
 
 		getText: function getText() {
+			var name = this.props.charity.formattedName;
+			var url = this.props.charity.charityURL || this.props.charity.orgHunterURL;
+
 			switch (this.props.pageName) {
 				case 'LandingPage':
 					return;
@@ -33471,7 +33474,7 @@
 						'p',
 						null,
 						'How much would you like to donate to ',
-						_react2.default.createElement(_Link2.default, { text: this.props.charityName }),
+						_react2.default.createElement(_Link2.default, { text: name, href: url }),
 						'?'
 					);
 				case 'EmailPage':
@@ -33481,7 +33484,7 @@
 						'$',
 						this.props.amount,
 						' to ',
-						_react2.default.createElement(_Link2.default, { text: this.props.charityName })
+						_react2.default.createElement(_Link2.default, { text: name, href: url })
 					);
 				case 'PaymentPage':
 					return _react2.default.createElement(
@@ -33490,7 +33493,7 @@
 						'$',
 						this.props.amount,
 						' to ',
-						_react2.default.createElement(_Link2.default, { text: this.props.charityName })
+						_react2.default.createElement(_Link2.default, { text: name, href: url })
 					);
 				case 'ConfirmationPage':
 					return _react2.default.createElement(
@@ -33499,7 +33502,7 @@
 						'$',
 						this.props.amount,
 						' to ',
-						_react2.default.createElement(_Link2.default, { text: this.props.charityName })
+						_react2.default.createElement(_Link2.default, { text: name, href: url })
 					);
 				case 'LoadingPage':
 					return _react2.default.createElement(
@@ -33517,7 +33520,7 @@
 					return _react2.default.createElement(
 						'p',
 						null,
-						_react2.default.createElement(_Link2.default, { text: this.props.charityName })
+						_react2.default.createElement(_Link2.default, { text: name, href: url })
 					);
 				case 'ErrorPage':
 					return _react2.default.createElement(
@@ -33786,10 +33789,11 @@
 	var Link = function Link(props) {
 		return _react2.default.createElement(
 			'a',
-			{ className: 'Link',
-				href: '#',
+			{ className: 'Link ' + props.className,
+				href: props.href ? props.href : '#',
+				target: props.target ? props.target : '_blank',
 				onClick: function onClick(e) {
-					e.preventDefault();
+					// e.preventDefault()
 				}
 			},
 			props.text
@@ -34410,7 +34414,6 @@
 				case 'LoadingPage':
 					return _react2.default.createElement(_LoadingPage2.default, { key: key });
 				default:
-					/* TODO Update to return error page */
 					return _react2.default.createElement(_ErrorPage2.default, { key: key });
 			}
 		},
@@ -34467,7 +34470,7 @@
 			return _react2.default.createElement(
 				'div',
 				{ className: 'Page PaymentFlow', style: this.props.style },
-				_react2.default.createElement(_Header2.default, { charityName: this.props.charity.formattedName, reason: this.props.charity.reason, amount: this.props.contribution.amount, pageName: key, previousPageName: this.props.previousPageName, key: 'header' }),
+				_react2.default.createElement(_Header2.default, { charity: this.props.charity, reason: this.props.charity.reason, amount: this.props.contribution.amount, pageName: key, previousPageName: this.props.previousPageName, key: 'header' }),
 				_react2.default.createElement(
 					_reactMotion.TransitionMotion,
 					{
@@ -34558,6 +34561,7 @@
 		displayName: 'LandingPage',
 
 		render: function render() {
+			var url = this.props.charity.charityURL || this.props.charity.orgHunterURL;
 			return _react2.default.createElement(
 				'div',
 				{ className: 'Page landing-page', style: this.props.style },
@@ -34570,9 +34574,9 @@
 					'p',
 					null,
 					'The author invites you to contribute to ',
-					_react2.default.createElement(_Link2.default, { text: this.props.charityName }),
+					_react2.default.createElement(_Link2.default, { text: this.props.charity.formattedName, href: url }),
 					' to support ',
-					this.props.reason,
+					this.props.charity.reason,
 					'.'
 				),
 				_react2.default.createElement(_MakeContributionButton2.default, { text: 'Make a contribution', type: 'large primary contribute-button' }),
@@ -45956,13 +45960,14 @@
 
 
 		getMission: function getMission() {
+			var url = this.props.charity.charityURL || this.props.charity.orgHunterURL;
 			if (this.props.charity.mission) {
 				return _react2.default.createElement(
 					'p',
 					{ className: 'charity-mission' },
 					this.props.charity.mission,
 					_react2.default.createElement('br', null),
-					_react2.default.createElement(_Link2.default, { text: 'Learn More' }),
+					_react2.default.createElement(_Link2.default, { text: 'Learn More', href: url }),
 					'.'
 				);
 			} else {
@@ -45972,7 +45977,7 @@
 					'No mission statement is available for ',
 					this.props.charity.formattedName,
 					'. ',
-					_react2.default.createElement(_Link2.default, { text: 'Learn more about this organization from OrgHunter' }),
+					_react2.default.createElement(_Link2.default, { text: 'Learn more about this organization', href: url }),
 					'.'
 				);
 			}
@@ -45988,9 +45993,9 @@
 					'p',
 					{ className: 'heartstrings-disclaimer' },
 					'The Heartstrings Project processes donations through ',
-					_react2.default.createElement(_Link2.default, { text: 'Stripe' }),
+					_react2.default.createElement(_Link2.default, { text: 'Stripe', href: 'https://stripe.com' }),
 					' and ',
-					_react2.default.createElement(_Link2.default, { text: 'Make My Donation' }),
+					_react2.default.createElement(_Link2.default, { text: 'Make My Donation', href: 'http://makemydonation.org/' }),
 					'. While we do not deduct any fees from your donation, Stripe deducts 2.9% + $0.30 processing and Make My Donation charges an additional 4.25%. Learn more about ',
 					_react2.default.createElement(_Link2.default, { text: 'The Heartstrings Project' }),
 					'.'
@@ -46091,7 +46096,7 @@
 			return _react2.default.createElement(
 				'div',
 				{ className: 'Page thanks-page', style: this.props.style },
-				_react2.default.createElement(_Header2.default, { charityName: this.props.contribution.charityName, reason: this.props.contribution.reason, amount: this.props.contribution.amount, pageName: this.props.pageName, key: 'thanks-header' }),
+				_react2.default.createElement(_Header2.default, { charity: this.props.charity, amount: this.props.contribution.amount, pageName: this.props.pageName, key: 'thanks-header' }),
 				_react2.default.createElement(
 					'div',
 					{ className: 'share-buttons' },

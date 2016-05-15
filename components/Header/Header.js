@@ -28,23 +28,26 @@ const CAMPAIGN_HEIGHT = 400 - 48;
 const Header = React.createClass({	
 
 	getText: function() {
+		let name = this.props.charity.formattedName
+		let url = this.props.charity.charityURL || this.props.charity.orgHunterURL
+
 		switch( this.props.pageName ) {
 			case 'LandingPage':
 				return
 			case 'ContributionPage':
-				return <p>How much would you like to donate to <Link text={this.props.charityName} />?</p>
+				return <p>How much would you like to donate to <Link text={name} href={url}/>?</p>
 			case 'EmailPage':
-				return <p>${this.props.amount} to <Link text={this.props.charityName} /></p>
+				return <p>${this.props.amount} to <Link text={name} href={url} /></p>
 			case 'PaymentPage':
-				return <p>${this.props.amount} to <Link text={this.props.charityName} /></p>
+				return <p>${this.props.amount} to <Link text={name} href={url} /></p>
 			case 'ConfirmationPage':
-				return <p>${this.props.amount} to <Link text={this.props.charityName} /></p>
+				return <p>${this.props.amount} to <Link text={name} href={url} /></p>
 			case 'LoadingPage':
 				return <p>Processing your donation...</p>
 			case 'ThanksPage':
 				return <p>Thanks! Share this article to help others make a difference</p>
 			case 'InfoPage':
-				return <p><Link text={this.props.charityName} /></p>
+				return <p><Link text={name} href={url}/></p>
 			case 'ErrorPage':
 				return <p>Unfortuntely we’re having trouble processing your donation.</p>
 			default:

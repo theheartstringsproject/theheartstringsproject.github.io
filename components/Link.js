@@ -1,10 +1,11 @@
 import React from 'react'
 
 const Link = (props) => (
-	<a className='Link'
-		href="#"
+	<a className={`Link ${props.className}`}
+		href={props.href ? props.href : '#'}
+		target={props.target ? props.target : '_blank'}
 		onClick={e => {
-		e.preventDefault()
+		// e.preventDefault()
 		}}
 	>
 		{props.text}
