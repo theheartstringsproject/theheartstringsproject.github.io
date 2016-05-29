@@ -1,0 +1,20 @@
+/* Fonts */
+$font-family: "Avenir", helvetica, sans-serif;
+
+/* Colors */
+$text-color-light: #ffffff;
+$text-color-light-secondary: color($text-color-light a(70%));
+$text-color-light-tertiary: color($text-color-light a(36%));
+$text-color-dark: #555555;
+$text-color-error: #D0021B;
+$background-color: #00AB6B;
+
+/* Spacing */
+$space: 24px;
+
+/* Sizing */
+$widget-height: 420px;
+$input-height: 48px;
+
+/* Animation */
+$animation-duration: 200ms;

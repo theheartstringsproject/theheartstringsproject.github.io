@@ -1,0 +1,98 @@
+@import '../variables.css';
+@import '../mixins.css';
+
+.world-map-container {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0; left: 0;
+	z-index: 0;
+
+	display: flex;
+
+	background: url(../../images/map-blank.png);
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+
+	transition: background-position $animation-duration ease-in-out;
+
+	&.top { align-items: flex-start; background-position: center top }
+	&.center { align-items: center; background-position: center }
+
+	/* Animate page transitions */
+	&.world-map-enter {
+		opacity: 0;
+	}
+
+	&.world-map-enter.world-map-enter-active {
+		opacity: 1;
+		transition: opacity $animation-duration ease-in-out;
+	}
+
+	&.world-map-leave {
+		opacity: 1;
+	}
+
+	&.world-map-leave.world-map-leave-active {
+		opacity: 0;
+		transition: opacity $animation-duration ease-in-out;
+	}
+
+}
+
+.world-map {
+	width: 100%;
+}
+
+.world-map svg {
+	max-height: $widget-height;
+}
+
+.world-map ellipse {
+	
+	// fill: rgba(0,0,0,0.2);
+	// animation: dot 5s infinite;
+	/* @for $i from 1 to 3228 {
+		&:nth-child($i) { animation-delay: calc(200ms * $(i)) }
+	} */
+
+	/* Animate dot transitions */
+	/*&.world-map-dot-enter {
+		opacity: 0;
+	}
+
+	&.world-map-dot-enter.world-map-dot-enter-active {
+		opacity: 1;
+		transition: opacity $animation-duration ease-in-out;
+	}
+
+	&.world-map-dot-leave {
+		opacity: 1;
+	}
+
+	&.world-map-dot-leave.world-map-dot-leave-active {
+		opacity: 0;
+		transition: opacity $animation-duration ease-in-out;
+	}*/
+	
+
+	&.on {
+		fill: #FFFFFF;
+		opacity: 1
+	}
+
+	&.off {
+		fill: #FFFFFF;
+		opacity: 0;
+	}
+
+	transition: opacity $animation-duration ease-in-out, fill $animation-duration ease-in-out;
+}
+
+@keyframes dot {
+	0% { fill: rgba(0,0,0,0.2); }
+	4% { fill: rgba(255,255,255,1); }
+	96% { fill: rgba(255,255,255,1); }
+	100% { fill: rgba(0,0,0,0.2); }
+}

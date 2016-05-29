@@ -1,0 +1,5 @@
+@define-mixin text-small {
+	color: $text-color-light-secondary;
+	font-size: .75rem;
+	line-height: 1.375em;
+}

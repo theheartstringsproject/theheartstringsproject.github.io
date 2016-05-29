@@ -1,0 +1,30 @@
+@import '../variables.css';
+@import '../mixins.css';
+
+.Campaign .Page.info-page {
+	display: block;
+
+	.charity-mission {
+		/* margin-top: $space; */
+		/*margin-bottom: calc( $space * 1.5 );*/
+		padding-bottom: calc( $space / 3 );
+	}
+
+	hr {
+		border-color: $text-color-light-tertiary;
+		border-top: none;
+   		width: 100%;
+	}
+
+	.heartstrings-disclaimer {
+		@mixin text-small;
+		padding-top: calc( $space / 3 );
+	}
+
+	.Footer {
+		position: relative;
+		/* margin-top: $space;
+		margin-bottom: $space; */
+		bottom: auto;
+	}
+}

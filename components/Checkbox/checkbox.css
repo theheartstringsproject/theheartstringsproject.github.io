@@ -1,0 +1,43 @@
+@import '../variables.css';
+@import '../mixins.css';
+
+$checkboxSize: 24px;
+
+.Checkbox {
+
+	cursor: pointer;
+	
+	/* Hide the default checkbox */
+	[type="checkbox"] {
+		display: none;
+	}
+
+	/* Add some spacing on each side */
+	margin: calc($space / 2) calc($space);
+
+	label {
+		display: flex;
+		align-items: center;
+
+		text-align: left;
+		@mixin text-small;
+	}
+
+	/* Add the icon */
+	label:before {
+		content: '';
+		display: inline-block;
+		height: $checkboxSize;
+		width: $checkboxSize;
+		flex-shrink: 0;
+		background: url(../../icons/circle-thin.svg);
+		margin-right: calc($space / 2);
+	}
+
+	[type="checkbox"]:checked + label:before {
+		background: url(../../icons/circle-check.svg);
+	}
+}
+
+
+

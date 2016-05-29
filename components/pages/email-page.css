@@ -1,0 +1,13 @@
+@import '../variables.css';
+@import '../mixins.css';
+
+.email-page {
+
+	.Input {
+		margin-top: $space;
+	}
+
+	.next-page-button {
+		margin-top: $space;
+	}
+}

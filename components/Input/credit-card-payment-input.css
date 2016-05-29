@@ -1,0 +1,139 @@
+@import '../variables.css';
+
+.CreditCardPaymentInput {
+
+	/* 	Outer container for fields
+		that prevents overflow outside
+		of the field area */
+	.fields-container {
+		overflow: hidden;
+		position: relative;
+		width: 100%;
+	}
+	
+	/*	Inner container for fields
+		that allows for natural field sizing */
+	.fields {
+		width: 100%;
+		// display: flex;
+	}
+	
+	/*	Make the card number field half the width of the inner container
+		so that it shows exclusively in card number mode */
+	.CardNumber {
+		// flex: 2;
+		position: relative;
+		margin-right: calc( $space / 2 );
+		width: calc( 100% - ( $space ) );
+		float: left;
+		box-sizing: border-box;
+		// flex: 0 0 180;
+		// width: 50%;
+	}
+
+	.ExpirationDate,
+	.SecurityCode {
+		// flex: 0 0;
+		width: 2px;
+		float: left;
+		text-align: center;
+		box-sizing: border-box;
+	}
+
+	/* 	Position a ghost card number field over the container
+		in order to show a peak at the last 5 credit card digits
+		when not in credit card editing mode */
+	.AbbreviatedCardNumberGhost,
+	.CardNumberGhost {
+		position: absolute;
+		left: 0;
+
+		display: flex;
+	    align-items: center;
+
+		height: $input-height;
+
+		font-size: 1rem;
+		font-weight: 300;
+		color: $text-color-dark;
+
+		// visibility: hidden;
+		opacity: 0;
+	}
+}
+
+/* Style the combo field when the credit card portion is active */
+.CreditCardPaymentInput.CreditCardNumber {
+	
+	/*	Animate the credit card field into view
+		when in credit card mode */
+	/*.fields {
+		transform: translateX(0%);
+		transition: transform $animation-duration ease-in-out;
+	}*/
+
+	/*	Animate the other fields out of view */
+	.ExpirationDate,
+	.SecurityCode,
+	.AbbreviatedCardNumberGhost {
+		opacity: 0;
+		transform: scale(0.8);
+		transition: transform $animation-duration ease-in-out, opacity $animation-duration ease-in-out;
+	}
+
+	/*	Show the credit card field
+		when in credid card number mode */
+	.CardNumber {
+		opacity: 1;
+		// transform: scale(0.8);
+		transition: transform $animation-duration ease-in-out, opacity $animation-duration ease-in-out;
+	}
+}
+
+/* Style the combo field when the credit card portion is active */
+.CreditCardPaymentInput.CreditCardExpirationDate,
+.CreditCardPaymentInput.CreditCardSecurityCode {
+	
+	/*	Animate the credit card field out of view
+		when not in credit card mode */
+	/*.fields {
+		transform: translateX(-25%);
+		transition: transform $animation-duration ease-in-out;
+	}*/
+
+	/*	Hide the credit card field
+		when not in credid card number mode
+		and expand the other fields */
+	/*.CardNumber {
+		flex: 0;
+	}
+
+	.ExpirationDate,
+	.SecurityCode {
+		flex: 1;
+	}*/
+
+	/*	Animate the other fields into view */
+	.ExpirationDate,
+	.SecurityCode,
+	.AbbreviatedCardNumberGhost {
+		opacity: 1;
+		transform: scale(1);
+		transition: transform $animation-duration ease-in-out, opacity $animation-duration ease-in-out;
+	}
+
+	/*	Animate the credit card field out of view */
+	.CardNumber {
+		opacity: 0;
+		// transform: scale(0.8);
+		transition: transform $animation-duration ease-in-out, opacity $animation-duration ease-in-out;
+	}	
+}
+
+.CreditCardPaymentInput.Error {
+	/* Make the abbreviated card number red if there's an error */
+	.AbbreviatedCardNumberGhost {
+		color: $text-color-error
+	}
+}
+

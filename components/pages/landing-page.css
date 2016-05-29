@@ -1,0 +1,28 @@
+@import '../variables.css';
+@import '../mixins.css';
+
+.landing-page {
+
+	/* &> *:not(.world-map):not(.Footer) {
+		position: relative;
+		z-index: 1;
+	} */
+
+	h1 {
+		padding-top: $space;
+	}
+
+	.contribute-button {
+		width: 100%;
+		margin-top: $space;
+	}
+
+	.Footer {
+		flex-direction: column;
+	}
+
+	i {
+		margin-top: calc($space / 3);
+	}
+}
+

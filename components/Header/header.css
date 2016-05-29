@@ -1,0 +1,84 @@
+@import '../variables.css';
+@import '../mixins.css';
+
+.Header {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	padding: calc( $space );
+	padding-top: $space;
+	padding-bottom: 0;
+	width: calc( 100% - $space*2 );
+
+	flex-grow: 0;
+	flex-shrink: 0;
+
+	nav {
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+}
+
+
+$iconSize: 60px;
+.donation-info {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	color: $text-color-light;
+	font-size: .75rem;
+	line-height: 1.375em;
+}
+
+.donation-info .header {
+	color: $text-color-light-secondary;
+	text-transform: uppercase;
+	margin-bottom: calc($space / 3);
+}
+
+.donation-icons {
+	height: $iconSize;
+	max-height: $iconSize;
+	flex: 1 0 $iconSize;
+
+	display: flex;
+	justify-content: center;
+
+	svg {
+		height: $iconSize;
+	}
+}
+
+.charity-icon {
+	position: absolute;
+	top: $space;
+	left: calc((100% - $iconSize) / 2);
+	z-index: 1;
+}
+
+.donation-amount-icon {
+	/*  Move this over slightly to appear
+		underneath the charity icon */
+	margin-left: -3px;
+	position: absolute;
+	z-index: 0;
+
+	top: $space;
+}
+
+.donation-amount {
+	position: absolute;
+	text-align: center;
+	width: 100%;
+	left: -3px;
+	top: calc((60px - 28px) / 2); /* Attempt to center the text by subtracting line-height from circle height and divide by two */
+
+	color: $background-color;
+	font-size: 1.25rem;
+	line-height: 1.375em;
+	font-weight: 300;
+}
