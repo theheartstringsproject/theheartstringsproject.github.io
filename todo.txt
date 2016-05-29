@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 - Credential saving & forget info button
 - Event logging
 - User agreement

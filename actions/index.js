@@ -298,6 +298,7 @@ export const paymentTokenRequestFailed = ( error ) => {
 }
 
 export function fetchPaymentToken( payment, contribution ) {
+
 	return function( dispatch ) {
 		dispatch( requestPaymentToken() )
 
