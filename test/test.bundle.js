@@ -2495,6 +2495,10 @@
 	exports.paymentTokenRequestFailed = exports.paymentTokenReceived = exports.requestPaymentToken = exports.unrecoverableError = exports.declinedCreditCard = exports.expiredCreditCard = exports.incorrectCreditCardSecurityCode = exports.incorrectCreditCardNumber = exports.invalidCreditCardSecurityCode = exports.invalidCreditCardExpirationYear = exports.invalidCreditCardExpirationMonth = exports.invalidCreditCardNumber = exports.hasAttemptedEmailValidation = exports.setEditingCreditCardSecurityCode = exports.setEditingCreditCardExpirationDate = exports.setEditingCreditCardNumber = exports.didFinishEditingCreditCardNumber = exports.didStartEditingCreditCardSecurityCode = exports.didStartEditingCreditCardExpirationDate = exports.didStartEditingCreditCardNumber = exports.setCreditCardSecurityCode = exports.setCreditCardExpirationDate = exports.setCreditCardNumber = exports.setEmail = exports.confirmContribution = exports.chooseContributionAmount = exports.jumpToPreviousPage = exports.jumpToPage = exports.recedePage = exports.advancePage = undefined;
 	exports.fetchPaymentToken = fetchPaymentToken;
 	
+	var _isomorphicFetch = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"isomorphic-fetch\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+	
 	var _ActionTypes = __webpack_require__(29);
 	
 	var types = _interopRequireWildcard(_ActionTypes);
@@ -2507,12 +2511,13 @@
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
 	var advancePage = exports.advancePage = function advancePage() {
 		return {
 			type: types.ADVANCE_PAGE
 		};
-	}; // import fetch from 'isomorphic-fetch'
-	
+	};
 	
 	var recedePage = exports.recedePage = function recedePage() {
 		return {
@@ -2801,7 +2806,8 @@
 		};
 	};
 	
-	function fetchPaymentToken(payment) {
+	function fetchPaymentToken(payment, contribution) {
+	
 		return function (dispatch) {
 			dispatch(requestPaymentToken());
 	
@@ -2820,7 +2826,31 @@
 					dispatch(paymentTokenRequestFailed(response.error));
 				} else {
 					dispatch(paymentTokenReceived(response));
-					dispatch(advancePage());
+	
+					return (0, _isomorphicFetch2.default)('http://localhost:8000/', {
+						method: 'post',
+						headers: {
+							'Accept': 'application/json'
+						},
+						body: JSON.stringify({
+							amount: contribution.amount * 100, // Transform the amount from dollars into cents for Stripe
+							email: payment.email.value,
+							campaign_id: '1',
+							stripeToken: response.id
+						})
+					}).then(function (response) {
+						response.json().then(function (response) {
+							if (response.status === 'success') {
+								dispatch(advancePage());
+							} else {
+								throw response.error;
+							}
+						});
+					}).catch(function (err) {
+						// Go back to the payment page for any of these errors
+						dispatch(jumpToPage(views.pages.indexOf(views.ERROR_PAGE)));
+						return dispatch(unrecoverableError(err));
+					});
 				}
 			});
 		};
@@ -3521,7 +3551,7 @@
 	/**
 	 * Maps children that are typically specified as `props.children`.
 	 *
-	 * The provided mapFunction(child, key, index) will be called for each
+	 * The provided mapFunction(child, index) will be called for each
 	 * leaf child.
 	 *
 	 * @param {?*} children Children tree container.
@@ -4237,6 +4267,7 @@
 	
 	var getIteratorFn = __webpack_require__(46);
 	var invariant = __webpack_require__(39);
+	var KeyEscapeUtils = __webpack_require__(331);
 	var warning = __webpack_require__(42);
 	
 	var SEPARATOR = '.';
@@ -4247,18 +4278,7 @@
 	 * pattern.
 	 */
 	
-	var userProvidedKeyEscaperLookup = {
-	  '=': '=0',
-	  ':': '=2'
-	};
-	
-	var userProvidedKeyEscapeRegex = /[=:]/g;
-	
 	var didWarnAboutMaps = false;
-	
-	function userProvidedKeyEscaper(match) {
-	  return userProvidedKeyEscaperLookup[match];
-	}
 	
 	/**
 	 * Generate a key string that identifies a component within a set.
@@ -4272,31 +4292,10 @@
 	  // that we don't block potential future ES APIs.
 	  if (component && (typeof component === 'undefined' ? 'undefined' : _typeof(component)) === 'object' && component.key != null) {
 	    // Explicit key
-	    return wrapUserProvidedKey(component.key);
+	    return KeyEscapeUtils.escape(component.key);
 	  }
 	  // Implicit key determined by the index in the set
 	  return index.toString(36);
-	}
-	
-	/**
-	 * Escape a component key so that it is safe to use in a reactid.
-	 *
-	 * @param {*} text Component key to be escaped.
-	 * @return {string} An escaped string.
-	 */
-	function escapeUserProvidedKey(text) {
-	  return ('' + text).replace(userProvidedKeyEscapeRegex, userProvidedKeyEscaper);
-	}
-	
-	/**
-	 * Wrap a `key` value explicitly provided by the user to distinguish it from
-	 * implicitly-generated keys generated by a component's index in its parent.
-	 *
-	 * @param {string} key Value of a user-provided `key` attribute
-	 * @return {string}
-	 */
-	function wrapUserProvidedKey(key) {
-	  return '$' + escapeUserProvidedKey(key);
 	}
 	
 	/**
@@ -4356,7 +4355,7 @@
 	          var entry = step.value;
 	          if (entry) {
 	            child = entry[1];
-	            nextName = nextNamePrefix + wrapUserProvidedKey(entry[0]) + SUBSEPARATOR + getComponentKey(child, 0);
+	            nextName = nextNamePrefix + KeyEscapeUtils.escape(entry[0]) + SUBSEPARATOR + getComponentKey(child, 0);
 	            subtreeCount += traverseAllChildrenImpl(child, nextName, callback, traverseContext);
 	          }
 	        }
@@ -6651,7 +6650,7 @@
 	
 	'use strict';
 	
-	module.exports = '15.0.1';
+	module.exports = '15.0.2';
 
 /***/ },
 /* 63 */
@@ -6681,7 +6680,7 @@
 	 * of children.
 	 *
 	 * @param {?object} children Child collection structure.
-	 * @return {ReactComponent} The first and only `ReactComponent` contained in the
+	 * @return {ReactElement} The first and only `ReactElement` contained in the
 	 * structure.
 	 */
 	function onlyChild(children) {
@@ -6857,9 +6856,6 @@
 	   * @return {array} an array of all the matches.
 	   */
 	  scryRenderedDOMComponentsWithClass: function scryRenderedDOMComponentsWithClass(root, classNames) {
-	    if (!Array.isArray(classNames)) {
-	      classNames = classNames.split(/\s+/);
-	    }
 	    return ReactTestUtils.findAllInRenderedTree(root, function (inst) {
 	      if (ReactTestUtils.isDOMComponent(inst)) {
 	        var className = inst.className;
@@ -6868,6 +6864,11 @@
 	          className = inst.getAttribute('class') || '';
 	        }
 	        var classList = className.split(/\s+/);
+	
+	        if (!Array.isArray(classNames)) {
+	          !(classNames !== undefined) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'TestUtils.scryRenderedDOMComponentsWithClass expects a ' + 'className as a second argument.') : invariant(false) : void 0;
+	          classNames = classNames.split(/\s+/);
+	        }
 	        return classNames.every(function (name) {
 	          return classList.indexOf(name) !== -1;
 	        });
@@ -7039,6 +7040,7 @@
 	  this.construct(element);
 	};
 	_assign(ShallowComponentWrapper.prototype, ReactCompositeComponent.Mixin, {
+	  _constructComponent: ReactCompositeComponent.Mixin._constructComponentWithoutOwner,
 	  _instantiateReactComponent: function _instantiateReactComponent(element) {
 	    return new NoopInternalComponent(element);
 	  },
@@ -7966,7 +7968,7 @@
 	  var dispatchListener = event._dispatchListeners;
 	  var dispatchInstance = event._dispatchInstances;
 	  !!Array.isArray(dispatchListener) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'executeDirectDispatch(...): Invalid `event`.') : invariant(false) : void 0;
-	  event.currentTarget = EventPluginUtils.getNodeFromInstance(dispatchInstance);
+	  event.currentTarget = dispatchListener ? EventPluginUtils.getNodeFromInstance(dispatchInstance) : null;
 	  var res = dispatchListener ? dispatchListener(event) : null;
 	  event.currentTarget = null;
 	  event._dispatchListeners = null;
@@ -13042,6 +13044,9 @@
 	  suppressContentEditableWarning: null
 	};
 	
+	// Node type for document fragments (Node.DOCUMENT_FRAGMENT_NODE).
+	var DOC_FRAGMENT_TYPE = 11;
+	
 	function getDeclarationErrorAddendum(internalInstance) {
 	  if (internalInstance) {
 	    var owner = internalInstance._currentElement._owner || null;
@@ -13138,7 +13143,8 @@
 	    process.env.NODE_ENV !== 'production' ? warning(registrationName !== 'onScroll' || isEventSupported('scroll', true), 'This browser doesn\'t support the `onScroll` event') : void 0;
 	  }
 	  var containerInfo = inst._nativeContainerInfo;
-	  var doc = containerInfo._ownerDocument;
+	  var isDocumentFragment = containerInfo._node && containerInfo._node.nodeType === DOC_FRAGMENT_TYPE;
+	  var doc = isDocumentFragment ? containerInfo._node : containerInfo._ownerDocument;
 	  if (!doc) {
 	    // Server rendering.
 	    return;
@@ -15484,7 +15490,7 @@
 
 /***/ },
 /* 137 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Copyright 2013-present, Facebook, Inc.
@@ -15499,40 +15505,14 @@
 	
 	'use strict';
 	
-	var mouseListenerNames = {
-	  onClick: true,
-	  onDoubleClick: true,
-	  onMouseDown: true,
-	  onMouseMove: true,
-	  onMouseUp: true,
-	
-	  onClickCapture: true,
-	  onDoubleClickCapture: true,
-	  onMouseDownCapture: true,
-	  onMouseMoveCapture: true,
-	  onMouseUpCapture: true
-	};
+	var DisabledInputUtils = __webpack_require__(332);
 	
 	/**
 	 * Implements a <button> native component that does not receive mouse events
 	 * when `disabled` is set.
 	 */
 	var ReactDOMButton = {
-	  getNativeProps: function getNativeProps(inst, props) {
-	    if (!props.disabled) {
-	      return props;
-	    }
-	
-	    // Copy the props, except the mouse listeners
-	    var nativeProps = {};
-	    for (var key in props) {
-	      if (props.hasOwnProperty(key) && !mouseListenerNames[key]) {
-	        nativeProps[key] = props[key];
-	      }
-	    }
-	
-	    return nativeProps;
-	  }
+	  getNativeProps: DisabledInputUtils.getNativeProps
 	};
 	
 	module.exports = ReactDOMButton;
@@ -15556,6 +15536,7 @@
 	
 	var _assign = __webpack_require__(36);
 	
+	var DisabledInputUtils = __webpack_require__(332);
 	var DOMPropertyOperations = __webpack_require__(129);
 	var LinkedValueUtils = __webpack_require__(139);
 	var ReactDOMComponentTree = __webpack_require__(83);
@@ -15612,7 +15593,7 @@
 	      // Make sure we set .type before any other properties (setting .value
 	      // before .type means .value is lost in IE11 and below)
 	      type: undefined
-	    }, props, {
+	    }, DisabledInputUtils.getNativeProps(inst, props), {
 	      defaultChecked: undefined,
 	      defaultValue: undefined,
 	      value: value != null ? value : inst._wrapperState.initialValue,
@@ -15920,8 +15901,16 @@
 	
 	    // Look up whether this option is 'selected'
 	    var selectValue = null;
-	    if (nativeParent != null && nativeParent._tag === 'select') {
-	      selectValue = ReactDOMSelect.getSelectValueContext(nativeParent);
+	    if (nativeParent != null) {
+	      var selectParent = nativeParent;
+	
+	      if (selectParent._tag === 'optgroup') {
+	        selectParent = selectParent._nativeParent;
+	      }
+	
+	      if (selectParent != null && selectParent._tag === 'select') {
+	        selectValue = ReactDOMSelect.getSelectValueContext(selectParent);
+	      }
 	    }
 	
 	    // If the value is null (e.g., no specified value or after initial mount)
@@ -16008,6 +15997,7 @@
 	
 	var _assign = __webpack_require__(36);
 	
+	var DisabledInputUtils = __webpack_require__(332);
 	var LinkedValueUtils = __webpack_require__(139);
 	var ReactDOMComponentTree = __webpack_require__(83);
 	var ReactUpdates = __webpack_require__(86);
@@ -16131,7 +16121,7 @@
 	 */
 	var ReactDOMSelect = {
 	  getNativeProps: function getNativeProps(inst, props) {
-	    return _assign({}, props, {
+	    return _assign({}, DisabledInputUtils.getNativeProps(inst, props), {
 	      onChange: inst._wrapperState.onChange,
 	      value: undefined
 	    });
@@ -16225,6 +16215,7 @@
 	
 	var _assign = __webpack_require__(36);
 	
+	var DisabledInputUtils = __webpack_require__(332);
 	var DOMPropertyOperations = __webpack_require__(129);
 	var LinkedValueUtils = __webpack_require__(139);
 	var ReactDOMComponentTree = __webpack_require__(83);
@@ -16273,7 +16264,7 @@
 	
 	    // Always set children to the same thing. In IE9, the selection range will
 	    // get reset if `textContent` is mutated.
-	    var nativeProps = _assign({}, props, {
+	    var nativeProps = _assign({}, DisabledInputUtils.getNativeProps(inst, props), {
 	      defaultValue: undefined,
 	      value: undefined,
 	      children: inst._wrapperState.initialValue,
@@ -16835,6 +16826,7 @@
 	var ReactReconciler = __webpack_require__(90);
 	
 	var instantiateReactComponent = __webpack_require__(146);
+	var KeyEscapeUtils = __webpack_require__(331);
 	var shouldUpdateReactComponent = __webpack_require__(151);
 	var traverseAllChildren = __webpack_require__(45);
 	var warning = __webpack_require__(42);
@@ -16843,7 +16835,7 @@
 	  // We found a component instance.
 	  var keyUnique = childInstances[name] === undefined;
 	  if (process.env.NODE_ENV !== 'production') {
-	    process.env.NODE_ENV !== 'production' ? warning(keyUnique, 'flattenChildren(...): Encountered two children with the same key, ' + '`%s`. Child keys must be unique; when two children share a key, only ' + 'the first child will be used.', name) : void 0;
+	    process.env.NODE_ENV !== 'production' ? warning(keyUnique, 'flattenChildren(...): Encountered two children with the same key, ' + '`%s`. Child keys must be unique; when two children share a key, only ' + 'the first child will be used.', KeyEscapeUtils.unescape(name)) : void 0;
 	  }
 	  if (child != null && keyUnique) {
 	    childInstances[name] = instantiateReactComponent(child);
@@ -17126,6 +17118,10 @@
 	  }
 	}
 	
+	function shouldConstruct(Component) {
+	  return Component.prototype && Component.prototype.isReactComponent;
+	}
+	
 	/**
 	 * ------------------ The Life-Cycle of a Composite Component ------------------
 	 *
@@ -17194,6 +17190,9 @@
 	
 	    // See ReactUpdates and ReactUpdateQueue.
 	    this._pendingCallbacks = null;
+	
+	    // ComponentWillUnmount shall only be called once
+	    this._calledComponentWillUnmount = false;
 	  },
 	
 	  /**
@@ -17219,37 +17218,15 @@
 	    var Component = this._currentElement.type;
 	
 	    // Initialize the public class
-	    var inst;
+	    var inst = this._constructComponent(publicProps, publicContext);
 	    var renderedElement;
 	
-	    if (Component.prototype && Component.prototype.isReactComponent) {
-	      if (process.env.NODE_ENV !== 'production') {
-	        ReactCurrentOwner.current = this;
-	        try {
-	          inst = new Component(publicProps, publicContext, ReactUpdateQueue);
-	        } finally {
-	          ReactCurrentOwner.current = null;
-	        }
-	      } else {
-	        inst = new Component(publicProps, publicContext, ReactUpdateQueue);
-	      }
-	    } else {
-	      if (process.env.NODE_ENV !== 'production') {
-	        ReactCurrentOwner.current = this;
-	        try {
-	          inst = Component(publicProps, publicContext, ReactUpdateQueue);
-	        } finally {
-	          ReactCurrentOwner.current = null;
-	        }
-	      } else {
-	        inst = Component(publicProps, publicContext, ReactUpdateQueue);
-	      }
-	      if (inst == null || inst.render == null) {
-	        renderedElement = inst;
-	        warnIfInvalidElement(Component, renderedElement);
-	        !(inst === null || inst === false || ReactElement.isValidElement(inst)) ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s(...): A valid React element (or null) must be returned. You may have ' + 'returned undefined, an array or some other invalid object.', Component.displayName || Component.name || 'Component') : invariant(false) : void 0;
-	        inst = new StatelessComponent(Component);
-	      }
+	    // Support functional components
+	    if (!shouldConstruct(Component) && (inst == null || inst.render == null)) {
+	      renderedElement = inst;
+	      warnIfInvalidElement(Component, renderedElement);
+	      !(inst === null || inst === false || ReactElement.isValidElement(inst)) ? process.env.NODE_ENV !== 'production' ? invariant(false, '%s(...): A valid React element (or null) must be returned. You may have ' + 'returned undefined, an array or some other invalid object.', Component.displayName || Component.name || 'Component') : invariant(false) : void 0;
+	      inst = new StatelessComponent(Component);
 	    }
 	
 	    if (process.env.NODE_ENV !== 'production') {
@@ -17312,6 +17289,28 @@
 	    }
 	
 	    return markup;
+	  },
+	
+	  _constructComponent: function _constructComponent(publicProps, publicContext) {
+	    if (process.env.NODE_ENV !== 'production') {
+	      ReactCurrentOwner.current = this;
+	      try {
+	        return this._constructComponentWithoutOwner(publicProps, publicContext);
+	      } finally {
+	        ReactCurrentOwner.current = null;
+	      }
+	    } else {
+	      return this._constructComponentWithoutOwner(publicProps, publicContext);
+	    }
+	  },
+	
+	  _constructComponentWithoutOwner: function _constructComponentWithoutOwner(publicProps, publicContext) {
+	    var Component = this._currentElement.type;
+	    if (shouldConstruct(Component)) {
+	      return new Component(publicProps, publicContext, ReactUpdateQueue);
+	    } else {
+	      return Component(publicProps, publicContext, ReactUpdateQueue);
+	    }
 	  },
 	
 	  performInitialMountWithErrorHandling: function performInitialMountWithErrorHandling(renderedElement, nativeParent, nativeContainerInfo, transaction, context) {
@@ -17378,7 +17377,8 @@
 	    }
 	    var inst = this._instance;
 	
-	    if (inst.componentWillUnmount) {
+	    if (inst.componentWillUnmount && !inst._calledComponentWillUnmount) {
+	      inst._calledComponentWillUnmount = true;
 	      if (safely) {
 	        var name = this.getName() + '.componentWillUnmount()';
 	        ReactErrorUtils.invokeGuardedCallback(name, inst.componentWillUnmount.bind(inst));
@@ -18373,6 +18373,7 @@
 	
 	'use strict';
 	
+	var KeyEscapeUtils = __webpack_require__(331);
 	var traverseAllChildren = __webpack_require__(45);
 	var warning = __webpack_require__(42);
 	
@@ -18386,7 +18387,7 @@
 	  var result = traverseContext;
 	  var keyUnique = result[name] === undefined;
 	  if (process.env.NODE_ENV !== 'production') {
-	    process.env.NODE_ENV !== 'production' ? warning(keyUnique, 'flattenChildren(...): Encountered two children with the same key, ' + '`%s`. Child keys must be unique; when two children share a key, only ' + 'the first child will be used.', name) : void 0;
+	    process.env.NODE_ENV !== 'production' ? warning(keyUnique, 'flattenChildren(...): Encountered two children with the same key, ' + '`%s`. Child keys must be unique; when two children share a key, only ' + 'the first child will be used.', KeyEscapeUtils.unescape(name)) : void 0;
 	  }
 	  if (keyUnique && child != null) {
 	    result[name] = child;
@@ -18661,6 +18662,7 @@
 	      case 'rt':
 	        return impliedEndTags.indexOf(parentTag) === -1;
 	
+	      case 'body':
 	      case 'caption':
 	      case 'col':
 	      case 'colgroup':
@@ -20677,7 +20679,7 @@
 	  DOMAttributeNames: {}
 	};
 	
-	Object.keys(ATTRS).map(function (key) {
+	Object.keys(ATTRS).forEach(function (key) {
 	  SVGDOMPropertyConfig.Properties[key] = 0;
 	  if (ATTRS[key]) {
 	    SVGDOMPropertyConfig.DOMAttributeNames[key] = ATTRS[key];
@@ -22590,12 +22592,13 @@
 	  // the amount of time it took to render the entire subtree.
 	  var cleanComponents = {};
 	  var writes = measurement.writes;
+	  var hierarchy = measurement.hierarchy;
 	  var dirtyComposites = {};
 	  Object.keys(writes).forEach(function (id) {
 	    writes[id].forEach(function (write) {
 	      // Root mounting (innerHTML set) is recorded with an ID of ''
-	      if (id !== '') {
-	        measurement.hierarchy[id].forEach(function (c) {
+	      if (id !== '' && hierarchy.hasOwnProperty(id)) {
+	        hierarchy[id].forEach(function (c) {
 	          return dirtyComposites[c] = true;
 	        });
 	      }
@@ -23138,6 +23141,7 @@
 	    _topLevelWrapper: topLevelWrapper,
 	    _idCounter: 1,
 	    _ownerDocument: node ? node.nodeType === DOC_NODE_TYPE ? node : node.ownerDocument : null,
+	    _node: node,
 	    _tag: node ? node.nodeName.toLowerCase() : null,
 	    _namespaceURI: node ? node.namespaceURI : null
 	  };
@@ -36117,8 +36121,9 @@
 	  }
 	  /* eslint-enable no-console */
 	  try {
-	    // This error was thrown as a convenience so that you can use this stack
-	    // to find the callsite that caused this warning to fire.
+	    // This error was thrown as a convenience so that if you enable
+	    // "break on all exceptions" in your console,
+	    // it would pause the execution at this line.
 	    throw new Error(message);
 	    /* eslint-disable no-empty */
 	  } catch (e) {}
@@ -37818,7 +37823,7 @@
 	    var willEnter = _props.willEnter;
 	    var willLeave = _props.willLeave;
 	
-	    var destStyles = typeof styles === 'function' ? styles() : styles;
+	    var destStyles = typeof styles === 'function' ? styles(defaultStyles) : styles;
 	
 	    // this is special. for the first time around, we don't have a comparison
 	    // between last (no last) and current merged props. we'll compute last so:
@@ -40712,6 +40717,124 @@
 	};
 	
 	exports.default = securityCode;
+
+/***/ },
+/* 331 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule KeyEscapeUtils
+	 */
+	
+	'use strict';
+	
+	/**
+	 * Escape and wrap key so it is safe to use as a reactid
+	 *
+	 * @param {*} key to be escaped.
+	 * @return {string} the escaped key.
+	 */
+	
+	function escape(key) {
+	  var escapeRegex = /[=:]/g;
+	  var escaperLookup = {
+	    '=': '=0',
+	    ':': '=2'
+	  };
+	  var escapedString = ('' + key).replace(escapeRegex, function (match) {
+	    return escaperLookup[match];
+	  });
+	
+	  return '$' + escapedString;
+	}
+	
+	/**
+	 * Unescape and unwrap key for human-readable display
+	 *
+	 * @param {string} key to unescape.
+	 * @return {string} the unescaped key.
+	 */
+	function unescape(key) {
+	  var unescapeRegex = /(=0|=2)/g;
+	  var unescaperLookup = {
+	    '=0': '=',
+	    '=2': ':'
+	  };
+	  var keySubstring = key[0] === '.' && key[1] === '$' ? key.substring(2) : key.substring(1);
+	
+	  return ('' + keySubstring).replace(unescapeRegex, function (match) {
+	    return unescaperLookup[match];
+	  });
+	}
+	
+	var KeyEscapeUtils = {
+	  escape: escape,
+	  unescape: unescape
+	};
+	
+	module.exports = KeyEscapeUtils;
+
+/***/ },
+/* 332 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule DisabledInputUtils
+	 */
+	
+	'use strict';
+	
+	var disableableMouseListenerNames = {
+	  onClick: true,
+	  onDoubleClick: true,
+	  onMouseDown: true,
+	  onMouseMove: true,
+	  onMouseUp: true,
+	
+	  onClickCapture: true,
+	  onDoubleClickCapture: true,
+	  onMouseDownCapture: true,
+	  onMouseMoveCapture: true,
+	  onMouseUpCapture: true
+	};
+	
+	/**
+	 * Implements a native component that does not receive mouse events
+	 * when `disabled` is set.
+	 */
+	var DisabledInputUtils = {
+	  getNativeProps: function getNativeProps(inst, props) {
+	    if (!props.disabled) {
+	      return props;
+	    }
+	
+	    // Copy the props, except the mouse listeners
+	    var nativeProps = {};
+	    for (var key in props) {
+	      if (!disableableMouseListenerNames[key] && props.hasOwnProperty(key)) {
+	        nativeProps[key] = props[key];
+	      }
+	    }
+	
+	    return nativeProps;
+	  }
+	};
+	
+	module.exports = DisabledInputUtils;
 
 /***/ }
 /******/ ]);
